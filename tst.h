@@ -660,8 +660,9 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             }
     
             if(current_index==UNDEFINED_INDEX) {
+                // le caractère courant ne matche pas
                 if(best_match_node) {
-                    // le caractère courant ne matche pas => on backtracke
+                    // on backtracke
     
                     // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
                     size_t key_size=best_match_start-previous_match_end;
@@ -690,6 +691,21 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                 }
                 else if(best_match_start) {
                     // en fait le début de match n'était pas bon... Il nous faut donc backtracker
+                    
+                    // TODO : ce backtrack n'est pas optimal. Puisqu'on a fait tout ce chemin, on sait
+                    // quelle est la chaine de caractère qui devrait commencer à best_match_start+1.
+                    // Supposons qu'on soit dans le noeud NICOLA et que le caractère courant soit A.
+                    // Il n'y a pas de match donc on devrait backtracker. Le truc c'est qu'on sait à l'avance
+                    // que si on commence à best_match_start+1, il faut chercher un I, puis un C, puis un O, etc.
+                    // Or aucun prénom ne commence par 'ICO', donc il n'y aura pas de match commençant à best_match_start+1.
+                    // Autant backtracker directement depuis best_match_start+2. Même motif, même punition, aucun prénom ne commence
+                    // pas COLA, on backtracke à best_match_start+3, où l'on a un match possible avec OLAAF. On avance donc directement de 3+3 (longueur de OLA) caractères
+                    // et on se positionne sur le noeud du TST correspondant à OLA. L'intérêt de la chose est que tout ce calcul
+                    // peut être réutilisé, il suffit de stocker son résultat, sous la forme (avancement (+1,+2,+3 etc), noeud) dans chaque noeud.
+                    // Dans cet exemple, on stocke dans le noeud NICOLA le backtracking (+6,OLA) et non pas (+7,OLAA), car le deuxième A vient de la chaine
+                    // dans laquelle on recherche et non pas de l'arbre lui-même.
+                    // Bien sûr, si l'arbre change, il faut recalculer toutes ces infos de backtrack.
+                    // Au final, on a une version multi-chaines de l'algo Knuth-Morris-Pratt : Knuth-Morris-Pratt-Lehuen ??? ;)
                     pos = best_match_start+1;
                     best_match_start = NULL;
                 }
