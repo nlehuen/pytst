@@ -36,12 +36,6 @@ except AttributeError:
 del types
 
 
-try:
-    from weakref import proxy as weakref_proxy
-except:
-    weakref_proxy = lambda x: x
-
-
 UNDEFINED_INDEX = _tst.UNDEFINED_INDEX
 class _TST(_object):
     __swig_setmethods__ = {}

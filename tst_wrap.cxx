@@ -9,7 +9,6 @@
  * ----------------------------------------------------------------------------- */
 
 #define SWIGPYTHON
-#define SWIG_DIRECTORS
 
 #ifdef __cplusplus
 template<class T> class SwigValueWrapper {
@@ -1372,7 +1371,7 @@ static swig_type_info *swig_types[19];
 #include "TST.cxx"
 
 
-  /*@C:\\SWIG-1.3.24\\Lib\\python\\pymacros.swg,66,SWIG_define@*/
+  /*@E:\\SWIG-1.3.24\\Lib\\python\\pymacros.swg,66,SWIG_define@*/
 #define SWIG_From_int PyInt_FromLong
 /*@@*/
 
@@ -1550,47 +1549,6 @@ SWIG_FromCharPtr(const char* cptr)
   Py_INCREF(Py_None);
   return Py_None;
 }
-
-
-
-/* ---------------------------------------------------
- * C++ director class methods
- * --------------------------------------------------- */
-
-#include "tst_wrap.h"
-
-/***********************************************************************
- * director.swg
- *
- *     This file contains support for director classes that proxy
- *     method calls from C++ to Python extensions.
- *
- * Author : Mark Rose (mrose@stm.lbl.gov)
- ************************************************************************/
-
-#ifdef __cplusplus
-
-namespace Swig {
-  /* base class for director exceptions */
-  DirectorException::~DirectorException() {
-  }
-
-  /* simple thread abstraction for pthreads on win32 */
-  Director::~Director() {
-    swig_decref(); 
-  }
-
-  bool Director::swig_up = false;
-
-#ifdef __PTHREAD__
-  MUTEX_INIT(Director::swig_mutex_up);
-  pthread_t Director::swig_mutex_thread;
-  bool Director::swig_mutex_active = false;
-#endif
-
-}
-
-#endif /* __cplusplus */
 
 #ifdef __cplusplus
 extern "C" {
@@ -1978,7 +1936,6 @@ static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOO:_TST_get_or_build",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
@@ -1988,8 +1945,6 @@ static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
     }
     SWIG_Python_ConvertPtr(obj2, (void **)&arg3, SWIGTYPE_p_filterTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(3)) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->get_or_build(arg2,arg3);
@@ -2014,7 +1969,6 @@ static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOO:_TST_put",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
@@ -2023,8 +1977,6 @@ static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
         SWIG_arg_fail(2);SWIG_fail;
     }
     arg3 = obj2;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->put(arg2,arg3);
@@ -2046,7 +1998,6 @@ static PyObject *_wrap__TST_remove(PyObject *, PyObject *args) {
     char *arg2 = (char *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:_TST_remove",&obj0,&obj1)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
@@ -2054,8 +2005,6 @@ static PyObject *_wrap__TST_remove(PyObject *, PyObject *args) {
     if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
         SWIG_arg_fail(2);SWIG_fail;
     }
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             (arg1)->remove(arg2);
@@ -2217,7 +2166,6 @@ static PyObject *_wrap__Action_perform(PyObject *, PyObject *args) {
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
     PyObject * obj3 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOOO:_Action_perform",&obj0,&obj1,&obj2,&obj3)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_actionTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
@@ -2230,8 +2178,6 @@ static PyObject *_wrap__Action_perform(PyObject *, PyObject *args) {
         if (SWIG_arg_fail(3)) SWIG_fail;
     }
     arg4 = obj3;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             (arg1)->perform(arg2,arg3,arg4);
@@ -2252,13 +2198,10 @@ static PyObject *_wrap__Action_result(PyObject *, PyObject *args) {
     action<char,PyObject * > *arg1 = (action<char,PyObject * > *) 0 ;
     PyObject *result;
     PyObject * obj0 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"O:_Action_result",&obj0)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_actionTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->result();
@@ -2315,7 +2258,6 @@ static PyObject *_wrap__Filter_perform(PyObject *, PyObject *args) {
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
     PyObject * obj3 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOOO:_Filter_perform",&obj0,&obj1,&obj2,&obj3)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_filterTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
@@ -2328,8 +2270,6 @@ static PyObject *_wrap__Filter_perform(PyObject *, PyObject *args) {
         if (SWIG_arg_fail(3)) SWIG_fail;
     }
     arg4 = obj3;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->perform(arg2,arg3,arg4);
@@ -2383,7 +2323,6 @@ static PyObject *_wrap__Serializer_write(PyObject *, PyObject *args) {
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOO:_Serializer_write",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_serializerTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
@@ -2391,8 +2330,6 @@ static PyObject *_wrap__Serializer_write(PyObject *, PyObject *args) {
     SWIG_Python_ConvertPtr(obj1, (void **)&arg2, SWIGTYPE_p_FILE, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(2)) SWIG_fail;
     arg3 = obj2;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             (arg1)->write(arg2,arg3);
@@ -2415,15 +2352,12 @@ static PyObject *_wrap__Serializer_read(PyObject *, PyObject *args) {
     PyObject *result;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:_Serializer_read",&obj0,&obj1)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_serializerTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
     SWIG_Python_ConvertPtr(obj1, (void **)&arg2, SWIGTYPE_p_FILE, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(2)) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->read(arg2);
@@ -2607,7 +2541,6 @@ static PyObject *_wrap_CallableAction_perform(PyObject *, PyObject *args) {
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
     PyObject * obj3 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOOO:CallableAction_perform",&obj0,&obj1,&obj2,&obj3)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_CallableAction, SWIG_POINTER_EXCEPTION | 0);
@@ -2620,8 +2553,6 @@ static PyObject *_wrap_CallableAction_perform(PyObject *, PyObject *args) {
         if (SWIG_arg_fail(3)) SWIG_fail;
     }
     arg4 = obj3;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             (arg1)->perform(arg2,arg3,arg4);
@@ -2642,13 +2573,10 @@ static PyObject *_wrap_CallableAction_result(PyObject *, PyObject *args) {
     CallableAction *arg1 = (CallableAction *) 0 ;
     PyObject *result;
     PyObject * obj0 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"O:CallableAction_result",&obj0)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_CallableAction, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->result();
@@ -2728,7 +2656,6 @@ static PyObject *_wrap_CallableFilter_perform(PyObject *, PyObject *args) {
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
     PyObject * obj3 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOOO:CallableFilter_perform",&obj0,&obj1,&obj2,&obj3)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_CallableFilter, SWIG_POINTER_EXCEPTION | 0);
@@ -2741,8 +2668,6 @@ static PyObject *_wrap_CallableFilter_perform(PyObject *, PyObject *args) {
         if (SWIG_arg_fail(3)) SWIG_fail;
     }
     arg4 = obj3;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->perform(arg2,arg3,arg4);
@@ -2818,7 +2743,6 @@ static PyObject *_wrap_DictAction_perform(PyObject *, PyObject *args) {
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
     PyObject * obj3 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOOO:DictAction_perform",&obj0,&obj1,&obj2,&obj3)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_DictAction, SWIG_POINTER_EXCEPTION | 0);
@@ -2831,8 +2755,6 @@ static PyObject *_wrap_DictAction_perform(PyObject *, PyObject *args) {
         if (SWIG_arg_fail(3)) SWIG_fail;
     }
     arg4 = obj3;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             (arg1)->perform(arg2,arg3,arg4);
@@ -2853,13 +2775,10 @@ static PyObject *_wrap_DictAction_result(PyObject *, PyObject *args) {
     DictAction *arg1 = (DictAction *) 0 ;
     PyObject *result;
     PyObject * obj0 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"O:DictAction_result",&obj0)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_DictAction, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->result();
@@ -2935,7 +2854,6 @@ static PyObject *_wrap_ListAction_perform(PyObject *, PyObject *args) {
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
     PyObject * obj3 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOOO:ListAction_perform",&obj0,&obj1,&obj2,&obj3)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_ListAction, SWIG_POINTER_EXCEPTION | 0);
@@ -2948,8 +2866,6 @@ static PyObject *_wrap_ListAction_perform(PyObject *, PyObject *args) {
         if (SWIG_arg_fail(3)) SWIG_fail;
     }
     arg4 = obj3;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             (arg1)->perform(arg2,arg3,arg4);
@@ -2970,13 +2886,10 @@ static PyObject *_wrap_ListAction_result(PyObject *, PyObject *args) {
     ListAction *arg1 = (ListAction *) 0 ;
     PyObject *result;
     PyObject * obj0 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"O:ListAction_result",&obj0)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_ListAction, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->result();
@@ -3052,7 +2965,6 @@ static PyObject *_wrap_TupleListAction_perform(PyObject *, PyObject *args) {
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
     PyObject * obj3 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOOO:TupleListAction_perform",&obj0,&obj1,&obj2,&obj3)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TupleListAction, SWIG_POINTER_EXCEPTION | 0);
@@ -3065,8 +2977,6 @@ static PyObject *_wrap_TupleListAction_perform(PyObject *, PyObject *args) {
         if (SWIG_arg_fail(3)) SWIG_fail;
     }
     arg4 = obj3;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             (arg1)->perform(arg2,arg3,arg4);
@@ -3087,13 +2997,10 @@ static PyObject *_wrap_TupleListAction_result(PyObject *, PyObject *args) {
     TupleListAction *arg1 = (TupleListAction *) 0 ;
     PyObject *result;
     PyObject * obj0 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"O:TupleListAction_result",&obj0)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TupleListAction, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->result();
@@ -3167,7 +3074,6 @@ static PyObject *_wrap_ObjectSerializer_write(PyObject *, PyObject *args) {
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOO:ObjectSerializer_write",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_ObjectSerializer, SWIG_POINTER_EXCEPTION | 0);
@@ -3175,8 +3081,6 @@ static PyObject *_wrap_ObjectSerializer_write(PyObject *, PyObject *args) {
     SWIG_Python_ConvertPtr(obj1, (void **)&arg2, SWIGTYPE_p_FILE, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(2)) SWIG_fail;
     arg3 = obj2;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             (arg1)->write(arg2,arg3);
@@ -3199,15 +3103,12 @@ static PyObject *_wrap_ObjectSerializer_read(PyObject *, PyObject *args) {
     PyObject *result;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:ObjectSerializer_read",&obj0,&obj1)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_ObjectSerializer, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
     SWIG_Python_ConvertPtr(obj1, (void **)&arg2, SWIGTYPE_p_FILE, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(2)) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->read(arg2);
@@ -3394,7 +3295,6 @@ static PyObject *_wrap_TST_get(PyObject *, PyObject *args) {
     PyObject *result;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:TST_get",&obj0,&obj1)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TST, SWIG_POINTER_EXCEPTION | 0);
@@ -3402,8 +3302,6 @@ static PyObject *_wrap_TST_get(PyObject *, PyObject *args) {
     if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
         SWIG_arg_fail(2);SWIG_fail;
     }
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->get(arg2);
@@ -3428,7 +3326,6 @@ static PyObject *_wrap_TST_get_or_build(PyObject *, PyObject *args) {
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOO:TST_get_or_build",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TST, SWIG_POINTER_EXCEPTION | 0);
@@ -3438,8 +3335,6 @@ static PyObject *_wrap_TST_get_or_build(PyObject *, PyObject *args) {
     }
     SWIG_Python_ConvertPtr(obj2, (void **)&arg3, SWIGTYPE_p_filterTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(3)) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->get_or_build(arg2,arg3);
@@ -3464,7 +3359,6 @@ static PyObject *_wrap_TST_put(PyObject *, PyObject *args) {
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
-    Swig::Director *director = 0;
     
     if(!PyArg_ParseTuple(args,(char *)"OOO:TST_put",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TST, SWIG_POINTER_EXCEPTION | 0);
@@ -3473,8 +3367,6 @@ static PyObject *_wrap_TST_put(PyObject *, PyObject *args) {
         SWIG_arg_fail(2);SWIG_fail;
     }
     arg3 = obj2;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
     {
         try {
             result = (PyObject *)(arg1)->put(arg2,arg3);
