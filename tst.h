@@ -34,6 +34,7 @@ public:
     int left;
     int height;
     int bt_node;
+    int bt_bmnode;
     int bt_forward;
 };
 
@@ -102,7 +103,7 @@ template<class S,class T> class tst {
 
         virtual int build_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length);
         virtual void remove_node(int* current_index,S* current_char,int current_key_length);
-        tst_node<S,T>* find_node(int* current_index,tst_node<S,T>** best_node, S* current_char);
+        tst_node<S,T>* find_node(int* current_index,int* best_node, S* current_char);
 
         void balance_node(tst_node<S,T>** current_node,int* current_index);
         void ll(tst_node<S,T>** current_node,int* current_index);
@@ -217,8 +218,7 @@ template<class S,class T> void tst<S,T>::pack() {
 }
 
 template<class S,class T> T tst<S,T>::get(S* string) {
-    int current_index=root;
-    tst_node<S,T>* best_node;
+    int current_index=root,best_node=UNDEFINED_INDEX;
     tst_node<S,T>* current_node=find_node(&current_index,&best_node,string);
     if(current_node) {
         return current_node->data;
@@ -464,6 +464,7 @@ template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node
     new_node->height=0;
     new_node->data=(T)NULL;
     new_node->bt_node=UNDEFINED_INDEX;
+    new_node->bt_bmnode=UNDEFINED_INDEX;
     new_node->bt_forward=1;
     store_data(new_node,default_value,0);
 
@@ -590,7 +591,7 @@ template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* curre
     }
 }
 
-template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,tst_node<S,T>** best_node,S* current_char) {
+template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,int* best_node,S* current_char) {
     tst_node<S,T>* _array=array;
     tst_node<S,T>* current_node;
     int diff;
@@ -608,7 +609,7 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
 
         if(diff==0) {
             if(current_node->data!=default_value) {
-                *best_node=current_node;
+                *best_node=*current_index;
             }
             
             current_char++;
@@ -638,14 +639,14 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
     S c;
     int diff;
 
-    tst_node<S,T> *current_node=NULL,*best_match_node=NULL;
+    tst_node<S,T> *current_node=NULL;
     S *pos=string,*previous_match_end=string,*best_match_end=NULL,*best_match_start=NULL;
 
-    int current_index=root;
+    int current_index=root,best_match_node=UNDEFINED_INDEX, temp_node=UNDEFINED_INDEX;
     int previous_char_was_stop_char=1;
 
     c = *(pos++);
-    while(best_match_node!=NULL || c!=0) {
+    while(best_match_node!=UNDEFINED_INDEX || c!=0) {
         if(c) {
             // on commence par rechercher le noeud correspondant au caractère courant
             while(current_index>=0) {
@@ -670,7 +671,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
     
             if(current_index==UNDEFINED_INDEX) {
                 // le caractère courant ne matche pas
-                if(best_match_node) {
+                if(best_match_node!=UNDEFINED_INDEX) {
                     // on backtracke
     
                     // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
@@ -688,7 +689,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     S* key=(S*)tst_malloc(key_size+1);
                     memcpy(key,best_match_start,key_size);
                     key[key_size]='\0';
-                    to_perform->perform(key,key_size,best_match_node->data);
+                    to_perform->perform(key,key_size,(array+best_match_node)->data);
                     tst_free(key);
     
                     // puis on reprend juste après le meilleur match depuis la racine de l'arbre
@@ -696,7 +697,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     // sur 'OLAAFRICA' renvoie deux matchs et non pas un seul.
                     previous_match_end = best_match_end;
                     pos = best_match_end;
-                    best_match_node = NULL;
+                    best_match_node = UNDEFINED_INDEX;
                     best_match_start = NULL;
                     best_match_end = NULL;
                     current_index=root;
@@ -727,20 +728,19 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                        memcpy(key,best_match_start,key_size);
                        key[key_size]='\0';
                        
-                       //printf("\nCalcul pour %s//%c\n",key,c);
+                       printf("\nCalcul pour %s//%c\n",key,c);
 
                        while(forward<key_size) {
-                           //printf("Test de la sous-cle %s...",key+forward);
+                           printf("Test de la sous-cle %s...",key+forward);
                            current_node->bt_node=root;
-                           find_node(&(current_node->bt_node),&best_match_node,key+forward);
+                           find_node(&(current_node->bt_node),&(current_node->bt_bmnode),key+forward);
                            if(current_node->bt_node==UNDEFINED_INDEX) {
-                               best_match_node=NULL;
-                               //printf("KO");
+                               printf("KO");
                                forward++;
-                               //if(forward<key_size) printf("\n");
+                               if(forward<key_size) printf("\n");
                            }
                            else {
-                            //printf("OK");
+                            printf("OK");
                             break;
                            }
                         }
@@ -754,18 +754,18 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                         else {
                             current_node->bt_node=(array+current_node->bt_node)->next;
                             if(current_node->bt_node==UNDEFINED_INDEX) {
-                                //printf("________ MERDE ____________\n");
-                                best_match_node=NULL;
+                                printf("________ MERDE ____________\n");
+                                current_node->bt_node=UNDEFINED_INDEX;
                                 current_node->bt_node=root;
                             }
                             else {
                                 if((array+current_node->bt_node)->data!=default_value) {
-                                    best_match_node=(array+current_node->bt_node)->data;
+                                    current_node->bt_bmnode=current_node->bt_node;
                                 }
                             }
                         }
                         
-                        //printf("==> %i, %c(%i)=>%c(%i)\n",forward,(array+current_node->bt_node)->c,current_node->bt_node,(array+(array+current_node->bt_node)->next)->c,(array+current_node->bt_node)->next);
+                        printf("==> %i, %c(%i)=>%c(%i)\n",forward,(array+current_node->bt_node)->c,current_node->bt_node,(array+(array+current_node->bt_node)->next)->c,(array+current_node->bt_node)->next);
                     }
                  
                     pos = best_match_start+1;
@@ -802,13 +802,13 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
 
                             if(previous_char_was_stop_char) {
                                 // le match est acceptable
-                                best_match_node = current_node;
+                                best_match_node = current_index;
                                 best_match_end = pos;
                             }
                         }
                         else {
                             // le match est acceptable
-                            best_match_node = current_node;
+                            best_match_node = current_index;
                             best_match_end = pos;
                         }
                     }
@@ -835,13 +835,13 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             S* key=(S*)tst_malloc(key_size+1);
             memcpy(key,best_match_start,key_size);
             key[key_size]='\0';
-            to_perform->perform(key,key_size,best_match_node->data);
+            to_perform->perform(key,key_size,(array+best_match_node)->data);
             tst_free(key);
 
             // puis on reprend juste après le meilleur match depuis la racine de l'arbre
             previous_match_end = best_match_end;
             pos = best_match_end;
-            best_match_node = NULL;
+            best_match_node = UNDEFINED_INDEX;
             best_match_end = NULL;
             best_match_start = NULL;
             current_index = root;
