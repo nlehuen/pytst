@@ -118,9 +118,6 @@
 			<File
 				RelativePath=".\hello.cxx">
 			</File>
-			<File
-				RelativePath=".\TST.cxx">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

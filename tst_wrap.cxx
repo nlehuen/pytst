@@ -9,6 +9,7 @@
  * ----------------------------------------------------------------------------- */
 
 #define SWIGPYTHON
+#define SWIG_DIRECTORS
 
 #ifdef __cplusplus
 template<class T> class SwigValueWrapper {
@@ -701,10 +702,13 @@ SWIG_Python_InstallConstants(PyObject *d, swig_const_info constants[]) {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define  SWIGTYPE_p_tstTchar_p_t swig_types[0] 
-#define  SWIGTYPE_p_tstTint_t swig_types[1] 
-#define  SWIGTYPE_p_tstTPyObject_p_t swig_types[2] 
-#define  SWIGTYPE_p_TST swig_types[3] 
-static swig_type_info *swig_types[5];
+#define  SWIGTYPE_p_actionTchar_p_t swig_types[1] 
+#define  SWIGTYPE_p_tstTint_t swig_types[2] 
+#define  SWIGTYPE_p_actionTint_t swig_types[3] 
+#define  SWIGTYPE_p_tstTPyObject_p_t swig_types[4] 
+#define  SWIGTYPE_p_actionTPyObject_p_t swig_types[5] 
+#define  SWIGTYPE_p_TST swig_types[6] 
+static swig_type_info *swig_types[8];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -717,6 +721,256 @@ static swig_type_info *swig_types[5];
 #define SWIG_name    "_tst"
 
 #include "TST.cxx"
+
+/***********************************************************************
+ * director.swg
+ *
+ *     This file contains support for director classes that proxy
+ *     method calls from C++ to Python extensions.
+ *
+ * Author : Mark Rose (mrose@stm.lbl.gov)
+ ************************************************************************/
+
+#ifdef __cplusplus
+
+#include <string>
+
+namespace Swig {
+  /* base class for director exceptions */
+  class DirectorException {
+    protected:
+      std::string swig_msg;
+    public:
+      DirectorException(const char* msg="") {
+      }
+      const char *getMessage() const { 
+        return swig_msg.c_str(); 
+      }
+      virtual ~DirectorException() {}
+  };
+
+  /* type mismatch in the return value from a python method call */
+  class DirectorTypeMismatchException : public Swig::DirectorException {
+    public:
+      DirectorTypeMismatchException(const char* msg="") {
+        swig_msg = "Swig director type mismatch: ";
+        swig_msg += msg;
+        PyErr_SetString(PyExc_TypeError, msg);
+      }
+  };
+
+  /* any python exception that occurs during a director method call */
+  class DirectorMethodException : public Swig::DirectorException {};
+
+  /* attempt to call a pure virtual method via a director method */
+  class DirectorPureVirtualException : public Swig::DirectorException {};
+
+
+  /* simple thread abstraction for pthreads on win32 */
+#ifdef __THREAD__
+#define __PTHREAD__
+#if defined(_WIN32) || defined(__WIN32__)
+#define pthread_mutex_lock EnterCriticalSection
+#define pthread_mutex_unlock LeaveCriticalSection
+#define pthread_mutex_t CRITICAL_SECTION
+#define MUTEX_INIT(var) CRITICAL_SECTION var
+#else
+#include <pthread.h>
+#define MUTEX_INIT(var) pthread_mutex_t var = PTHREAD_MUTEX_INITIALIZER 
+#endif
+#endif
+
+
+  /* director base class */
+  class Director {
+    private:
+      /* pointer to the wrapped python object */
+      PyObject* swig_self;
+      /* flag indicating whether the object is owned by python or c++ */
+      mutable bool swig_disown_flag;
+      /* shared flag for breaking recursive director calls */
+      static bool swig_up;
+
+#ifdef __PTHREAD__
+      /* locks for sharing the swig_up flag in a threaded environment */
+      static pthread_mutex_t swig_mutex_up;
+      static bool swig_mutex_active;
+      static pthread_t swig_mutex_thread;
+#endif
+
+      /* decrement the reference count of the wrapped python object */
+      void swig_decref() const { 
+        if (swig_disown_flag) {
+          Py_DECREF(swig_self); 
+        }
+      }
+
+      /* reset the swig_up flag once the routing direction has been determined */
+#ifdef __PTHREAD__
+      void swig_clear_up() const { 
+        Swig::Director::swig_up = false; 
+        Swig::Director::swig_mutex_active = false;
+        pthread_mutex_unlock(&swig_mutex_up);
+      }
+#else
+      void swig_clear_up() const { 
+        Swig::Director::swig_up = false; 
+      }
+#endif
+
+    public:
+      /* wrap a python object, optionally taking ownership */
+      Director(PyObject* self, bool disown) : swig_self(self), swig_disown_flag(disown) {
+        swig_incref();
+      }
+
+      /* discard our reference at destruction */
+      virtual ~Director() {
+        swig_decref(); 
+      }
+
+      /* return a pointer to the wrapped python object */
+      PyObject *swig_get_self() const { 
+        return swig_self; 
+      }
+
+      /* get the swig_up flag to determine if the method call should be routed
+       * to the c++ base class or through the wrapped python object
+       */
+#ifdef __PTHREAD__
+      bool swig_get_up() const { 
+        if (Swig::Director::swig_mutex_active) {
+          if (pthread_equal(Swig::Director::swig_mutex_thread, pthread_self())) {
+            bool up = swig_up;
+            swig_clear_up();
+            return up;
+          }
+        }
+        return 0;
+      }
+#else 
+      bool swig_get_up() const { 
+        bool up = swig_up;
+        swig_up = false;
+        return up;
+      }
+#endif
+
+      /* set the swig_up flag if the next method call should be directed to
+       * the c++ base class rather than the wrapped python object
+       */
+#ifdef __PTHREAD__
+      void swig_set_up() const { 
+        pthread_mutex_lock(&Swig::Director::swig_mutex_up);
+        Swig::Director::swig_mutex_thread = pthread_self();
+        Swig::Director::swig_mutex_active = true;
+        Swig::Director::swig_up = true; 
+      }
+#else 
+      void swig_set_up() const { 
+        Swig::Director::swig_up = true; 
+      }
+#endif
+
+      /* acquire ownership of the wrapped python object (the sense of "disown"
+       * is from python) */
+      void swig_disown() const { 
+        if (!swig_disown_flag) { 
+          swig_disown_flag=true;
+          swig_incref(); 
+        } 
+      }
+
+      /* increase the reference count of the wrapped python object */
+      void swig_incref() const { 
+        if (swig_disown_flag) {
+          Py_INCREF(swig_self); 
+        }
+      }
+
+      /* methods to implement pseudo protected director members */
+      virtual bool swig_get_inner(const char* name) const {
+        return true;
+      }
+
+      virtual void swig_set_inner(const char* name, bool val) const {
+      }
+  };
+
+  bool Swig::Director::swig_up = false;
+
+#ifdef __PTHREAD__
+  MUTEX_INIT(Swig::Director::swig_mutex_up);
+  pthread_t Swig::Director::swig_mutex_thread;
+  bool Swig::Director::swig_mutex_active = false;
+#endif
+
+}
+
+#endif /* __cplusplus */
+
+
+
+
+/* ---------------------------------------------------
+ * C++ director class methods
+ * --------------------------------------------------- */
+
+#include "tst_wrap.h"
+
+SwigDirector_IntegerAction::SwigDirector_IntegerAction(PyObject *self, bool disown): action<int >(), Swig::Director(self, disown) {
+    
+}
+
+
+
+void SwigDirector_IntegerAction::perform(char *key, int remaining_distance, int data) {
+    PyObject *result;
+    
+    if (swig_get_up()) {
+        action<int >::perform(key,remaining_distance,data);
+        return;
+    }
+    result = PyObject_CallMethod(swig_get_self(), "perform", "sii" ,key,remaining_distance,data);
+    Py_XDECREF(result);
+}
+
+
+SwigDirector_StringAction::SwigDirector_StringAction(PyObject *self, bool disown): action<char * >(), Swig::Director(self, disown) {
+    
+}
+
+
+
+void SwigDirector_StringAction::perform(char *key, int remaining_distance, char *data) {
+    PyObject *result;
+    
+    if (swig_get_up()) {
+        action<char * >::perform(key,remaining_distance,data);
+        return;
+    }
+    result = PyObject_CallMethod(swig_get_self(), "perform", "sis" ,key,remaining_distance,data);
+    Py_XDECREF(result);
+}
+
+
+SwigDirector_Action::SwigDirector_Action(PyObject *self, bool disown): action<PyObject * >(), Swig::Director(self, disown) {
+    
+}
+
+
+
+void SwigDirector_Action::perform(char *key, int remaining_distance, PyObject *data) {
+    PyObject *result;
+    
+    if (swig_get_up()) {
+        action<PyObject * >::perform(key,remaining_distance,data);
+        return;
+    }
+    result = PyObject_CallMethod(swig_get_self(), "perform", "siO" ,key,remaining_distance,data);
+    Py_XDECREF(result);
+}
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -761,6 +1015,28 @@ static PyObject *_wrap_IntegerTST_adjust(PyObject *self, PyObject *args) {
     if(!PyArg_ParseTuple(args,(char *)"O:IntegerTST_adjust",&obj0)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     (arg1)->adjust();
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_IntegerTST_almost(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    tst<int > *arg1 = (tst<int > *) 0 ;
+    char *arg2 ;
+    int arg3 ;
+    int arg4 ;
+    action<int > *arg5 = (action<int > *) 0 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj4 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OsiiO:IntegerTST_almost",&obj0,&arg2,&arg3,&arg4,&obj4)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj4,(void **) &arg5, SWIGTYPE_p_actionTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    (arg1)->almost(arg2,arg3,arg4,arg5);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -883,6 +1159,94 @@ static PyObject * IntegerTST_swigregister(PyObject *self, PyObject *args) {
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
+static PyObject *_wrap_new_IntegerAction(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    PyObject *arg1 = (PyObject *) 0 ;
+    action<int > *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:new_IntegerAction",&obj0)) goto fail;
+    arg1 = obj0;
+    if ( arg1 != Py_None ) {
+        /* subclassed */
+        result = (action<int > *)new SwigDirector_IntegerAction(arg1,false);
+        
+    } else {
+        result = (action<int > *)new action<int >();
+        
+    }
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_actionTint_t, 1);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_delete_IntegerAction(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    action<int > *arg1 = (action<int > *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:delete_IntegerAction",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    delete arg1;
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_IntegerAction_perform(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    action<int > *arg1 = (action<int > *) 0 ;
+    char *arg2 ;
+    int arg3 ;
+    int arg4 ;
+    PyObject * obj0 = 0 ;
+    Swig::Director *director = 0;
+    
+    if(!PyArg_ParseTuple(args,(char *)"Osii:IntegerAction_perform",&obj0,&arg2,&arg3,&arg4)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    director = dynamic_cast<Swig::Director *>(arg1);
+    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
+    (arg1)->perform(arg2,arg3,arg4);
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_disown_IntegerAction(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    action<int > *arg1 = (action<int > *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:disown_IntegerAction",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    {
+        Swig::Director *director = dynamic_cast<Swig::Director *>(arg1);
+        if (director) director->swig_disown();
+    }
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject * IntegerAction_swigregister(PyObject *self, PyObject *args) {
+    PyObject *obj;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
+    SWIG_TypeClientData(SWIGTYPE_p_actionTint_t, obj);
+    Py_INCREF(obj);
+    return Py_BuildValue((char *)"");
+}
 static PyObject *_wrap_new_StringTST(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     int arg1 ;
@@ -923,6 +1287,28 @@ static PyObject *_wrap_StringTST_adjust(PyObject *self, PyObject *args) {
     if(!PyArg_ParseTuple(args,(char *)"O:StringTST_adjust",&obj0)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     (arg1)->adjust();
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_StringTST_almost(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    tst<char * > *arg1 = (tst<char * > *) 0 ;
+    char *arg2 ;
+    int arg3 ;
+    int arg4 ;
+    action<char * > *arg5 = (action<char * > *) 0 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj4 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OsiiO:StringTST_almost",&obj0,&arg2,&arg3,&arg4,&obj4)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj4,(void **) &arg5, SWIGTYPE_p_actionTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    (arg1)->almost(arg2,arg3,arg4,arg5);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -1045,6 +1431,94 @@ static PyObject * StringTST_swigregister(PyObject *self, PyObject *args) {
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
+static PyObject *_wrap_new_StringAction(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    PyObject *arg1 = (PyObject *) 0 ;
+    action<char * > *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:new_StringAction",&obj0)) goto fail;
+    arg1 = obj0;
+    if ( arg1 != Py_None ) {
+        /* subclassed */
+        result = (action<char * > *)new SwigDirector_StringAction(arg1,false);
+        
+    } else {
+        result = (action<char * > *)new action<char * >();
+        
+    }
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_actionTchar_p_t, 1);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_delete_StringAction(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    action<char * > *arg1 = (action<char * > *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:delete_StringAction",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    delete arg1;
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_StringAction_perform(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    action<char * > *arg1 = (action<char * > *) 0 ;
+    char *arg2 ;
+    int arg3 ;
+    char *arg4 ;
+    PyObject * obj0 = 0 ;
+    Swig::Director *director = 0;
+    
+    if(!PyArg_ParseTuple(args,(char *)"Osis:StringAction_perform",&obj0,&arg2,&arg3,&arg4)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    director = dynamic_cast<Swig::Director *>(arg1);
+    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
+    (arg1)->perform(arg2,arg3,arg4);
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_disown_StringAction(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    action<char * > *arg1 = (action<char * > *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:disown_StringAction",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    {
+        Swig::Director *director = dynamic_cast<Swig::Director *>(arg1);
+        if (director) director->swig_disown();
+    }
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject * StringAction_swigregister(PyObject *self, PyObject *args) {
+    PyObject *obj;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
+    SWIG_TypeClientData(SWIGTYPE_p_actionTchar_p_t, obj);
+    Py_INCREF(obj);
+    return Py_BuildValue((char *)"");
+}
 static PyObject *_wrap_new__object_tst(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     int arg1 ;
@@ -1087,6 +1561,28 @@ static PyObject *_wrap__object_tst_adjust(PyObject *self, PyObject *args) {
     if(!PyArg_ParseTuple(args,(char *)"O:_object_tst_adjust",&obj0)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     (arg1)->adjust();
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap__object_tst_almost(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    tst<PyObject * > *arg1 = (tst<PyObject * > *) 0 ;
+    char *arg2 ;
+    int arg3 ;
+    int arg4 ;
+    action<PyObject * > *arg5 = (action<PyObject * > *) 0 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj4 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OsiiO:_object_tst_almost",&obj0,&arg2,&arg3,&arg4,&obj4)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj4,(void **) &arg5, SWIGTYPE_p_actionTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    (arg1)->almost(arg2,arg3,arg4,arg5);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -1213,6 +1709,96 @@ static PyObject * _object_tst_swigregister(PyObject *self, PyObject *args) {
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
+static PyObject *_wrap_new_Action(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    PyObject *arg1 = (PyObject *) 0 ;
+    action<PyObject * > *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:new_Action",&obj0)) goto fail;
+    arg1 = obj0;
+    if ( arg1 != Py_None ) {
+        /* subclassed */
+        result = (action<PyObject * > *)new SwigDirector_Action(arg1,false);
+        
+    } else {
+        result = (action<PyObject * > *)new action<PyObject * >();
+        
+    }
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_actionTPyObject_p_t, 1);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_delete_Action(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    action<PyObject * > *arg1 = (action<PyObject * > *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:delete_Action",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    delete arg1;
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_Action_perform(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    action<PyObject * > *arg1 = (action<PyObject * > *) 0 ;
+    char *arg2 ;
+    int arg3 ;
+    PyObject *arg4 = (PyObject *) 0 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj3 = 0 ;
+    Swig::Director *director = 0;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OsiO:Action_perform",&obj0,&arg2,&arg3,&obj3)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    arg4 = obj3;
+    director = dynamic_cast<Swig::Director *>(arg1);
+    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
+    (arg1)->perform(arg2,arg3,arg4);
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_disown_Action(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    action<PyObject * > *arg1 = (action<PyObject * > *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:disown_Action",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    {
+        Swig::Director *director = dynamic_cast<Swig::Director *>(arg1);
+        if (director) director->swig_disown();
+    }
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject * Action_swigregister(PyObject *self, PyObject *args) {
+    PyObject *obj;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
+    SWIG_TypeClientData(SWIGTYPE_p_actionTPyObject_p_t, obj);
+    Py_INCREF(obj);
+    return Py_BuildValue((char *)"");
+}
 static PyObject *_wrap_new_TST(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     int arg1 ;
@@ -1336,6 +1922,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_IntegerTST", _wrap_new_IntegerTST, METH_VARARGS },
 	 { (char *)"delete_IntegerTST", _wrap_delete_IntegerTST, METH_VARARGS },
 	 { (char *)"IntegerTST_adjust", _wrap_IntegerTST_adjust, METH_VARARGS },
+	 { (char *)"IntegerTST_almost", _wrap_IntegerTST_almost, METH_VARARGS },
 	 { (char *)"IntegerTST_get", _wrap_IntegerTST_get, METH_VARARGS },
 	 { (char *)"IntegerTST___getitem__", _wrap_IntegerTST___getitem__, METH_VARARGS },
 	 { (char *)"IntegerTST_put", _wrap_IntegerTST_put, METH_VARARGS },
@@ -1343,9 +1930,15 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"IntegerTST_debug", _wrap_IntegerTST_debug, METH_VARARGS },
 	 { (char *)"IntegerTST_bytes_allocated", _wrap_IntegerTST_bytes_allocated, METH_VARARGS },
 	 { (char *)"IntegerTST_swigregister", IntegerTST_swigregister, METH_VARARGS },
+	 { (char *)"new_IntegerAction", _wrap_new_IntegerAction, METH_VARARGS },
+	 { (char *)"delete_IntegerAction", _wrap_delete_IntegerAction, METH_VARARGS },
+	 { (char *)"IntegerAction_perform", _wrap_IntegerAction_perform, METH_VARARGS },
+	 { (char *)"disown_IntegerAction", _wrap_disown_IntegerAction, METH_VARARGS },
+	 { (char *)"IntegerAction_swigregister", IntegerAction_swigregister, METH_VARARGS },
 	 { (char *)"new_StringTST", _wrap_new_StringTST, METH_VARARGS },
 	 { (char *)"delete_StringTST", _wrap_delete_StringTST, METH_VARARGS },
 	 { (char *)"StringTST_adjust", _wrap_StringTST_adjust, METH_VARARGS },
+	 { (char *)"StringTST_almost", _wrap_StringTST_almost, METH_VARARGS },
 	 { (char *)"StringTST_get", _wrap_StringTST_get, METH_VARARGS },
 	 { (char *)"StringTST___getitem__", _wrap_StringTST___getitem__, METH_VARARGS },
 	 { (char *)"StringTST_put", _wrap_StringTST_put, METH_VARARGS },
@@ -1353,9 +1946,15 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"StringTST_debug", _wrap_StringTST_debug, METH_VARARGS },
 	 { (char *)"StringTST_bytes_allocated", _wrap_StringTST_bytes_allocated, METH_VARARGS },
 	 { (char *)"StringTST_swigregister", StringTST_swigregister, METH_VARARGS },
+	 { (char *)"new_StringAction", _wrap_new_StringAction, METH_VARARGS },
+	 { (char *)"delete_StringAction", _wrap_delete_StringAction, METH_VARARGS },
+	 { (char *)"StringAction_perform", _wrap_StringAction_perform, METH_VARARGS },
+	 { (char *)"disown_StringAction", _wrap_disown_StringAction, METH_VARARGS },
+	 { (char *)"StringAction_swigregister", StringAction_swigregister, METH_VARARGS },
 	 { (char *)"new__object_tst", _wrap_new__object_tst, METH_VARARGS },
 	 { (char *)"delete__object_tst", _wrap_delete__object_tst, METH_VARARGS },
 	 { (char *)"_object_tst_adjust", _wrap__object_tst_adjust, METH_VARARGS },
+	 { (char *)"_object_tst_almost", _wrap__object_tst_almost, METH_VARARGS },
 	 { (char *)"_object_tst_get", _wrap__object_tst_get, METH_VARARGS },
 	 { (char *)"_object_tst___getitem__", _wrap__object_tst___getitem__, METH_VARARGS },
 	 { (char *)"_object_tst_put", _wrap__object_tst_put, METH_VARARGS },
@@ -1363,6 +1962,11 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_object_tst_debug", _wrap__object_tst_debug, METH_VARARGS },
 	 { (char *)"_object_tst_bytes_allocated", _wrap__object_tst_bytes_allocated, METH_VARARGS },
 	 { (char *)"_object_tst_swigregister", _object_tst_swigregister, METH_VARARGS },
+	 { (char *)"new_Action", _wrap_new_Action, METH_VARARGS },
+	 { (char *)"delete_Action", _wrap_delete_Action, METH_VARARGS },
+	 { (char *)"Action_perform", _wrap_Action_perform, METH_VARARGS },
+	 { (char *)"disown_Action", _wrap_disown_Action, METH_VARARGS },
+	 { (char *)"Action_swigregister", Action_swigregister, METH_VARARGS },
 	 { (char *)"new_TST", _wrap_new_TST, METH_VARARGS },
 	 { (char *)"TST_get", _wrap_TST_get, METH_VARARGS },
 	 { (char *)"TST___getitem__", _wrap_TST___getitem__, METH_VARARGS },
@@ -1380,14 +1984,20 @@ static void *_p_TSTTo_p_tstTPyObject_p_t(void *x) {
     return (void *)((tst<PyObject * > *)  ((TST *) x));
 }
 static swig_type_info _swigt__p_tstTchar_p_t[] = {{"_p_tstTchar_p_t", 0, "tst<char * > *", 0},{"_p_tstTchar_p_t"},{0}};
+static swig_type_info _swigt__p_actionTchar_p_t[] = {{"_p_actionTchar_p_t", 0, "action<char * > *", 0},{"_p_actionTchar_p_t"},{0}};
 static swig_type_info _swigt__p_tstTint_t[] = {{"_p_tstTint_t", 0, "tst<int > *", 0},{"_p_tstTint_t"},{0}};
+static swig_type_info _swigt__p_actionTint_t[] = {{"_p_actionTint_t", 0, "action<int > *", 0},{"_p_actionTint_t"},{0}};
 static swig_type_info _swigt__p_tstTPyObject_p_t[] = {{"_p_tstTPyObject_p_t", 0, "tst<PyObject * > *", 0},{"_p_tstTPyObject_p_t"},{"_p_TST", _p_TSTTo_p_tstTPyObject_p_t},{0}};
+static swig_type_info _swigt__p_actionTPyObject_p_t[] = {{"_p_actionTPyObject_p_t", 0, "action<PyObject * > *", 0},{"_p_actionTPyObject_p_t"},{0}};
 static swig_type_info _swigt__p_TST[] = {{"_p_TST", 0, "TST *", 0},{"_p_TST"},{0}};
 
 static swig_type_info *swig_types_initial[] = {
 _swigt__p_tstTchar_p_t, 
+_swigt__p_actionTchar_p_t, 
 _swigt__p_tstTint_t, 
+_swigt__p_actionTint_t, 
 _swigt__p_tstTPyObject_p_t, 
+_swigt__p_actionTPyObject_p_t, 
 _swigt__p_TST, 
 0
 };
