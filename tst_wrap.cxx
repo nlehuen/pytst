@@ -1311,6 +1311,32 @@ static PyObject *_wrap__TST_put(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap__TST_remove(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
+    char *arg2 ;
+    PyObject * obj0 = 0 ;
+    Swig::Director *director = 0;
+    
+    if(!PyArg_ParseTuple(args,(char *)"Os:_TST_remove",&obj0,&arg2)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_PyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    director = dynamic_cast<Swig::Director *>(arg1);
+    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
+    {
+        try {
+            (arg1)->remove(arg2);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap__TST_get_maximum_key_length(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
@@ -1373,6 +1399,28 @@ static PyObject *_wrap__TST_write(PyObject *self, PyObject *args) {
     {
         try {
             (arg1)->write(arg2,arg3);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap__TST_debug_print_root(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:_TST_debug_print_root",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_PyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    {
+        try {
+            (arg1)->debug_print_root();
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2629,6 +2677,29 @@ static PyObject *_wrap_TST___setitem__(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_TST___delitem__(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    TST *arg1 = (TST *) 0 ;
+    char *arg2 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"Os:TST___delitem__",&obj0,&arg2)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_TST,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    {
+        try {
+            (arg1)->__delitem__(arg2);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject * TST_swigregister(PyObject *self, PyObject *args) {
     PyObject *obj;
     if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
@@ -2648,9 +2719,11 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_TST_get", _wrap__TST_get, METH_VARARGS },
 	 { (char *)"_TST_get_or_build", _wrap__TST_get_or_build, METH_VARARGS },
 	 { (char *)"_TST_put", _wrap__TST_put, METH_VARARGS },
+	 { (char *)"_TST_remove", _wrap__TST_remove, METH_VARARGS },
 	 { (char *)"_TST_get_maximum_key_length", _wrap__TST_get_maximum_key_length, METH_VARARGS },
 	 { (char *)"_TST_bytes_allocated", _wrap__TST_bytes_allocated, METH_VARARGS },
 	 { (char *)"_TST_write", _wrap__TST_write, METH_VARARGS },
+	 { (char *)"_TST_debug_print_root", _wrap__TST_debug_print_root, METH_VARARGS },
 	 { (char *)"_TST_swigregister", _TST_swigregister, METH_VARARGS },
 	 { (char *)"delete__Action", _wrap_delete__Action, METH_VARARGS },
 	 { (char *)"_Action_perform", _wrap__Action_perform, METH_VARARGS },
@@ -2705,6 +2778,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"TST_put", _wrap_TST_put, METH_VARARGS },
 	 { (char *)"TST___getitem__", _wrap_TST___getitem__, METH_VARARGS },
 	 { (char *)"TST___setitem__", _wrap_TST___setitem__, METH_VARARGS },
+	 { (char *)"TST___delitem__", _wrap_TST___delitem__, METH_VARARGS },
 	 { (char *)"TST_swigregister", TST_swigregister, METH_VARARGS },
 	 { NULL, NULL }
 };
@@ -2768,6 +2842,11 @@ _swigt__p_TST,
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (END) -------- */
 
 static swig_const_info swig_const_table[] = {
+{ SWIG_PY_INT,     (char *)"UNDEFINED_INDEX", (long) -1, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"RELATION_UNKNOWN", (long) 0, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"RELATION_NEXT", (long) 1, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"RELATION_LEFT", (long) 2, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"RELATION_RIGHT", (long) 3, 0, 0, 0},
 {0}};
 
 #ifdef __cplusplus
