@@ -36,7 +36,7 @@ char* donothing::result() {
 class printer : public donothing {
     public:
         virtual void perform(char* key,int remaining_distance,char* data) {
-            printf("%s = %s\n",key,data);
+            printf("%s = %s (%i)\n",key,data,remaining_distance);
         }
 };
 
@@ -87,6 +87,36 @@ void stringtst::store_data(tst_node<char*>* node,char* data) {
         }
 
 int main(int argc,char** argv) {
+    tst<char*>* linetst=new tst<char*>(16,"<nothing>");
+    linetst->put("abc","abc");
+    linetst->put("abcdef","abcdef");
+    linetst->put("01","01");
+    printf("%s\n",linetst->get("abc"));
+    printf("%s\n",linetst->get("01"));
+    printf("%s\n",linetst->get("foobar"));
+
+    printer p=printer();
+    linetst->walk(NULL,&p);
+
+    printf("-----------------------\n");
+    linetst->scan("abc",&p);
+    printf("-----------------------\n");
+    linetst->scan("01",&p);
+    printf("-----------------------\n");
+    linetst->scan("abc01",&p);
+    printf("-----------------------\n");
+    linetst->scan("abc---01",&p);
+    printf("-----------------------\n");
+    linetst->scan("abcdef---abc--01--abcdef--abc",&p);
+    printf("-----------------------\n");
+    linetst->scan("--abcdef---abc--01--abcdef--abc01",&p);
+    printf("-----------------------\n");
+    linetst->scan("--abcdef---abc--01--abcdef--abc01--",&p);
+
+    delete linetst;
+}
+
+int main2(int argc,char** argv) {
     printf("Taille d'un noeud char* : %i\n",sizeof(tst_node<char*>));
     printf("Taille d'un noeud size_t : %i\n",sizeof(tst_node<int>));
 
@@ -96,7 +126,7 @@ int main(int argc,char** argv) {
         char* line;
         FILE* input;
 
-        input = fopen("prenoms.txt","r");
+        input = fopen("..\\prenoms.txt","r");
         
         if(input==NULL) {
             printf("Impossible d'ouvrir le fichier prenoms.txt\n");
@@ -116,7 +146,7 @@ int main(int argc,char** argv) {
         linetst->walk(NULL,t);
         delete t;
 
-        /*linetst->adjust();
+        linetst->adjust();
         lengthtst->adjust();
         printf("Taille totale line : %i\n",linetst->bytes_allocated());
         printf("Taille totale length : %i\n",lengthtst->bytes_allocated());
@@ -161,10 +191,7 @@ int main(int argc,char** argv) {
 
             delete linetst;
             fclose(finput);
-        }*/
-
-        delete linetst;
-        delete lengthtst;
+        }
     }
 
     return 0;

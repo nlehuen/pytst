@@ -262,6 +262,32 @@ class ListActionPtr(ListAction):
         _swig_setattr(self, ListAction,self.__class__,ListAction)
 _tst.ListAction_swigregister(ListActionPtr)
 
+class TupleListAction(_Action):
+    __swig_setmethods__ = {}
+    for _s in [_Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, TupleListAction, name, value)
+    __swig_getmethods__ = {}
+    for _s in [_Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    __getattr__ = lambda self, name: _swig_getattr(self, TupleListAction, name)
+    def __repr__(self):
+        return "<C TupleListAction instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, TupleListAction, 'this', _tst.new_TupleListAction(*args))
+        _swig_setattr(self, TupleListAction, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_TupleListAction):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.TupleListAction_perform(*args)
+    def result(*args): return _tst.TupleListAction_result(*args)
+
+class TupleListActionPtr(TupleListAction):
+    def __init__(self, this):
+        _swig_setattr(self, TupleListAction, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, TupleListAction, 'thisown', 0)
+        _swig_setattr(self, TupleListAction,self.__class__,TupleListAction)
+_tst.TupleListAction_swigregister(TupleListActionPtr)
+
 class ObjectSerializer(_Serializer):
     __swig_setmethods__ = {}
     for _s in [_Serializer]: __swig_setmethods__.update(_s.__swig_setmethods__)

@@ -156,6 +156,37 @@ class ListAction : public action<PyObject*> {
         PyObject* list;
 };
 
+class TupleListAction : public action<PyObject*> {
+    public:
+        TupleListAction() {
+            list=PyList_New(0);
+            if(!list) {
+                throw TSTException("Cannot build a list");
+            }
+        }
+
+        virtual ~TupleListAction() {
+            Py_DECREF(list);
+        }
+
+        virtual void perform(char* key,int remaining_distance,PyObject* data) {
+            if(!data) {
+                data=Py_None;
+            }
+            PyObject* tuple=Py_BuildValue("siO",key,remaining_distance,data);
+            PyList_Append(list,tuple);
+            Py_DECREF(tuple);
+        }
+
+        virtual PyObject* result() {
+            Py_INCREF(list);
+            return list;
+        }
+
+    private:
+        PyObject* list;
+};
+
 class ObjectSerializer : public serializer<PyObject*> {
     public:
         ObjectSerializer() {
@@ -223,7 +254,7 @@ class ObjectSerializer : public serializer<PyObject*> {
             }
             return result;
         }
-    
+
     private:
         PyObject *dumps,*loads;
 };

@@ -710,10 +710,11 @@ SWIG_Python_InstallConstants(PyObject *d, swig_const_info constants[]) {
 #define  SWIGTYPE_p_tstTPyObject_p_t swig_types[6] 
 #define  SWIGTYPE_p_DictAction swig_types[7] 
 #define  SWIGTYPE_p_ListAction swig_types[8] 
-#define  SWIGTYPE_p_CallableAction swig_types[9] 
-#define  SWIGTYPE_p_ObjectSerializer swig_types[10] 
-#define  SWIGTYPE_p_TST swig_types[11] 
-static swig_type_info *swig_types[13];
+#define  SWIGTYPE_p_TupleListAction swig_types[9] 
+#define  SWIGTYPE_p_CallableAction swig_types[10] 
+#define  SWIGTYPE_p_ObjectSerializer swig_types[11] 
+#define  SWIGTYPE_p_TST swig_types[12] 
+static swig_type_info *swig_types[14];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -2092,6 +2093,111 @@ static PyObject * ListAction_swigregister(PyObject *self, PyObject *args) {
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
+static PyObject *_wrap_new_TupleListAction(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    TupleListAction *result;
+    
+    if(!PyArg_ParseTuple(args,(char *)":new_TupleListAction")) goto fail;
+    {
+        try {
+            result = (TupleListAction *)new TupleListAction();
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_TupleListAction, 1);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_delete_TupleListAction(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    TupleListAction *arg1 = (TupleListAction *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:delete_TupleListAction",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_TupleListAction,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    {
+        try {
+            delete arg1;
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_TupleListAction_perform(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    TupleListAction *arg1 = (TupleListAction *) 0 ;
+    char *arg2 ;
+    int arg3 ;
+    PyObject *arg4 = (PyObject *) 0 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj3 = 0 ;
+    Swig::Director *director = 0;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OsiO:TupleListAction_perform",&obj0,&arg2,&arg3,&obj3)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_TupleListAction,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    arg4 = obj3;
+    director = dynamic_cast<Swig::Director *>(arg1);
+    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
+    {
+        try {
+            (arg1)->perform(arg2,arg3,arg4);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_TupleListAction_result(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    TupleListAction *arg1 = (TupleListAction *) 0 ;
+    PyObject *result;
+    PyObject * obj0 = 0 ;
+    Swig::Director *director = 0;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:TupleListAction_result",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_TupleListAction,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    director = dynamic_cast<Swig::Director *>(arg1);
+    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
+    {
+        try {
+            result = (PyObject *)(arg1)->result();
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = result;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject * TupleListAction_swigregister(PyObject *self, PyObject *args) {
+    PyObject *obj;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
+    SWIG_TypeClientData(SWIGTYPE_p_TupleListAction, obj);
+    Py_INCREF(obj);
+    return Py_BuildValue((char *)"");
+}
 static PyObject *_wrap_new_ObjectSerializer(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     ObjectSerializer *result;
@@ -2552,6 +2658,11 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"ListAction_perform", _wrap_ListAction_perform, METH_VARARGS },
 	 { (char *)"ListAction_result", _wrap_ListAction_result, METH_VARARGS },
 	 { (char *)"ListAction_swigregister", ListAction_swigregister, METH_VARARGS },
+	 { (char *)"new_TupleListAction", _wrap_new_TupleListAction, METH_VARARGS },
+	 { (char *)"delete_TupleListAction", _wrap_delete_TupleListAction, METH_VARARGS },
+	 { (char *)"TupleListAction_perform", _wrap_TupleListAction_perform, METH_VARARGS },
+	 { (char *)"TupleListAction_result", _wrap_TupleListAction_result, METH_VARARGS },
+	 { (char *)"TupleListAction_swigregister", TupleListAction_swigregister, METH_VARARGS },
 	 { (char *)"new_ObjectSerializer", _wrap_new_ObjectSerializer, METH_VARARGS },
 	 { (char *)"delete_ObjectSerializer", _wrap_delete_ObjectSerializer, METH_VARARGS },
 	 { (char *)"ObjectSerializer_write", _wrap_ObjectSerializer_write, METH_VARARGS },
@@ -2578,6 +2689,9 @@ static void *_p_DictActionTo_p_actionTPyObject_p_t(void *x) {
 static void *_p_ListActionTo_p_actionTPyObject_p_t(void *x) {
     return (void *)((action<PyObject * > *)  ((ListAction *) x));
 }
+static void *_p_TupleListActionTo_p_actionTPyObject_p_t(void *x) {
+    return (void *)((action<PyObject * > *)  ((TupleListAction *) x));
+}
 static void *_p_CallableActionTo_p_actionTPyObject_p_t(void *x) {
     return (void *)((action<PyObject * > *)  ((CallableAction *) x));
 }
@@ -2593,12 +2707,13 @@ static void *_p_TSTTo_p_tstTPyObject_p_t(void *x) {
 static swig_type_info _swigt__p_FILE[] = {{"_p_FILE", 0, "FILE *", 0},{"_p_FILE"},{0}};
 static swig_type_info _swigt__p_TSTException[] = {{"_p_TSTException", 0, "TSTException *", 0},{"_p_TSTException"},{0}};
 static swig_type_info _swigt__p_CallableFilter[] = {{"_p_CallableFilter", 0, "CallableFilter *", 0},{"_p_CallableFilter"},{0}};
-static swig_type_info _swigt__p_actionTPyObject_p_t[] = {{"_p_actionTPyObject_p_t", 0, "action<PyObject * > *", 0},{"_p_actionTPyObject_p_t"},{"_p_DictAction", _p_DictActionTo_p_actionTPyObject_p_t},{"_p_ListAction", _p_ListActionTo_p_actionTPyObject_p_t},{"_p_CallableAction", _p_CallableActionTo_p_actionTPyObject_p_t},{0}};
+static swig_type_info _swigt__p_actionTPyObject_p_t[] = {{"_p_actionTPyObject_p_t", 0, "action<PyObject * > *", 0},{"_p_actionTPyObject_p_t"},{"_p_DictAction", _p_DictActionTo_p_actionTPyObject_p_t},{"_p_ListAction", _p_ListActionTo_p_actionTPyObject_p_t},{"_p_TupleListAction", _p_TupleListActionTo_p_actionTPyObject_p_t},{"_p_CallableAction", _p_CallableActionTo_p_actionTPyObject_p_t},{0}};
 static swig_type_info _swigt__p_filterTPyObject_p_t[] = {{"_p_filterTPyObject_p_t", 0, "filter<PyObject * > *", 0},{"_p_CallableFilter", _p_CallableFilterTo_p_filterTPyObject_p_t},{"_p_filterTPyObject_p_t"},{0}};
 static swig_type_info _swigt__p_serializerTPyObject_p_t[] = {{"_p_serializerTPyObject_p_t", 0, "serializer<PyObject * > *", 0},{"_p_serializerTPyObject_p_t"},{"_p_ObjectSerializer", _p_ObjectSerializerTo_p_serializerTPyObject_p_t},{0}};
 static swig_type_info _swigt__p_tstTPyObject_p_t[] = {{"_p_tstTPyObject_p_t", 0, "tst<PyObject * > *", 0},{"_p_tstTPyObject_p_t"},{"_p_TST", _p_TSTTo_p_tstTPyObject_p_t},{0}};
 static swig_type_info _swigt__p_DictAction[] = {{"_p_DictAction", 0, "DictAction *", 0},{"_p_DictAction"},{0}};
 static swig_type_info _swigt__p_ListAction[] = {{"_p_ListAction", 0, "ListAction *", 0},{"_p_ListAction"},{0}};
+static swig_type_info _swigt__p_TupleListAction[] = {{"_p_TupleListAction", 0, "TupleListAction *", 0},{"_p_TupleListAction"},{0}};
 static swig_type_info _swigt__p_CallableAction[] = {{"_p_CallableAction", 0, "CallableAction *", 0},{"_p_CallableAction"},{0}};
 static swig_type_info _swigt__p_ObjectSerializer[] = {{"_p_ObjectSerializer", 0, "ObjectSerializer *", 0},{"_p_ObjectSerializer"},{0}};
 static swig_type_info _swigt__p_TST[] = {{"_p_TST", 0, "TST *", 0},{"_p_TST"},{0}};
@@ -2613,6 +2728,7 @@ _swigt__p_serializerTPyObject_p_t,
 _swigt__p_tstTPyObject_p_t, 
 _swigt__p_DictAction, 
 _swigt__p_ListAction, 
+_swigt__p_TupleListAction, 
 _swigt__p_CallableAction, 
 _swigt__p_ObjectSerializer, 
 _swigt__p_TST, 
