@@ -4,3 +4,5 @@ include TST.cxx
 include tst.h
 include debug.h
 include LICENSE
+include MANIFEST.in
+
