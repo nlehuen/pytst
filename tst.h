@@ -33,9 +33,8 @@ public:
     int right;
     int left;
     int height;
-    int bt_node;
-    int bt_bmnode;
-    int bt_forward;
+    int position;
+    int failure;
 };
 
 template<class S,class T> class action {
@@ -81,10 +80,21 @@ template<class S,class T> class tst {
         void write(FILE* file,serializer<S,T>* writer);
 
         void debug_print_root() {
+            int next_index=UNDEFINED_INDEX;
             printf("Size: %i (%i bytes), next: %i (%i bytes)\n",size,size*sizeof(tst_node<S,T>),next,next*sizeof(tst_node<S,T>));
             if(root!=UNDEFINED_INDEX) {
-                tst_node<S,T>* root_node=array+root;
-                printf("Root index: %i, c: %c, data: 0x%x, height: %i\n",root,root_node->c,(int)root_node->data,root_node->height);
+                tst_node<S,T>* node=array+root;
+                printf("root index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",root,node->next,node->c,(int)node->data,node->height,node->position);
+                next_index = node->next;
+                if(next_index!=UNDEFINED_INDEX) {
+                    node=array+next_index;
+                    printf("root->next index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",next_index,node->next,node->c,(int)node->data,node->height,node->position);
+                    next_index = node->next;
+                    if(next_index!=UNDEFINED_INDEX) {
+                        node=array+next_index;
+                        printf("root->next->next index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",next_index,node->next,node->c,(int)node->data,node->height,node->position);
+                    }
+                }
             }
         }
 
@@ -463,9 +473,8 @@ template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node
     new_node->left=UNDEFINED_INDEX;
     new_node->height=0;
     new_node->data=(T)NULL;
-    new_node->bt_node=UNDEFINED_INDEX;
-    new_node->bt_bmnode=UNDEFINED_INDEX;
-    new_node->bt_forward=1;
+    new_node->position=-1;
+    new_node->failure=UNDEFINED_INDEX;
     store_data(new_node,default_value,0);
 
     return id;
@@ -476,6 +485,7 @@ template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,
 
     if((*current_node)->c==0) {
         (*current_node)->c=(*current_char);
+        (*current_node)->position=current_key_length;
         diff=0;
     }
     else {
@@ -632,7 +642,128 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
 }
 
 template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
-    return tst<S,T>::scan_with_stop_chars(string,NULL,to_perform);
+    // return tst<S,T>::scan_with_stop_chars(string,NULL,to_perform);
+    tst_node<S,T> *current_node=NULL;
+    tst_node<S,T> *match_node=NULL;
+
+    S current_char;
+    S temp_char;
+
+    S *current_pos=string;
+    int current_index=root;
+    S *non_match_start=string;
+    
+    int current_match_index=UNDEFINED_INDEX;
+    S *current_match_start=NULL;
+    S *current_match_end=NULL;
+
+    current_char=*current_pos;
+    current_node=array+current_index;
+    while(current_char!=0) {
+        current_node=array+current_index;
+        int diff=current_char-current_node->c;
+        if(diff>0) {
+            current_index=current_node->right;
+        }
+        else if(diff<0) {
+            current_index=current_node->left;
+        }
+        else {
+            // ok, le caractère courant est accepté
+            if(current_match_start==NULL) {
+                current_match_start=current_pos;
+            }
+            if(current_node->data!=default_value) {
+                // définition du match
+                current_match_end=current_pos+1;
+                current_match_index=current_index;
+
+                // debug
+                temp_char=*current_match_end;
+                *current_match_end=0;
+                *current_match_end=temp_char;
+            }
+            current_pos++;
+            if(*current_pos) {
+                current_index=current_node->next;
+            }
+            else {
+                current_index=UNDEFINED_INDEX;
+            }
+        }
+                
+        if(current_index==UNDEFINED_INDEX) {
+            // Le caractère courant n'est pas accepté
+            if(current_match_index!=UNDEFINED_INDEX) {
+                // envoi de ce qui précède le match
+                if(current_match_start>non_match_start) {
+                    temp_char=*current_match_start;
+                    *current_match_start=0;
+                    to_perform->perform(non_match_start,non_match_start-current_match_start,default_value);
+                    *current_match_start=temp_char;
+                }
+                
+                // envoi du match
+                match_node=array+current_match_index;
+                temp_char=*current_match_end;
+                *current_match_end=0;
+                to_perform->perform(current_match_start,current_match_end-current_match_start,match_node->data);
+                *current_match_end=temp_char;
+                non_match_start=current_match_end;
+   
+                // annulation du match
+                current_match_index=UNDEFINED_INDEX;
+                
+                // backtrack de relou pour l'instant
+                current_pos = current_match_end;
+                current_index = root;
+            }
+            else if(current_match_start!=NULL) {
+                // backtrack de relou pour l'instant.
+                current_pos = current_match_start+1;
+                current_index = root;
+            }
+            else {
+                current_pos++;
+                current_index = root;
+            }
+
+            // On annule le match
+            current_match_start=NULL;
+        }
+
+        current_char=*current_pos;
+    }
+
+    if(current_match_index!=UNDEFINED_INDEX) {
+        // envoi de ce qui précède le match
+        if(current_match_start>non_match_start) {
+            temp_char=*current_match_start;
+            *current_match_start=0;
+            to_perform->perform(non_match_start,non_match_start-current_match_start,default_value);
+            *current_match_start=temp_char;
+        }
+
+        // envoi du match
+        match_node=array+current_match_index;
+        temp_char=*current_match_end;
+        *current_match_end=0;
+        to_perform->perform(current_match_start,current_match_end-current_match_start,match_node->data);
+        *current_match_end=temp_char;
+        non_match_start=current_match_end;
+        
+        // annulation du match
+        current_match_index=UNDEFINED_INDEX;
+    }
+    current_match_start=NULL;
+    if(current_pos>non_match_start) {
+        temp_char=*current_pos;
+        *current_pos=0;
+        to_perform->perform(non_match_start,non_match_start-current_pos,default_value);
+        *current_pos=temp_char;
+    }
+    
+    return to_perform->result();
 }
 
 template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform) {
@@ -731,7 +862,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     // Au final, on a une version multi-chaines de l'algo Knuth-Morris-Pratt : Knuth-Morris-Pratt-Lehuen ??? ;)
                     // Ben non, en fait, c'est l'algo Aho-Corasick http://www-sr.informatik.uni-tuebingen.de/~buehler/AC/AC.html :(
                     // La seule différence, c'est qu'ici je vais calculer le 'Failure Pattern' au fur et à mesure des besoins.
-                    if(current_node->bt_node==UNDEFINED_INDEX) {
+                    /*if(current_node->bt_node==UNDEFINED_INDEX) {
                         size_t key_size=pos-best_match_start-1;
                        
                         if(key_size==0) {
@@ -782,7 +913,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                                 }
                             }
                         }                        
-                    }
+                    }*/
                  
                     pos = best_match_start+1;
                     best_match_start = NULL;
