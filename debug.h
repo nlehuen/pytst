@@ -2,7 +2,7 @@
 #define __DEBUG_H_INCLUDED__
 // #define NDEBUG
 
-// #ifdef NDEBUG
+//#ifdef NDEBUG
     #define LOG0(a)
     #define LOG1(a,b)
     #define LOG2(a,b,c)

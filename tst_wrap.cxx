@@ -701,21 +701,18 @@ SWIG_Python_InstallConstants(PyObject *d, swig_const_info constants[]) {
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define  SWIGTYPE_p_TST swig_types[0] 
-#define  SWIGTYPE_p_actionTint_t swig_types[1] 
-#define  SWIGTYPE_p_filterTint_t swig_types[2] 
-#define  SWIGTYPE_p_tstTint_t swig_types[3] 
-#define  SWIGTYPE_p_actionTchar_p_t swig_types[4] 
-#define  SWIGTYPE_p_filterTchar_p_t swig_types[5] 
-#define  SWIGTYPE_p_tstTchar_p_t swig_types[6] 
-#define  SWIGTYPE_p_CallableAction swig_types[7] 
-#define  SWIGTYPE_p_CallableFilter swig_types[8] 
-#define  SWIGTYPE_p_ListAction swig_types[9] 
-#define  SWIGTYPE_p_DictAction swig_types[10] 
-#define  SWIGTYPE_p_tstTPyObject_p_t swig_types[11] 
-#define  SWIGTYPE_p_filterTPyObject_p_t swig_types[12] 
-#define  SWIGTYPE_p_actionTPyObject_p_t swig_types[13] 
-static swig_type_info *swig_types[15];
+#define  SWIGTYPE_p_tstTint_t swig_types[0] 
+#define  SWIGTYPE_p_filterTint_t swig_types[1] 
+#define  SWIGTYPE_p_actionTint_t swig_types[2] 
+#define  SWIGTYPE_p_CallableFilter swig_types[3] 
+#define  SWIGTYPE_p_actionTPyObject_p_t swig_types[4] 
+#define  SWIGTYPE_p_filterTPyObject_p_t swig_types[5] 
+#define  SWIGTYPE_p_tstTPyObject_p_t swig_types[6] 
+#define  SWIGTYPE_p_DictAction swig_types[7] 
+#define  SWIGTYPE_p_ListAction swig_types[8] 
+#define  SWIGTYPE_p_CallableAction swig_types[9] 
+#define  SWIGTYPE_p_TST swig_types[10] 
+static swig_type_info *swig_types[12];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -964,45 +961,6 @@ int SwigDirector_IntegerFilter::perform(char *key, int remaining_distance, int d
 }
 
 
-SwigDirector_StringAction::SwigDirector_StringAction(PyObject *self, bool disown): action<char * >(), Swig::Director(self, disown) {
-    
-}
-
-
-
-void SwigDirector_StringAction::perform(char *key, int remaining_distance, char *data) {
-    PyObject *result;
-    
-    if (swig_get_up()) {
-        action<char * >::perform(key,remaining_distance,data);
-        return;
-    }
-    result = PyObject_CallMethod(swig_get_self(), "perform", "sis" ,key,remaining_distance,data);
-    Py_XDECREF(result);
-}
-
-
-SwigDirector_StringFilter::SwigDirector_StringFilter(PyObject *self, bool disown): filter<char * >(), Swig::Director(self, disown) {
-    
-}
-
-
-
-char * SwigDirector_StringFilter::perform(char *key, int remaining_distance, char *data) {
-    char *c_result ;
-    PyObject *result;
-    
-    if (swig_get_up()) {
-        return filter<char * >::perform(key,remaining_distance,data);
-    }
-    result = PyObject_CallMethod(swig_get_self(), "perform", "sis" ,key,remaining_distance,data);
-    c_result = (char *) PyString_AsString(result);
-    if (PyErr_Occurred()) throw Swig::DirectorTypeMismatchException("Error converting Python object using PyString_AsString");
-    Py_XDECREF(result);
-    return c_result;
-}
-
-
 SwigDirector_Action::SwigDirector_Action(PyObject *self, bool disown): action<PyObject * >(), Swig::Director(self, disown) {
     
 }
@@ -1124,13 +1082,18 @@ static PyObject *_wrap_IntegerTST_almost(PyObject *self, PyObject *args) {
     filter<int > *arg5 = (filter<int > *) 0 ;
     action<int > *arg6 = (action<int > *) 0 ;
     PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    PyObject * obj3 = 0 ;
     PyObject * obj4 = 0 ;
-    PyObject * obj5 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OsiiOO:IntegerTST_almost",&obj0,&arg2,&arg3,&arg4,&obj4,&obj5)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OOiOO:IntegerTST_almost",&obj0,&obj1,&arg4,&obj3,&obj4)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj4,(void **) &arg5, SWIGTYPE_p_filterTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj5,(void **) &arg6, SWIGTYPE_p_actionTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    {
+        arg2 = (char *) PyString_AsString(obj1);
+        arg3 = (int) PyString_Size(obj1);
+    }
+    if ((SWIG_ConvertPtr(obj3,(void **) &arg5, SWIGTYPE_p_filterTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj4,(void **) &arg6, SWIGTYPE_p_actionTint_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     (arg1)->almost(arg2,arg3,arg4,arg5,arg6);
     
     Py_INCREF(Py_None); resultobj = Py_None;
@@ -1471,432 +1434,6 @@ static PyObject * IntegerFilter_swigregister(PyObject *self, PyObject *args) {
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
-static PyObject *_wrap_new_StringTST(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    int arg1 ;
-    char *arg2 ;
-    tst<char * > *result;
-    
-    if(!PyArg_ParseTuple(args,(char *)"is:new_StringTST",&arg1,&arg2)) goto fail;
-    result = (tst<char * > *)new tst<char * >(arg1,arg2);
-    
-    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_tstTchar_p_t, 1);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_delete_StringTST(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:delete_StringTST",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    delete arg1;
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST_adjust(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:StringTST_adjust",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    (arg1)->adjust();
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST_walk(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    filter<char * > *arg2 = (filter<char * > *) 0 ;
-    action<char * > *arg3 = (action<char * > *) 0 ;
-    PyObject * obj0 = 0 ;
-    PyObject * obj1 = 0 ;
-    PyObject * obj2 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OOO:StringTST_walk",&obj0,&obj1,&obj2)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_filterTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj2,(void **) &arg3, SWIGTYPE_p_actionTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    (arg1)->walk(arg2,arg3);
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST_almost(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    char *arg2 ;
-    int arg3 ;
-    int arg4 ;
-    filter<char * > *arg5 = (filter<char * > *) 0 ;
-    action<char * > *arg6 = (action<char * > *) 0 ;
-    PyObject * obj0 = 0 ;
-    PyObject * obj4 = 0 ;
-    PyObject * obj5 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OsiiOO:StringTST_almost",&obj0,&arg2,&arg3,&arg4,&obj4,&obj5)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj4,(void **) &arg5, SWIGTYPE_p_filterTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj5,(void **) &arg6, SWIGTYPE_p_actionTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    (arg1)->almost(arg2,arg3,arg4,arg5,arg6);
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST_common_prefix(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    char *arg2 ;
-    filter<char * > *arg3 = (filter<char * > *) 0 ;
-    action<char * > *arg4 = (action<char * > *) 0 ;
-    PyObject * obj0 = 0 ;
-    PyObject * obj2 = 0 ;
-    PyObject * obj3 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OsOO:StringTST_common_prefix",&obj0,&arg2,&obj2,&obj3)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj2,(void **) &arg3, SWIGTYPE_p_filterTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj3,(void **) &arg4, SWIGTYPE_p_actionTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    (arg1)->common_prefix(arg2,arg3,arg4);
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST_get(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    char *arg2 ;
-    char *result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"Os:StringTST_get",&obj0,&arg2)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (char *)(arg1)->get(arg2);
-    
-    resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST___getitem__(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    char *arg2 ;
-    char *result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"Os:StringTST___getitem__",&obj0,&arg2)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (char *)(arg1)->__getitem__(arg2);
-    
-    resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST_put(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    char *arg2 ;
-    char *arg3 ;
-    char *result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"Oss:StringTST_put",&obj0,&arg2,&arg3)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (char *)(arg1)->put(arg2,arg3);
-    
-    resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST___setitem__(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    char *arg2 ;
-    char *arg3 ;
-    char *result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"Oss:StringTST___setitem__",&obj0,&arg2,&arg3)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (char *)(arg1)->__setitem__(arg2,arg3);
-    
-    resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST_debug(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:StringTST_debug",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    (arg1)->debug();
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST_get_maximum_key_length(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:StringTST_get_maximum_key_length",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (int)(arg1)->get_maximum_key_length();
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringTST_bytes_allocated(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    tst<char * > *arg1 = (tst<char * > *) 0 ;
-    size_t result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:StringTST_bytes_allocated",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (arg1)->bytes_allocated();
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject * StringTST_swigregister(PyObject *self, PyObject *args) {
-    PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
-    SWIG_TypeClientData(SWIGTYPE_p_tstTchar_p_t, obj);
-    Py_INCREF(obj);
-    return Py_BuildValue((char *)"");
-}
-static PyObject *_wrap_new_StringAction(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    PyObject *arg1 = (PyObject *) 0 ;
-    action<char * > *result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:new_StringAction",&obj0)) goto fail;
-    arg1 = obj0;
-    if ( arg1 != Py_None ) {
-        /* subclassed */
-        result = (action<char * > *)new SwigDirector_StringAction(arg1,false);
-        
-    } else {
-        result = (action<char * > *)new action<char * >();
-        
-    }
-    
-    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_actionTchar_p_t, 1);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_delete_StringAction(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    action<char * > *arg1 = (action<char * > *) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:delete_StringAction",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    delete arg1;
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringAction_perform(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    action<char * > *arg1 = (action<char * > *) 0 ;
-    char *arg2 ;
-    int arg3 ;
-    char *arg4 ;
-    PyObject * obj0 = 0 ;
-    Swig::Director *director = 0;
-    
-    if(!PyArg_ParseTuple(args,(char *)"Osis:StringAction_perform",&obj0,&arg2,&arg3,&arg4)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
-    (arg1)->perform(arg2,arg3,arg4);
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_disown_StringAction(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    action<char * > *arg1 = (action<char * > *) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:disown_StringAction",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_actionTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    {
-        Swig::Director *director = dynamic_cast<Swig::Director *>(arg1);
-        if (director) director->swig_disown();
-    }
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject * StringAction_swigregister(PyObject *self, PyObject *args) {
-    PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
-    SWIG_TypeClientData(SWIGTYPE_p_actionTchar_p_t, obj);
-    Py_INCREF(obj);
-    return Py_BuildValue((char *)"");
-}
-static PyObject *_wrap_new_StringFilter(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    PyObject *arg1 = (PyObject *) 0 ;
-    filter<char * > *result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:new_StringFilter",&obj0)) goto fail;
-    arg1 = obj0;
-    if ( arg1 != Py_None ) {
-        /* subclassed */
-        result = (filter<char * > *)new SwigDirector_StringFilter(arg1,false);
-        
-    } else {
-        result = (filter<char * > *)new filter<char * >();
-        
-    }
-    
-    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_filterTchar_p_t, 1);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_delete_StringFilter(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    filter<char * > *arg1 = (filter<char * > *) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:delete_StringFilter",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_filterTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    delete arg1;
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_StringFilter_perform(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    filter<char * > *arg1 = (filter<char * > *) 0 ;
-    char *arg2 ;
-    int arg3 ;
-    char *arg4 ;
-    char *result;
-    PyObject * obj0 = 0 ;
-    Swig::Director *director = 0;
-    
-    if(!PyArg_ParseTuple(args,(char *)"Osis:StringFilter_perform",&obj0,&arg2,&arg3,&arg4)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_filterTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    director = dynamic_cast<Swig::Director *>(arg1);
-    if (director && (director->swig_get_self()==obj0)) director->swig_set_up();
-    result = (char *)(arg1)->perform(arg2,arg3,arg4);
-    
-    resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_disown_StringFilter(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    filter<char * > *arg1 = (filter<char * > *) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:disown_StringFilter",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_filterTchar_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    {
-        Swig::Director *director = dynamic_cast<Swig::Director *>(arg1);
-        if (director) director->swig_disown();
-    }
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject * StringFilter_swigregister(PyObject *self, PyObject *args) {
-    PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
-    SWIG_TypeClientData(SWIGTYPE_p_filterTchar_p_t, obj);
-    Py_INCREF(obj);
-    return Py_BuildValue((char *)"");
-}
 static PyObject *_wrap_new__object_tst(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     int arg1 ;
@@ -1978,13 +1515,18 @@ static PyObject *_wrap__object_tst_almost(PyObject *self, PyObject *args) {
     filter<PyObject * > *arg5 = (filter<PyObject * > *) 0 ;
     action<PyObject * > *arg6 = (action<PyObject * > *) 0 ;
     PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    PyObject * obj3 = 0 ;
     PyObject * obj4 = 0 ;
-    PyObject * obj5 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OsiiOO:_object_tst_almost",&obj0,&arg2,&arg3,&arg4,&obj4,&obj5)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OOiOO:_object_tst_almost",&obj0,&obj1,&arg4,&obj3,&obj4)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj4,(void **) &arg5, SWIGTYPE_p_filterTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj5,(void **) &arg6, SWIGTYPE_p_actionTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    {
+        arg2 = (char *) PyString_AsString(obj1);
+        arg3 = (int) PyString_Size(obj1);
+    }
+    if ((SWIG_ConvertPtr(obj3,(void **) &arg5, SWIGTYPE_p_filterTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj4,(void **) &arg6, SWIGTYPE_p_actionTPyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     (arg1)->almost(arg2,arg3,arg4,arg5,arg6);
     
     Py_INCREF(Py_None); resultobj = Py_None;
@@ -2762,30 +2304,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"IntegerFilter_perform", _wrap_IntegerFilter_perform, METH_VARARGS },
 	 { (char *)"disown_IntegerFilter", _wrap_disown_IntegerFilter, METH_VARARGS },
 	 { (char *)"IntegerFilter_swigregister", IntegerFilter_swigregister, METH_VARARGS },
-	 { (char *)"new_StringTST", _wrap_new_StringTST, METH_VARARGS },
-	 { (char *)"delete_StringTST", _wrap_delete_StringTST, METH_VARARGS },
-	 { (char *)"StringTST_adjust", _wrap_StringTST_adjust, METH_VARARGS },
-	 { (char *)"StringTST_walk", _wrap_StringTST_walk, METH_VARARGS },
-	 { (char *)"StringTST_almost", _wrap_StringTST_almost, METH_VARARGS },
-	 { (char *)"StringTST_common_prefix", _wrap_StringTST_common_prefix, METH_VARARGS },
-	 { (char *)"StringTST_get", _wrap_StringTST_get, METH_VARARGS },
-	 { (char *)"StringTST___getitem__", _wrap_StringTST___getitem__, METH_VARARGS },
-	 { (char *)"StringTST_put", _wrap_StringTST_put, METH_VARARGS },
-	 { (char *)"StringTST___setitem__", _wrap_StringTST___setitem__, METH_VARARGS },
-	 { (char *)"StringTST_debug", _wrap_StringTST_debug, METH_VARARGS },
-	 { (char *)"StringTST_get_maximum_key_length", _wrap_StringTST_get_maximum_key_length, METH_VARARGS },
-	 { (char *)"StringTST_bytes_allocated", _wrap_StringTST_bytes_allocated, METH_VARARGS },
-	 { (char *)"StringTST_swigregister", StringTST_swigregister, METH_VARARGS },
-	 { (char *)"new_StringAction", _wrap_new_StringAction, METH_VARARGS },
-	 { (char *)"delete_StringAction", _wrap_delete_StringAction, METH_VARARGS },
-	 { (char *)"StringAction_perform", _wrap_StringAction_perform, METH_VARARGS },
-	 { (char *)"disown_StringAction", _wrap_disown_StringAction, METH_VARARGS },
-	 { (char *)"StringAction_swigregister", StringAction_swigregister, METH_VARARGS },
-	 { (char *)"new_StringFilter", _wrap_new_StringFilter, METH_VARARGS },
-	 { (char *)"delete_StringFilter", _wrap_delete_StringFilter, METH_VARARGS },
-	 { (char *)"StringFilter_perform", _wrap_StringFilter_perform, METH_VARARGS },
-	 { (char *)"disown_StringFilter", _wrap_disown_StringFilter, METH_VARARGS },
-	 { (char *)"StringFilter_swigregister", StringFilter_swigregister, METH_VARARGS },
 	 { (char *)"new__object_tst", _wrap_new__object_tst, METH_VARARGS },
 	 { (char *)"delete__object_tst", _wrap_delete__object_tst, METH_VARARGS },
 	 { (char *)"_object_tst_adjust", _wrap__object_tst_adjust, METH_VARARGS },
@@ -2841,12 +2359,6 @@ static PyMethodDef SwigMethods[] = {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static void *_p_TSTTo_p_tstTPyObject_p_t(void *x) {
-    return (void *)((tst<PyObject * > *)  ((TST *) x));
-}
-static void *_p_CallableFilterTo_p_filterTPyObject_p_t(void *x) {
-    return (void *)((filter<PyObject * > *)  ((CallableFilter *) x));
-}
 static void *_p_DictActionTo_p_actionTPyObject_p_t(void *x) {
     return (void *)((action<PyObject * > *)  ((DictAction *) x));
 }
@@ -2856,36 +2368,36 @@ static void *_p_ListActionTo_p_actionTPyObject_p_t(void *x) {
 static void *_p_CallableActionTo_p_actionTPyObject_p_t(void *x) {
     return (void *)((action<PyObject * > *)  ((CallableAction *) x));
 }
-static swig_type_info _swigt__p_TST[] = {{"_p_TST", 0, "TST *", 0},{"_p_TST"},{0}};
-static swig_type_info _swigt__p_actionTint_t[] = {{"_p_actionTint_t", 0, "action<int > *", 0},{"_p_actionTint_t"},{0}};
-static swig_type_info _swigt__p_filterTint_t[] = {{"_p_filterTint_t", 0, "filter<int > *", 0},{"_p_filterTint_t"},{0}};
+static void *_p_CallableFilterTo_p_filterTPyObject_p_t(void *x) {
+    return (void *)((filter<PyObject * > *)  ((CallableFilter *) x));
+}
+static void *_p_TSTTo_p_tstTPyObject_p_t(void *x) {
+    return (void *)((tst<PyObject * > *)  ((TST *) x));
+}
 static swig_type_info _swigt__p_tstTint_t[] = {{"_p_tstTint_t", 0, "tst<int > *", 0},{"_p_tstTint_t"},{0}};
-static swig_type_info _swigt__p_actionTchar_p_t[] = {{"_p_actionTchar_p_t", 0, "action<char * > *", 0},{"_p_actionTchar_p_t"},{0}};
-static swig_type_info _swigt__p_filterTchar_p_t[] = {{"_p_filterTchar_p_t", 0, "filter<char * > *", 0},{"_p_filterTchar_p_t"},{0}};
-static swig_type_info _swigt__p_tstTchar_p_t[] = {{"_p_tstTchar_p_t", 0, "tst<char * > *", 0},{"_p_tstTchar_p_t"},{0}};
-static swig_type_info _swigt__p_CallableAction[] = {{"_p_CallableAction", 0, "CallableAction *", 0},{"_p_CallableAction"},{0}};
+static swig_type_info _swigt__p_filterTint_t[] = {{"_p_filterTint_t", 0, "filter<int > *", 0},{"_p_filterTint_t"},{0}};
+static swig_type_info _swigt__p_actionTint_t[] = {{"_p_actionTint_t", 0, "action<int > *", 0},{"_p_actionTint_t"},{0}};
 static swig_type_info _swigt__p_CallableFilter[] = {{"_p_CallableFilter", 0, "CallableFilter *", 0},{"_p_CallableFilter"},{0}};
-static swig_type_info _swigt__p_ListAction[] = {{"_p_ListAction", 0, "ListAction *", 0},{"_p_ListAction"},{0}};
-static swig_type_info _swigt__p_DictAction[] = {{"_p_DictAction", 0, "DictAction *", 0},{"_p_DictAction"},{0}};
-static swig_type_info _swigt__p_tstTPyObject_p_t[] = {{"_p_tstTPyObject_p_t", 0, "tst<PyObject * > *", 0},{"_p_tstTPyObject_p_t"},{"_p_TST", _p_TSTTo_p_tstTPyObject_p_t},{0}};
-static swig_type_info _swigt__p_filterTPyObject_p_t[] = {{"_p_filterTPyObject_p_t", 0, "filter<PyObject * > *", 0},{"_p_CallableFilter", _p_CallableFilterTo_p_filterTPyObject_p_t},{"_p_filterTPyObject_p_t"},{0}};
 static swig_type_info _swigt__p_actionTPyObject_p_t[] = {{"_p_actionTPyObject_p_t", 0, "action<PyObject * > *", 0},{"_p_actionTPyObject_p_t"},{"_p_DictAction", _p_DictActionTo_p_actionTPyObject_p_t},{"_p_ListAction", _p_ListActionTo_p_actionTPyObject_p_t},{"_p_CallableAction", _p_CallableActionTo_p_actionTPyObject_p_t},{0}};
+static swig_type_info _swigt__p_filterTPyObject_p_t[] = {{"_p_filterTPyObject_p_t", 0, "filter<PyObject * > *", 0},{"_p_CallableFilter", _p_CallableFilterTo_p_filterTPyObject_p_t},{"_p_filterTPyObject_p_t"},{0}};
+static swig_type_info _swigt__p_tstTPyObject_p_t[] = {{"_p_tstTPyObject_p_t", 0, "tst<PyObject * > *", 0},{"_p_tstTPyObject_p_t"},{"_p_TST", _p_TSTTo_p_tstTPyObject_p_t},{0}};
+static swig_type_info _swigt__p_DictAction[] = {{"_p_DictAction", 0, "DictAction *", 0},{"_p_DictAction"},{0}};
+static swig_type_info _swigt__p_ListAction[] = {{"_p_ListAction", 0, "ListAction *", 0},{"_p_ListAction"},{0}};
+static swig_type_info _swigt__p_CallableAction[] = {{"_p_CallableAction", 0, "CallableAction *", 0},{"_p_CallableAction"},{0}};
+static swig_type_info _swigt__p_TST[] = {{"_p_TST", 0, "TST *", 0},{"_p_TST"},{0}};
 
 static swig_type_info *swig_types_initial[] = {
-_swigt__p_TST, 
-_swigt__p_actionTint_t, 
-_swigt__p_filterTint_t, 
 _swigt__p_tstTint_t, 
-_swigt__p_actionTchar_p_t, 
-_swigt__p_filterTchar_p_t, 
-_swigt__p_tstTchar_p_t, 
-_swigt__p_CallableAction, 
+_swigt__p_filterTint_t, 
+_swigt__p_actionTint_t, 
 _swigt__p_CallableFilter, 
-_swigt__p_ListAction, 
-_swigt__p_DictAction, 
-_swigt__p_tstTPyObject_p_t, 
-_swigt__p_filterTPyObject_p_t, 
 _swigt__p_actionTPyObject_p_t, 
+_swigt__p_filterTPyObject_p_t, 
+_swigt__p_tstTPyObject_p_t, 
+_swigt__p_DictAction, 
+_swigt__p_ListAction, 
+_swigt__p_CallableAction, 
+_swigt__p_TST, 
 0
 };
 

@@ -173,7 +173,7 @@ template<class T> void tst<T>::walk_recurse(tst_node<T>* current_node,char* curr
     }
 
     T data = current_node->data;
-    if(filter) {
+    if(data!=default_value && filter) {
         data = filter->perform(current_key,0,data);
     }
     if(data!=default_value && to_perform) {
@@ -221,7 +221,7 @@ template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* cu
     }
 
     T data = current_node->data;
-    if(filter) {
+    if(data!=default_value && filter) {
         data = filter->perform(current_key,0,data);
     }
     if(data!=default_value && to_perform) {

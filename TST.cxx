@@ -16,10 +16,14 @@ class CallableAction : public action<PyObject*> {
         }
 
         virtual void perform(char* key,int remaining_distance,PyObject* data) {
+            if(!data) {
+                data=Py_None;
+            }
+
             PyObject* tuple=PyTuple_New(3);
             PyTuple_SetItem(tuple,0,PyString_FromString(key));
             PyTuple_SetItem(tuple,1,PyInt_FromLong(remaining_distance));
-            Py_XINCREF(data);
+            Py_INCREF(data);
             PyTuple_SetItem(tuple,2,data);
             PyObject_CallObject(callable,tuple);
             Py_DECREF(tuple);
@@ -41,13 +45,21 @@ class CallableFilter : public filter<PyObject*> {
         }
 
         virtual PyObject* perform(char* key,int remaining_distance,PyObject* data) {
+            if(!data) {
+                data=Py_None;
+            }
+
             PyObject* tuple=PyTuple_New(3);
             PyTuple_SetItem(tuple,0,PyString_FromString(key));
             PyTuple_SetItem(tuple,1,PyInt_FromLong(remaining_distance));
-            Py_XINCREF(data);
+            Py_INCREF(data);
             PyTuple_SetItem(tuple,2,data);
             PyObject* result=PyObject_CallObject(callable,tuple);
-            Py_XINCREF(result);
+            if(result==NULL) {
+                PyErr_Print();
+                result=Py_None;
+            }
+            Py_INCREF(result);
             Py_DECREF(tuple);
             return result;
         }
@@ -67,6 +79,10 @@ class DictAction : public action<PyObject*> {
         }
 
         virtual void perform(char* key,int remaining_distance,PyObject* data) {
+            if(!data) {
+                data=Py_None;
+            }
+
             PyObject* tuple=PyDict_GetItemString(dict,key);
             if(tuple!=NULL) {
                 long value=PyInt_AsLong(PyTuple_GetItem(tuple,0));
@@ -80,7 +96,7 @@ class DictAction : public action<PyObject*> {
 
             tuple=PyTuple_New(2);
             PyTuple_SetItem(tuple,0,PyInt_FromLong(remaining_distance));
-            Py_XINCREF(data);
+            Py_INCREF(data);
             PyTuple_SetItem(tuple,1,data);
             PyDict_SetItemString(dict,key,tuple);
         };
@@ -105,15 +121,12 @@ class ListAction : public action<PyObject*> {
         }
 
         virtual void perform(char* key,int remaining_distance,PyObject* data) {
-            PyObject* tuple=PyTuple_New(2);
-            PyTuple_SetItem(tuple,0,PyString_FromString(key));
-
-            Py_XINCREF(data);
-            if(data!=Py_None) {
-                PyTuple_SetItem(tuple,1,data);
-                PyList_Append(list,tuple);
+            if(!data) {
+                data=Py_None;
             }
-        };
+            Py_INCREF(data);
+            PyList_Append(list,data);
+        }
 
         PyObject* get_list() {
             Py_INCREF(list);
@@ -159,7 +172,9 @@ PyObject* TST::__getitem__(char* string) {
 
 PyObject* TST::put(char* string,PyObject* data) {
     Py_XINCREF(data);
-    return tst<PyObject*>::put(string,data);
+    PyObject* result = tst<PyObject*>::put(string,data);
+    Py_XINCREF(result);
+    return result;
 }
 
 PyObject* TST::__setitem__(char* string,PyObject* data) {

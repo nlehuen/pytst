@@ -1,5 +1,7 @@
 %module(directors="1") tst
 
+%apply (char *STRING, int LENGTH) { (char *string, int string_length) };
+
 %{
 #include "TST.cxx"
 %}
@@ -17,9 +19,9 @@
 %template(IntegerAction) action<int>;
 %template(IntegerFilter) filter<int>;
 
-%template(StringTST) tst<char*>;
+/*%template(StringTST) tst<char*>;
 %template(StringAction) action<char*>;
-%template(StringFilter) filter<char*>;
+%template(StringFilter) filter<char*>;*/
 
 %template(_object_tst) tst<PyObject*>;
 %template(Action) action<PyObject*>;

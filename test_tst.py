@@ -3,7 +3,7 @@ from tcc.util import levenshtein
 
 import time
 
-t = tst.TST(8,'')
+t = tst.TST(8,None)
 u = tst.IntegerTST(8,0)
 
 start = time.time()
@@ -31,7 +31,7 @@ for s in ('Nicolas;H','Yohan;H'):
     for i in range(7):
         print "almost(%i)"%i
         _dict = tst.DictAction()
-        t.almost(s,len(s),i,None,_dict)
+        t.almost(s,i,None,_dict)
         print len(_dict.get_dict())
 #        for key,item in _dict:
 #            d = levenshtein(key,s);
@@ -40,6 +40,29 @@ for s in ('Nicolas;H','Yohan;H'):
 
 print 'maximum key length :', t.get_maximum_key_length()
 
-la = tst.ListAction();
-t.walk(tst.CallableFilter(lambda x,y,z: z),la)
-print la.get_list()
+import re
+r = re.compile('(.*)[;=](.*)')
+
+start = time.time()
+for i in range(500):
+    la = action();
+    t.walk(tst.CallableFilter(lambda x,y,z: r.match(z).group(1)),la)
+print 'la en python : ',time.time()-start
+
+start = time.time()
+for i in range(500):
+    la = tst.DictAction();
+    t.walk(tst.CallableFilter(lambda x,y,z: r.match(z).group(1)),la)
+print 'la en C++ : ',time.time()-start
+
+start = time.time()
+for i in range(500):
+    la = tst.DictAction();
+    t.walk(None,la)
+print 'la en C++ sans filter : ',time.time()-start
+
+start = time.time()
+for i in range(500):
+    la = tst.ListAction();
+    t.walk(None,la)
+print 'listaction en C++ sans filter: ',time.time()-start

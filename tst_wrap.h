@@ -30,22 +30,6 @@ public:
 };
 
 
-class SwigDirector_StringAction : public action<char * >, public Swig::Director {
-
-public:
-    SwigDirector_StringAction(PyObject *self, bool disown = false);
-    virtual void perform(char *key, int remaining_distance, char *data);
-};
-
-
-class SwigDirector_StringFilter : public filter<char * >, public Swig::Director {
-
-public:
-    SwigDirector_StringFilter(PyObject *self, bool disown = false);
-    virtual char * perform(char *key, int remaining_distance, char *data);
-};
-
-
 class SwigDirector_Action : public action<PyObject * >, public Swig::Director {
 
 public:
