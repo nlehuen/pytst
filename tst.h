@@ -112,7 +112,7 @@ template<class S,class T> class tst {
         virtual void remove_node(int* current_index,S* current_char,int current_key_length);
         tst_node<S,T>* find_node(int* current_index,int* best_node, S* current_char);
 
-        T compute_backtrack(tst_node<S,T> *current_node,S *match,S *match,S *current_pos);
+        void compute_backtrack(tst_node<S,T> *current_node,S *match,S *match,S *current_pos);
             
         void balance_node(tst_node<S,T>** current_node,int* current_index);
         void ll(tst_node<S,T>** current_node,int* current_index);
@@ -641,7 +641,7 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
     return NULL;
 }
 
-template<class S,class T> T tst<S,T>::compute_backtrack(tst_node<S,T> *current_node,S *start, S *match,S *current_pos) {
+template<class S,class T> void tst<S,T>::compute_backtrack(tst_node<S,T> *current_node,S *start, S *match,S *current_pos) {
     if(current_node->backtrack==UNDEFINED_INDEX) {
         S temp_char=*match;
         *match=0;
@@ -666,7 +666,7 @@ template<class S,class T> T tst<S,T>::compute_backtrack(tst_node<S,T> *current_n
                     S* best_match_end=forward_pos+(array+current_node->backtrack_match_index)->position+1;
                     S temp_char2=*best_match_end;
                     *best_match_end=0;
-                    printf(" with best match \"%s\"\n",forward_pos,forward_pos);
+                    printf(" with best match \"%s\"\n",forward_pos);
                     *best_match_end=temp_char2;
                 }
                 else {
