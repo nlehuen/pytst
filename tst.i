@@ -1,4 +1,5 @@
 /* 
+ # $Id$
  # Copyright (C) 2004-2005 Nicolas Lehuen <nicolas@lehuen.com>
  #
  # This library is free software; you can redistribute it and/or
