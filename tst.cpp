@@ -5,31 +5,53 @@
 #include "debug.h"
 #include "tst.h"
 
-tst* tst_create(int initial_size) {
-    tst* _tst=(tst*)malloc(sizeof(tst));
-    if(_tst) {
-        _tst->array=(tst_node*)malloc(initial_size*sizeof(tst_node));
-        _tst->root=-1;
-        _tst->next=0;
-        _tst->size=initial_size;
-    }
-    _tst->root=tst_create_node(_tst,&(_tst->array),0);
-    return _tst;
+tst::tst(int initial_size) {
+    array=(tst_node*)malloc(initial_size*sizeof(tst_node));
+    next=0;
+    root=create_node(&array,0);
+    size=initial_size;
 }
 
-int tst_create_node(tst* _tst,tst_node** current_node,int current_index) {
+tst::~tst() {
+    free(array);
+}
+
+void tst::adjust() {
+    if(next<size) {
+        size=next;
+        array=(tst_node*)realloc(array,size*sizeof(tst_node));
+    }
+}
+
+TST_NODE_TYPE tst::get(char* string) {
+    int current_index=root;
+    tst_node* current_node=find_node(&current_index,string);
+    return current_node->data;
+}
+
+TST_NODE_TYPE tst::put(char* string,TST_NODE_TYPE data) {
+    tst_node* current_node=array+root;
+    int node_index=build_node(&current_node,&root,string);
+    TST_NODE_TYPE result;
+    current_node=array+node_index;
+    result = current_node->data;
+    current_node->data=data;
+    return result;
+}
+
+int tst::create_node(tst_node** current_node,int current_index) {
     int id;
     tst_node* new_node;
 
-    if(_tst->next==_tst->size) {
-        _tst->size+=(_tst->size>>1);
-        LOG1("===> Resize to %i\n",_tst->size);
-        _tst->array=realloc(_tst->array,_tst->size*sizeof(tst_node));
-        *current_node = _tst->array+current_index;
+    if(next==size) {
+        size+=(size>>1);
+        LOG1("===> Resize to %i\n",size);
+        array=(tst_node*)realloc(array,size*sizeof(tst_node));
+        *current_node = array+current_index;
     }
 
-    id=_tst->next++;
-    new_node=_tst->array+id;
+    id=next++;
+    new_node=array+id;
     new_node->c=0;
     new_node->next=-1;
     new_node->right=-1;
@@ -39,14 +61,7 @@ int tst_create_node(tst* _tst,tst_node** current_node,int current_index) {
     return id;
 }
 
-void tst_adjust_size(tst* _tst) {
-    if(_tst->next<_tst->size) {
-        _tst->size=_tst->next;
-        _tst->array=realloc(_tst->array,_tst->size*sizeof(tst_node));
-    }
-}
-
-int tst_build_node(tst* _tst,tst_node** current_node,int* current_index,char* current_char) {
+int tst::build_node(tst_node** current_node,int* current_index,char* current_char) {
     int diff,result,next_index;
     
     if((*current_node)->c==0) {
@@ -66,14 +81,14 @@ int tst_build_node(tst* _tst,tst_node** current_node,int* current_index,char* cu
             if(next_index<0) {
                 /* attention cela doit FORCEMENT se faire en deux ligne
                    car current_node peut être modifié par tst_create_node. */
-                next_index=tst_create_node(_tst,current_node,*current_index);
+                next_index=create_node(current_node,*current_index);
                 (*current_node)->next=next_index;
             }
-            *current_node = _tst->array + next_index;
-            result=tst_build_node(_tst,current_node,&next_index,current_char);
-            *current_node = _tst->array+*current_index;
+            *current_node = array + next_index;
+            result=build_node(current_node,&next_index,current_char);
+            *current_node = array+*current_index;
             (*current_node)->next=next_index;
-            tst_balance_node(_tst->array,current_node,current_index);
+            balance_node(current_node,current_index);
             return result;
         }
         else {
@@ -84,39 +99,39 @@ int tst_build_node(tst* _tst,tst_node** current_node,int* current_index,char* cu
         LOG2("%c > %c\n",*current_char,(*current_node)->c);
         next_index = (*current_node)->right;
         if(next_index<0) {
-            next_index=tst_create_node(_tst,current_node,*current_index);
+            next_index=create_node(current_node,*current_index);
             (*current_node)->right=next_index;
         }
-        *current_node = _tst->array + next_index;
-        result=tst_build_node(_tst,current_node,&next_index,current_char);
-        *current_node = _tst->array+*current_index;
+        *current_node = array + next_index;
+        result=build_node(current_node,&next_index,current_char);
+        *current_node = array+*current_index;
         (*current_node)->right=next_index;
-        tst_balance_node(_tst->array,current_node,current_index);
+        balance_node(current_node,current_index);
         return result;
     }
     else {
         LOG2("%c < %c\n",*current_char,(*current_node)->c);
         next_index = (*current_node)->left;
         if(next_index<0) {
-            next_index=tst_create_node(_tst,current_node,*current_index);
+            next_index=create_node(current_node,*current_index);
             (*current_node)->left=next_index;
         }
-        *current_node = _tst->array + next_index;
-        result=tst_build_node(_tst,current_node,&next_index,current_char);
-        *current_node = _tst->array+*current_index;
+        *current_node = array + next_index;
+        result=build_node(current_node,&next_index,current_char);
+        *current_node = array+*current_index;
         (*current_node)->left=next_index;
-        tst_balance_node(_tst->array,current_node,current_index);
+        balance_node(current_node,current_index);
         return result;
     }
 }
 
-tst_node* tst_find_node(tst* _tst,int* current_index,char* current_char) {
-    tst_node* array=_tst->array;
+tst_node* tst::find_node(int* current_index,char* current_char) {
+    tst_node* _array=array;
     tst_node* current_node;
     int diff;
 
     while(*current_index>=0) {
-        current_node=array+*current_index;
+        current_node=_array+*current_index;
 
         if(current_node->c==0) {
             *current_index=-1;
@@ -149,84 +164,68 @@ tst_node* tst_find_node(tst* _tst,int* current_index,char* current_char) {
     return 0;
 }
 
-TST_NODE_TYPE tst_get(tst* _tst,char* string) {
-    int current_index=_tst->root;
-    tst_node* current_node=tst_find_node(_tst,&current_index,string);
-    return current_node->data;
-}
-
-TST_NODE_TYPE tst_put(tst* _tst,char* string,TST_NODE_TYPE data) {
-    tst_node* current_node=_tst->array+_tst->root;
-    int node_index=tst_build_node(_tst,&current_node,&(_tst->root),string);
-    TST_NODE_TYPE result;
-    current_node=_tst->array+node_index;
-    result = current_node->data;
-    current_node->data=data;
-    return result;
-}
-
-void tst_balance_node(tst_node* array,tst_node** current_node,int* current_index) {
+void tst::balance_node(tst_node** current_node,int* current_index) {
     int current_balance;
-    current_balance=tst_compute_height_and_balance(array,*current_node);
+    current_balance=compute_height_and_balance(*current_node);
     if(current_balance>1) {
-        current_balance=tst_compute_height_and_balance(array,array+(*current_node)->right);
+        current_balance=compute_height_and_balance(array+(*current_node)->right);
         if(current_balance>0) {
-            tst_rr(array,current_node,current_index);
+            rr(current_node,current_index);
         }
         else {
-            tst_rl(array,current_node,current_index);
+            rl(current_node,current_index);
         }
     }
     else if(current_balance<-1) {
-       current_balance=tst_compute_height_and_balance(array,array+(*current_node)->left);
+       current_balance=compute_height_and_balance(array+(*current_node)->left);
        if(current_balance<0) {
-            tst_ll(array,current_node,current_index);
+            ll(current_node,current_index);
         }
         else {
-            tst_lr(array,current_node,current_index);
+            lr(current_node,current_index);
         }
     }
 }
 
-void tst_ll(tst_node* array,tst_node** current_node,int* current_index) {
+void tst::ll(tst_node** current_node,int* current_index) {
     int left_index=(*current_node)->left;
     tst_node* left_node=array+left_index;
     int left_right_index=left_node->right;
     (*current_node)->left=left_right_index;
-    tst_compute_height_and_balance(array,*current_node);
+    compute_height_and_balance(*current_node);
     left_node->right=*current_index;
-    tst_compute_height_and_balance(array,left_node);
+    compute_height_and_balance(left_node);
     *current_index=left_index;
     *current_node=array+left_index;
 }
 
-void tst_rr(tst_node* array,tst_node** current_node,int* current_index) {
+void tst::rr(tst_node** current_node,int* current_index) {
     int right_index=(*current_node)->right;
     tst_node* right_node=array+right_index;
     int right_left_index=right_node->left;
     (*current_node)->right=right_left_index;
-    tst_compute_height_and_balance(array,*current_node);
+    compute_height_and_balance(*current_node);
     right_node->left=*current_index;
-    tst_compute_height_and_balance(array,right_node);
+    compute_height_and_balance(right_node);
     *current_index=right_index;
     *current_node=array+right_index;
 }
 
-void tst_lr(tst_node* array,tst_node** current_node,int* current_index) {
+void tst::lr(tst_node** current_node,int* current_index) {
     int* left_index=&((*current_node)->left);
     tst_node* left_node=array+*left_index;
-    tst_rr(array,&left_node,left_index);
-    tst_ll(array,current_node,current_index);
+    rr(&left_node,left_index);
+    ll(current_node,current_index);
 }
 
-void tst_rl(tst_node* array,tst_node** current_node,int* current_index) {
+void tst::rl(tst_node** current_node,int* current_index) {
     int* right_index=&((*current_node)->right);
     tst_node* right_node=array+*right_index;
-    tst_ll(array,&right_node,right_index);
-    tst_rr(array,current_node,current_index);
+    ll(&right_node,right_index);
+    rr(current_node,current_index);
 }
 
-int tst_compute_height_and_balance(tst_node* array,tst_node* current_node) {
+int tst::compute_height_and_balance(tst_node* current_node) {
     int left = current_node->left;
     int right = current_node->right;
     int left_height,right_height,result;
@@ -265,32 +264,35 @@ int tst_compute_height_and_balance(tst_node* array,tst_node* current_node) {
     }
 }
 
-void tst_debug_node(tst_node* array,tst_node* current_node) {
+void tst::debug() {
+    debug(array+root);
+}
+
+size_t tst::bytes_allocated() {
+    return sizeof(tst)+size*sizeof(tst_node);
+}
+
+void tst::debug(tst_node* current_node) {
     int index=current_node->left;
     printf("%c",current_node->c);
     if(index>=0) {
-        tst_debug_node(array,array+index);
+        debug(array+index);
     }
     else {
         printf("-");
     }
     index=current_node->next;
     if(index>=0) {
-        tst_debug_node(array,array+index);
+        debug(array+index);
     }
     else {
         printf("-");
     }
     index=current_node->right;
     if(index>=0) {
-        tst_debug_node(array,array+index);
+        debug(array+index);
     }
     else {
         printf("-");
     }
-}
-
-
-void tst_free(tst* _tst) {
-    free(_tst);
 }

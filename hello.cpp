@@ -3,16 +3,16 @@
 #include "tst.h"
 
 int main(int argc,char** argv) {
-    tst* mytst=tst_create(2);
+    tst* mytst=new tst(2);
     char* line;
     FILE* input;
     
-    printf("Taille d'un noeud : %i",sizeof(tst_node));
-
+    printf("Taille d'un noeud : %i\n",sizeof(tst_node));
+    
     input = fopen("prenoms.txt","r");
     line = (char*)malloc(256);
     while(fgets(line,256,input)!=NULL) {
-        tst_put(mytst,line,line);
+        mytst->put(line,line);
         line = (char*)malloc(256);
     }
     fclose(input);
@@ -20,20 +20,20 @@ int main(int argc,char** argv) {
     input = fopen("prenoms.txt","r");
     line = (char*)malloc(256);
     while(fgets(line,256,input)!=NULL) {
-        printf("%s ==> %s",line,tst_get(mytst,line));
+        printf("%s ==> %s",line,mytst->get(line));
         free(line);
         line = (char*)malloc(256);
     }
     fclose(input);
     free(line);
 
-    printf("Taille de l'arbre ; %i utilises, %i alloues\n",mytst->next,mytst->size);
+    /*printf("Taille de l'arbre ; %i utilises, %i alloues\n",mytst->next,mytst->size);
     printf("Taille de l'arbre ; %i\n",mytst->size*sizeof(tst_node));
     tst_adjust_size(mytst);
-    printf("Taille de l'arbre ajuste ; %i\n",mytst->size*sizeof(tst_node));
+    printf("Taille de l'arbre ajuste ; %i\n",mytst->size*sizeof(tst_node));*/
 
-    /* tst_debug_node(mytst->array,mytst->array+mytst->root); */
+    mytst -> debug();
 
-    tst_free(mytst);
+    delete mytst;
     return 0;
 }

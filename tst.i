@@ -1,19 +1,8 @@
-#ifndef __TST__H_INCLUDED__
-#define __TST__H_INCLUDED__
+%module tst
 
-#ifndef TST_NODE_TYPE
-#define TST_NODE_TYPE char*
-#endif
-
-struct tst_node {
-    char c;
-    int next;
-    int right;
-    int left;
-    int height;
-    TST_NODE_TYPE data;
-};
-typedef struct tst_node tst_node;
+%{
+#include "tst.h"
+%}
 
 class tst {
     public:
@@ -42,5 +31,3 @@ class tst {
         int compute_height_and_balance(tst_node* current_node);
         void debug(tst_node* current_node);
 };
-
-#endif
