@@ -54,6 +54,12 @@ public:
     virtual T read(FILE* file)=0;
 };
 
+template<class S> class array {
+public:
+    S* start;
+    int length;
+};
+
 template<class S,class T> class tst {
 public:
     tst(FILE* file,serializer<S,T>* reader);
