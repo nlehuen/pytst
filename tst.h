@@ -547,7 +547,7 @@ template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,
 }
 
 template<class S,class T> void tst<S,T>::remove_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length) {
-    int diff,result,*next_index;
+    int diff,*next_index;
 
     if((*current_node)->c==0) {
         return;
