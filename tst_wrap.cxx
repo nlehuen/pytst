@@ -1199,6 +1199,34 @@ static PyObject *_wrap__TST_scan(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
+    char *arg2 ;
+    char *arg3 ;
+    action<char,PyObject * > *arg4 = (action<char,PyObject * > *) 0 ;
+    PyObject *result;
+    PyObject * obj0 = 0 ;
+    PyObject * obj3 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OssO:_TST_scan_with_stop_chars",&obj0,&arg2,&arg3,&obj3)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_PyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj3,(void **) &arg4, SWIGTYPE_p_actionTchar_PyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    {
+        try {
+            result = (PyObject *)(arg1)->scan_with_stop_chars(arg2,arg3,arg4);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = result;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap__TST_get(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
@@ -2616,6 +2644,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_TST_almost", _wrap__TST_almost, METH_VARARGS },
 	 { (char *)"_TST_common_prefix", _wrap__TST_common_prefix, METH_VARARGS },
 	 { (char *)"_TST_scan", _wrap__TST_scan, METH_VARARGS },
+	 { (char *)"_TST_scan_with_stop_chars", _wrap__TST_scan_with_stop_chars, METH_VARARGS },
 	 { (char *)"_TST_get", _wrap__TST_get, METH_VARARGS },
 	 { (char *)"_TST_get_or_build", _wrap__TST_get_or_build, METH_VARARGS },
 	 { (char *)"_TST_put", _wrap__TST_put, METH_VARARGS },

@@ -62,6 +62,7 @@ template<class S,class T> class tst {
         T almost(S* string,int string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform);
         T common_prefix(S* string,filter<S,T>* filter,action<S,T>* to_perform);
         T scan(S* string,action<S,T>* to_perform);
+        T scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform);
         T get(S* string);
         virtual T get_or_build(S* string,filter<S,T>* factory);
         virtual T put(S* string,T data);
@@ -532,6 +533,10 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
 }
 
 template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
+    return tst<S,T>::scan_with_stop_chars(string,NULL,to_perform);
+}
+
+template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform) {
     S c;
     int diff;
 
@@ -539,7 +544,8 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
     S *pos=string,*previous_match_end=string,*best_match_end=NULL,*best_match_start=NULL;
 
     int current_index=root;
-
+    int previous_char_was_stop_char=1;
+    
     while(c=*(pos++)) {
         // on commence par rechercher le noeud correspondant au caractère courant
         while(current_index>=0) {
@@ -586,7 +592,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
 
                 // puis on reprend juste après le meilleur match depuis la racine de l'arbre
                 previous_match_end = best_match_end;
-               pos = best_match_end;
+                pos = best_match_end;
                 best_match_node = NULL;
                 best_match_end = NULL;
             }
@@ -595,24 +601,54 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
         }
         else {
             if(!best_match_start) {
-                best_match_start=pos-1;
+                if(previous_char_was_stop_char) {
+                    best_match_start=pos-1;
+                }
+                else {
+                    current_index = root;
+                }
             }
-            // on a trouvé le caractère courant => s'il y a un objet courant on enregistre
-            // le match
-            if(current_node->data!=default_value) {
-                best_match_node = current_node;
-                best_match_end = pos;
+            if(best_match_start) {
+                // on a trouvé le caractère courant => s'il y a un objet courant et qu'il est terminal
+                // on enregistre le match
+                if(current_node->data!=default_value) {
+                    if(stop_chars) {
+                        S next_char = *pos;
+                        S* current_stop_char=stop_chars;
+                        do {
+                            if(next_char==(*current_stop_char)) {
+                                best_match_node = current_node;
+                                best_match_end = pos;
+                                break;
+                            }
+                        } while(*(current_stop_char++));
+                    }
+                    else {
+                        best_match_node = current_node;
+                        best_match_end = pos;
+                    }
+                }
+                // si on peut continuer on y va sinon le match est terminé.
+                current_index=current_node->next;
             }
-            // si on peut continuer on y va sinon le match est terminé.
-            current_index=current_node->next;
+        }
+        
+        if(stop_chars) {
+            previous_char_was_stop_char=0;
+            S* current_stop_char=stop_chars;
+            do {
+                if(c==(*current_stop_char)) {
+                    previous_char_was_stop_char=1;
+                    break;
+                }
+            } while(*(current_stop_char++));
         }
     }
 
-
     if(best_match_node) {
-        // le caractère courant ne matche pas => on backtracke
-
-        // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
+        // en fin de parcours
+        
+        // on envoie les caractères pas matchés avant le match actuel
         size_t key_size=best_match_start-previous_match_end;
         if(key_size>0) {
             S* key=(S*)tst_malloc(key_size+1);
@@ -630,22 +666,25 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
         to_perform->perform(key,0,best_match_node->data);
         free(key);
 
-        // puis on reprend juste après le meilleur match depuis la racine de l'arbre
-        previous_match_end = best_match_end;
+        // Code inutile car variable non réutilisée
+        // Mais cela permet de se rendre compte que le code après le 'else' suivant
+        // ne pouvait être exécuté à la suite
+        /*previous_match_end = best_match_end;
         pos = best_match_end;
         best_match_node = NULL;
         best_match_start = NULL;
-        best_match_end = NULL;
+        best_match_end = NULL;*/
     }
-
-    // A la fin du parcours on envoie les derniers caractères s'il y a lieu
-    size_t key_size=pos-previous_match_end;
-    if(key_size>0) {
-        S* key=(S*)tst_malloc(key_size+1);
-        memcpy(key,previous_match_end,key_size);
-        key[key_size]='\0';
-        to_perform->perform(key,-key_size,default_value);
-        free(key);
+    else {
+        // A la fin du parcours on envoie les derniers caractères s'il y a lieu
+        size_t key_size=pos-previous_match_end;
+        if(key_size>0) {
+            S* key=(S*)tst_malloc(key_size+1);
+            memcpy(key,previous_match_end,key_size);
+            key[key_size]='\0';
+            to_perform->perform(key,-key_size,default_value);
+            free(key);
+        }
     }
 
     return to_perform->result();

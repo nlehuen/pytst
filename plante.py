@@ -17,6 +17,7 @@ for i in xrange(1000000000):
     t['APP']='APPARTEMENT'
     t['APPT']='APPARTEMENT'
     t['APPARTEMENT']='APPARTEMENT'
+    t['APP BEN COOL']='TEST TEST TEST'
     t['PARIS 15ème']='PARIS 15ème 2'
     # t['PARIS 15EME ARRONDISSEMENT']='PARIS 15EME ARRONDISSEMENT'
 
@@ -43,8 +44,8 @@ for i in xrange(1000000000):
     print t.common_prefix('PYTHON',None,tst.ListAction())
 
     print '>>>>>>>>>'
-    # print t.scan('Bonjour PARIS ca va PARIS 15 PARIS 17 YOUPI PARIS 15EME GUEH PARIS 2',tst.CallableAction(prout,None))
-    print t.scan('Bonjour PARIS APPT ca va PARIS 15 PARIS APPARTEMENT 17 YOUPI PARIS 15EME GUEH PARIS APP 2',tst.TupleListAction())
+    # print t.scan('Bonjour  APPARITION PARIS ca va PARIS 15 PARIS 17 YOUPI PARIS 15EME GUEH PARIS 2',tst.CallableAction(prout,None))
+    print t.scan_with_stop_chars('LALA VARAPP Bonjour APPARITION APP PARIS APPT APP BEN ca va APP BEN COOL PARIS 15 PARIS APPARTEMENT 17 YOUPI PARIS 15EME GUEH PARIS APP 2 APPARemment APPA',' \t\r\n',tst.TupleListAction())
     print '>>>>>>>>>'
 
     print 1+1
