@@ -2,10 +2,8 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <memory.h>
+#include "debug.h"
 #include "tst.h"
-
-// #define NDEBUG
-// #include <assert.h>
 
 tst* tst_create(int initial_size) {
     tst* _tst=(tst*)malloc(sizeof(tst));
@@ -55,7 +53,7 @@ int tst_find_node(tst* _tst,int current_node,char* current_char) {
         current=_tst->array+current_node;
 
         if(current->c==0) {
-            printf("%c !!!\n",*current_char);
+            LOG1("%c !!!\n",*current_char);
             current->c=(*current_char);
             diff=0;
         }
@@ -64,7 +62,7 @@ int tst_find_node(tst* _tst,int current_node,char* current_char) {
         }
 
         if(diff==0) {
-            printf("%c = %c\n",*current_char,current->c);
+            LOG2("%c = %c\n",*current_char,current->c);
             current_char++;
             if(*current_char) {
                 if(current->next<0) {
@@ -82,7 +80,7 @@ int tst_find_node(tst* _tst,int current_node,char* current_char) {
             }
         }
         else if(diff>0) {
-            printf("%c > %c\n",*current_char,current->c);
+            LOG2("%c > %c\n",*current_char,current->c);
             if(current->higher<0) {
                 current_node=tst_create_node(_tst,&current,current_node);
                 current->higher=current_node;
@@ -92,7 +90,7 @@ int tst_find_node(tst* _tst,int current_node,char* current_char) {
             }
         }
         else {
-            printf("%c < %c\n",*current_char,current->c);
+            LOG2("%c < %c\n",*current_char,current->c);
             if(current->lower<0) {
                 current_node=tst_create_node(_tst,&current,current_node);
                 current->lower=current_node;
