@@ -56,7 +56,7 @@ template<class T> tst<T>::tst(int size,T default_value) {
 }
 
 template<class T> tst<T>::~tst() {
-    printf("tst::~tst() : Removing array of %i elements\n",size);
+    LOG1("tst::~tst() : Removing array of %i elements\n",size);
     free(array);
 }
 
