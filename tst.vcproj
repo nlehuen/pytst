@@ -125,9 +125,6 @@
 				RelativePath=".\test_tst2.py">
 			</File>
 			<File
-				RelativePath=".\TST.cxx">
-			</File>
-			<File
 				RelativePath="..\python\tcc\tst.py">
 			</File>
 		</Filter>

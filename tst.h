@@ -53,8 +53,15 @@ template<class T> class filter {
         };
 };
 
+template<class T> class serializer {
+    public:
+        virtual void write(FILE* file,T data)=0;
+        virtual T read(FILE* file)=0;
+};
+
 template<class T> class tst {
     public:
+        tst(FILE* file,serializer<T>* reader);
         tst(int initial_size,T default_value);
         ~tst();
 
@@ -69,6 +76,7 @@ template<class T> class tst {
         void debug();
         int get_maximum_key_length();
         size_t bytes_allocated();
+        void write(FILE* file,serializer<T>* writer);
 
     protected:
         tst_node<T>* array;
@@ -100,6 +108,67 @@ template<class T> tst<T>::tst(int size,T default_value) {
     next=0;
     root=create_node(&array,0);
     maximum_key_length=0;
+}
+
+template<class T> tst<T>::tst(FILE* file, serializer<T>* reader) {
+    fread(&size,sizeof(int),1,file);
+    next=size;
+    fread(&root,sizeof(int),1,file);
+    fread(&maximum_key_length,sizeof(int),1,file);
+    int has_data=fgetc(file);
+    if(has_data) {
+        default_value=reader->read(file);
+    }
+    else {
+        default_value=NULL;
+    }
+    array=(tst_node<T>*)malloc(size*sizeof(tst_node<T>));
+    for(int i=0;i<size;i++) {
+        tst_node<T>* node=array+i;
+
+        node->c=fgetc(file);
+        fread(&(node->left),sizeof(int),1,file);
+        fread(&(node->next),sizeof(int),1,file);
+        fread(&(node->right),sizeof(int),1,file);
+        fread(&(node->height),sizeof(int),1,file);
+
+        has_data=fgetc(file);
+        if(has_data) {
+            node->data=reader->read(file);
+        }
+        else {
+            node->data=default_value;
+        }
+    }
+}
+
+template<class T> void tst<T>::write(FILE* file, serializer<T>* writer) {
+    fwrite(&next,sizeof(int),1,file);
+    fwrite(&root,sizeof(int),1,file);
+    fwrite(&maximum_key_length,sizeof(int),1,file);
+    if(default_value) {
+        putc('\1',file);
+        writer->write(file,default_value);
+    }
+    else {
+        putc('\0',file);
+    }
+    for(int i=0;i<next;i++) {
+        tst_node<T>* node=array+i;
+        fputc(node->c,file);
+        fwrite(&(node->left),sizeof(int),1,file);
+        fwrite(&(node->next),sizeof(int),1,file);
+        fwrite(&(node->right),sizeof(int),1,file);
+        fwrite(&(node->height),sizeof(int),1,file);
+        T data=node->data;
+        if(data!=default_value) {
+            fputc('\1',file);
+            writer->write(file,data);
+        }
+        else {
+            fputc('\0',file);
+        }
+    }
 }
 
 template<class T> tst<T>::~tst() {
