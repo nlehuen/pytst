@@ -14,8 +14,6 @@ class DictAction : public action<PyObject*> {
         }
 
         virtual void perform(char* key,int remaining_distance,PyObject* data) {
-            printf("%s\n",key);
-
             PyObject* tuple=PyDict_GetItemString(dict,key);
             if(tuple!=NULL) {
                 long value=PyInt_AsLong(PyTuple_GetItem(tuple,0));
