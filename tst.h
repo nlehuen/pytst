@@ -688,7 +688,6 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
     printf("\n--------scan \"%s\"\n",string);
     // return tst<S,T>::scan_with_stop_chars(string,NULL,to_perform);
     tst_node<S,T> *current_node=NULL;
-    tst_node<S,T> *match_node=NULL;
 
     S current_char;
     S temp_char;
@@ -699,40 +698,43 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
     
     int current_match_index=UNDEFINED_INDEX;
     S *current_match_start=NULL;
-    S *current_match_end=NULL;
 
     current_char=*current_pos;
     current_node=array+current_index;
-    while(current_char!=0) {
+    while(1) {
         current_node=array+current_index;
         printf("%3i:%3i: %c %c",current_pos-string,current_index,current_node->c,current_char);
-        int diff=current_char-current_node->c;
-        if(diff>0) {
-            printf(" R");
-            current_index=current_node->right;
-        }
-        else if(diff<0) {
-            printf(" L");
-            current_index=current_node->left;
-        }
-        else {
-            // ok, le caractère courant est accepté
-            if(current_match_start==NULL) {
-                current_match_start=current_pos;
+        if(current_char) {
+            int diff=current_char-current_node->c;
+            if(diff>0) {
+                printf(" R");
+                current_index=current_node->right;
             }
-            if(current_node->data!=default_value) {
-                // définition du match
-                current_match_end=current_pos+1;
-                current_match_index=current_index;
-            }
-            current_pos++;
-            if(*current_pos) {
-                current_index=current_node->next;
+            else if(diff<0) {
+                printf(" L");
+                current_index=current_node->left;
             }
             else {
-                current_index=UNDEFINED_INDEX;
+                // ok, le caractère courant est accepté
+                if(current_match_start==NULL) {
+                    current_match_start=current_pos;
+                }
+                if(current_node->data!=default_value) {
+                    // définition du match
+                    current_match_index=current_index;
+                }
+                current_pos++;
+                if(*current_pos) {
+                    current_index=current_node->next;
+                }
+                else {
+                    current_index=UNDEFINED_INDEX;
+                }
+                printf(" ok %3i",current_index);            
             }
-            printf(" ok %3i",current_index);            
+        }
+        else {
+            current_index=UNDEFINED_INDEX;
         }
                 
         if(current_index==UNDEFINED_INDEX) {
@@ -740,6 +742,9 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
             
             // Le caractère courant n'est pas accepté
             if(current_match_index!=UNDEFINED_INDEX) {
+                tst_node<S,T> *match_node;
+                S* current_match_end;
+                
                 // envoi de ce qui précède le match
                 if(current_match_start>non_match_start) {
                     temp_char=*current_match_start;
@@ -751,10 +756,11 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 
                 // envoi du match
                 match_node=array+current_match_index;
+                current_match_end=current_match_start+match_node->position+1;
                 temp_char=*current_match_end;
                 *current_match_end=0;
                 printf("-> \"%s\"\n",current_match_start);
-                to_perform->perform(current_match_start,current_match_end-current_match_start,match_node->data);
+                to_perform->perform(current_match_start,match_node->position+1,match_node->data);
                 *current_match_end=temp_char;
                 non_match_start=current_match_end;
    
@@ -809,10 +815,15 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 }
             }
             else {
-                current_pos++;
-                current_index = root;
-                // On annule le match
-                current_match_start=NULL;
+                if(current_char) {
+                    current_pos++;
+                    current_index = root;
+                    // On annule le match
+                    current_match_start=NULL;
+                }
+                else {
+                    break;
+                }
             }
         }
         else {
