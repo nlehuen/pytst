@@ -81,7 +81,7 @@ template<class S,class T> class tst {
             printf("Size: %i, next: %i\n",size,next);
             if(root!=UNDEFINED_INDEX) {
                 tst_node<S,T>* root_node=array+root;
-                printf("Root index: %i, c: %c, data: %i\n",root,root_node->c,(int)root_node->data);
+                printf("Root index: %i, c: %c, data: %i, height: %i\n",root,root_node->c,(int)root_node->data,root_node->height);
             }
         }
 
