@@ -471,7 +471,8 @@ template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node
     tst_node<S,T>* new_node;
 
     if(next==size) {
-        size+=(size>>1);
+        // on utilise le nombre d'or pour l'accroissement du tableau
+        size=(int)(1.618*size);
         array=(tst_node<S,T>*)tst_realloc(array,size*sizeof(tst_node<S,T>));
         *current_node = array+current_index;
     }
