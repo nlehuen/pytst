@@ -18,7 +18,7 @@ typedef struct tst tst;
 
 struct tst* tst_create();
 void tst_free(struct tst* _tst);
-int tst_create_node(struct tst* _tst);
+int tst_create_node(struct tst* _tst,tst_node** current,int current_node);
 void tst_adjust_size(struct tst* _tst);
 int tst_find_node(struct tst* _tst,int current_node,char* current_char);
 

@@ -13,14 +13,14 @@ int main(int argc,char** argv) {
         printf("------------------ %03i\n",i);
         debug(mytst,"Nicolas");
         debug(mytst,"Nicolas");
-        //debug(mytst,"Carine");
-        //debug(mytst,"Youpila");
-        //debug(mytst,"Aaaaron");
-        //debug(mytst,"Nicole");
-        //debug(mytst,"Tripou");
-        //debug(mytst,"Carinette");
-        //debug(mytst,"Fripounette");
-        //debug(mytst,"Cailloux");
+        debug(mytst,"Carine");
+        debug(mytst,"Youpila");
+        debug(mytst,"Aaaaron");
+        debug(mytst,"Nicole");
+        debug(mytst,"Tripou");
+        debug(mytst,"Carinette");
+        debug(mytst,"Fripounette");
+        debug(mytst,"Cailloux");
     }
     tst_free(mytst);
     return 0;

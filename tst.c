@@ -5,7 +5,7 @@
 #include "tst.h"
 
 // #define NDEBUG
-#include <assert.h>
+// #include <assert.h>
 
 tst* tst_create(int initial_size) {
     tst* _tst=(tst*)malloc(sizeof(tst));
@@ -15,29 +15,19 @@ tst* tst_create(int initial_size) {
         _tst->next=0;
         _tst->size=initial_size;
     }
-    _tst->root=tst_create_node(_tst);
+    _tst->root=tst_create_node(_tst,&(_tst->array),0);
     return _tst;
 }
 
-int tst_create_node(tst* _tst) {
-	int id, old_size;
+int tst_create_node(tst* _tst,tst_node** current,int current_node) {
+	int id;
 	tst_node* new_node;
     tst_node* old_array = _tst->array;
 
-	assert(_tst->next<=_tst->size);
-
 	if(_tst->next==_tst->size) {
-        old_size = _tst->size;
         _tst->size+=(_tst->size>>1);
-
-        printf("Resize : %i --> %i\n",old_size,_tst->size);
-
-        _tst->array=(tst_node*)memcpy(
-			malloc(_tst->size*sizeof(tst_node)),
-			old_array,
-			old_size*sizeof(tst_node));
-		assert(memcmp(_tst->array,old_array,old_size*sizeof(tst_node))==0);
-        free(old_array);
+        _tst->array=realloc(_tst->array,_tst->size*sizeof(tst_node));
+		*current = _tst->array+current_node;
     }
 
 	id=_tst->next++;
@@ -47,26 +37,14 @@ int tst_create_node(tst* _tst) {
     new_node->higher=-1;
     new_node->lower=-1;
 
-	assert(_tst->next<=_tst->size);
-	
 	return id;
 }
 
 void tst_adjust_size(tst* _tst) {
-	tst_node* old_array = _tst->array;
-
-	assert(_tst->next<=_tst->size);
     if(_tst->next<_tst->size) {
-		printf("Resize : %i --> %i\n",_tst->size,_tst->next);
 		_tst->size=_tst->next;
-        _tst->array=(tst_node*)memcpy(
-			malloc(_tst->size*sizeof(tst_node)),
-			old_array,
-			_tst->size*sizeof(tst_node));
-		assert(memcmp(_tst->array,old_array,_tst->size*sizeof(tst_node))==0);
-        free(old_array);
+        _tst->array=realloc(_tst->array,_tst->size*sizeof(tst_node));
     }
-	assert(_tst->next<=_tst->size);
 }
 
 int tst_find_node(tst* _tst,int current_node,char* current_char) {
@@ -74,8 +52,6 @@ int tst_find_node(tst* _tst,int current_node,char* current_char) {
     int diff;
 
     while(1) {
-		assert(_tst->next<=_tst->size);
-
         current=_tst->array+current_node;
         
         if(current->c==0) {
@@ -88,33 +64,42 @@ int tst_find_node(tst* _tst,int current_node,char* current_char) {
         }
 
         if(diff==0) {
-			assert(current->c==*current_char);
             printf("%c = %c\n",*current_char,current->c);
             current_char++;
             if(*current_char) {
                 if(current->next<0) {
-                    current->next=tst_create_node(_tst);
+					// attention cela doit FORCEMENT se faire en deux ligne
+					// car current peut être modifié par tst_create_node.
+					current_node=tst_create_node(_tst,&current,current_node);
+                    current->next=current_node;
                 }
-                current_node=current->next;
+				else {
+					current_node=current->next;
+				}
             }
             else {
-				assert(_tst->next<=_tst->size);
                 return current_node;
             }
         }
         else if(diff>0) {
             printf("%c > %c\n",*current_char,current->c);
             if(current->higher<0) {
-                current->higher=tst_create_node(_tst);
+				current_node=tst_create_node(_tst,&current,current_node);
+                current->higher=current_node;
             }
-            current_node=current->higher;
+			else {
+				current_node=current->higher;
+			}
         }
         else {
             printf("%c < %c\n",*current_char,current->c);
             if(current->lower<0) {
-                current->lower=tst_create_node(_tst);
+				current_node=tst_create_node(_tst,&current,current_node);
+                current->lower=current_node;
             }
-            current_node=current->lower;
+			else {
+				current_node=current->lower;
+			}
         }
     }
 }
