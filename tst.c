@@ -20,7 +20,6 @@ tst* tst_create(int initial_size) {
 int tst_create_node(tst* _tst,tst_node** current,int current_node) {
     int id;
     tst_node* new_node;
-    tst_node* old_array = _tst->array;
 
     if(_tst->next==_tst->size) {
         _tst->size+=(_tst->size>>1);
@@ -66,8 +65,8 @@ int tst_find_node(tst* _tst,int current_node,char* current_char) {
             current_char++;
             if(*current_char) {
                 if(current->next<0) {
-                    // attention cela doit FORCEMENT se faire en deux ligne
-                    // car current peut être modifié par tst_create_node.
+                    /* attention cela doit FORCEMENT se faire en deux ligne
+                       car current peut être modifié par tst_create_node. */
                     current_node=tst_create_node(_tst,&current,current_node);
                     current->next=current_node;
                 }

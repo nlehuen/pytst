@@ -1,6 +1,6 @@
 #ifndef __DEBUG_H_INCLUDED__
 #define __DEBUG_H_INCLUDED__
-// #define NDEBUG
+#define NDEBUG
 
 #ifdef NDEBUG
     #define LOG1(a,b)
