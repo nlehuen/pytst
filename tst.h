@@ -81,15 +81,15 @@ public:
         printf("Size: %i (%i bytes), next: %i (%i bytes)\n",size,size*sizeof(tst_node<S,T>),next,next*sizeof(tst_node<S,T>));
         if(root!=UNDEFINED_INDEX) {
             tst_node<S,T>* node=array+root;
-            printf("root index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",root,node->next,node->c,(int)node->data,node->height,node->position);
+            printf("root index: %i, next: %i, c: %c, height: %i, position: %i\n",root,node->next,node->c,node->height,node->position);
             next_index = node->next;
             if(next_index!=UNDEFINED_INDEX) {
                 node=array+next_index;
-                printf("root->next index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",next_index,node->next,node->c,(int)node->data,node->height,node->position);
+                printf("root->next index: %i, next: %i, c: %c, height: %i, position: %i\n",next_index,node->next,node->c,node->height,node->position);
                 next_index = node->next;
                 if(next_index!=UNDEFINED_INDEX) {
                     node=array+next_index;
-                    printf("root->next->next index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",next_index,node->next,node->c,(int)node->data,node->height,node->position);
+                    printf("root->next->next index: %i, next: %i, c: %c, height: %i, position: %i\n",next_index,node->next,node->c,node->height,node->position);
                 }
             }
         }
