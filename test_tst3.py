@@ -57,11 +57,6 @@ if __name__=='__main__':
         
         def testScan2(self):
             self.assertEqual(self.t.scan('NicolaNicolaNicolaNicolaNicola',TupleListAction()),[('NicolaNicolaNicolaNicolaNicola', -30, None)])
-
-        def testScan25(self):
-            self.assertEqual(self.t.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
-            self.assertEqual(self.t.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
-            self.assertEqual(self.t.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
         
         def testScan3(self):
             self.assertEqual(self.t.scan('Nicolasstupide',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('stupide', -7, None)])
@@ -99,6 +94,11 @@ if __name__=='__main__':
         def testScanWithStopChars2(self):
             self.assertEqual(self.t.scan_with_stop_chars('Nicolasstupide',' -',TupleListAction()),[('Nicolasstupide', -14, None)])
         
+        def testScanWithStopChars25(self):
+            self.assertEqual(self.t.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
+            self.assertEqual(self.t.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
+            self.assertEqual(self.t.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
+
         def testScanWithStopChars3(self):
             self.assertEqual(self.t.scan_with_stop_chars('Nicolast',' -',TupleListAction()),[('Nicolast', -8, None)])
         
@@ -110,9 +110,6 @@ if __name__=='__main__':
         
         def testScanWithStopChars6(self):
             self.assertEqual(self.t.scan_with_stop_chars('xxxAntoine Nicolas',' -',TupleListAction()),[('xxxAntoine ', -11, None),('Nicolas', 7, 'Nicolas')])
-        
-        def testScanWithStopChars7(self):
-            self.assertEqual(self.t.scan_with_stop_chars('xxxAntoine A Nicolas',' -',TupleListAction()),[('xxxAntoine A ', -13, None),('Nicolas', 7, 'Nicolas')])
         
         def testScanWithStopChars8(self):
             self.assertEqual(self.t.scan_with_stop_chars('Nicolas-Antoinette',' -',TupleListAction()),[('Nicolas-Antoinette', 18, 'Nicolas-Antoinette')])

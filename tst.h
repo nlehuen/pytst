@@ -112,7 +112,7 @@ template<class S,class T> class tst {
         virtual void remove_node(int* current_index,S* current_char,int current_key_length);
         tst_node<S,T>* find_node(int* current_index,int* best_node, S* current_char);
 
-        void compute_backtrack(tst_node<S,T> *current_node,S *match,S *match,S *current_pos);
+        void compute_backtrack(tst_node<S,T> *current_node,S *start,S *match,S *current_pos);
             
         void balance_node(tst_node<S,T>** current_node,int* current_index);
         void ll(tst_node<S,T>** current_node,int* current_index);
@@ -750,7 +750,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                     temp_char=*current_match_start;
                     *current_match_start=0;
                     printf("-> \"%s\"\n",non_match_start);
-                    to_perform->perform(non_match_start,non_match_start-current_match_start,default_value);
+                    to_perform->perform(non_match_start,(int)(non_match_start-current_match_start),default_value);
                     *current_match_start=temp_char;
                 }
                 
@@ -837,7 +837,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
         temp_char=*current_pos;
         *current_pos=0;
         printf("-> \"%s\"\n",non_match_start);
-        to_perform->perform(non_match_start,non_match_start-current_pos,default_value);
+        to_perform->perform(non_match_start,(int)(non_match_start-current_pos),default_value);
         *current_pos=temp_char;
     }
     
@@ -908,7 +908,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                         S* key=(S*)tst_malloc(key_size+1);
                         memcpy(key,previous_match_end,key_size);
                         key[key_size]='\0';
-                        to_perform->perform(key,-key_size,default_value);
+                        to_perform->perform(key,-(int)key_size,default_value);
                         tst_free(key);
                     }
     
@@ -917,7 +917,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     S* key=(S*)tst_malloc(key_size+1);
                     memcpy(key,best_match_start,key_size);
                     key[key_size]='\0';
-                    to_perform->perform(key,key_size,(array+best_match_node)->data);
+                    to_perform->perform(key,(int)key_size,(array+best_match_node)->data);
                     tst_free(key);
     
                     // puis on reprend juste après le meilleur match depuis la racine de l'arbre
@@ -1100,7 +1100,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                 S* key=(S*)tst_malloc(key_size+1);
                 memcpy(key,previous_match_end,key_size);
                 key[key_size]='\0';
-                to_perform->perform(key,-key_size,default_value);
+                to_perform->perform(key,-(int)key_size,default_value);
                 tst_free(key);
             }
 
@@ -1109,7 +1109,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             S* key=(S*)tst_malloc(key_size+1);
             memcpy(key,best_match_start,key_size);
             key[key_size]='\0';
-            to_perform->perform(key,key_size,(array+best_match_node)->data);
+            to_perform->perform(key,(int)key_size,(array+best_match_node)->data);
             tst_free(key);
 
             // puis on reprend juste après le meilleur match depuis la racine de l'arbre
@@ -1142,7 +1142,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
         S* key=(S*)tst_malloc(key_size+1);
         memcpy(key,previous_match_end,key_size);
         key[key_size]='\0';
-        to_perform->perform(key,-key_size,default_value);
+        to_perform->perform(key,-(int)key_size,default_value);
         tst_free(key);
     }
 
