@@ -767,7 +767,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 // annulation du match
                 current_match_index=UNDEFINED_INDEX;
                 
-                // backtrack de relou pour l'instant
+                // backtrack correct !
                 compute_backtrack(current_node,current_match_start,current_match_end,current_pos);
                 current_index = current_node->backtrack;
                 current_match_index=current_node->backtrack_match_index;
@@ -790,7 +790,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 }
             }
             else if(current_match_start!=NULL) {
-                // backtrack correct
+                // backtrack correct !
                 
                 // on commence par calculer où l'on va aller
                 compute_backtrack(current_node,current_match_start,current_match_start+1,current_pos);
@@ -842,6 +842,15 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
     }
     
     return to_perform->result();
+}
+
+template<class S> int is_in(S c,S* stop_chars) {
+    do {
+        if(c==*stop_chars) {
+            return 1;
+        }
+    } while(*(stop_chars++));
+    return 0;
 }
 
 template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform) {
