@@ -20,10 +20,6 @@
 #include "debug.h"
 
 #define UNDEFINED_INDEX -1
-#define RELATION_UNKNOWN 0
-#define RELATION_NEXT    1
-#define RELATION_LEFT    2
-#define RELATION_RIGHT   3
 
 template<class S,class T> class tst_node {
 public:
@@ -663,7 +659,9 @@ template<class S,class T> T tst<S,T>::compute_backtrack(tst_node<S,T> *current_n
                 forward_pos++;
             }
             else {
-                printf(" => \"%s\"",forward_pos);
+                current_node->backtrack=(array+current_node->backtrack)->next;
+                
+                printf(" => \"%s\"(%i)",forward_pos,current_node->backtrack);
                 if(current_node->backtrack_match_index!=UNDEFINED_INDEX) {
                     S* best_match_end=forward_pos+(array+current_node->backtrack_match_index)->position+1;
                     S temp_char2=*best_match_end;
@@ -707,11 +705,14 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
     current_node=array+current_index;
     while(current_char!=0) {
         current_node=array+current_index;
+        printf("%3i:%3i: %c %c",current_pos-string,current_index,current_node->c,current_char);
         int diff=current_char-current_node->c;
         if(diff>0) {
+            printf(" R");
             current_index=current_node->right;
         }
         else if(diff<0) {
+            printf(" L");
             current_index=current_node->left;
         }
         else {
@@ -723,11 +724,6 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 // définition du match
                 current_match_end=current_pos+1;
                 current_match_index=current_index;
-
-                // debug
-                temp_char=*current_match_end;
-                *current_match_end=0;
-                *current_match_end=temp_char;
             }
             current_pos++;
             if(*current_pos) {
@@ -736,9 +732,12 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
             else {
                 current_index=UNDEFINED_INDEX;
             }
+            printf(" ok %3i",current_index);            
         }
                 
         if(current_index==UNDEFINED_INDEX) {
+            printf(" KO\n");
+            
             // Le caractère courant n'est pas accepté
             if(current_match_index!=UNDEFINED_INDEX) {
                 // envoi de ce qui précède le match
@@ -764,20 +763,44 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 compute_backtrack(current_node,current_match_start,current_match_end,current_pos);
                 current_pos = current_match_end;
                 current_index = root;
+
+                // On annule le match
+                current_match_start=NULL;
             }
             else if(current_match_start!=NULL) {
-                // backtrack de relou pour l'instant.
+                // backtrack correct
+                
+                // on commence par calculer où l'on va aller
                 compute_backtrack(current_node,current_match_start,current_match_start+1,current_pos);
-                current_pos = current_match_start+1;
-                current_index = root;
+                current_index = current_node->backtrack;
+                current_match_index=current_node->backtrack_match_index;
+                
+                if(current_index==root) {
+                    // quand on a un retour à la racine, on n'a aucun match en cours
+                    current_match_start=NULL;
+                }
+                else {
+                    // sinon c'est qu'un match est en cours, on va recalculer son point de démarrage
+                    // grâce à la position du noeud
+                    current_match_start=current_pos-(array+current_index)->position;
+                    
+                    // DEBUG
+                    temp_char=*current_pos;
+                    *current_pos=0;
+                    printf("Restarting at \"%s|%c\" with state %i\n",current_match_start,temp_char,current_index);
+                    *current_pos=temp_char;
+                    // END DEBUG
+                }
             }
             else {
                 current_pos++;
                 current_index = root;
+                // On annule le match
+                current_match_start=NULL;
             }
-
-            // On annule le match
-            current_match_start=NULL;
+        }
+        else {
+            printf("\n");
         }
 
         current_char=*current_pos;

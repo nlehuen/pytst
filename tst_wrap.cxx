@@ -2843,10 +2843,6 @@ _swigt__p_TST,
 
 static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"UNDEFINED_INDEX", (long) -1, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"RELATION_UNKNOWN", (long) 0, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"RELATION_NEXT", (long) 1, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"RELATION_LEFT", (long) 2, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"RELATION_RIGHT", (long) 3, 0, 0, 0},
 {0}};
 
 #ifdef __cplusplus
