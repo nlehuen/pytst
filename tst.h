@@ -768,10 +768,10 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
         // A la fin du parcours on envoie les derniers caractères s'il y a lieu
         size_t key_size=pos-previous_match_end;
         if(key_size>0) {
-            S* key=(S*)tst_malloc(key_size+1);
-            memcpy(key,previous_match_end,key_size);
-            key[key_size]='\0';
-            to_perform->perform(key,-key_size,default_value);
+            S* key=(S*)tst_malloc(key_size);
+            memcpy(key,previous_match_end,key_size-1);
+            key[key_size-1]='\0';
+            to_perform->perform(key,-key_size+1,default_value);
             free(key);
         }
     }
