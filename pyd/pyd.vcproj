@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="tst"
-	ProjectGUID="{B13DF1CD-3540-43D3-8754-8BC1E88345AE}"
+	Name="pyd"
+	ProjectGUID="{A5208316-015E-4611-B812-6E2F7CCD33A2}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -14,16 +14,18 @@
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\Python23\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="..;e:\python23msvc7\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="5"
+				RuntimeLibrary="1"
+				BufferSecurityCheck="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -32,11 +34,13 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/tst.exe"
+				OutputFile="$(OutDir)/_tst_d.pyd"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="e:\python23msvc7\libs"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/tst.pdb"
-				SubSystem="1"
+				ProgramDatabaseFile="$(OutDir)/pyd.pdb"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)/pyd.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -63,13 +67,12 @@
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="c:\Python23\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				RuntimeLibrary="4"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -78,13 +81,13 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/tst.exe"
+				OutputFile="$(OutDir)/pyd.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="C:\Python23\libs"
 				GenerateDebugInformation="TRUE"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				ImportLibrary="$(OutDir)/pyd.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -116,19 +119,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\hello.cxx">
-			</File>
-			<File
-				RelativePath=".\test_tst.py">
-			</File>
-			<File
-				RelativePath=".\test_tst2.py">
-			</File>
-			<File
-				RelativePath=".\TST.cxx">
-			</File>
-			<File
-				RelativePath="..\python\tcc\tst.py">
+				RelativePath="..\tst_wrap.cxx">
 			</File>
 		</Filter>
 		<Filter
@@ -136,10 +127,7 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\debug.h">
-			</File>
-			<File
-				RelativePath=".\tst.h">
+				RelativePath="..\tst.h">
 			</File>
 		</Filter>
 		<Filter
