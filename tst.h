@@ -706,6 +706,8 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     // dans laquelle on recherche et non pas de l'arbre lui-même.
                     // Bien sûr, si l'arbre change, il faut recalculer toutes ces infos de backtrack.
                     // Au final, on a une version multi-chaines de l'algo Knuth-Morris-Pratt : Knuth-Morris-Pratt-Lehuen ??? ;)
+                    // Ben non, en fait, c'est l'algo Aho-Corasick http://www-sr.informatik.uni-tuebingen.de/~buehler/AC/AC.html :(
+                    // La seule différence, c'est qu'ici je vais calculer le 'Failure Pattern' au fur et à mesure des besoins.
                     pos = best_match_start+1;
                     best_match_start = NULL;
                 }
