@@ -121,10 +121,10 @@ template<class T> T tst<T>::__setitem__(char* string,T data) {
 }
 
 template<class T> void tst<T>::almost(char* string, int string_length, int maximum_distance, action<T>* to_perform) {
-    LOG1("malloc de %i\n",string_length+maximum_distance+4);
-    char* current_key=(char*)malloc((string_length+maximum_distance+4)*sizeof(char));
+    LOG1("malloc de %i\n",string_length+maximum_distance+2);
+    char* current_key=(char*)malloc((string_length+maximum_distance+2)*sizeof(char));
     LOG1("malloc : %x\n",(int)current_key);
-    almost_recurse(array+root,current_key,0,string,0,string_length,maximum_distance,to_perform,string_length+maximum_distance+4);
+    almost_recurse(array+root,current_key,0,string,0,string_length,maximum_distance,to_perform,string_length+maximum_distance+2);
     free(current_key);
 }
 
@@ -148,7 +148,7 @@ template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* cu
     
     if(current_node->data!=default_value) {
         diff2=remaining_distance-abs(current_key_length+1-string_length)-diff;
-        if(diff2>0) {
+        if(diff2>=0) {
             current_key[current_key_length]=current_node->c;
             current_key[current_key_length+1]='\0';
             to_perform->perform(current_key,diff2,current_node->data);
@@ -159,7 +159,7 @@ template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* cu
     other_index=current_node->next;
     if (other_index>=0) {
         diff2 = remaining_distance - diff;
-        if (diff2>0) {
+        if (diff2>=0) {
             current_key[current_key_length]=current_node->c;
             current_key[current_key_length+1]='\0';
             almost_recurse(array+other_index,current_key,current_key_length+1,string,current_index+1,string_length,diff2,to_perform,buffer_size);

@@ -5,7 +5,7 @@ t = tst.TST(8,'')
 u = tst.IntegerTST(8,0)
 
 start = time.time()
-for i in range(50):
+for i in range(5):
     for line in file('prenoms.txt','r').readlines():
         line=line.strip()
         t.put(line,line)
@@ -27,7 +27,7 @@ class action(tst.Action):
 
 s = 'Nicolas;H';
 a = action()
-t.almost(s,len(s),3,a)
+t.almost(s,len(s),2,a)
 
 print 'The END !'
 
@@ -37,12 +37,14 @@ t=tcc.tst.TST()
 u=tcc.tst.TST()
 
 start = time.time()
-for i in range(50):
+for i in range(5):
     for line in file('prenoms.txt','r').readlines():
         line=line.strip()
         t[line]=line
         u[line]=len(line)
 print 'Python version : ',time.time()-start
+
+print t.almost(s,3)
 
 #t.adjust()
 #u.adjust()
