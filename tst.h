@@ -24,7 +24,9 @@ template<class T> class tst {
         
         void adjust();
         T get(char* string);
+        T __getitem__(char* string);
         T put(char* string,T data);
+        T __setitem__(char* string,T data);
         void debug();
         size_t bytes_allocated();
 
@@ -32,8 +34,7 @@ template<class T> class tst {
         int create_node(tst_node<T>** current_node,int current_index);
         int build_node(tst_node<T>** current_node,int* current_index,char* current_char);
         tst_node<T>* find_node(int* current_index,char* current_char);
-    
-    private:
+
         int (*comparator)(T,T);
         tst_node<T>* array;
         T default_value;
@@ -80,6 +81,10 @@ template<class T> T tst<T>::get(char* string) {
     }
 }
 
+template<class T> T tst<T>::__getitem__(char* string) {
+    return get(string);
+}
+
 template<class T> T tst<T>::put(char* string,T data) {
     LOG2("put(%s,%i)\n",string,(int)data);
     
@@ -91,6 +96,10 @@ template<class T> T tst<T>::put(char* string,T data) {
     result = current_node->data;
     current_node->data=data;
     return result;
+}
+
+template<class T> T tst<T>::__setitem__(char* string,T data) {
+    return put(string,data);
 }
 
 template<class T> int tst<T>::create_node(tst_node<T>** current_node,int current_index) {

@@ -1,12 +1,12 @@
 import tst,tcc.tst
 import time
 
-t = tst.string_tst(8,'')
-u = tst.int_tst(8,0)
+t = tst.StringTST(8,'')
+u = tst.IntegerTST(8,0)
 
 start = time.time()
-for i in range(100):
-    for line in file('prenoms.txt','r'):
+for i in range(50):
+    for line in file('prenoms.txt','r').readlines():
         line=line.strip()
         t.put(line,line)
         u.put(line,len(line))
@@ -16,11 +16,11 @@ t=tcc.tst.TST()
 u=tcc.tst.TST()
 
 start = time.time()
-for i in range(100):
-    for line in file('prenoms.txt','r'):
+for i in range(50):
+    for line in file('prenoms.txt','r').readlines():
         line=line.strip()
         t[line]=line
-        u[line]=line
+        u[line]=len(line)
 print 'Python version : ',time.time()-start
 
 #t.adjust()

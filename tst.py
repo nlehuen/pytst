@@ -30,85 +30,119 @@ except AttributeError:
 del types
 
 
-class int_tst(_object):
+class IntegerTST(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, int_tst, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, IntegerTST, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, int_tst, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, IntegerTST, name)
     def __repr__(self):
         return "<C tst<(int)> instance at %s>" % (self.this,)
     def __init__(self, *args):
-        _swig_setattr(self, int_tst, 'this', _tst.new_int_tst(*args))
-        _swig_setattr(self, int_tst, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete_int_tst):
+        _swig_setattr(self, IntegerTST, 'this', _tst.new_IntegerTST(*args))
+        _swig_setattr(self, IntegerTST, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_IntegerTST):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def adjust(*args): return _tst.int_tst_adjust(*args)
-    def get(*args): return _tst.int_tst_get(*args)
-    def put(*args): return _tst.int_tst_put(*args)
-    def debug(*args): return _tst.int_tst_debug(*args)
-    def bytes_allocated(*args): return _tst.int_tst_bytes_allocated(*args)
+    def adjust(*args): return _tst.IntegerTST_adjust(*args)
+    def get(*args): return _tst.IntegerTST_get(*args)
+    def __getitem__(*args): return _tst.IntegerTST___getitem__(*args)
+    def put(*args): return _tst.IntegerTST_put(*args)
+    def __setitem__(*args): return _tst.IntegerTST___setitem__(*args)
+    def debug(*args): return _tst.IntegerTST_debug(*args)
+    def bytes_allocated(*args): return _tst.IntegerTST_bytes_allocated(*args)
 
-class int_tstPtr(int_tst):
+class IntegerTSTPtr(IntegerTST):
     def __init__(self, this):
-        _swig_setattr(self, int_tst, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, int_tst, 'thisown', 0)
-        _swig_setattr(self, int_tst,self.__class__,int_tst)
-_tst.int_tst_swigregister(int_tstPtr)
+        _swig_setattr(self, IntegerTST, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, IntegerTST, 'thisown', 0)
+        _swig_setattr(self, IntegerTST,self.__class__,IntegerTST)
+_tst.IntegerTST_swigregister(IntegerTSTPtr)
 
-class string_tst(_object):
+class StringTST(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, string_tst, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, StringTST, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, string_tst, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, StringTST, name)
     def __repr__(self):
         return "<C tst<(p.char)> instance at %s>" % (self.this,)
     def __init__(self, *args):
-        _swig_setattr(self, string_tst, 'this', _tst.new_string_tst(*args))
-        _swig_setattr(self, string_tst, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete_string_tst):
+        _swig_setattr(self, StringTST, 'this', _tst.new_StringTST(*args))
+        _swig_setattr(self, StringTST, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_StringTST):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def adjust(*args): return _tst.string_tst_adjust(*args)
-    def get(*args): return _tst.string_tst_get(*args)
-    def put(*args): return _tst.string_tst_put(*args)
-    def debug(*args): return _tst.string_tst_debug(*args)
-    def bytes_allocated(*args): return _tst.string_tst_bytes_allocated(*args)
+    def adjust(*args): return _tst.StringTST_adjust(*args)
+    def get(*args): return _tst.StringTST_get(*args)
+    def __getitem__(*args): return _tst.StringTST___getitem__(*args)
+    def put(*args): return _tst.StringTST_put(*args)
+    def __setitem__(*args): return _tst.StringTST___setitem__(*args)
+    def debug(*args): return _tst.StringTST_debug(*args)
+    def bytes_allocated(*args): return _tst.StringTST_bytes_allocated(*args)
 
-class string_tstPtr(string_tst):
+class StringTSTPtr(StringTST):
     def __init__(self, this):
-        _swig_setattr(self, string_tst, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, string_tst, 'thisown', 0)
-        _swig_setattr(self, string_tst,self.__class__,string_tst)
-_tst.string_tst_swigregister(string_tstPtr)
+        _swig_setattr(self, StringTST, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, StringTST, 'thisown', 0)
+        _swig_setattr(self, StringTST,self.__class__,StringTST)
+_tst.StringTST_swigregister(StringTSTPtr)
 
-class object_tst(_object):
+class _object_tst(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, object_tst, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, _object_tst, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, object_tst, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, _object_tst, name)
     def __repr__(self):
         return "<C tst<(p.PyObject)> instance at %s>" % (self.this,)
     def __init__(self, *args):
-        _swig_setattr(self, object_tst, 'this', _tst.new_object_tst(*args))
-        _swig_setattr(self, object_tst, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete_object_tst):
+        _swig_setattr(self, _object_tst, 'this', _tst.new__object_tst(*args))
+        _swig_setattr(self, _object_tst, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete__object_tst):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def adjust(*args): return _tst.object_tst_adjust(*args)
-    def get(*args): return _tst.object_tst_get(*args)
-    def put(*args): return _tst.object_tst_put(*args)
-    def debug(*args): return _tst.object_tst_debug(*args)
-    def bytes_allocated(*args): return _tst.object_tst_bytes_allocated(*args)
+    def adjust(*args): return _tst._object_tst_adjust(*args)
+    def get(*args): return _tst._object_tst_get(*args)
+    def __getitem__(*args): return _tst._object_tst___getitem__(*args)
+    def put(*args): return _tst._object_tst_put(*args)
+    def __setitem__(*args): return _tst._object_tst___setitem__(*args)
+    def debug(*args): return _tst._object_tst_debug(*args)
+    def bytes_allocated(*args): return _tst._object_tst_bytes_allocated(*args)
 
-class object_tstPtr(object_tst):
+class _object_tstPtr(_object_tst):
     def __init__(self, this):
-        _swig_setattr(self, object_tst, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, object_tst, 'thisown', 0)
-        _swig_setattr(self, object_tst,self.__class__,object_tst)
-_tst.object_tst_swigregister(object_tstPtr)
+        _swig_setattr(self, _object_tst, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, _object_tst, 'thisown', 0)
+        _swig_setattr(self, _object_tst,self.__class__,_object_tst)
+_tst._object_tst_swigregister(_object_tstPtr)
+
+class TST(_object_tst):
+    __swig_setmethods__ = {}
+    for _s in [_object_tst]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, TST, name, value)
+    __swig_getmethods__ = {}
+    for _s in [_object_tst]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    __getattr__ = lambda self, name: _swig_getattr(self, TST, name)
+    def __repr__(self):
+        return "<C TST instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, TST, 'this', _tst.new_TST(*args))
+        _swig_setattr(self, TST, 'thisown', 1)
+    def get(*args): return _tst.TST_get(*args)
+    def __getitem__(*args): return _tst.TST___getitem__(*args)
+    def put(*args): return _tst.TST_put(*args)
+    def __setitem__(*args): return _tst.TST___setitem__(*args)
+    def __del__(self, destroy=_tst.delete_TST):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+
+class TSTPtr(TST):
+    def __init__(self, this):
+        _swig_setattr(self, TST, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, TST, 'thisown', 0)
+        _swig_setattr(self, TST,self.__class__,TST)
+_tst.TST_swigregister(TSTPtr)
 
 
