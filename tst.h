@@ -635,145 +635,158 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
     int current_index=root;
     int previous_char_was_stop_char=1;
 
-    while(c=*(pos++)) {
-        // on commence par rechercher le noeud correspondant au caractère courant
-        while(current_index>=0) {
-            current_node=array+current_index;
-            if(current_node->c==0) {
-                current_index=UNDEFINED_INDEX;
-                break;
-            }
-            else {
-                diff=c-current_node->c;
-                if(diff>0) {
-                    current_index=current_node->right;
-                }
-                else if(diff<0) {
-                    current_index=current_node->left;
-                }
-                else {
+    c = *(pos++);
+    while(best_match_node!=NULL || c!=0) {
+        if(c) {
+            // on commence par rechercher le noeud correspondant au caractère courant
+            while(current_index>=0) {
+                current_node=array+current_index;
+                if(current_node->c==0) {
+                    current_index=UNDEFINED_INDEX;
                     break;
                 }
-            }
-        }
-
-        if(current_index==UNDEFINED_INDEX) {
-            if(best_match_node) {
-                // le caractère courant ne matche pas => on backtracke
-
-                // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
-                size_t key_size=best_match_start-previous_match_end;
-                if(key_size>0) {
-                    S* key=(S*)tst_malloc(key_size+1);
-                    memcpy(key,previous_match_end,key_size);
-                    key[key_size]='\0';
-                    to_perform->perform(key,-key_size,default_value);
-                    tst_free(key);
-                }
-
-                // puis on envoie le match actuel
-                key_size=best_match_end-best_match_start;
-                S* key=(S*)tst_malloc(key_size+1);
-                memcpy(key,best_match_start,key_size);
-                key[key_size]='\0';
-                to_perform->perform(key,key_size,best_match_node->data);
-                tst_free(key);
-
-                // puis on reprend juste après le meilleur match depuis la racine de l'arbre
-                previous_match_end = best_match_end;
-                pos = best_match_end;
-                best_match_node = NULL;
-                best_match_end = NULL;
-            }
-            best_match_start = NULL;
-            current_index = root;
-        }
-        else {
-            if(!best_match_start) {
-                if(previous_char_was_stop_char) {
-                    best_match_start=pos-1;
-                }
                 else {
-                    current_index = root;
-                }
-            }
-            if(best_match_start) {
-                // on a trouvé le caractère courant => s'il y a un objet courant et qu'il est terminal
-                // on enregistre le match
-                if(current_node->data!=default_value) {
-                    if(stop_chars) {
-                        S next_char = *pos;
-                        S* current_stop_char=stop_chars;
-                        do {
-                            if(next_char==(*current_stop_char)) {
-                                best_match_node = current_node;
-                                best_match_end = pos;
-                                break;
-                            }
-                        } while(*(current_stop_char++));
+                    diff=c-current_node->c;
+                    if(diff>0) {
+                        current_index=current_node->right;
+                    }
+                    else if(diff<0) {
+                        current_index=current_node->left;
                     }
                     else {
-                        best_match_node = current_node;
-                        best_match_end = pos;
+                        break;
                     }
                 }
-                // si on peut continuer on y va sinon le match est terminé.
-                current_index=current_node->next;
+            }
+    
+            if(current_index==UNDEFINED_INDEX) {
+                if(best_match_node) {
+                    // le caractère courant ne matche pas => on backtracke
+    
+                    // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
+                    size_t key_size=best_match_start-previous_match_end;
+                    if(key_size>0) {
+                        S* key=(S*)tst_malloc(key_size+1);
+                        memcpy(key,previous_match_end,key_size);
+                        key[key_size]='\0';
+                        to_perform->perform(key,-key_size,default_value);
+                        tst_free(key);
+                    }
+    
+                    // puis on envoie le match actuel
+                    key_size=best_match_end-best_match_start;
+                    S* key=(S*)tst_malloc(key_size+1);
+                    memcpy(key,best_match_start,key_size);
+                    key[key_size]='\0';
+                    to_perform->perform(key,key_size,best_match_node->data);
+                    tst_free(key);
+    
+                    // puis on reprend juste après le meilleur match depuis la racine de l'arbre
+                    previous_match_end = best_match_end;
+                    pos = best_match_end;
+                    best_match_node = NULL;
+                    best_match_end = NULL;
+                }
+                best_match_start = NULL;
+                current_index = root;
+            }
+            else {
+                if(!best_match_start) {
+                    if(previous_char_was_stop_char) {
+                        best_match_start=pos-1;
+                    }
+                    else {
+                        current_index = root;
+                    }
+                }
+                if(best_match_start) {
+                    // on a trouvé le caractère courant => s'il y a un objet courant et qu'il est terminal
+                    // on enregistre le match
+                    if(current_node->data!=default_value) {
+                        if(stop_chars) {
+                            S next_char = *pos;
+                            S* current_stop_char=stop_chars;
+                            do {
+                                if(next_char==(*current_stop_char)) {
+                                    best_match_node = current_node;
+                                    best_match_end = pos;
+                                    break;
+                                }
+                            } while(*(current_stop_char++));
+                        }
+                        else {
+                            best_match_node = current_node;
+                            best_match_end = pos;
+                        }
+                    }
+                    // si on peut continuer on y va sinon le match est terminé.
+                    current_index=current_node->next;
+                }
+            }
+
+            if(stop_chars) {
+                previous_char_was_stop_char=0;
+                S* current_stop_char=stop_chars;
+                do {
+                    if(c==(*current_stop_char)) {
+                        previous_char_was_stop_char=1;
+                        break;
+                    }
+                } while(*(current_stop_char++));
+            }
+       }
+        else {
+            // maintenant on est à la fin de la chaine
+            // on se comporte comme si le caractère était incorrect
+            // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
+            size_t key_size=best_match_start-previous_match_end;
+            if(key_size>0) {
+                S* key=(S*)tst_malloc(key_size+1);
+                memcpy(key,previous_match_end,key_size);
+                key[key_size]='\0';
+                to_perform->perform(key,-key_size,default_value);
+                tst_free(key);
+            }
+
+            // puis on envoie le match actuel
+            key_size=best_match_end-best_match_start;
+            S* key=(S*)tst_malloc(key_size+1);
+            memcpy(key,best_match_start,key_size);
+            key[key_size]='\0';
+            to_perform->perform(key,key_size,best_match_node->data);
+            tst_free(key);
+
+            // puis on reprend juste après le meilleur match depuis la racine de l'arbre
+            previous_match_end = best_match_end;
+            pos = best_match_end;
+            best_match_node = NULL;
+            best_match_end = NULL;
+            best_match_start = NULL;
+            current_index = root;
+
+            if(stop_chars) {
+                previous_char_was_stop_char=0;
+                S* current_stop_char=stop_chars;
+                do {
+                    if(*(pos-1)==(*current_stop_char)) {
+                        previous_char_was_stop_char=1;
+                        break;
+                    }
+                } while(*(current_stop_char++));
             }
         }
 
-        if(stop_chars) {
-            previous_char_was_stop_char=0;
-            S* current_stop_char=stop_chars;
-            do {
-                if(c==(*current_stop_char)) {
-                    previous_char_was_stop_char=1;
-                    break;
-                }
-            } while(*(current_stop_char++));
-        }
+        c = *(pos++);
     }
 
-    if(best_match_node) {
-        // en fin de parcours
-
-        // on envoie les caractères pas matchés avant le match actuel
-        size_t key_size=best_match_start-previous_match_end;
-        if(key_size>0) {
-            S* key=(S*)tst_malloc(key_size+1);
-            memcpy(key,previous_match_end,key_size);
-            key[key_size]='\0';
-            to_perform->perform(key,-key_size,default_value);
-            tst_free(key);
-        }
-
-        // puis on envoie le match actuel
-        key_size=best_match_end-best_match_start;
+    // A la fin du parcours on envoie les derniers caractères s'il y a lieu
+    size_t key_size=pos-previous_match_end-1;
+    if(key_size>0) {
         S* key=(S*)tst_malloc(key_size+1);
-        memcpy(key,best_match_start,key_size);
+        memcpy(key,previous_match_end,key_size);
         key[key_size]='\0';
-        to_perform->perform(key,key_size,best_match_node->data);
+        to_perform->perform(key,-key_size,default_value);
         tst_free(key);
-
-        // Code inutile car variable non réutilisée
-        // Mais cela permet de se rendre compte que le code après le 'else' suivant
-        // ne pouvait être exécuté à la suite
-        /*previous_match_end = best_match_end;
-        pos = best_match_end;
-        best_match_node = NULL;
-        best_match_start = NULL;
-        best_match_end = NULL;*/
-    }
-    else {
-        // A la fin du parcours on envoie les derniers caractères s'il y a lieu
-        size_t key_size=pos-previous_match_end-1;
-        if(key_size>0) {
-            S* key=(S*)tst_malloc(key_size+1);
-            memcpy(key,previous_match_end,key_size);
-            key[key_size]='\0';
-            to_perform->perform(key,-key_size,default_value);
-            tst_free(key);
-        }
     }
 
     return to_perform->result();
