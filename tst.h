@@ -11,15 +11,15 @@ struct tst_node {
 typedef struct tst_node tst_node;
 
 struct tst {
-    tst_node *array;
+    struct tst_node *array;
     int root,next,size;
 };
 typedef struct tst tst;
 
-tst* tst_create();
-void tst_free(tst* _tst);
-int tst_create_node(tst* _tst);
-void tst_adjust_size(tst* _tst);
-int tst_find_node(tst* _tst,int current_node,char* current_char);
+struct tst* tst_create();
+void tst_free(struct tst* _tst);
+int tst_create_node(struct tst* _tst);
+void tst_adjust_size(struct tst* _tst);
+int tst_find_node(struct tst* _tst,int current_node,char* current_char);
 
 #endif
