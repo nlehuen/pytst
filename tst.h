@@ -16,19 +16,27 @@ struct tst_node {
 typedef struct tst_node tst_node;
 
 struct tst {
-    struct tst_node *array;
+    tst_node *array;
     int root,next,size;
 };
 typedef struct tst tst;
 
+/**
+ * Interface publique
+ **/
 struct tst* tst_create();
-void tst_free(tst* _tst);
-int tst_create_node(tst* _tst,tst_node** current,int current_node);
-void tst_adjust_size(tst* _tst);
-int tst_build_node(tst* _tst,tst_node** current_node,int* current_index,char* current_char);
-tst_node* tst_find_node(tst* _tst,int* current_index,char* current_char);
 TST_NODE_TYPE tst_get(tst* _tst,char* string);
 TST_NODE_TYPE tst_put(tst* _tst,char* string,TST_NODE_TYPE data);
+void tst_free(tst* _tst);
+
+/**
+ * Interface privée
+ **/
+int tst_create_node(tst* _tst,tst_node** current,int current_node);
+void tst_adjust_size(tst* _tst);
+
+tst_node* tst_find_node(tst* _tst,int* current_index,char* current_char);
+int tst_build_node(tst* _tst,tst_node** current_node,int* current_index,char* current_char);
 
 void tst_balance_node(tst_node* array,tst_node** current_node,int* current_index);
 void tst_ll(tst_node* array,tst_node** current_node,int* current_index);

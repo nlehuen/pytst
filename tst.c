@@ -111,11 +111,12 @@ int tst_build_node(tst* _tst,tst_node** current_node,int* current_index,char* cu
 }
 
 tst_node* tst_find_node(tst* _tst,int* current_index,char* current_char) {
+    tst_node* array=_tst->array;
     tst_node* current_node;
     int diff;
 
     while(*current_index>=0) {
-        current_node=_tst->array+*current_index;
+        current_node=array+*current_index;
 
         if(current_node->c==0) {
             *current_index=-1;
