@@ -36,24 +36,27 @@ template<class T> class tst {
         ~tst();
 
         void adjust();
+        void walk(action<T>* to_perform);
         void almost_perform(char* string,int string_length,int maximum_distance,action<T>* to_perform);
         T get(char* string);
         T __getitem__(char* string);
         T put(char* string,T data);
         T __setitem__(char* string,T data);
         void debug();
+        int get_maximum_key_length();
         size_t bytes_allocated();
 
     protected:
         tst_node<T>* array;
         T default_value;
-        int root,next,size,max_key_length;
+        int root,next,size,maximum_key_length;
 
+        void walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,action<T>* to_perform);
         void almost_recurse(tst_node<T>* current_node,char* current_key, int current_key_length, char* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,action<T>* to_perform,int current_key_limit);
 
         int create_node(tst_node<T>** current_node,int current_index);
 
-        int build_node(tst_node<T>** current_node,int* current_index,char* current_char);
+        int build_node(tst_node<T>** current_node,int* current_index,char* current_char,int current_key_length);
         tst_node<T>* find_node(int* current_index,char* current_char);
 
         void balance_node(tst_node<T>** current_node,int* current_index);
@@ -72,6 +75,7 @@ template<class T> tst<T>::tst(int size,T default_value) {
     array=(tst_node<T>*)malloc(size*sizeof(tst_node<T>));
     next=0;
     root=create_node(&array,0);
+    maximum_key_length=0;
 }
 
 template<class T> tst<T>::~tst() {
@@ -107,7 +111,7 @@ template<class T> T tst<T>::put(char* string,T data) {
     LOG2("put(%s,%i)\n",string,(int)data);
 
     tst_node<T>* current_node=array+root;
-    int node_index=build_node(&current_node,&root,string);
+    int node_index=build_node(&current_node,&root,string,0);
     T result;
 
     current_node=array+node_index;
@@ -127,6 +131,46 @@ template<class T> void tst<T>::almost_perform(char* string, int string_length, i
     LOG1("malloc : %x\n",(int)current_key);
     almost_recurse(array+root,current_key,0,string,0,string_length,string_length,maximum_distance,to_perform,string_length+maximum_distance);
     free(current_key);
+}
+
+template<class T> void tst<T>::walk(action<T>* to_perform) {
+    char* key=(char*)malloc((maximum_key_length+2)*sizeof(char));
+    *key='\0';
+    walk_recurse(array+root,key,0,maximum_key_length+1,to_perform);
+    free(key);
+}
+
+template<class T> void tst<T>::walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,action<T>* to_perform) {
+    int other_index;
+
+    other_index=current_node->left;
+    if(other_index>=0) {
+        walk_recurse(array+other_index,current_key,current_key_length,current_key_limit,to_perform);
+    }
+
+    if(current_node->data!=default_value) {
+        assert(current_key[current_key_length]=='\0');
+        assert(current_key_length < current_key_limit);
+        current_key[current_key_length]=current_node->c;
+        current_key[current_key_length+1]='\0';
+        to_perform->perform(current_key,0,current_node->data);
+        current_key[current_key_length]='\0';
+    }
+
+    other_index=current_node->next;
+    if(other_index>=0) {
+        assert(current_key[current_key_length]=='\0');
+        assert(current_key_length < current_key_limit);
+        current_key[current_key_length]=current_node->c;
+        current_key[current_key_length+1]='\0';
+        walk_recurse(array+other_index,current_key,current_key_length+1,current_key_limit,to_perform);
+        current_key[current_key_length]='\0';
+    }
+
+    other_index=current_node->right;
+    if(other_index>=0) {
+        walk_recurse(array+other_index,current_key,current_key_length,current_key_limit,to_perform);
+    }
 }
 
 template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,char* string, int current_index, int real_string_length, int string_length, int remaining_distance, action<T>* to_perform,int current_key_limit) {
@@ -217,7 +261,7 @@ template<class T> int tst<T>::create_node(tst_node<T>** current_node,int current
     return id;
 }
 
-template<class T> int tst<T>::build_node(tst_node<T>** current_node,int* current_index,char* current_char) {
+template<class T> int tst<T>::build_node(tst_node<T>** current_node,int* current_index,char* current_char,int current_key_length) {
     int diff,result,next_index;
 
     if((*current_node)->c==0) {
@@ -232,7 +276,11 @@ template<class T> int tst<T>::build_node(tst_node<T>** current_node,int* current
     if(diff==0) {
         LOG2("%c = %c\n",*current_char,(*current_node)->c);
         current_char++;
+        current_key_length++;
         if(*current_char) {
+            if(current_key_length>maximum_key_length) {
+                maximum_key_length=current_key_length;
+            }
             next_index = (*current_node)->next;
             if(next_index<0) {
                 /* attention cela doit FORCEMENT se faire en deux ligne
@@ -241,7 +289,7 @@ template<class T> int tst<T>::build_node(tst_node<T>** current_node,int* current
                 (*current_node)->next=next_index;
             }
             *current_node = array + next_index;
-            result=build_node(current_node,&next_index,current_char);
+            result=build_node(current_node,&next_index,current_char,current_key_length);
             *current_node = array+*current_index;
             (*current_node)->next=next_index;
             balance_node(current_node,current_index);
@@ -259,7 +307,7 @@ template<class T> int tst<T>::build_node(tst_node<T>** current_node,int* current
             (*current_node)->right=next_index;
         }
         *current_node = array + next_index;
-        result=build_node(current_node,&next_index,current_char);
+        result=build_node(current_node,&next_index,current_char,current_key_length);
         *current_node = array+*current_index;
         (*current_node)->right=next_index;
         balance_node(current_node,current_index);
@@ -273,7 +321,7 @@ template<class T> int tst<T>::build_node(tst_node<T>** current_node,int* current
             (*current_node)->left=next_index;
         }
         *current_node = array + next_index;
-        result=build_node(current_node,&next_index,current_char);
+        result=build_node(current_node,&next_index,current_char,current_key_length);
         *current_node = array+*current_index;
         (*current_node)->left=next_index;
         balance_node(current_node,current_index);
@@ -426,6 +474,10 @@ template<class T> void tst<T>::debug() {
 
 template<class T> size_t tst<T>::bytes_allocated() {
     return sizeof(tst)+size*sizeof(tst_node<T>);
+}
+
+template<class T> int tst<T>::get_maximum_key_length() {
+    return maximum_key_length;
 }
 
 template<class T> void tst<T>::debug(tst_node<T>* current_node) {

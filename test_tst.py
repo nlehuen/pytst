@@ -30,9 +30,15 @@ for s in ('Nicolas;H','Yohan;H'):
     for i in range(7):
         print "almost(%i)"%i
         _dict = t.almost(s,len(s),i).items();
-        print _dict
+        print len(_dict)
         for key,item in _dict:
             d = levenshtein(key,s);
             assert(d<=i)
             assert(d==(i-item[0]))
         print 'OK'
+
+la = tst.ListAction();
+t.walk(la)
+print len(la.get_list())
+
+print t.get_maximum_key_length()

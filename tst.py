@@ -51,12 +51,14 @@ class IntegerTST(_object):
             if self.thisown: destroy(self)
         except: pass
     def adjust(*args): return _tst.IntegerTST_adjust(*args)
+    def walk(*args): return _tst.IntegerTST_walk(*args)
     def almost_perform(*args): return _tst.IntegerTST_almost_perform(*args)
     def get(*args): return _tst.IntegerTST_get(*args)
     def __getitem__(*args): return _tst.IntegerTST___getitem__(*args)
     def put(*args): return _tst.IntegerTST_put(*args)
     def __setitem__(*args): return _tst.IntegerTST___setitem__(*args)
     def debug(*args): return _tst.IntegerTST_debug(*args)
+    def get_maximum_key_length(*args): return _tst.IntegerTST_get_maximum_key_length(*args)
     def bytes_allocated(*args): return _tst.IntegerTST_bytes_allocated(*args)
 
 class IntegerTSTPtr(IntegerTST):
@@ -112,12 +114,14 @@ class StringTST(_object):
             if self.thisown: destroy(self)
         except: pass
     def adjust(*args): return _tst.StringTST_adjust(*args)
+    def walk(*args): return _tst.StringTST_walk(*args)
     def almost_perform(*args): return _tst.StringTST_almost_perform(*args)
     def get(*args): return _tst.StringTST_get(*args)
     def __getitem__(*args): return _tst.StringTST___getitem__(*args)
     def put(*args): return _tst.StringTST_put(*args)
     def __setitem__(*args): return _tst.StringTST___setitem__(*args)
     def debug(*args): return _tst.StringTST_debug(*args)
+    def get_maximum_key_length(*args): return _tst.StringTST_get_maximum_key_length(*args)
     def bytes_allocated(*args): return _tst.StringTST_bytes_allocated(*args)
 
 class StringTSTPtr(StringTST):
@@ -173,12 +177,14 @@ class _object_tst(_object):
             if self.thisown: destroy(self)
         except: pass
     def adjust(*args): return _tst._object_tst_adjust(*args)
+    def walk(*args): return _tst._object_tst_walk(*args)
     def almost_perform(*args): return _tst._object_tst_almost_perform(*args)
     def get(*args): return _tst._object_tst_get(*args)
     def __getitem__(*args): return _tst._object_tst___getitem__(*args)
     def put(*args): return _tst._object_tst_put(*args)
     def __setitem__(*args): return _tst._object_tst___setitem__(*args)
     def debug(*args): return _tst._object_tst_debug(*args)
+    def get_maximum_key_length(*args): return _tst._object_tst_get_maximum_key_length(*args)
     def bytes_allocated(*args): return _tst._object_tst_bytes_allocated(*args)
 
 class _object_tstPtr(_object_tst):
@@ -245,6 +251,32 @@ class DictActionPtr(DictAction):
         _swig_setattr(self, DictAction,self.__class__,DictAction)
 _tst.DictAction_swigregister(DictActionPtr)
 
+class ListAction(Action):
+    __swig_setmethods__ = {}
+    for _s in [Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ListAction, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    __getattr__ = lambda self, name: _swig_getattr(self, ListAction, name)
+    def __repr__(self):
+        return "<C ListAction instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, ListAction, 'this', _tst.new_ListAction(*args))
+        _swig_setattr(self, ListAction, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_ListAction):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.ListAction_perform(*args)
+    def get_list(*args): return _tst.ListAction_get_list(*args)
+
+class ListActionPtr(ListAction):
+    def __init__(self, this):
+        _swig_setattr(self, ListAction, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, ListAction, 'thisown', 0)
+        _swig_setattr(self, ListAction,self.__class__,ListAction)
+_tst.ListAction_swigregister(ListActionPtr)
+
 class TST(_object_tst):
     __swig_setmethods__ = {}
     for _s in [_object_tst]: __swig_setmethods__.update(_s.__swig_setmethods__)
@@ -257,15 +289,15 @@ class TST(_object_tst):
     def __init__(self, *args):
         _swig_setattr(self, TST, 'this', _tst.new_TST(*args))
         _swig_setattr(self, TST, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_TST):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
     def get(*args): return _tst.TST_get(*args)
     def __getitem__(*args): return _tst.TST___getitem__(*args)
     def put(*args): return _tst.TST_put(*args)
     def __setitem__(*args): return _tst.TST___setitem__(*args)
     def almost(*args): return _tst.TST_almost(*args)
-    def __del__(self, destroy=_tst.delete_TST):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
 
 class TSTPtr(TST):
     def __init__(self, this):

@@ -3,13 +3,21 @@
 #include <string.h>
 #include "tst.h"
 
-class printer : public action<char*> {
+class donothing : public action<char*> {
     public:
-        void perform(char* key,int remaining_distance,char* data);
+        virtual void perform(char* key,int remaining_distance,char* data);
+};
+
+void donothing::perform(char* key,int remaining_distance,char* data) {
+}
+
+class printer : public donothing {
+    public:
+        virtual void perform(char* key,int remaining_distance,char* data);
 };
 
 void printer::perform(char* key,int remaining_distance,char* data) {
-    // printf(">>> (%i) %s=%s\n",remaining_distance,key,data);
+    printf("%s = %s\n",key,data);
 }
 
 int main(int argc,char** argv) {
@@ -45,9 +53,14 @@ int main(int argc,char** argv) {
     printf("Taille totale line : %i\n",linetst->bytes_allocated());
     printf("Taille totale length : %i\n",lengthtst->bytes_allocated());
 
-    printer* myaction=new printer();
+    action<char*>* myaction=new donothing();
     linetst->almost_perform("Yohan;H\r\n",(int)strlen("Yohan;H\r\n"),7,myaction);
     delete myaction;
+
+    myaction=new printer();
+    linetst->walk(myaction);
+    delete myaction;
+    
 
     delete linetst;
     delete lengthtst;
