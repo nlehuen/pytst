@@ -2,8 +2,6 @@
 
 #include "tst.h"
 
-#include "Python.h"
-
 class TSTException {
     public:
         TSTException(char* _message) {

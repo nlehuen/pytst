@@ -33,6 +33,8 @@ public:
     int right;
     int left;
     int height;
+    int bt_node;
+    int bt_forward;
 };
 
 template<class S,class T> class action {
@@ -100,7 +102,7 @@ template<class S,class T> class tst {
 
         virtual int build_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length);
         virtual void remove_node(int* current_index,S* current_char,int current_key_length);
-        tst_node<S,T>* find_node(int* current_index,S* current_char);
+        tst_node<S,T>* find_node(int* current_index,tst_node<S,T>** best_node, S* current_char);
 
         void balance_node(tst_node<S,T>** current_node,int* current_index);
         void ll(tst_node<S,T>** current_node,int* current_index);
@@ -216,7 +218,8 @@ template<class S,class T> void tst<S,T>::pack() {
 
 template<class S,class T> T tst<S,T>::get(S* string) {
     int current_index=root;
-    tst_node<S,T>* current_node=find_node(&current_index,string);
+    tst_node<S,T>* best_node;
+    tst_node<S,T>* current_node=find_node(&current_index,&best_node,string);
     if(current_node) {
         return current_node->data;
     }
@@ -460,6 +463,8 @@ template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node
     new_node->left=UNDEFINED_INDEX;
     new_node->height=0;
     new_node->data=(T)NULL;
+    new_node->bt_node=UNDEFINED_INDEX;
+    new_node->bt_forward=1;
     store_data(new_node,default_value,0);
 
     return id;
@@ -585,7 +590,7 @@ template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* curre
     }
 }
 
-template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,S* current_char) {
+template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,tst_node<S,T>** best_node,S* current_char) {
     tst_node<S,T>* _array=array;
     tst_node<S,T>* current_node;
     int diff;
@@ -602,6 +607,10 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
         }
 
         if(diff==0) {
+            if(current_node->data!=default_value) {
+                *best_node=current_node;
+            }
+            
             current_char++;
             if(*current_char) {
                 *current_index = current_node->next;
@@ -683,16 +692,19 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     tst_free(key);
     
                     // puis on reprend juste après le meilleur match depuis la racine de l'arbre
+                    // TODO : on devrait faire un vrai backtrack si l'on veut que (OLAAF,AFRICA)
+                    // sur 'OLAAFRICA' renvoie deux matchs et non pas un seul.
                     previous_match_end = best_match_end;
                     pos = best_match_end;
                     best_match_node = NULL;
                     best_match_start = NULL;
                     best_match_end = NULL;
+                    current_index=root;
                 }
                 else if(best_match_start) {
                     // en fait le début de match n'était pas bon... Il nous faut donc backtracker
                     
-                    // TODO : ce backtrack n'est pas optimal. Puisqu'on a fait tout ce chemin, on sait
+                    // Puisqu'on a fait tout ce chemin, on sait
                     // quelle est la chaine de caractère qui devrait commencer à best_match_start+1.
                     // Supposons qu'on soit dans le noeud NICOLA et que le caractère courant soit A.
                     // Il n'y a pas de match donc on devrait backtracker. Le truc c'est qu'on sait à l'avance
@@ -708,11 +720,61 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     // Au final, on a une version multi-chaines de l'algo Knuth-Morris-Pratt : Knuth-Morris-Pratt-Lehuen ??? ;)
                     // Ben non, en fait, c'est l'algo Aho-Corasick http://www-sr.informatik.uni-tuebingen.de/~buehler/AC/AC.html :(
                     // La seule différence, c'est qu'ici je vais calculer le 'Failure Pattern' au fur et à mesure des besoins.
+                    if(current_node->bt_node==UNDEFINED_INDEX) {
+                       int forward=1;
+                       size_t key_size=pos-best_match_start-1;
+                       S* key=(S*)tst_malloc(key_size+1);
+                       memcpy(key,best_match_start,key_size);
+                       key[key_size]='\0';
+                       
+                       //printf("\nCalcul pour %s//%c\n",key,c);
+
+                       while(forward<key_size) {
+                           //printf("Test de la sous-cle %s...",key+forward);
+                           current_node->bt_node=root;
+                           find_node(&(current_node->bt_node),&best_match_node,key+forward);
+                           if(current_node->bt_node==UNDEFINED_INDEX) {
+                               best_match_node=NULL;
+                               //printf("KO");
+                               forward++;
+                               //if(forward<key_size) printf("\n");
+                           }
+                           else {
+                            //printf("OK");
+                            break;
+                           }
+                        }
+                        
+                        tst_free(key);
+                        
+                        current_node->bt_forward=forward;
+                        if(current_node->bt_node==UNDEFINED_INDEX) {
+                            current_node->bt_node=root;
+                        }
+                        else {
+                            current_node->bt_node=(array+current_node->bt_node)->next;
+                            if(current_node->bt_node==UNDEFINED_INDEX) {
+                                //printf("________ MERDE ____________\n");
+                                best_match_node=NULL;
+                                current_node->bt_node=root;
+                            }
+                            else {
+                                if((array+current_node->bt_node)->data!=default_value) {
+                                    best_match_node=(array+current_node->bt_node)->data;
+                                }
+                            }
+                        }
+                        
+                        //printf("==> %i, %c(%i)=>%c(%i)\n",forward,(array+current_node->bt_node)->c,current_node->bt_node,(array+(array+current_node->bt_node)->next)->c,(array+current_node->bt_node)->next);
+                    }
+                 
                     pos = best_match_start+1;
                     best_match_start = NULL;
+                    current_index=root;   
                 }
-                
-                current_index = root;
+                else {
+                    current_index = root;
+                }
             }
             else {
                 if(!best_match_start) {
