@@ -20,40 +20,40 @@ tst* tst_create(int initial_size) {
 }
 
 int tst_create_node(tst* _tst,tst_node** current,int current_node) {
-	int id;
-	tst_node* new_node;
+    int id;
+    tst_node* new_node;
     tst_node* old_array = _tst->array;
 
-	if(_tst->next==_tst->size) {
+    if(_tst->next==_tst->size) {
         _tst->size+=(_tst->size>>1);
         _tst->array=realloc(_tst->array,_tst->size*sizeof(tst_node));
-		*current = _tst->array+current_node;
+        *current = _tst->array+current_node;
     }
 
-	id=_tst->next++;
-	new_node=_tst->array+id;
+    id=_tst->next++;
+    new_node=_tst->array+id;
     new_node->c=0;
     new_node->next=-1;
     new_node->higher=-1;
     new_node->lower=-1;
 
-	return id;
+    return id;
 }
 
 void tst_adjust_size(tst* _tst) {
     if(_tst->next<_tst->size) {
-		_tst->size=_tst->next;
+        _tst->size=_tst->next;
         _tst->array=realloc(_tst->array,_tst->size*sizeof(tst_node));
     }
 }
 
 int tst_find_node(tst* _tst,int current_node,char* current_char) {
-	tst_node* current;
+    tst_node* current;
     int diff;
 
     while(1) {
         current=_tst->array+current_node;
-        
+
         if(current->c==0) {
             printf("%c !!!\n",*current_char);
             current->c=(*current_char);
@@ -68,14 +68,14 @@ int tst_find_node(tst* _tst,int current_node,char* current_char) {
             current_char++;
             if(*current_char) {
                 if(current->next<0) {
-					// attention cela doit FORCEMENT se faire en deux ligne
-					// car current peut être modifié par tst_create_node.
-					current_node=tst_create_node(_tst,&current,current_node);
+                    // attention cela doit FORCEMENT se faire en deux ligne
+                    // car current peut être modifié par tst_create_node.
+                    current_node=tst_create_node(_tst,&current,current_node);
                     current->next=current_node;
                 }
-				else {
-					current_node=current->next;
-				}
+                else {
+                    current_node=current->next;
+                }
             }
             else {
                 return current_node;
@@ -84,22 +84,22 @@ int tst_find_node(tst* _tst,int current_node,char* current_char) {
         else if(diff>0) {
             printf("%c > %c\n",*current_char,current->c);
             if(current->higher<0) {
-				current_node=tst_create_node(_tst,&current,current_node);
+                current_node=tst_create_node(_tst,&current,current_node);
                 current->higher=current_node;
             }
-			else {
-				current_node=current->higher;
-			}
+            else {
+                current_node=current->higher;
+            }
         }
         else {
             printf("%c < %c\n",*current_char,current->c);
             if(current->lower<0) {
-				current_node=tst_create_node(_tst,&current,current_node);
+                current_node=tst_create_node(_tst,&current,current_node);
                 current->lower=current_node;
             }
-			else {
-				current_node=current->lower;
-			}
+            else {
+                current_node=current->lower;
+            }
         }
     }
 }
