@@ -11,7 +11,11 @@ if __name__=='__main__':
             self.t['Antoinette']='Antoinette'
             self.t['Antoine']='Antoine'
             self.t['astride']='astride'
+            self.t['VICTOIRE']='VICTOIRE'
+            self.t['IAN']='IAN'
             self.t['x']='x'
+            self.t['V']='V'
+            self.t['ROBERT']='ROBERT'
             self.t['A N']='A N'
 
         def testScan(self):
@@ -43,6 +47,10 @@ if __name__=='__main__':
 
         def testScanVicieux2(self):
             self.assertEqual(self.t.scan_with_stop_chars('Antoinette Antoinette',' -',TupleListAction()),[('Antoinette', 10, 'Antoinette'), (' ', -1, None), ('Antoinette', 10, 'Antoinette')])
+
+        def testScanVicieux3(self):
+            self.assertEqual(self.t.scan_with_stop_chars('nastride lazlo',' -',TupleListAction()),[('nastride ', -9, None), ('lazlo', 5, 'laszlo')])
+            self.assertEqual(self.t.scan_with_stop_chars('VIAN ROBERT',' -',TupleListAction()),[('VIAN ', -5, None), ('ROBERT', 6, 'ROBERT')])
 
     unittest.main()
 

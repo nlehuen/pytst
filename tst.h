@@ -736,17 +736,6 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     current_index=current_node->next;
                 }
             }
-
-            if(stop_chars) {
-                previous_char_was_stop_char=0;
-                S* current_stop_char=stop_chars;
-                do {
-                    if(c==(*current_stop_char)) {
-                        previous_char_was_stop_char=1;
-                        break;
-                    }
-                } while(*(current_stop_char++));
-            }
        }
        else {
             // maintenant on est à la fin de la chaine
@@ -776,18 +765,18 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             best_match_end = NULL;
             best_match_start = NULL;
             current_index = root;
+        }
 
-            if(stop_chars) {
-                c = *(pos-1);
-                previous_char_was_stop_char=0;
-                S* current_stop_char=stop_chars;
-                do {
-                    if(c==(*current_stop_char)) {
-                        previous_char_was_stop_char=1;
-                        break;
-                    }
-                } while(*(current_stop_char++));
-            }
+        if(stop_chars) {
+            c = *(pos-1);
+            previous_char_was_stop_char=0;
+            S* current_stop_char=stop_chars;
+            do {
+                if(c==(*current_stop_char)) {
+                    previous_char_was_stop_char=1;
+                    break;
+                }
+            } while(*(current_stop_char++));
         }
 
         c = *(pos++);
