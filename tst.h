@@ -1,9 +1,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-#ifndef TST_NODE_TYPE
-#define TST_NODE_TYPE char*
-#endif
+#include "Python.h"
 
 struct tst_node {
     char c;
@@ -11,9 +9,10 @@ struct tst_node {
     int right;
     int left;
     int height;
-    TST_NODE_TYPE data;
+    PyObject* data;
 };
 typedef struct tst_node tst_node;
+
 
 class tst {
     public:
@@ -21,8 +20,8 @@ class tst {
         ~tst();
         
         void adjust();
-        TST_NODE_TYPE get(char* string);
-        TST_NODE_TYPE put(char* string,TST_NODE_TYPE data);
+        PyObject* get(char* string);
+        PyObject* put(char* string,PyObject* data);
         void debug();
         size_t bytes_allocated();
 

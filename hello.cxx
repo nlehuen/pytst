@@ -12,7 +12,7 @@ int main(int argc,char** argv) {
     input = fopen("prenoms.txt","r");
     line = (char*)malloc(256);
     while(fgets(line,256,input)!=NULL) {
-        mytst->put(line,line);
+        mytst->put(line,(PyObject*)line);
         line = (char*)malloc(256);
     }
     fclose(input);
@@ -20,7 +20,7 @@ int main(int argc,char** argv) {
     input = fopen("prenoms.txt","r");
     line = (char*)malloc(256);
     while(fgets(line,256,input)!=NULL) {
-        printf("%s ==> %s",line,mytst->get(line));
+        printf("%s ==> %s",line,(char*)mytst->get(line));
         free(line);
         line = (char*)malloc(256);
     }

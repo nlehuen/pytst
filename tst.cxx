@@ -13,6 +13,7 @@ tst::tst(int initial_size) {
 }
 
 tst::~tst() {
+    printf("tst::~tst() : Removing array of %i elements\n",size);
     free(array);
 }
 
@@ -23,18 +24,35 @@ void tst::adjust() {
     }
 }
 
-TST_NODE_TYPE tst::get(char* string) {
+PyObject* tst::get(char* string) {
+    LOG1("get(%s)\n",string);
+
     int current_index=root;
     tst_node* current_node=find_node(&current_index,string);
-    return current_node->data;
+    if(current_node) {
+        PyObject* result=current_node->data;
+        Py_INCREF(result);
+        return result;
+    }
+    else {
+        Py_INCREF(Py_None);
+        return Py_None;
+    }
 }
 
-TST_NODE_TYPE tst::put(char* string,TST_NODE_TYPE data) {
+PyObject* tst::put(char* string,PyObject* data) {
+    LOG2("put(%s,%i)\n",string,(int)data);
+    
     tst_node* current_node=array+root;
     int node_index=build_node(&current_node,&root,string);
-    TST_NODE_TYPE result;
+    PyObject* result;
+    
     current_node=array+node_index;
     result = current_node->data;
+    // On n'INCREF pas result car on a :
+    // Py_INCREF(result); // puisqu'on transmet la référence
+    // Py_DECREF(result); // puisqu'on supprime la référence du noeud
+    Py_INCREF(data);
     current_node->data=data;
     return result;
 }
@@ -57,6 +75,8 @@ int tst::create_node(tst_node** current_node,int current_index) {
     new_node->right=-1;
     new_node->left=-1;
     new_node->height=0;
+    Py_INCREF(Py_None);
+    new_node->data=Py_None;
 
     return id;
 }
@@ -135,7 +155,7 @@ tst_node* tst::find_node(int* current_index,char* current_char) {
 
         if(current_node->c==0) {
             *current_index=-1;
-            return 0;
+            return NULL;
         }
         else {
             diff=(*current_char)-(current_node->c);
@@ -161,7 +181,7 @@ tst_node* tst::find_node(int* current_index,char* current_char) {
         }
     }
 
-    return 0;
+    return NULL;
 }
 
 void tst::balance_node(tst_node** current_node,int* current_index) {
@@ -275,6 +295,9 @@ size_t tst::bytes_allocated() {
 void tst::debug(tst_node* current_node) {
     int index=current_node->left;
     printf("%c",current_node->c);
+    if(current_node->data) {
+        printf("\"%s\"",current_node->data);
+    }
     if(index>=0) {
         debug(array+index);
     }
@@ -296,3 +319,4 @@ void tst::debug(tst_node* current_node) {
         printf("-");
     }
 }
+
