@@ -626,11 +626,6 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
 }
 
 template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform) {
-    /*if(stop_chars)
-        printf("Scan_with_stop_chars(%s) de >%s\n",stop_chars,string);
-    else
-        printf("Scan de >%s\n",string);*/
-        
     S c;
     int diff;
 
@@ -643,7 +638,6 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
     c = *(pos++);
     while(best_match_node!=NULL || c!=0) {
         if(c) {
-            //printf(">%c",c);
             // on commence par rechercher le noeud correspondant au caractère courant
             while(current_index>=0) {
                 current_node=array+current_index;
@@ -666,7 +660,6 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             }
     
             if(current_index==UNDEFINED_INDEX) {
-                //printf("!\n");
                 if(best_match_node) {
                     // le caractère courant ne matche pas => on backtracke
     
@@ -676,7 +669,6 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                         S* key=(S*)tst_malloc(key_size+1);
                         memcpy(key,previous_match_end,key_size);
                         key[key_size]='\0';
-                        //printf("---> %s\n",key);
                         to_perform->perform(key,-key_size,default_value);
                         tst_free(key);
                     }
@@ -686,7 +678,6 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     S* key=(S*)tst_malloc(key_size+1);
                     memcpy(key,best_match_start,key_size);
                     key[key_size]='\0';
-                    //printf("-M-> %s\n",key);
                     to_perform->perform(key,key_size,best_match_node->data);
                     tst_free(key);
     
@@ -696,32 +687,24 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     best_match_node = NULL;
                     best_match_start = NULL;
                     best_match_end = NULL;
-                    //printf("<<<<< %c\n",*pos);
                 }
                 else if(best_match_start) {
                     // en fait le début de match n'était pas bon... Il nous faut donc backtracker
                     pos = best_match_start+1;
                     best_match_start = NULL;
-                    //printf("<<<<< %c\n",*pos);
                 }
                 
                 current_index = root;
             }
             else {
-                //printf("=");
                 if(!best_match_start) {
                     if(previous_char_was_stop_char) {
-                        //printf("START\n");
                         best_match_start=pos-1;
                     }
                     else {
-                        //printf("NO STOP_CHAR\n");
                         current_index = root;
                     }
                 }
-                /*else {
-                    printf("\n");
-                }*/
                 if(best_match_start) {
                     // on a trouvé le caractère courant => s'il y a un objet courant et qu'il est terminal
                     // on enregistre le match
@@ -766,7 +749,6 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             }
        }
        else {
-            //printf("||||\n");
             // maintenant on est à la fin de la chaine
             // on se comporte comme si le caractère était incorrect
             // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
@@ -775,7 +757,6 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                 S* key=(S*)tst_malloc(key_size+1);
                 memcpy(key,previous_match_end,key_size);
                 key[key_size]='\0';
-                //printf("---> %s\n",key);
                 to_perform->perform(key,-key_size,default_value);
                 tst_free(key);
             }
@@ -785,7 +766,6 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             S* key=(S*)tst_malloc(key_size+1);
             memcpy(key,best_match_start,key_size);
             key[key_size]='\0';
-            //printf("-M-> %s\n",key);
             to_perform->perform(key,key_size,best_match_node->data);
             tst_free(key);
 
@@ -796,7 +776,6 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             best_match_end = NULL;
             best_match_start = NULL;
             current_index = root;
-            //printf("<<<<< %c\n",*pos);
 
             if(stop_chars) {
                 c = *(pos-1);
@@ -820,7 +799,6 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
         S* key=(S*)tst_malloc(key_size+1);
         memcpy(key,previous_match_end,key_size);
         key[key_size]='\0';
-        //printf("---> %s\n",key);
         to_perform->perform(key,-key_size,default_value);
         tst_free(key);
     }
