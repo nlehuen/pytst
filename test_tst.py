@@ -1,11 +1,11 @@
 # -*- coding: CP1252 -*-
 from tcc import tst
-#from tcc.util import levenshtein
+from tcc.util import levenshtein
 
 import time
 
 t = tst.TST(8,None)
-u = tst.IntegerTST(8,0)
+u = tst.TST(8,0)
 
 start = time.time()
 for i in range(5):
@@ -50,7 +50,7 @@ import re
 r = re.compile('(.*)[;=](.*)')
 
 start = time.time()
-for i in range(5000):
+for i in range(500):
     print i
     la = action();
     #TODO: si on enlève le "d=" le résultat est immédiatement décrémenté ce qui coince quand on passe au bench suivant...
@@ -79,10 +79,9 @@ start = time.time()
 for line in file('prenoms.txt','r').readlines():
     line = line.strip()
     t.put(line,line+str(i))
-    la1 = tst.ListAction()
-    la2 = tst.DictAction()
-    t.almost(line,4,None,la1)
-    t.common_prefix(line,None,la2)
-    t.almost(line+line,4,None,la1)
-    t.common_prefix(line+line,None,la2)
+    for k,v in t.almost(line,4,None,tst.DictAction()).items():
+        assert(levenshtein(line,k)==(4-v[0]))
+    t.common_prefix(line,None,tst.ListAction())
+    t.almost(line+line,4,None,tst.DictAction())
+    t.common_prefix(line+line,None,tst.ListAction())
 print time.time()-start

@@ -221,6 +221,8 @@ class TST : public tst<PyObject*> {
         TST(int initial_size,PyObject* default_value);
         virtual ~TST();
         PyObject* write(PyObject* file);
+        PyObject* __getitem__(char* string);
+        void __setitem__(char* string,PyObject* data);
 
     protected:
         virtual void store_data(tst_node<PyObject*>* node,PyObject* data);
@@ -261,3 +263,12 @@ PyObject* TST::write(PyObject* file) {
     delete os;
     return Py_None;
 }
+
+PyObject* TST::__getitem__(char* string) {
+    return get(string);
+}
+
+void TST::__setitem__(char* string,PyObject* data) {
+    put(string,data);
+}
+

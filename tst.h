@@ -57,18 +57,16 @@ template<class T> class tst {
             clear_nodes();
         };
 
-        virtual void adjust();
-        virtual T walk(filter<T>* filter,action<T>* to_perform);
-        virtual T almost(char* string,int string_length,int maximum_distance,filter<T>* filter,action<T>* to_perform);
-        virtual T common_prefix(char* string,filter<T>* filter,action<T>* to_perform);
-        virtual T get(char* string);
-        virtual T __getitem__(char* string);
+        void adjust();
+        T walk(filter<T>* filter,action<T>* to_perform);
+        T almost(char* string,int string_length,int maximum_distance,filter<T>* filter,action<T>* to_perform);
+        T common_prefix(char* string,filter<T>* filter,action<T>* to_perform);
+        T scan(char* string,action<T>* to_perform);
+        T get(char* string);
         virtual void put(char* string,T data);
-        virtual void __setitem__(char* string,T data);
-        virtual void debug();
-        virtual int get_maximum_key_length();
-        virtual size_t bytes_allocated();
-        virtual void write(FILE* file,serializer<T>* writer);
+        int get_maximum_key_length();
+        size_t bytes_allocated();
+        void write(FILE* file,serializer<T>* writer);
 
     protected:
         tst_node<T>* array;
@@ -78,22 +76,20 @@ template<class T> class tst {
         tst();
         virtual void read(FILE* file,serializer<T>* serializer);
 
-        virtual void walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,filter<T>* filter,action<T>* to_perform);
-        virtual void almost_recurse(tst_node<T>* current_node,char* current_key, int current_key_length, char* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<T>* filter,action<T>* to_perform,int current_key_limit);
+        void walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,filter<T>* filter,action<T>* to_perform);
+        void almost_recurse(tst_node<T>* current_node,char* current_key, int current_key_length, char* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<T>* filter,action<T>* to_perform,int current_key_limit);
 
         virtual int create_node(tst_node<T>** current_node,int current_index);
 
         virtual int build_node(tst_node<T>** current_node,int* current_index,char* current_char,int current_key_length);
-        virtual tst_node<T>* find_node(int* current_index,char* current_char);
+        tst_node<T>* find_node(int* current_index,char* current_char);
 
-        virtual void balance_node(tst_node<T>** current_node,int* current_index);
-        virtual void ll(tst_node<T>** current_node,int* current_index);
-        virtual void rr(tst_node<T>** current_node,int* current_index);
-        virtual void lr(tst_node<T>** current_node,int* current_index);
-        virtual void rl(tst_node<T>** current_node,int* current_index);
-        virtual int compute_height_and_balance(tst_node<T>* current_node);
-
-        virtual void debug(tst_node<T>* current_node);
+        void balance_node(tst_node<T>** current_node,int* current_index);
+        void ll(tst_node<T>** current_node,int* current_index);
+        void rr(tst_node<T>** current_node,int* current_index);
+        void lr(tst_node<T>** current_node,int* current_index);
+        void rl(tst_node<T>** current_node,int* current_index);
+        int compute_height_and_balance(tst_node<T>* current_node);
 
         virtual void clear_nodes();
 
@@ -208,19 +204,11 @@ template<class T> T tst<T>::get(char* string) {
     }
 }
 
-template<class T> T tst<T>::__getitem__(char* string) {
-    return get(string);
-}
-
 template<class T> void tst<T>::put(char* string,T data) {
     tst_node<T>* current_node=array+root;
     int node_index=build_node(&current_node,&root,string,0);
     current_node=array+node_index;
     store_data(current_node,data);
-}
-
-template<class T> void tst<T>::__setitem__(char* string,T data) {
-    put(string,data);
 }
 
 template<class T> T tst<T>::almost(char* string, int string_length, int maximum_distance,filter<T>* filter,action<T>* to_perform) {
@@ -529,6 +517,18 @@ template<class T> tst_node<T>* tst<T>::find_node(int* current_index,char* curren
     return NULL;
 }
 
+template<class T> T tst<T>::scan(char* string,action<T>* to_perform) {
+    tst_node<T>* lastmatch=NULL;
+    char c,*match_start=NULL, *back_track=NULL;
+    int current_index=root;
+    
+    while(c=*(string++)) {            
+    }
+    
+    return (T)NULL;
+}
+
+
 template<class T> void tst<T>::balance_node(tst_node<T>** current_node,int* current_index) {
     int current_balance;
     current_balance=compute_height_and_balance(*current_node);
@@ -629,47 +629,12 @@ template<class T> int tst<T>::compute_height_and_balance(tst_node<T>* current_no
     }
 }
 
-template<class T> void tst<T>::debug() {
-    debug(array+root);
-}
-
 template<class T> size_t tst<T>::bytes_allocated() {
     return sizeof(tst)+size*sizeof(tst_node<T>);
 }
 
 template<class T> int tst<T>::get_maximum_key_length() {
     return maximum_key_length;
-}
-
-template<class T> void tst<T>::debug(tst_node<T>* current_node) {
-    int index=current_node->left;
-    printf("%c",current_node->c);
-    if(current_node->data) {
-        printf("*");
-    }
-    else{
-        printf(".");
-    }
-    if(index>=0) {
-        debug(array+index);
-    }
-    else {
-        printf("-");
-    }
-    index=current_node->next;
-    if(index>=0) {
-        debug(array+index);
-    }
-    else {
-        printf("-");
-    }
-    index=current_node->right;
-    if(index>=0) {
-        debug(array+index);
-    }
-    else {
-        printf("-");
-    }
 }
 
 #endif

@@ -36,47 +36,45 @@ except:
     weakref_proxy = lambda x: x
 
 
-class _object_tst(_object):
+class BaseTST(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, _object_tst, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, BaseTST, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, _object_tst, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, BaseTST, name)
     def __repr__(self):
         return "<C tst<(p.PyObject)> instance at %s>" % (self.this,)
     def __init__(self, *args):
-        if self.__class__ == _object_tst:
+        if self.__class__ == BaseTST:
             args = (None,) + args
         else:
             args = (self,) + args
-        _swig_setattr(self, _object_tst, 'this', _tst.new__object_tst(*args))
-        _swig_setattr(self, _object_tst, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete__object_tst):
+        _swig_setattr(self, BaseTST, 'this', _tst.new_BaseTST(*args))
+        _swig_setattr(self, BaseTST, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_BaseTST):
         try:
             if self.thisown: destroy(self)
         except: pass
-    def adjust(*args): return _tst._object_tst_adjust(*args)
-    def walk(*args): return _tst._object_tst_walk(*args)
-    def almost(*args): return _tst._object_tst_almost(*args)
-    def common_prefix(*args): return _tst._object_tst_common_prefix(*args)
-    def get(*args): return _tst._object_tst_get(*args)
-    def __getitem__(*args): return _tst._object_tst___getitem__(*args)
-    def put(*args): return _tst._object_tst_put(*args)
-    def __setitem__(*args): return _tst._object_tst___setitem__(*args)
-    def debug(*args): return _tst._object_tst_debug(*args)
-    def get_maximum_key_length(*args): return _tst._object_tst_get_maximum_key_length(*args)
-    def bytes_allocated(*args): return _tst._object_tst_bytes_allocated(*args)
-    def write(*args): return _tst._object_tst_write(*args)
+    def adjust(*args): return _tst.BaseTST_adjust(*args)
+    def walk(*args): return _tst.BaseTST_walk(*args)
+    def almost(*args): return _tst.BaseTST_almost(*args)
+    def common_prefix(*args): return _tst.BaseTST_common_prefix(*args)
+    def scan(*args): return _tst.BaseTST_scan(*args)
+    def get(*args): return _tst.BaseTST_get(*args)
+    def put(*args): return _tst.BaseTST_put(*args)
+    def get_maximum_key_length(*args): return _tst.BaseTST_get_maximum_key_length(*args)
+    def bytes_allocated(*args): return _tst.BaseTST_bytes_allocated(*args)
+    def write(*args): return _tst.BaseTST_write(*args)
     def __disown__(self):
         self.thisown = 0
-        _tst.disown__object_tst(self)
+        _tst.disown_BaseTST(self)
         return weakref_proxy(self)
 
-class _object_tstPtr(_object_tst):
+class BaseTSTPtr(BaseTST):
     def __init__(self, this):
-        _swig_setattr(self, _object_tst, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, _object_tst, 'thisown', 0)
-        _swig_setattr(self, _object_tst,self.__class__,_object_tst)
-_tst._object_tst_swigregister(_object_tstPtr)
+        _swig_setattr(self, BaseTST, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, BaseTST, 'thisown', 0)
+        _swig_setattr(self, BaseTST,self.__class__,BaseTST)
+_tst.BaseTST_swigregister(BaseTSTPtr)
 
 class Action(_object):
     __swig_setmethods__ = {}
@@ -172,143 +170,6 @@ class SerializerPtr(Serializer):
         if not hasattr(self,"thisown"): _swig_setattr(self, Serializer, 'thisown', 0)
         _swig_setattr(self, Serializer,self.__class__,Serializer)
 _tst.Serializer_swigregister(SerializerPtr)
-
-class IntegerTST(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, IntegerTST, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, IntegerTST, name)
-    def __repr__(self):
-        return "<C tst<(int)> instance at %s>" % (self.this,)
-    def __init__(self, *args):
-        if self.__class__ == IntegerTST:
-            args = (None,) + args
-        else:
-            args = (self,) + args
-        _swig_setattr(self, IntegerTST, 'this', _tst.new_IntegerTST(*args))
-        _swig_setattr(self, IntegerTST, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete_IntegerTST):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-    def adjust(*args): return _tst.IntegerTST_adjust(*args)
-    def walk(*args): return _tst.IntegerTST_walk(*args)
-    def almost(*args): return _tst.IntegerTST_almost(*args)
-    def common_prefix(*args): return _tst.IntegerTST_common_prefix(*args)
-    def get(*args): return _tst.IntegerTST_get(*args)
-    def __getitem__(*args): return _tst.IntegerTST___getitem__(*args)
-    def put(*args): return _tst.IntegerTST_put(*args)
-    def __setitem__(*args): return _tst.IntegerTST___setitem__(*args)
-    def debug(*args): return _tst.IntegerTST_debug(*args)
-    def get_maximum_key_length(*args): return _tst.IntegerTST_get_maximum_key_length(*args)
-    def bytes_allocated(*args): return _tst.IntegerTST_bytes_allocated(*args)
-    def write(*args): return _tst.IntegerTST_write(*args)
-    def __disown__(self):
-        self.thisown = 0
-        _tst.disown_IntegerTST(self)
-        return weakref_proxy(self)
-
-class IntegerTSTPtr(IntegerTST):
-    def __init__(self, this):
-        _swig_setattr(self, IntegerTST, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, IntegerTST, 'thisown', 0)
-        _swig_setattr(self, IntegerTST,self.__class__,IntegerTST)
-_tst.IntegerTST_swigregister(IntegerTSTPtr)
-
-class IntegerAction(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, IntegerAction, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, IntegerAction, name)
-    def __repr__(self):
-        return "<C action<(int)> instance at %s>" % (self.this,)
-    def __del__(self, destroy=_tst.delete_IntegerAction):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-    def perform(*args): return _tst.IntegerAction_perform(*args)
-    def result(*args): return _tst.IntegerAction_result(*args)
-    def __init__(self, *args):
-        if self.__class__ == IntegerAction:
-            args = (None,) + args
-        else:
-            args = (self,) + args
-        _swig_setattr(self, IntegerAction, 'this', _tst.new_IntegerAction(*args))
-        _swig_setattr(self, IntegerAction, 'thisown', 1)
-    def __disown__(self):
-        self.thisown = 0
-        _tst.disown_IntegerAction(self)
-        return weakref_proxy(self)
-
-class IntegerActionPtr(IntegerAction):
-    def __init__(self, this):
-        _swig_setattr(self, IntegerAction, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, IntegerAction, 'thisown', 0)
-        _swig_setattr(self, IntegerAction,self.__class__,IntegerAction)
-_tst.IntegerAction_swigregister(IntegerActionPtr)
-
-class IntegerFilter(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, IntegerFilter, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, IntegerFilter, name)
-    def __repr__(self):
-        return "<C filter<(int)> instance at %s>" % (self.this,)
-    def __del__(self, destroy=_tst.delete_IntegerFilter):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-    def perform(*args): return _tst.IntegerFilter_perform(*args)
-    def __init__(self, *args):
-        if self.__class__ == IntegerFilter:
-            args = (None,) + args
-        else:
-            args = (self,) + args
-        _swig_setattr(self, IntegerFilter, 'this', _tst.new_IntegerFilter(*args))
-        _swig_setattr(self, IntegerFilter, 'thisown', 1)
-    def __disown__(self):
-        self.thisown = 0
-        _tst.disown_IntegerFilter(self)
-        return weakref_proxy(self)
-
-class IntegerFilterPtr(IntegerFilter):
-    def __init__(self, this):
-        _swig_setattr(self, IntegerFilter, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, IntegerFilter, 'thisown', 0)
-        _swig_setattr(self, IntegerFilter,self.__class__,IntegerFilter)
-_tst.IntegerFilter_swigregister(IntegerFilterPtr)
-
-class IntegerSerializer(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, IntegerSerializer, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, IntegerSerializer, name)
-    def __repr__(self):
-        return "<C serializer<(int)> instance at %s>" % (self.this,)
-    def __del__(self, destroy=_tst.delete_IntegerSerializer):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-    def write(*args): return _tst.IntegerSerializer_write(*args)
-    def read(*args): return _tst.IntegerSerializer_read(*args)
-    def __init__(self, *args):
-        if self.__class__ == IntegerSerializer:
-            args = (None,) + args
-        else:
-            args = (self,) + args
-        _swig_setattr(self, IntegerSerializer, 'this', _tst.new_IntegerSerializer(*args))
-        _swig_setattr(self, IntegerSerializer, 'thisown', 1)
-    def __disown__(self):
-        self.thisown = 0
-        _tst.disown_IntegerSerializer(self)
-        return weakref_proxy(self)
-
-class IntegerSerializerPtr(IntegerSerializer):
-    def __init__(self, this):
-        _swig_setattr(self, IntegerSerializer, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, IntegerSerializer, 'thisown', 0)
-        _swig_setattr(self, IntegerSerializer,self.__class__,IntegerSerializer)
-_tst.IntegerSerializer_swigregister(IntegerSerializerPtr)
 
 class TSTException(_object):
     __swig_setmethods__ = {}
@@ -464,12 +325,12 @@ class ObjectSerializerPtr(ObjectSerializer):
         _swig_setattr(self, ObjectSerializer,self.__class__,ObjectSerializer)
 _tst.ObjectSerializer_swigregister(ObjectSerializerPtr)
 
-class TST(_object_tst):
+class TST(BaseTST):
     __swig_setmethods__ = {}
-    for _s in [_object_tst]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    for _s in [BaseTST]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, TST, name, value)
     __swig_getmethods__ = {}
-    for _s in [_object_tst]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    for _s in [BaseTST]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, TST, name)
     def __repr__(self):
         return "<C TST instance at %s>" % (self.this,)
@@ -481,6 +342,8 @@ class TST(_object_tst):
             if self.thisown: destroy(self)
         except: pass
     def write(*args): return _tst.TST_write(*args)
+    def __getitem__(*args): return _tst.TST___getitem__(*args)
+    def __setitem__(*args): return _tst.TST___setitem__(*args)
 
 class TSTPtr(TST):
     def __init__(self, this):
