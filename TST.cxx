@@ -13,14 +13,16 @@ class TSTException {
         char* message;
 };
 
-class CallableAction : public action<PyObject*> {
+/*class CallableAction : public action<PyObject*> {
     public:
         CallableAction(PyObject* _callable) {
+            LOG1("CallableAction %x\n",(int)_callable);
             Py_INCREF(_callable);
             callable=_callable;
         }
 
         virtual ~CallableAction() {
+            LOG0("~CallableAction\n");
             Py_DECREF(callable);
         }
 
@@ -50,11 +52,13 @@ class CallableAction : public action<PyObject*> {
 class CallableFilter : public filter<PyObject*> {
     public:
         CallableFilter(PyObject* _callable) {
+            LOG1("CallableFilter %x\n",_callable);
             Py_INCREF(_callable);
             callable=_callable;
         }
 
         virtual ~CallableFilter() {
+            LOG0("~CallableFilter\n");
             Py_DECREF(callable);
         }
 
@@ -80,15 +84,23 @@ class CallableFilter : public filter<PyObject*> {
 
     private:
         PyObject* callable;
-};
+};*/
+
+int lcounter=0;
 
 class DictAction : public action<PyObject*> {
     public:
         DictAction() {
+            mycounter=lcounter++;
+            LOG1("DictAction%i\n",mycounter);
             dict=PyDict_New();
+            if(!dict) {
+                throw TSTException("Cannot build a list");
+            }
         }
 
         virtual ~DictAction() {
+            LOG1("~DictAction%i\n",mycounter);
             Py_DECREF(dict);
         }
 
@@ -99,6 +111,7 @@ class DictAction : public action<PyObject*> {
 
             PyObject* tuple=PyDict_GetItemString(dict,key);
             if(tuple!=NULL) {
+                Py_INCREF(tuple);
                 long value=PyInt_AsLong(PyTuple_GetItem(tuple,0));
                 if(value>=remaining_distance) {
                     return;
@@ -106,6 +119,7 @@ class DictAction : public action<PyObject*> {
                 else {
                     Py_DECREF(tuple);
                 }
+                Py_DECREF(tuple);
             }
 
             tuple=PyTuple_New(2);
@@ -113,25 +127,36 @@ class DictAction : public action<PyObject*> {
             Py_INCREF(data);
             PyTuple_SetItem(tuple,1,data);
             PyDict_SetItemString(dict,key,tuple);
+            Py_DECREF(tuple);
         };
 
         virtual PyObject* result() {
+            LOG1("DictAction::result%i\n",mycounter);
             Py_INCREF(dict);
+            LOG2("DictAction::result%i done %x!\n",mycounter,(int)dict);
             return dict;
         }
 
     private:
+        int mycounter;
         PyObject* dict;
 };
 
 class ListAction : public action<PyObject*> {
     public:
         ListAction() {
+            mycounter=lcounter++;
+            LOG1("ListAction%i\n",mycounter);
             list=PyList_New(0);
+            if(!list) {
+                throw TSTException("Cannot build a list");
+            }
         }
 
         virtual ~ListAction() {
+            LOG1("~ListAction%i\n",mycounter);
             Py_DECREF(list);
+            LOG0("~ListAction done !\n");
         }
 
         virtual void perform(char* key,int remaining_distance,PyObject* data) {
@@ -143,11 +168,13 @@ class ListAction : public action<PyObject*> {
         }
 
         virtual PyObject* result() {
+            LOG1("ListAction::result%i\n",mycounter);
             Py_INCREF(list);
             return list;
         }
 
     private:
+        int mycounter;
         PyObject* list;
 };
 
@@ -228,17 +255,11 @@ class TST : public tst<PyObject*> {
         TST();
         TST(PyObject* file);
         TST(int initial_size,PyObject* default_value);
-        ~TST();
-        PyObject* get(char* string);
-        // surcharge nécessaire car la fonction n'est pas virtuelle
-        PyObject* __getitem__(char* string);
-        PyObject* put(char* string,PyObject* data);
-        // surcharge nécessaire car la fonction n'est pas virtuelle
-        PyObject* __setitem__(char* string,PyObject* data);
+        virtual ~TST();
         PyObject* write(PyObject* file);
-
+        
     protected:
-        int create_node(tst_node<PyObject*>** current_node,int current_index);
+        virtual void store_data(tst_node<PyObject*>* node,PyObject* data);
 };
 
 TST::TST() : tst<PyObject*>(16,Py_None) {
@@ -258,7 +279,20 @@ TST::TST(int initial_size,PyObject* default_value) : tst<PyObject*>(initial_size
 }
 
 TST::~TST() {
+    LOG1("tst::~tst() : Deallocating %i nodes\n",next);
+    tst_node<PyObject*>* current_node=array;
+    for(int i=0;i<next;i++,current_node++) {
+        store_data(current_node,(PyObject*)NULL);
+    }
+    LOG1("tst::~tst() : Removing array of %i elements\n",size);
+    free(array);
     Py_XDECREF(default_value);
+}
+
+void TST::store_data(tst_node<PyObject*>* node,PyObject* data) {
+    Py_XDECREF(node->data);
+    Py_XINCREF(data);
+    node->data=data;
 }
 
 PyObject* TST::write(PyObject* file) {
@@ -270,31 +304,4 @@ PyObject* TST::write(PyObject* file) {
     delete os;
     Py_INCREF(Py_None);
     return Py_None;
-}
-
-PyObject* TST::get(char* string) {
-    PyObject* result=tst<PyObject*>::get(string);
-    Py_XINCREF(result);
-    return result;
-}
-
-PyObject* TST::__getitem__(char* string) {
-    return get(string);
-}
-
-PyObject* TST::put(char* string,PyObject* data) {
-    Py_XINCREF(data);
-    PyObject* result = tst<PyObject*>::put(string,data);
-    Py_XINCREF(result);
-    return result;
-}
-
-PyObject* TST::__setitem__(char* string,PyObject* data) {
-    return put(string,data);
-}
-
-int TST::create_node(tst_node<PyObject*>** current_node,int current_index) {
-    int result=tst<PyObject*>::create_node(current_node,current_index);
-    Py_XINCREF((array+result)->data);
-    return result;
 }

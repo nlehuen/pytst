@@ -14,20 +14,18 @@
 class Swig::Director;
 
 
-class SwigDirector_IntegerAction : public action<int >, public Swig::Director {
+class SwigDirector__object_tst : public tst<PyObject * >, public Swig::Director {
 
 public:
-    SwigDirector_IntegerAction(PyObject* self, bool disown = false);
-    virtual void perform(char *key, int remaining_distance, int data);
-    virtual int result();
-};
-
-
-class SwigDirector_IntegerFilter : public filter<int >, public Swig::Director {
-
-public:
-    SwigDirector_IntegerFilter(PyObject* self, bool disown = false);
-    virtual int perform(char *key, int remaining_distance, int data);
+    SwigDirector__object_tst(PyObject *self, FILE *file, serializer<PyObject * > *reader, bool disown = false);
+    SwigDirector__object_tst(PyObject *self, int initial_size, PyObject *default_value, bool disown = false);
+    virtual PyObject * put(char *string, PyObject *data);
+    virtual PyObject * __setitem__(char *string, PyObject *data);
+    virtual PyObject * common_prefix(char *string, filter<PyObject * > *filter, action<PyObject * > *to_perform);
+    virtual PyObject * walk(filter<PyObject * > *filter, action<PyObject * > *to_perform);
+    virtual PyObject * almost(char *string, int string_length, int maximum_distance, filter<PyObject * > *filter, action<PyObject * > *to_perform);
+    virtual PyObject * get(char *string);
+    virtual PyObject * __getitem__(char *string);
 };
 
 

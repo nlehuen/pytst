@@ -50,16 +50,19 @@ template<class T> class tst {
     public:
         tst(FILE* file,serializer<T>* reader);
         tst(int initial_size,T default_value);
-        ~tst();
+        virtual ~tst() {
+            printf("youpala\n");
+            clear_nodes();
+        };
 
         void adjust();
-        T walk(filter<T>* filter,action<T>* to_perform);
-        T almost(char* string,int string_length,int maximum_distance,filter<T>* filter,action<T>* to_perform);
-        T common_prefix(char* string,filter<T>* filter,action<T>* to_perform);
-        T get(char* string);
-        T __getitem__(char* string);
-        T put(char* string,T data);
-        T __setitem__(char* string,T data);
+        virtual T walk(filter<T>* filter,action<T>* to_perform);
+        virtual T almost(char* string,int string_length,int maximum_distance,filter<T>* filter,action<T>* to_perform);
+        virtual T common_prefix(char* string,filter<T>* filter,action<T>* to_perform);
+        virtual T get(char* string);
+        virtual T __getitem__(char* string);
+        virtual T put(char* string,T data);
+        virtual T __setitem__(char* string,T data);
         void debug();
         int get_maximum_key_length();
         size_t bytes_allocated();
@@ -76,7 +79,7 @@ template<class T> class tst {
         void walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,filter<T>* filter,action<T>* to_perform);
         void almost_recurse(tst_node<T>* current_node,char* current_key, int current_key_length, char* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<T>* filter,action<T>* to_perform,int current_key_limit);
 
-        int create_node(tst_node<T>** current_node,int current_index);
+        virtual int create_node(tst_node<T>** current_node,int current_index);
 
         int build_node(tst_node<T>** current_node,int* current_index,char* current_char,int current_key_length);
         tst_node<T>* find_node(int* current_index,char* current_char);
@@ -89,6 +92,13 @@ template<class T> class tst {
         int compute_height_and_balance(tst_node<T>* current_node);
 
         void debug(tst_node<T>* current_node);
+
+        void clear_nodes();
+
+        virtual void store_data(tst_node<T>* node,T data) {
+            LOG0("default store data");
+            node->data=data;
+        }
 };
 
 template<class T> tst<T>::tst(int size,T default_value) {
@@ -131,10 +141,10 @@ template<class T> void tst<T>::read(FILE* file, serializer<T>* reader) {
 
         has_data=fgetc(file);
         if(has_data) {
-            node->data=reader->read(file);
+            store_data(node,reader->read(file));
         }
         else {
-            node->data=default_value;
+            store_data(node,default_value);
         }
     }
 }
@@ -168,8 +178,13 @@ template<class T> void tst<T>::write(FILE* file, serializer<T>* writer) {
     }
 }
 
-template<class T> tst<T>::~tst() {
-    LOG1("tst::~tst() : Removing array of %i elements\n",size);
+template<class T> void tst<T>::clear_nodes() {
+    printf("tst::~clear_nodes() : Deallocating %i nodes of %x\n",next,(int)this);
+    tst_node<T>* current_node=array;
+    for(int i=0;i<next;i++,current_node++) {
+        store_data(current_node,(T)NULL);
+    }
+    printf("tst::~clear_nodes() : Removing array of %i elements\n",size);
     free(array);
 }
 
@@ -181,7 +196,7 @@ template<class T> void tst<T>::adjust() {
 }
 
 template<class T> T tst<T>::get(char* string) {
-    LOG1("get(%s)\n",string);
+    // LOG1("get(%s)\n",string);
 
     int current_index=root;
     tst_node<T>* current_node=find_node(&current_index,string);
@@ -198,7 +213,7 @@ template<class T> T tst<T>::__getitem__(char* string) {
 }
 
 template<class T> T tst<T>::put(char* string,T data) {
-    LOG2("put(%s,%i)\n",string,(int)data);
+    // LOG2("put(%s,%i)\n",string,(int)data);
 
     tst_node<T>* current_node=array+root;
     int node_index=build_node(&current_node,&root,string,0);
@@ -206,7 +221,7 @@ template<class T> T tst<T>::put(char* string,T data) {
 
     current_node=array+node_index;
     result = current_node->data;
-    current_node->data=data;
+    store_data(current_node,data);
     return result;
 }
 
@@ -215,7 +230,7 @@ template<class T> T tst<T>::__setitem__(char* string,T data) {
 }
 
 template<class T> T tst<T>::almost(char* string, int string_length, int maximum_distance,filter<T>* filter,action<T>* to_perform) {
-    LOG1("malloc de %i\n",string_length+maximum_distance+1);
+    LOG1("almost, malloc de %i\n",string_length+maximum_distance+1);
     char* current_key=(char*)malloc((string_length+maximum_distance+1)*sizeof(char));
     *current_key='\0';
     LOG1("malloc : %x\n",(int)current_key);
@@ -225,6 +240,7 @@ template<class T> T tst<T>::almost(char* string, int string_length, int maximum_
 }
 
 template<class T> T tst<T>::walk(filter<T>* filter,action<T>* to_perform) {
+    LOG1("walk, malloc de %i\n",(maximum_key_length+2));
     char* key=(char*)malloc((maximum_key_length+2)*sizeof(char));
     *key='\0';
     walk_recurse(array+root,key,0,maximum_key_length+1,filter,to_perform);
@@ -234,6 +250,8 @@ template<class T> T tst<T>::walk(filter<T>* filter,action<T>* to_perform) {
 
 template<class T> void tst<T>::walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,filter<T>* filter,action<T>* to_perform) {
     int other_index;
+
+    LOG1("walk recurse %s\n",current_key);
 
     other_index=current_node->left;
     if(other_index>=0) {
@@ -270,6 +288,7 @@ template<class T> void tst<T>::walk_recurse(tst_node<T>* current_node,char* curr
 }
 
 template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,char* string, int current_index, int real_string_length, int string_length, int remaining_distance,filter<T>* filter, action<T>* to_perform,int current_key_limit) {
+    LOG1("almost recurse %s\n",current_key);
     int other_index;
     int diff,diff2;
 
@@ -416,7 +435,8 @@ template<class T> int tst<T>::create_node(tst_node<T>** current_node,int current
     new_node->right=-1;
     new_node->left=-1;
     new_node->height=0;
-    new_node->data=default_value;
+    new_node->data=(T)NULL;
+    store_data(new_node,default_value);
 
     return id;
 }
@@ -425,7 +445,6 @@ template<class T> int tst<T>::build_node(tst_node<T>** current_node,int* current
     int diff,result,next_index;
 
     if((*current_node)->c==0) {
-        LOG1("%c !!!\n",*current_char);
         (*current_node)->c=(*current_char);
         diff=0;
     }
@@ -434,7 +453,6 @@ template<class T> int tst<T>::build_node(tst_node<T>** current_node,int* current
     }
 
     if(diff==0) {
-        LOG2("%c = %c\n",*current_char,(*current_node)->c);
         current_char++;
         current_key_length++;
         if(*current_char) {
@@ -460,7 +478,6 @@ template<class T> int tst<T>::build_node(tst_node<T>** current_node,int* current
         }
     }
     else if(diff>0) {
-        LOG2("%c > %c\n",*current_char,(*current_node)->c);
         next_index = (*current_node)->right;
         if(next_index<0) {
             next_index=create_node(current_node,*current_index);
@@ -474,7 +491,6 @@ template<class T> int tst<T>::build_node(tst_node<T>** current_node,int* current
         return result;
     }
     else {
-        LOG2("%c < %c\n",*current_char,(*current_node)->c);
         next_index = (*current_node)->left;
         if(next_index<0) {
             next_index=create_node(current_node,*current_index);
@@ -506,7 +522,6 @@ template<class T> tst_node<T>* tst<T>::find_node(int* current_index,char* curren
         }
 
         if(diff==0) {
-            LOG2("%c = %c\n",*current_char,current_node->c);
             current_char++;
             if(*current_char) {
                 *current_index = current_node->next;
@@ -516,11 +531,9 @@ template<class T> tst_node<T>* tst<T>::find_node(int* current_index,char* curren
             }
         }
         else if(diff>0) {
-            LOG2("%c > %c\n",*current_char,current_node->c);
             *current_index=current_node->right;
         }
         else {
-            LOG2("%c < %c\n",*current_char,current_node->c);
             *current_index=current_node->left;
         }
     }

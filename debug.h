@@ -1,7 +1,7 @@
 #ifndef __DEBUG_H_INCLUDED__
 #define __DEBUG_H_INCLUDED__
 
-#define NDEBUG
+//#define NDEBUG
 #define NDEBUG_LOG
 
 #ifdef NDEBUG_LOG

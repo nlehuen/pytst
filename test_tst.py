@@ -1,6 +1,6 @@
 # -*- coding: CP1252 -*-
 import tst
-from tcc.util import levenshtein
+#from tcc.util import levenshtein
 
 import time
 
@@ -17,7 +17,7 @@ print 'C++ version : ',time.time()-start
 
 class action(tst.Action):
     counter = 0
-    
+
     def __init__(self):
         tst.Action.__init__(self)
         self._dict=dict()
@@ -53,7 +53,7 @@ start = time.time()
 for i in range(500):
     la = action();
     #TODO: si on enlève le "d=" le résultat est immédiatement décrémenté ce qui coince quand on passe au bench suivant...
-    d=t.walk(tst.CallableFilter(lambda x,y,z: r.match(z).group(1)),la)
+    t.walk(tst.CallableFilter(lambda x,y,z: r.match(z).group(1)),la)
 print 'la en python : ',time.time()-start
 
 start = time.time()
