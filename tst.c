@@ -103,7 +103,96 @@ int tst_find_node(tst* _tst,int current_index,char* current_char) {
     }
 }
 
-void tst_compute_height_and_balance(tst* _tst,tst_node* current_node) {
+void tst_balance(tst* _tst,int* flag) {
+    int* root_index=&(_tst->root);
+	tst_node* array=_tst->array;
+    tst_node* root_node=array+*root_index;
+    tst_balance_recursive(array,&root_node,root_index,flag);
+}
+
+void tst_balance_recursive(tst_node* array,tst_node** current_node,int* current_index,int* flag) {
+    int* other_index;
+    tst_node* other_node;
+    
+    other_index=&((*current_node)->left);
+    if(*other_index>=0) {
+        other_node=array+*other_index;
+        tst_balance_recursive(array,&other_node,other_index,flag);
+    }
+    other_index=&((*current_node)->right);
+    if(*other_index>=0) {
+        other_node=array+*other_index;
+        tst_balance_recursive(array,&other_node,other_index,flag);
+    }
+    tst_balance_node(array,current_node,current_index,flag);
+}
+
+void tst_balance_node(tst_node* array,tst_node** current_node,int* current_index,int* flag) {
+    int balance;
+    tst_node* other_node;
+    tst_compute_height_and_balance(array,*current_node);
+    balance=(*current_node)->balance;
+    if(balance>1) {
+        other_node=array+(*current_node)->right;
+        if(other_node->balance>0) {
+            tst_rr(array,current_node,current_index);
+        }
+        else {
+            tst_rl(array,current_node,current_index);
+        }
+        *flag=1;
+    }
+    else if(balance<-1) {
+        other_node=array+(*current_node)->left;
+        if(other_node->balance<0) {
+            tst_ll(array,current_node,current_index);
+        }
+        else {
+            tst_lr(array,current_node,current_index);
+        }
+        *flag=1;
+    }
+}
+
+void tst_ll(tst_node* array,tst_node** current_node,int* current_index) {
+    int left_index=(*current_node)->left;
+    tst_node* left_node=array+left_index;
+    int left_right_index=left_node->right;
+    (*current_node)->left=left_right_index;
+    tst_compute_height_and_balance(array,*current_node);
+    left_node->right=*current_index;
+    tst_compute_height_and_balance(array,left_node);
+    *current_index=left_index;
+    *current_node=array+left_index;
+}
+
+void tst_rr(tst_node* array,tst_node** current_node,int* current_index) {
+    int right_index=(*current_node)->right;
+    tst_node* right_node=array+right_index;
+    int right_left_index=right_node->left;
+    (*current_node)->right=right_left_index;
+    tst_compute_height_and_balance(array,*current_node);
+    right_node->left=*current_index;
+    tst_compute_height_and_balance(array,right_node);
+    *current_index=right_index;
+    *current_node=array+right_index;
+}
+
+void tst_lr(tst_node* array,tst_node** current_node,int* current_index) {
+    int* left_index=&((*current_node)->left);
+    tst_node* left_node=array+*left_index;
+    tst_rr(array,&left_node,left_index);
+    tst_ll(array,current_node,current_index);
+}
+
+void tst_rl(tst_node* array,tst_node** current_node,int* current_index) {
+    int* right_index=&((*current_node)->right);
+    tst_node* right_node=array+*right_index;
+    tst_ll(array,&right_node,right_index);
+    tst_rr(array,current_node,current_index);
+}
+
+void tst_compute_height_and_balance(tst_node* array,tst_node* current_node) {
     int left = current_node->left;
     int right = current_node->right;
     int left_height,right_height;
@@ -111,10 +200,10 @@ void tst_compute_height_and_balance(tst* _tst,tst_node* current_node) {
     tst_node* right_node;
     
     if(right>=0) {
-        right_node=_tst->array+right;
+        right_node=array+right;
         right_height=right_node->height;
         if(left>=0) {
-            left_node=_tst->array+left;
+            left_node=array+left;
             left_height=left_node->height;
             current_node->balance=right_height-left_height;
             if(left_height>right_height) {
@@ -129,7 +218,7 @@ void tst_compute_height_and_balance(tst* _tst,tst_node* current_node) {
     }
     else {
         if(left>=0) {
-            left_node=_tst->array+left;
+            left_node=array+left;
             left_height=left_node->height;
             current_node->balance=-left_height;
             current_node->height=left_height+1;
@@ -141,106 +230,18 @@ void tst_compute_height_and_balance(tst* _tst,tst_node* current_node) {
     }
 }
 
-void tst_balance(tst* _tst,int* flag) {
-    int* root_index=&(_tst->root);
-    tst_node* root_node=_tst->array+*root_index;
-    tst_balance_recursive(_tst,&root_node,root_index,flag);
-}
-
-void tst_balance_recursive(tst* _tst,tst_node** current_node,int* current_index,int* flag) {
-    int* other_index;
-    tst_node* other_node;
-    
-    other_index=&((*current_node)->left);
-    if(*other_index>=0) {
-        other_node=_tst->array+*other_index;
-        tst_balance_recursive(_tst,&other_node,other_index,flag);
-    }
-    other_index=&((*current_node)->right);
-    if(*other_index>=0) {
-        other_node=_tst->array+*other_index;
-        tst_balance_recursive(_tst,&other_node,other_index,flag);
-    }
-    tst_balance_node(_tst,current_node,current_index,flag);
-}
-
-void tst_balance_node(tst* _tst,tst_node** current_node,int* current_index,int* flag) {
-    int balance;
-    tst_node* other_node;
-    tst_compute_height_and_balance(_tst,*current_node);
-    balance=(*current_node)->balance;
-    if(balance>1) {
-        other_node=_tst->array+(*current_node)->right;
-        if(other_node->balance>0) {
-            tst_rr(_tst,current_node,current_index);
-        }
-        else {
-            tst_rl(_tst,current_node,current_index);
-        }
-        *flag=1;
-    }
-    else if(balance<-1) {
-        other_node=_tst->array+(*current_node)->left;
-        if(other_node->balance<0) {
-            tst_ll(_tst,current_node,current_index);
-        }
-        else {
-            tst_lr(_tst,current_node,current_index);
-        }
-        *flag=1;
-    }
-}
-
-void tst_ll(tst* _tst,tst_node** current_node,int* current_index) {
-    int left_index=(*current_node)->left;
-    tst_node* left_node=_tst->array+left_index;
-    int left_right_index=left_node->right;
-    (*current_node)->left=left_right_index;
-    tst_compute_height_and_balance(_tst,*current_node);
-    left_node->right=*current_index;
-    tst_compute_height_and_balance(_tst,left_node);
-    *current_index=left_index;
-    *current_node=_tst->array+left_index;
-}
-
-void tst_rr(tst* _tst,tst_node** current_node,int* current_index) {
-    int right_index=(*current_node)->right;
-    tst_node* right_node=_tst->array+right_index;
-    int right_left_index=right_node->left;
-    (*current_node)->right=right_left_index;
-    tst_compute_height_and_balance(_tst,*current_node);
-    right_node->left=*current_index;
-    tst_compute_height_and_balance(_tst,right_node);
-    *current_index=right_index;
-    *current_node=_tst->array+right_index;
-}
-
-void tst_lr(tst* _tst,tst_node** current_node,int* current_index) {
-    int* left_index=&((*current_node)->left);
-    tst_node* left_node=_tst->array+*left_index;
-    tst_rr(_tst,&left_node,left_index);
-    tst_ll(_tst,current_node,current_index);
-}
-
-void tst_rl(tst* _tst,tst_node** current_node,int* current_index) {
-    int* right_index=&((*current_node)->right);
-    tst_node* right_node=_tst->array+*right_index;
-    tst_ll(_tst,&right_node,right_index);
-    tst_rr(_tst,current_node,current_index);
-}
-
-void tst_debug_node(tst* _tst,tst_node* current_node) {
+void tst_debug_node(tst_node* array,tst_node* current_node) {
     int index=current_node->left;
     printf("%c",current_node->c);
     if(index>=0) {
-        tst_debug_node(_tst,_tst->array+index);
+        tst_debug_node(array,array+index);
     }
     else {
         printf("-");
     }
     index=current_node->right;
     if(index>=0) {
-        tst_debug_node(_tst,_tst->array+index);
+        tst_debug_node(array,array+index);
     }
     else {
         printf("-");
