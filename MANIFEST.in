@@ -5,4 +5,6 @@ include tst.h
 include debug.h
 include LICENSE
 include MANIFEST.in
+include README.html
+
 

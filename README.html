@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>pytst 0.51 README</title>
+</head>
+<body>
+<h1>pytst 0.51 README</h1>
+<p>&copy; Nicolas Lehuen
+2004-2005<br>
+This work is released under the LGPL
+license - see the LICENSE file for
+more information.</p>
+<h2>Introduction</h2>
+<p>As <a
+ href="http://www.lehuen.com/nicolas/index.php/2005/02/14/36-james-tauber-updated-python-trie-implementation">promised</a>,
+I've released a very preliminary version of pytst, a <a
+ href="http://www.nist.gov/dads/HTML/ternarySearchTree.html">Ternary
+Search Tree</a> (TST or trie)
+implementation in C++ with a Python interface (built with <a
+ href="http://www.swig.org/">SWIG</a>).
+Download it <a href="http://nicolas.lehuen.com/download/">here</a>
+if you dare !</p>
+<p>Basically, it behaves like a
+dictionary, but the keys can only be plain strings (sorry, not Unicode
+strings yet). So why bother ? Because TSTs are a lot smarter than
+dictionaries when it comes to :</p>
+<ul>
+  <li>Prefix-matching : find the
+longest entry in the TST which is a prefix to a given string. Handy for
+things like scanners, <a
+ href="http://www.myelin.co.nz/post/2005/2/28/#200502281">url
+matchers</a> and so on.</li>
+  <li>Scanning (corollary of the
+previous one) : using the <a
+ href="http://www-sr.informatik.uni-tuebingen.de/%7Ebuehler/AC/AC.html">Aho-Corasick</a>
+algorithm, you can implement pretty efficient scanners with a TST. The
+good thing it that it can scale up to tens of thousands of entries and
+still perform well.</li>
+  <li>Spelling correctors : find a
+set of entries which spelling is close to a given string. The distance
+used is the <a href="http://www.merriampark.com/ld.htm">Levenshtein</a>
+distance.</li>
+</ul>
+<p>I have been using this package
+in production for nearly a year now, without any problem (except a
+surprise due to SWIG directors when I switched to Python 2.4, but this
+is fixed now). I release this under the LGPL. Incidentally, this is my
+first release under a license, up until now I was pretty much releasing
+my dirty works in the public domain where it could safely be ignored
+:). I am NOT satisfied with the packaging (especially the tests), the
+code layout (it's been so long I had not been writing C++ that I forgot
+a whole bunch of coding conventions) and so on, but I decided to
+release this as is, and see what happens.</p>
+<h2>Requirements and installation</h2>
+First of all, get the files in the <a
+ href="http://nicolas.lehuen.com/download/">download</a> directory. If
+you're lucky, there is a binary installer right for you environment (I
+usually provide builds for Win32). If not, you're going to build the
+module from the sources.<br>
+<br>
+pytst is a standard Python module, with a classic <span
+ style="font-family: monospace;">setup.py install</span>
+installation procedure. However, the native part of the module is
+written in C++, so your mileage may vary. I have successfully built the
+module on those environments :<br>
+<ul>
+  <li>Python 2.3 + MinGW (GCC
+3.4.x) + Windows XP. See <a
+ href="http://sebsauvage.net/python/mingw.html">here</a>
+for more information on building native modules in this environment.</li>
+  <li>Python 2.3 + GCC 3.3.x under
+Cygwin + Windows XP.</li>
+  <li>Python 2.4 + Microsoft
+Visual Studio 2003 + Windows XP. Theoretically, using the free <a
+ href="http://msdn.microsoft.com/visualc/vctoolkit2003/">Microsoft
+Visual C++ Toolkit 2003</a> should
+be possible, following <a
+ href="http://www.vrplumber.com/programming/mstoolkit/">those
+instructions</a>.</li>
+</ul>
+If you manage to build pytst on any other environment, send me a mail
+so that I can add it to this list ! Even better, we could add the
+binaries to the downloads directory.<br>
+<h2>Running the tests</h2>
+Well, for now, the test are really crappy. I only have one script using
+unittest, the other ones don't say anything&nbsp; about the test
+passing or failing. So for now, forget about running the test and go
+straight to the...<br>
+<h2>Ternary Search Tree crash course</h2>
+OK, so first, the basics :<br>
+<pre>&gt;&gt;&gt; import tst<br>&gt;&gt;&gt; t = tst.TST()<br>&gt;&gt;&gt; t['foo']='bar'<br>&gt;&gt;&gt; print t['foo']<br>bar<br>&gt;&gt;&gt; print t['fo']<br>None<br>&gt;&gt;&gt; t['foo']='baz'<br>&gt;&gt;&gt; print t['foo']<br>baz<br>&gt;&gt;&gt; print t[1]<br>Traceback (most recent call last):<br>  File "&lt;stdin&gt;", line 1, in ?<br>  File "tst.py", line 354, in __getitem__<br>    def __getitem__(*args): return _tst.TST___getitem__(*args)<br>TypeError: argument number 2: a 'char *' is expected, 'int(1)' is received<br></pre>
+A TST instance behaves a bit like a Python <span
+ style="font-family: monospace;">dict</span>, but the keys can only be
+strings, more precisely <span style="font-family: monospace;">str</span>
+instances. Sorry, Unicode is not supported now, mostly because I
+haven't found a way yet to have SWIG handle Unicode. If&nbsp; you want
+to use Unicode strings as keys, you have to consistently encode them
+before storing them, preferably in UTF8 since it has the nice property
+of not breaking the measurement of Levenshtein distances :<br>
+<pre>&gt;&gt;&gt; import tst<br>&gt;&gt;&gt; t = tst.TST()<br>&gt;&gt;&gt; t[u'caf&eacute;'.encode('UTF8')]='java'<br>&gt;&gt;&gt; print t[u'caf&eacute;'.encode('UTF8')]<br>java<br>&gt;&gt;&gt; print t['caf\xc3\xa9']<br>java<br>&gt;&gt;&gt; print t[u'caf&eacute;']<br><span
+ style="font-style: italic;">(the process dies unexpectedly)<br></span></pre>
+Talk about a crash course (wink wink, nudge nudge). Oh, yes, it's
+dirty, but the nice thing about the process being killed is that it
+saves you from the mess that would result of mixing byte strings and
+Unicode strings in the same TST.<br>
+<br>
+<span style="font-style: italic;"></span><span
+ style="font-style: italic;"></span>So, what have we learned so far ?
+pytst is a kind of dictionary, which handles string keys only, and
+crash in a not so nice way when given Unicode strings. However, if you
+read the introduction carefuly, you know that there is more to ternary
+search trees than this.<br>
+</body>
+</html>
