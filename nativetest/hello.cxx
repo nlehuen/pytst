@@ -160,12 +160,12 @@ int main3(int argc,char** argv) {
         FILE* input;
 
         input = fopen("..\\..\\prenoms.txt","r");
-        
+
         if(input==NULL) {
             printf("Impossible d'ouvrir le fichier prenoms.txt\n");
             return 1;
         }
-        
+
         line = (char*)tst_malloc(256);
         while(fgets(line,256,input)!=NULL) {
             linetst->put(line,line);
@@ -179,8 +179,8 @@ int main3(int argc,char** argv) {
         linetst->walk(NULL,t);
         delete t;
 
-        linetst->adjust();
-        lengthtst->adjust();
+        linetst->pack();
+        lengthtst->pack();
         printf("Taille totale line : %i\n",linetst->bytes_allocated());
         printf("Taille totale length : %i\n",lengthtst->bytes_allocated());
 

@@ -1054,16 +1054,16 @@ static PyObject *_wrap_delete__TST(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap__TST_adjust(PyObject *self, PyObject *args) {
+static PyObject *_wrap__TST_pack(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
     PyObject * obj0 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"O:_TST_adjust",&obj0)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"O:_TST_pack",&obj0)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_tstTchar_PyObject_p_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     {
         try {
-            (arg1)->adjust();
+            (arg1)->pack();
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2710,7 +2710,7 @@ static PyObject * TST_swigregister(PyObject *self, PyObject *args) {
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"new__TST", _wrap_new__TST, METH_VARARGS },
 	 { (char *)"delete__TST", _wrap_delete__TST, METH_VARARGS },
-	 { (char *)"_TST_adjust", _wrap__TST_adjust, METH_VARARGS },
+	 { (char *)"_TST_pack", _wrap__TST_pack, METH_VARARGS },
 	 { (char *)"_TST_walk", _wrap__TST_walk, METH_VARARGS },
 	 { (char *)"_TST_almost", _wrap__TST_almost, METH_VARARGS },
 	 { (char *)"_TST_common_prefix", _wrap__TST_common_prefix, METH_VARARGS },

@@ -63,7 +63,7 @@ template<class S,class T> class tst {
             clear_nodes();
         };
 
-        void adjust();
+        void pack();
         T walk(filter<S,T>* filter,action<S,T>* to_perform);
         T almost(S* string,int string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform);
         T common_prefix(S* string,filter<S,T>* filter,action<S,T>* to_perform);
@@ -207,7 +207,7 @@ template<class S,class T> void tst<S,T>::clear_nodes() {
     }
 }
 
-template<class S,class T> void tst<S,T>::adjust() {
+template<class S,class T> void tst<S,T>::pack() {
     if(next<size) {
         size=next;
         array=(tst_node<S,T>*)tst_realloc(array,size*sizeof(tst_node<S,T>));
