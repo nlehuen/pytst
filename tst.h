@@ -63,7 +63,8 @@ template<class T> class tst {
         T common_prefix(char* string,filter<T>* filter,action<T>* to_perform);
         T scan(char* string,action<T>* to_perform);
         T get(char* string);
-        virtual void put(char* string,T data);
+        virtual T get_or_build(char* string,filter<T>* factory);
+        virtual T put(char* string,T data);
         int get_maximum_key_length();
         size_t bytes_allocated();
         void write(FILE* file,serializer<T>* writer);
@@ -93,8 +94,10 @@ template<class T> class tst {
 
         virtual void clear_nodes();
 
-        virtual void store_data(tst_node<T>* node,T data) {
+        virtual T store_data(tst_node<T>* node,T data,int want_old_value) {
+            T result=node->data;
             node->data=data;
+            return result;
         }
 };
 
@@ -139,10 +142,10 @@ template<class T> void tst<T>::read(FILE* file, serializer<T>* reader) {
 
         has_data=fgetc(file);
         if(has_data) {
-            store_data(node,reader->read(file));
+            store_data(node,reader->read(file),0);
         }
         else {
-            store_data(node,default_value);
+            store_data(node,default_value,0);
         }
     }
 }
@@ -179,7 +182,7 @@ template<class T> void tst<T>::write(FILE* file, serializer<T>* writer) {
 template<class T> void tst<T>::clear_nodes() {
     if(array) {
         for(int i=0;i<next;i++) {
-            store_data(array+i,(T)NULL);
+            store_data(array+i,(T)NULL,0);
         }
         tst_free(array);
         array=NULL;
@@ -204,11 +207,22 @@ template<class T> T tst<T>::get(char* string) {
     }
 }
 
-template<class T> void tst<T>::put(char* string,T data) {
+template<class T> T tst<T>::put(char* string,T data) {
     tst_node<T>* current_node=array+root;
     int node_index=build_node(&current_node,&root,string,0);
     current_node=array+node_index;
-    store_data(current_node,data);
+    return store_data(current_node,data,1);
+}
+
+template<class T> T tst<T>::get_or_build(char* string,filter<T>* factory) {
+    tst_node<T>* current_node=array+root;
+    int node_index=build_node(&current_node,&root,string,0);
+    current_node=array+node_index;
+    T data=factory->perform(string,0,current_node->data);
+    if(data!=current_node->data) {
+        store_data(current_node,data,0);
+    }
+    return data;
 }
 
 template<class T> T tst<T>::almost(char* string, int string_length, int maximum_distance,filter<T>* filter,action<T>* to_perform) {
@@ -412,7 +426,7 @@ template<class T> int tst<T>::create_node(tst_node<T>** current_node,int current
     new_node->left=-1;
     new_node->height=0;
     new_node->data=(T)NULL;
-    store_data(new_node,default_value);
+    store_data(new_node,default_value,0);
 
     return id;
 }

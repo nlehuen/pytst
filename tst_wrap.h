@@ -14,36 +14,27 @@
 class Swig::Director;
 
 
-class SwigDirector_BaseTST : public tst<PyObject * >, public Swig::Director {
+class SwigDirector__Action : public action<PyObject * >, public Swig::Director {
 
 public:
-    SwigDirector_BaseTST(PyObject *self, FILE *file, serializer<PyObject * > *reader, bool disown = false);
-    SwigDirector_BaseTST(PyObject *self, int initial_size, PyObject *default_value, bool disown = false);
-    virtual void put(char *string, PyObject *data);
-};
-
-
-class SwigDirector_Action : public action<PyObject * >, public Swig::Director {
-
-public:
-    SwigDirector_Action(PyObject* self, bool disown = false);
+    SwigDirector__Action(PyObject* self, bool disown = false);
     virtual void perform(char *key, int remaining_distance, PyObject *data);
     virtual PyObject * result();
 };
 
 
-class SwigDirector_Filter : public filter<PyObject * >, public Swig::Director {
+class SwigDirector__Filter : public filter<PyObject * >, public Swig::Director {
 
 public:
-    SwigDirector_Filter(PyObject* self, bool disown = false);
+    SwigDirector__Filter(PyObject* self, bool disown = false);
     virtual PyObject * perform(char *key, int remaining_distance, PyObject *data);
 };
 
 
-class SwigDirector_Serializer : public serializer<PyObject * >, public Swig::Director {
+class SwigDirector__Serializer : public serializer<PyObject * >, public Swig::Director {
 
 public:
-    SwigDirector_Serializer(PyObject* self, bool disown = false);
+    SwigDirector__Serializer(PyObject* self, bool disown = false);
     virtual void write(FILE *file, PyObject *data);
     virtual PyObject * read(FILE *file);
 };

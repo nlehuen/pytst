@@ -15,31 +15,44 @@ class TSTException {
 
 class CallableAction : public action<PyObject*> {
     public:
-        CallableAction(PyObject* _callable) {
-            Py_INCREF(_callable);
-            callable=_callable;
+        CallableAction(PyObject* perform,PyObject* result) {
+            if(!perform) perform=Py_None;
+            Py_INCREF(perform);
+            _perform=perform;
+            if(!result) result=Py_None;
+            Py_INCREF(result);
+            _result=result;
         }
 
         virtual ~CallableAction() {
-            Py_DECREF(callable);
+            Py_DECREF(_perform);
+            Py_DECREF(_result);
         }
 
         virtual void perform(char* key,int remaining_distance,PyObject* data) {
+            if(_perform==Py_None) {
+                return;
+            }
             if(!data) {
                 data=Py_None;
             }
 
             PyObject* tuple=Py_BuildValue("siO",key,remaining_distance,data);
-            PyObject_CallObject(callable,tuple);
+            Py_DECREF(PyObject_CallObject(_perform,tuple));
             Py_DECREF(tuple);
         }
 
         virtual PyObject* result() {
-            return Py_None;
+            if(_result==Py_None) {
+                return Py_None;
+            }
+            else {
+                return PyObject_CallObject(_result,NULL);
+            }
         }
 
     private:
-        PyObject* callable;
+        PyObject *_perform,*_result;
 };
 
 class CallableFilter : public filter<PyObject*> {
@@ -99,13 +112,14 @@ class DictAction : public action<PyObject*> {
 
             PyObject* tuple=PyTuple_New(2);
             PyTuple_SetItem(tuple,0,PyInt_FromLong(remaining_distance));
-            Py_XINCREF(data);
+            Py_INCREF(data);
             PyTuple_SetItem(tuple,1,data);
             PyDict_SetItemString(dict,key,tuple);
             Py_DECREF(tuple);
         };
 
         virtual PyObject* result() {
+            Py_INCREF(dict);
             return dict;
         }
 
@@ -130,11 +144,11 @@ class ListAction : public action<PyObject*> {
             if(!data) {
                 data=Py_None;
             }
-            Py_INCREF(data);
             PyList_Append(list,data);
         }
 
         virtual PyObject* result() {
+            Py_INCREF(list);
             return list;
         }
 
@@ -221,11 +235,14 @@ class TST : public tst<PyObject*> {
         TST(int initial_size,PyObject* default_value);
         virtual ~TST();
         PyObject* write(PyObject* file);
+        virtual PyObject* get(char* string);
+        virtual PyObject* get_or_build(char* string,filter<PyObject*>* factory);
+        virtual PyObject* put(char* string,PyObject* data);
         PyObject* __getitem__(char* string);
-        void __setitem__(char* string,PyObject* data);
+        PyObject* __setitem__(char* string,PyObject* data);
 
     protected:
-        virtual void store_data(tst_node<PyObject*>* node,PyObject* data);
+        virtual PyObject* store_data(tst_node<PyObject*>* node,PyObject* data,int want_old_value);
 };
 
 TST::TST() : tst<PyObject*>(16,Py_None) {
@@ -241,17 +258,24 @@ TST::TST(PyObject* file) : tst<PyObject*>() {
 }
 
 TST::TST(int initial_size,PyObject* default_value) : tst<PyObject*>(initial_size,default_value) {
-    Py_XINCREF(default_value);
+    if(!default_value) default_value=Py_None;
+    Py_INCREF(default_value);
 }
 
 TST::~TST() {
-    Py_XDECREF(default_value);
+    clear_nodes();
+    // TODO : pourquoi ce DECREF est en trop ?
+    // Py_DECREF(default_value);
 }
 
-void TST::store_data(tst_node<PyObject*>* node,PyObject* data) {
-    Py_XDECREF(node->data);
-    Py_XINCREF(data);
+PyObject* TST::store_data(tst_node<PyObject*>* node,PyObject* data,int want_old_value) {
+    PyObject* result=node->data;
+    if(want_old_value==0) {
+        Py_DECREF(result);
+    }
+    Py_INCREF(data);
     node->data=data;
+    return result;
 }
 
 PyObject* TST::write(PyObject* file) {
@@ -264,11 +288,29 @@ PyObject* TST::write(PyObject* file) {
     return Py_None;
 }
 
+PyObject* TST::get(char* string) {
+    PyObject* result=tst<PyObject*>::get(string);
+    Py_INCREF(result);
+    return result;
+}
+
+PyObject* TST::get_or_build(char* string,filter<PyObject*>* factory) {
+    PyObject* result=tst<PyObject*>::get_or_build(string,factory);
+    Py_INCREF(result);
+    return result;
+}
+
+
+PyObject* TST::put(char* string,PyObject* data) {
+    PyObject* result=tst<PyObject*>::put(string,data);
+    return result;
+}
+
 PyObject* TST::__getitem__(char* string) {
     return get(string);
 }
 
-void TST::__setitem__(char* string,PyObject* data) {
-    put(string,data);
+PyObject* TST::__setitem__(char* string,PyObject* data) {
+    return put(string,data);
 }
 
