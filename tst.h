@@ -1,5 +1,5 @@
-#ifndef __TST__
-#define __TST__
+#ifndef __TST__H_INCLUDED__
+#define __TST__H_INCLUDED__
 
 struct tst_node {
     char c;
