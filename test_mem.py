@@ -1,4 +1,4 @@
-from tcc import tst
+import tst
 import sys
 
 a = 'toto'
@@ -55,3 +55,4 @@ assert(sys.getrefcount(a)==ca1)
 
 assert(sys.getrefcount(None)==ca2)
 
+raw_input('FINI')
