@@ -148,32 +148,6 @@ int tst_find_node(tst* _tst,int current_index,char* current_char) {
     return -1;
 }
 
-/****** PLUS BESOIN DE CES DEUX FONCTIONS PUISQUE L'ARBRE EST TOUJOURS BALANCE
-void tst_balance(tst* _tst,int* flag) {
-    int* root_index=&(_tst->root);
-    tst_node* array=_tst->array;
-    tst_node* root_node=array+*root_index;
-    tst_balance_recursive(array,&root_node,root_index,flag);
-}
-
-void tst_balance_recursive(tst_node* array,tst_node** current_node,int* current_index,int* flag) {
-    int* other_index;
-    tst_node* other_node;
-    
-    other_index=&((*current_node)->left);
-    if(*other_index>=0) {
-        other_node=array+*other_index;
-        tst_balance_recursive(array,&other_node,other_index,flag);
-    }
-    other_index=&((*current_node)->right);
-    if(*other_index>=0) {
-        other_node=array+*other_index;
-        tst_balance_recursive(array,&other_node,other_index,flag);
-    }
-    tst_balance_node(array,current_node,current_index,flag);
-}
-**************************************************************/
-
 void tst_balance_node(tst_node* array,tst_node** current_node,int* current_index) {
     int balance;
     tst_node* other_node;
