@@ -744,6 +744,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 if(current_match_start>non_match_start) {
                     temp_char=*current_match_start;
                     *current_match_start=0;
+                    printf("-> \"%s\"\n",non_match_start);
                     to_perform->perform(non_match_start,non_match_start-current_match_start,default_value);
                     *current_match_start=temp_char;
                 }
@@ -752,6 +753,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 match_node=array+current_match_index;
                 temp_char=*current_match_end;
                 *current_match_end=0;
+                printf("-> \"%s\"\n",current_match_start);
                 to_perform->perform(current_match_start,current_match_end-current_match_start,match_node->data);
                 *current_match_end=temp_char;
                 non_match_start=current_match_end;
@@ -761,11 +763,25 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 
                 // backtrack de relou pour l'instant
                 compute_backtrack(current_node,current_match_start,current_match_end,current_pos);
-                current_pos = current_match_end;
-                current_index = root;
-
-                // On annule le match
-                current_match_start=NULL;
+                current_index = current_node->backtrack;
+                current_match_index=current_node->backtrack_match_index;
+                
+                if(current_index==root) {
+                    // quand on a un retour à la racine, on n'a aucun match en cours
+                    current_match_start=NULL;
+                }
+                else {
+                    // sinon c'est qu'un match est en cours, on va recalculer son point de démarrage
+                    // grâce à la position du noeud
+                    current_match_start=current_pos-(array+current_index)->position;
+                    
+                    // DEBUG
+                    temp_char=*current_pos;
+                    *current_pos=0;
+                    printf("Restarting at \"%s|%c\" with state %i\n",current_match_start,temp_char,current_index);
+                    *current_pos=temp_char;
+                    // END DEBUG
+                }
             }
             else if(current_match_start!=NULL) {
                 // backtrack correct
@@ -809,6 +825,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
     if(current_pos>non_match_start) {
         temp_char=*current_pos;
         *current_pos=0;
+        printf("-> \"%s\"\n",non_match_start);
         to_perform->perform(non_match_start,non_match_start-current_pos,default_value);
         *current_pos=temp_char;
     }
