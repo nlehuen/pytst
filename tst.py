@@ -51,7 +51,7 @@ class IntegerTST(_object):
             if self.thisown: destroy(self)
         except: pass
     def adjust(*args): return _tst.IntegerTST_adjust(*args)
-    def almost(*args): return _tst.IntegerTST_almost(*args)
+    def almost_perform(*args): return _tst.IntegerTST_almost_perform(*args)
     def get(*args): return _tst.IntegerTST_get(*args)
     def __getitem__(*args): return _tst.IntegerTST___getitem__(*args)
     def put(*args): return _tst.IntegerTST_put(*args)
@@ -112,7 +112,7 @@ class StringTST(_object):
             if self.thisown: destroy(self)
         except: pass
     def adjust(*args): return _tst.StringTST_adjust(*args)
-    def almost(*args): return _tst.StringTST_almost(*args)
+    def almost_perform(*args): return _tst.StringTST_almost_perform(*args)
     def get(*args): return _tst.StringTST_get(*args)
     def __getitem__(*args): return _tst.StringTST___getitem__(*args)
     def put(*args): return _tst.StringTST_put(*args)
@@ -173,7 +173,7 @@ class _object_tst(_object):
             if self.thisown: destroy(self)
         except: pass
     def adjust(*args): return _tst._object_tst_adjust(*args)
-    def almost(*args): return _tst._object_tst_almost(*args)
+    def almost_perform(*args): return _tst._object_tst_almost_perform(*args)
     def get(*args): return _tst._object_tst_get(*args)
     def __getitem__(*args): return _tst._object_tst___getitem__(*args)
     def put(*args): return _tst._object_tst_put(*args)
@@ -219,6 +219,32 @@ class ActionPtr(Action):
         _swig_setattr(self, Action,self.__class__,Action)
 _tst.Action_swigregister(ActionPtr)
 
+class DictAction(Action):
+    __swig_setmethods__ = {}
+    for _s in [Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, DictAction, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    __getattr__ = lambda self, name: _swig_getattr(self, DictAction, name)
+    def __repr__(self):
+        return "<C DictAction instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, DictAction, 'this', _tst.new_DictAction(*args))
+        _swig_setattr(self, DictAction, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_DictAction):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.DictAction_perform(*args)
+    def get_dict(*args): return _tst.DictAction_get_dict(*args)
+
+class DictActionPtr(DictAction):
+    def __init__(self, this):
+        _swig_setattr(self, DictAction, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, DictAction, 'thisown', 0)
+        _swig_setattr(self, DictAction,self.__class__,DictAction)
+_tst.DictAction_swigregister(DictActionPtr)
+
 class TST(_object_tst):
     __swig_setmethods__ = {}
     for _s in [_object_tst]: __swig_setmethods__.update(_s.__swig_setmethods__)
@@ -235,6 +261,7 @@ class TST(_object_tst):
     def __getitem__(*args): return _tst.TST___getitem__(*args)
     def put(*args): return _tst.TST_put(*args)
     def __setitem__(*args): return _tst.TST___setitem__(*args)
+    def almost(*args): return _tst.TST_almost(*args)
     def __del__(self, destroy=_tst.delete_TST):
         try:
             if self.thisown: destroy(self)

@@ -30,7 +30,7 @@ int main(int argc,char** argv) {
     }
     fclose(input);
 
-    input = fopen("prenoms.txt","r");
+    /*input = fopen("prenoms.txt","r");
     line = (char*)malloc(256);
     while(fgets(line,256,input)!=NULL) {
         printf("%s ==> %s (%i)",line,linetst->get(line),lengthtst->get(line));
@@ -38,7 +38,7 @@ int main(int argc,char** argv) {
         line = (char*)malloc(256);
     }
     fclose(input);
-    free(line);
+    free(line);*/
 
     linetst->adjust();
     lengthtst->adjust();
@@ -46,7 +46,7 @@ int main(int argc,char** argv) {
     printf("Taille totale length : %i\n",lengthtst->bytes_allocated());
 
     printer* myaction=new printer();
-    linetst->almost("Yohan;H\r\n",(int)strlen("Yohan;H\r\n"),5,myaction);
+    linetst->almost_perform("Yohan;H\r\n",(int)strlen("Yohan;H\r\n"),7,myaction);
     delete myaction;
 
     delete linetst;
