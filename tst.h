@@ -645,11 +645,15 @@ template<class S,class T> void tst<S,T>::compute_backtrack(tst_node<S,T> *curren
     if(current_node->backtrack==UNDEFINED_INDEX) {
         S temp_char=*match;
         *match=0;
+/*
         printf("find backtrack for \"%s|",start);
+*/
         *match=temp_char;
         temp_char=*current_pos;
         *current_pos=0;
+/*
         printf("%s\"",match);        
+*/
         S* forward_pos=match;
         while(forward_pos<current_pos) {
             current_node->backtrack=root;
@@ -661,6 +665,7 @@ template<class S,class T> void tst<S,T>::compute_backtrack(tst_node<S,T> *curren
             else {
                 current_node->backtrack=(array+current_node->backtrack)->next;
 
+/*              
                 printf(" => \"%s\"(%i)",forward_pos,current_node->backtrack);
                 if(current_node->backtrack_match_index!=UNDEFINED_INDEX) {
                     S* best_match_end=forward_pos+(array+current_node->backtrack_match_index)->position+1;
@@ -672,21 +677,25 @@ template<class S,class T> void tst<S,T>::compute_backtrack(tst_node<S,T> *curren
                 else {
                     printf(" with no best match\n");
                 }
+*/
                 break;
             }
         }
         if(current_node->backtrack==UNDEFINED_INDEX) {
+/*
             printf(" => nothing !\n");
+*/
             current_node->backtrack=root;
-            current_node->backtrack_match_index=UNDEFINED_INDEX; // inutile
+            current_node->backtrack_match_index=UNDEFINED_INDEX;
         }
         *current_pos=temp_char;
     }
 }
 
 template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
+/*
     printf("\n--------scan \"%s\"\n",string);
-    // return tst<S,T>::scan_with_stop_chars(string,NULL,to_perform);
+*/
     tst_node<S,T> *current_node=NULL;
 
     S current_char;
@@ -703,15 +712,21 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
     current_node=array+current_index;
     while(1) {
         current_node=array+current_index;
+/*
         printf("%3i:%3i: %c %c",current_pos-string,current_index,current_node->c,current_char);
+*/
         if(current_char) {
             int diff=current_char-current_node->c;
             if(diff>0) {
+/*
                 printf(" R");
+*/
                 current_index=current_node->right;
             }
             else if(diff<0) {
+/*
                 printf(" L");
+*/
                 current_index=current_node->left;
             }
             else {
@@ -730,7 +745,9 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 else {
                     current_index=UNDEFINED_INDEX;
                 }
+/*
                 printf(" ok %3i",current_index);            
+*/
             }
         }
         else {
@@ -738,7 +755,9 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
         }
 
         if(current_index==UNDEFINED_INDEX) {
+/*
             printf(" KO\n");
+*/
 
             // Le caractère courant n'est pas accepté
             if(current_match_index!=UNDEFINED_INDEX) {
@@ -749,7 +768,9 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 if(current_match_start>non_match_start) {
                     temp_char=*current_match_start;
                     *current_match_start=0;
+/*
                     printf("-> \"%s\"\n",non_match_start);
+*/
                     to_perform->perform(non_match_start,(int)(non_match_start-current_match_start),default_value);
                     *current_match_start=temp_char;
                 }
@@ -759,7 +780,9 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 current_match_end=current_match_start+match_node->position+1;
                 temp_char=*current_match_end;
                 *current_match_end=0;
+/*
                 printf("-> \"%s\"\n",current_match_start);
+*/
                 to_perform->perform(current_match_start,match_node->position+1,match_node->data);
                 *current_match_end=temp_char;
                 non_match_start=current_match_end;
@@ -781,12 +804,14 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                     // grâce à la position du noeud
                     current_match_start=current_pos-(array+current_index)->position;
 
+/*
                     // DEBUG
                     temp_char=*current_pos;
                     *current_pos=0;
                     printf("Restarting at \"%s|%c\" with state %i\n",current_match_start,temp_char,current_index);
                     *current_pos=temp_char;
                     // END DEBUG
+*/
                 }
             }
             else if(current_match_start!=NULL) {
@@ -806,12 +831,14 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                     // grâce à la position du noeud
                     current_match_start=current_pos-(array+current_index)->position;
 
+/*
                     // DEBUG
                     temp_char=*current_pos;
                     *current_pos=0;
                     printf("Restarting at \"%s|%c\" with state %i\n",current_match_start,temp_char,current_index);
                     *current_pos=temp_char;
                     // END DEBUG
+*/
                 }
             }
             else {
@@ -826,9 +853,11 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 }
             }
         }
+/*
         else {
             printf("\n");
         }
+*/
 
         current_char=*current_pos;
     }
@@ -836,7 +865,9 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
     if(current_pos>non_match_start) {
         temp_char=*current_pos;
         *current_pos=0;
+/*
         printf("-> \"%s\"\n",non_match_start);
+*/
         to_perform->perform(non_match_start,(int)(non_match_start-current_pos),default_value);
         *current_pos=temp_char;
     }
@@ -854,160 +885,155 @@ template<class S> int is_in(S c,S* stop_chars) {
 }
 
 template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform) {
+/*
+    printf("\n--------scan_with_stop_chars\"%s\"\n",string);
+*/
     tst_node<S,T> *current_node=NULL;
 
-    S c;
-    S *pos=string;
-    S *previous_match_end=string;
-    S *best_match_end=NULL;
-    S *best_match_start=NULL;
+    S current_char;
+    S temp_char;
 
+    S *current_pos=string;
     int current_index=root;
-    int best_match_node=UNDEFINED_INDEX;
-    int is_stop_char=1;
+    S *non_match_start=string;
 
-    c = *(pos++);
-    while(best_match_node!=UNDEFINED_INDEX || c!=0) {
-        if(c) {
-            // on commence par rechercher le noeud correspondant au caractère courant
-            while(current_index!=UNDEFINED_INDEX) {
-                current_node=array+current_index;
-                if(current_node->c==0) {
-                    current_index=UNDEFINED_INDEX;
-                    break;
-                }
-                else {
-                    int diff=c-current_node->c;
-                    if(diff>0) {
-                        current_index=current_node->right;
-                    }
-                    else if(diff<0) {
-                        current_index=current_node->left;
-                    }
-                    else {
-                        break;
-                    }
-                }
+    int current_match_index=UNDEFINED_INDEX;
+    S *current_match_start=NULL;
+
+    current_char=*current_pos;
+    current_node=array+current_index;
+    while(1) {
+        current_node=array+current_index;
+/*
+        printf("%3i:%3i: %c %c",current_pos-string,current_index,current_node->c,current_char);
+*/
+        if(current_char) {
+            int diff=current_char-current_node->c;
+            if(diff>0) {
+/*
+                printf(" R");
+*/
+                current_index=current_node->right;
             }
-
-            if(current_index==UNDEFINED_INDEX) {
-                // le caractère courant ne matche pas
-                if(best_match_node!=UNDEFINED_INDEX) {
-                    // on backtracke
-
-                    // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
-                    size_t key_size=best_match_start-previous_match_end;
-                    if(key_size>0) {
-                        S* key=(S*)tst_malloc(key_size+1);
-                        memcpy(key,previous_match_end,key_size);
-                        key[key_size]='\0';
-                        to_perform->perform(key,-(int)key_size,default_value);
-                        tst_free(key);
-                    }
-
-                    // puis on envoie le match actuel
-                    key_size=best_match_end-best_match_start;
-                    S* key=(S*)tst_malloc(key_size+1);
-                    memcpy(key,best_match_start,key_size);
-                    key[key_size]='\0';
-                    to_perform->perform(key,(int)key_size,(array+best_match_node)->data);
-                    tst_free(key);
-
-                    // puis on reprend juste après le meilleur match depuis la racine de l'arbre
-                    // TODO : on devrait faire un vrai backtrack si l'on veut que (OLAAF,AFRICA)
-                    // sur 'OLAAFRICA' renvoie deux matchs et non pas un seul.
-                    previous_match_end = best_match_end;
-                    pos = best_match_end;
-                    best_match_node = UNDEFINED_INDEX;
-                    best_match_start = NULL;
-                    best_match_end = NULL;
-                    current_index=root;
-                }
-                else if(best_match_start) {
-                    pos = best_match_start+1;
-                    best_match_start = NULL;
-                    current_index=root;   
-                }
-                else {
-                    current_index = root;
-                }
+            else if(diff<0) {
+/*
+                printf(" L");
+*/
+                current_index=current_node->left;
             }
             else {
-                if(!best_match_start) {
-                    if(is_stop_char) {
-                        best_match_start=pos-1;
+                // ok, le caractère courant est accepté
+                if(current_match_start==NULL) {
+                    if(current_pos==string || is_in(*(current_pos-1),stop_chars)) {
+                        current_match_start=current_pos;
                     }
                     else {
-                        current_index = root;
+                        current_match_start=NULL;
+                        current_pos++;
                     }
                 }
-                if(best_match_start) {
-                    // on a trouvé le caractère courant => s'il y a un objet courant et qu'il est terminal
-                    // on enregistre le match
-                    if(current_node->data!=default_value) {
-                        if(stop_chars) {
-                            if(is_in(*pos,stop_chars)) {
-                                // le match est acceptable
-                                best_match_node = current_index;
-                                best_match_end = pos;
-                            }
-                        }
-                        else {
-                            // le match est acceptable
-                            best_match_node = current_index;
-                            best_match_end = pos;
-                        }
+                if(current_match_start) {
+                    if(current_node->data!=default_value && (*(current_pos+1)==0 || is_in(*(current_pos+1),stop_chars))) {
+                        // définition du match
+                        current_match_index=current_index;
                     }
-                    // si on peut continuer on y va sinon le match est terminé.
-                    current_index=current_node->next;
+                    current_pos++;
+                    if(*current_pos) {
+                        current_index=current_node->next;
+                    }
+                    else {
+                        current_index=UNDEFINED_INDEX;
+                    }
+/*
+                    printf(" ok %3i",current_index);            
+*/
                 }
             }
         }
         else {
-            // maintenant on est à la fin de la chaine
-            // on se comporte comme si le caractère était incorrect
-            // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
-            size_t key_size=best_match_start-previous_match_end;
-            if(key_size>0) {
-                S* key=(S*)tst_malloc(key_size+1);
-                memcpy(key,previous_match_end,key_size);
-                key[key_size]='\0';
-                to_perform->perform(key,-(int)key_size,default_value);
-                tst_free(key);
+            current_index=UNDEFINED_INDEX;
+        }
+
+        if(current_index==UNDEFINED_INDEX) {
+/*
+            printf(" KO\n");
+*/
+
+            // Le caractère courant n'est pas accepté
+            if(current_match_index!=UNDEFINED_INDEX) {
+                tst_node<S,T> *match_node;
+                S* current_match_end;
+
+                // envoi de ce qui précède le match
+                if(current_match_start>non_match_start) {
+                    temp_char=*current_match_start;
+                    *current_match_start=0;
+/*
+                    printf("-> \"%s\"\n",non_match_start);
+*/
+                    to_perform->perform(non_match_start,(int)(non_match_start-current_match_start),default_value);
+                    *current_match_start=temp_char;
+                }
+
+                // envoi du match
+                match_node=array+current_match_index;
+                current_match_end=current_match_start+match_node->position+1;
+                temp_char=*current_match_end;
+                *current_match_end=0;
+/*
+                printf("-> \"%s\"\n",current_match_start);
+*/
+                to_perform->perform(current_match_start,match_node->position+1,match_node->data);
+                *current_match_end=temp_char;
+                non_match_start=current_match_end;
+
+                // annulation du match
+                current_match_index=UNDEFINED_INDEX;
+
+                // backtrack de naze parce qu'on ne peut pas utiliser
+                // les infos de backtrack à cause des séparateurs.
+                current_pos=non_match_start;
+                current_index = root;
+                current_match_index=UNDEFINED_INDEX;
+                current_match_start=NULL;
             }
-
-            // puis on envoie le match actuel
-            key_size=best_match_end-best_match_start;
-            S* key=(S*)tst_malloc(key_size+1);
-            memcpy(key,best_match_start,key_size);
-            key[key_size]='\0';
-            to_perform->perform(key,(int)key_size,(array+best_match_node)->data);
-            tst_free(key);
-
-            // puis on reprend juste après le meilleur match depuis la racine de l'arbre
-            previous_match_end = best_match_end;
-            pos = best_match_end;
-            best_match_node = UNDEFINED_INDEX;
-            best_match_end = NULL;
-            best_match_start = NULL;
-            current_index = root;
+            else if(current_match_start!=NULL) {
+                // backtrack de naze parce qu'on ne peut pas utiliser
+                // les infos de backtrack à cause des séparateurs.
+                current_pos=current_match_start+1;
+                current_index = root;
+                current_match_index=UNDEFINED_INDEX;
+                current_match_start=NULL;
+            }
+            else {
+                if(current_char) {
+                    current_pos++;
+                    current_index = root;
+                    // On annule le match
+                    current_match_start=NULL;
+                }
+                else {
+                    break;
+                }
+            }
         }
-
-        if(stop_chars) {
-            is_stop_char=is_in(*(pos-1),stop_chars);
+/*
+        else {
+            printf("\n");
         }
+*/
 
-        c = *(pos++);
+        current_char=*current_pos;
     }
 
-    // A la fin du parcours on envoie les derniers caractères s'il y a lieu
-    size_t key_size=pos-previous_match_end-1;
-    if(key_size>0) {
-        S* key=(S*)tst_malloc(key_size+1);
-        memcpy(key,previous_match_end,key_size);
-        key[key_size]='\0';
-        to_perform->perform(key,-(int)key_size,default_value);
-        tst_free(key);
+    if(current_pos>non_match_start) {
+        temp_char=*current_pos;
+        *current_pos=0;
+/*
+        printf("-> \"%s\"\n",non_match_start);
+*/
+        to_perform->perform(non_match_start,(int)(non_match_start-current_pos),default_value);
+        *current_pos=temp_char;
     }
 
     return to_perform->result();
