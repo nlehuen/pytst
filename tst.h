@@ -78,10 +78,10 @@ template<class S,class T> class tst {
         void write(FILE* file,serializer<S,T>* writer);
 
         void debug_print_root() {
-            printf("Size: %i, next: %i\n",size,next);
+            printf("Size: %i (%i bytes), next: %i (%i bytes)\n",size,size*sizeof(tst_node<S,T>),next,next*sizeof(tst_node<S,T>));
             if(root!=UNDEFINED_INDEX) {
                 tst_node<S,T>* root_node=array+root;
-                printf("Root index: %i, c: %c, data: %i, height: %i\n",root,root_node->c,(int)root_node->data,root_node->height);
+                printf("Root index: %i, c: %c, data: 0x%x, height: %i\n",root,root_node->c,(int)root_node->data,root_node->height);
             }
         }
 
