@@ -282,7 +282,7 @@ template<class S,class T> void tst<S,T>::walk_recurse(tst_node<S,T>* current_nod
     int other_index;
 
     other_index=current_node->left;
-    if(other_index>=0) {
+    if(other_index!=UNDEFINED_INDEX) {
         walk_recurse(array+other_index,current_key,current_key_length,current_key_limit,filter,to_perform);
     }
 
@@ -300,7 +300,7 @@ template<class S,class T> void tst<S,T>::walk_recurse(tst_node<S,T>* current_nod
     }
 
     other_index=current_node->next;
-    if(other_index>=0) {
+    if(other_index!=UNDEFINED_INDEX) {
         assert(current_key[current_key_length]=='\0');
         assert(current_key_length < current_key_limit);
         current_key[current_key_length]=current_node->c;
@@ -310,7 +310,7 @@ template<class S,class T> void tst<S,T>::walk_recurse(tst_node<S,T>* current_nod
     }
 
     other_index=current_node->right;
-    if(other_index>=0) {
+    if(other_index!=UNDEFINED_INDEX) {
         walk_recurse(array+other_index,current_key,current_key_length,current_key_limit,filter,to_perform);
     }
 }
@@ -320,7 +320,7 @@ template<class S,class T> void tst<S,T>::almost_recurse(tst_node<S,T>* current_n
     int diff,diff2;
 
     other_index=current_node->left;
-    if (other_index>=0) {
+    if (other_index!=UNDEFINED_INDEX) {
         almost_recurse(array+other_index,current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,filter,to_perform,current_key_limit);
     }
 
@@ -351,7 +351,7 @@ template<class S,class T> void tst<S,T>::almost_recurse(tst_node<S,T>* current_n
     }
 
     other_index=current_node->next;
-    if (other_index>=0) {
+    if (other_index!=UNDEFINED_INDEX) {
         diff2 = remaining_distance - diff;
         if (diff2>=0) {
             assert(current_key[current_key_length]=='\0');
@@ -368,7 +368,7 @@ template<class S,class T> void tst<S,T>::almost_recurse(tst_node<S,T>* current_n
         almost_recurse(current_node,current_key,current_key_length,string,current_index+1,real_string_length,string_length-1,remaining_distance-1,filter,to_perform,current_key_limit);
     }
 
-    if(other_index>=0 && remaining_distance>0) {
+    if(other_index!=UNDEFINED_INDEX && remaining_distance>0) {
         assert(current_key[current_key_length]=='\0');
         assert(current_key_length < current_key_limit);
         current_key[current_key_length]=current_node->c;
@@ -378,7 +378,7 @@ template<class S,class T> void tst<S,T>::almost_recurse(tst_node<S,T>* current_n
     }
 
     other_index = current_node->right;
-    if(other_index>=0) {
+    if(other_index!=UNDEFINED_INDEX) {
         assert(current_key[current_key_length]=='\0');
         almost_recurse(array+other_index,current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,filter,to_perform,current_key_limit);
     }
@@ -400,7 +400,7 @@ template<class S,class T> T tst<S,T>::common_prefix(S* string,filter<S,T>* filte
         current_key[current_key_length]=c;
         current_key[current_key_length+1]='\0';
         current_key_length++;
-        while(current_index>=0) {
+        while(current_index!=UNDEFINED_INDEX) {
             current_node=array+current_index;
             diff=c-current_node->c;
             if(diff==0) {
@@ -419,7 +419,7 @@ template<class S,class T> T tst<S,T>::common_prefix(S* string,filter<S,T>* filte
                         to_perform->perform(current_key,0,biggest);
                     }
                     current_index=current_node->next;
-                    if(current_index>=0) {
+                    if(current_index!=UNDEFINED_INDEX) {
                         walk_recurse(array+current_index,current_key,current_key_length,maximum_key_length+2,filter,to_perform);
                     }
                     tst_free(current_key);
@@ -606,7 +606,7 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
     tst_node<S,T>* current_node;
     int diff;
 
-    while(*current_index>=0) {
+    while(*current_index!=UNDEFINED_INDEX) {
         current_node=_array+*current_index;
 
         if(current_node->c==0) {
@@ -1108,10 +1108,10 @@ template<class S,class T> int tst<S,T>::compute_height_and_balance(tst_node<S,T>
     tst_node<S,T>* left_node;
     tst_node<S,T>* right_node;
 
-    if(right>=0) {
+    if(right!=UNDEFINED_INDEX) {
         right_node=array+right;
         right_height=right_node->height;
-        if(left>=0) {
+        if(left!=UNDEFINED_INDEX) {
             left_node=array+left;
             left_height=left_node->height;
             result=right_height-left_height;
@@ -1127,7 +1127,7 @@ template<class S,class T> int tst<S,T>::compute_height_and_balance(tst_node<S,T>
         }
     }
     else {
-        if(left>=0) {
+        if(left!=UNDEFINED_INDEX) {
             left_node=array+left;
             left_height=left_node->height;
             current_node->height=left_height+1;
