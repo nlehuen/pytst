@@ -44,7 +44,7 @@ class stringtst : public tst<char*> {
     public:
         stringtst() : tst<char*>(16,NULL) {
         }
-        
+
         virtual ~stringtst() {
             clear_nodes();
         }
@@ -59,6 +59,24 @@ class stringtst : public tst<char*> {
        virtual void store_data(tst_node<char*>* node,char* data);
 };
 
+class tester : public donothing {
+    public:
+        tester(tst<char*>* mytst) : donothing() {
+            this->mytst=mytst;
+        }
+
+        virtual void perform(char* key,int remaining_distance,char* data) {
+            donothing* dn = new donothing();
+            mytst->almost(key,strlen(key),3,NULL,dn);
+            mytst->common_prefix(key,NULL,dn);
+            delete dn;
+        }
+
+    private:
+        tst<char*>* mytst;
+};
+
+
 void stringtst::store_data(tst_node<char*>* node,char* data) {
             // printf("sd %x %x %x %s\n",(int)node,(int)node->data,node->c,data);
             if(node->data) {
@@ -71,8 +89,8 @@ void stringtst::store_data(tst_node<char*>* node,char* data) {
 int main(int argc,char** argv) {
     printf("Taille d'un noeud char* : %i\n",sizeof(tst_node<char*>));
     printf("Taille d'un noeud size_t : %i\n",sizeof(tst_node<int>));
-    
-    for(int i=0;i<1000;i++) {
+
+    for(int i=0;i<10;i++) {
         tst<char*>* linetst=new stringtst();
         tst<size_t>* lengthtst=new tst<size_t>(16,0);
         char* line;
@@ -88,7 +106,11 @@ int main(int argc,char** argv) {
         fclose(input);
         tst_free(line);
 
-        linetst->adjust();
+        tester* t=new tester(linetst);
+        linetst->walk(NULL,t);
+        delete t;
+
+        /*linetst->adjust();
         lengthtst->adjust();
         printf("Taille totale line : %i\n",linetst->bytes_allocated());
         printf("Taille totale length : %i\n",lengthtst->bytes_allocated());
@@ -133,7 +155,10 @@ int main(int argc,char** argv) {
 
             delete linetst;
             fclose(finput);
-        }
+        }*/
+
+        delete linetst;
+        delete lengthtst;
     }
 
     return 0;
