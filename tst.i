@@ -12,6 +12,7 @@
 %feature("director") filter<int>;
 %feature("director") filter<char*>;
 %feature("director") filter<PyObject*>;
+%feature("director") serializer<PyObject*>;
 
 %include "tst.h"
 
@@ -26,6 +27,7 @@
 %template(_object_tst) tst<PyObject*>;
 %template(Action) action<PyObject*>;
 %template(Filter) filter<PyObject*>;
+%template(Serializer) serializer<PyObject*>;
 
 %include "TST.cxx"
 

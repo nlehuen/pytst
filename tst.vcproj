@@ -67,7 +67,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="E:\Python23\include"
+				AdditionalIncludeDirectories="c:\Python23\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="4"
 				UsePrecompiledHeader="0"
@@ -80,7 +80,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/tst.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="E:\Python23\libs"
+				AdditionalLibraryDirectories="C:\Python23\libs"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -123,6 +123,9 @@
 			</File>
 			<File
 				RelativePath=".\test_tst2.py">
+			</File>
+			<File
+				RelativePath=".\TST.cxx">
 			</File>
 			<File
 				RelativePath="..\python\tcc\tst.py">

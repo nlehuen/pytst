@@ -55,6 +55,8 @@ template<class T> class filter {
 
 template<class T> class serializer {
     public:
+        virtual ~serializer() {
+        }
         virtual void write(FILE* file,T data)=0;
         virtual T read(FILE* file)=0;
 };
@@ -66,9 +68,9 @@ template<class T> class tst {
         ~tst();
 
         void adjust();
-        void walk(filter<T>* filter,action<T>* to_perform);
-        void almost(char* string,int string_length,int maximum_distance,filter<T>* filter,action<T>* to_perform);
-        void common_prefix(char* string,filter<T>* filter,action<T>* to_perform);
+        action<T>* walk(filter<T>* filter,action<T>* to_perform);
+        action<T>* almost(char* string,int string_length,int maximum_distance,filter<T>* filter,action<T>* to_perform);
+        action<T>* common_prefix(char* string,filter<T>* filter,action<T>* to_perform);
         T get(char* string);
         T __getitem__(char* string);
         T put(char* string,T data);
@@ -217,20 +219,22 @@ template<class T> T tst<T>::__setitem__(char* string,T data) {
     return put(string,data);
 }
 
-template<class T> void tst<T>::almost(char* string, int string_length, int maximum_distance,filter<T>* filter,action<T>* to_perform) {
+template<class T> action<T>* tst<T>::almost(char* string, int string_length, int maximum_distance,filter<T>* filter,action<T>* to_perform) {
     LOG1("malloc de %i\n",string_length+maximum_distance+1);
     char* current_key=(char*)malloc((string_length+maximum_distance+1)*sizeof(char));
     *current_key='\0';
     LOG1("malloc : %x\n",(int)current_key);
     almost_recurse(array+root,current_key,0,string,0,string_length,string_length,maximum_distance,filter,to_perform,string_length+maximum_distance);
     free(current_key);
+    return to_perform;
 }
 
-template<class T> void tst<T>::walk(filter<T>* filter,action<T>* to_perform) {
+template<class T> action<T>* tst<T>::walk(filter<T>* filter,action<T>* to_perform) {
     char* key=(char*)malloc((maximum_key_length+2)*sizeof(char));
     *key='\0';
     walk_recurse(array+root,key,0,maximum_key_length+1,filter,to_perform);
     free(key);
+    return to_perform;
 }
 
 template<class T> void tst<T>::walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,filter<T>* filter,action<T>* to_perform) {
@@ -339,7 +343,7 @@ template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* cu
     }
 }
 
-template<class T> void tst<T>::common_prefix(char* string,filter<T>* filter,action<T>* to_perform) {
+template<class T> action<T>* tst<T>::common_prefix(char* string,filter<T>* filter,action<T>* to_perform) {
     char* current_key=(char*)malloc((maximum_key_length+2)*sizeof(char));
     int current_key_length=0,current_key_limit=maximum_key_length+1;
     *current_key='\0';
@@ -377,7 +381,7 @@ template<class T> void tst<T>::common_prefix(char* string,filter<T>* filter,acti
                         walk_recurse(array+current_index,current_key,current_key_length,current_key_limit,filter,to_perform);
                     }
                     free(current_key);
-                    return;
+                    return to_perform;
                 }
             }
             else if(diff>0) {
@@ -396,6 +400,7 @@ template<class T> void tst<T>::common_prefix(char* string,filter<T>* filter,acti
         to_perform->perform(current_key,current_key_length,biggest);
     }
     free(current_key);
+    return to_perform;
 }
 
 template<class T> int tst<T>::create_node(tst_node<T>** current_node,int current_index) {

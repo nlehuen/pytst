@@ -61,6 +61,7 @@ class IntegerTST(_object):
     def debug(*args): return _tst.IntegerTST_debug(*args)
     def get_maximum_key_length(*args): return _tst.IntegerTST_get_maximum_key_length(*args)
     def bytes_allocated(*args): return _tst.IntegerTST_bytes_allocated(*args)
+    def write(*args): return _tst.IntegerTST_write(*args)
 
 class IntegerTSTPtr(IntegerTST):
     def __init__(self, this):
@@ -156,6 +157,7 @@ class _object_tst(_object):
     def debug(*args): return _tst._object_tst_debug(*args)
     def get_maximum_key_length(*args): return _tst._object_tst_get_maximum_key_length(*args)
     def bytes_allocated(*args): return _tst._object_tst_bytes_allocated(*args)
+    def write(*args): return _tst._object_tst_write(*args)
 
 class _object_tstPtr(_object_tst):
     def __init__(self, this):
@@ -225,6 +227,38 @@ class FilterPtr(Filter):
         if not hasattr(self,"thisown"): _swig_setattr(self, Filter, 'thisown', 0)
         _swig_setattr(self, Filter,self.__class__,Filter)
 _tst.Filter_swigregister(FilterPtr)
+
+class Serializer(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Serializer, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Serializer, name)
+    def __repr__(self):
+        return "<C serializer<(p.PyObject)> instance at %s>" % (self.this,)
+    def __del__(self, destroy=_tst.delete_Serializer):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def write(*args): return _tst.Serializer_write(*args)
+    def read(*args): return _tst.Serializer_read(*args)
+    def __init__(self, *args):
+        if self.__class__ == Serializer:
+            args = (None,) + args
+        else:
+            args = (self,) + args
+        _swig_setattr(self, Serializer, 'this', _tst.new_Serializer(*args))
+        _swig_setattr(self, Serializer, 'thisown', 1)
+    def __disown__(self):
+        self.thisown = 0
+        _tst.disown_Serializer(self)
+        return weakref_proxy(self)
+
+class SerializerPtr(Serializer):
+    def __init__(self, this):
+        _swig_setattr(self, Serializer, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, Serializer, 'thisown', 0)
+        _swig_setattr(self, Serializer,self.__class__,Serializer)
+_tst.Serializer_swigregister(SerializerPtr)
 
 class CallableAction(Action):
     __swig_setmethods__ = {}
@@ -327,6 +361,32 @@ class ListActionPtr(ListAction):
         if not hasattr(self,"thisown"): _swig_setattr(self, ListAction, 'thisown', 0)
         _swig_setattr(self, ListAction,self.__class__,ListAction)
 _tst.ListAction_swigregister(ListActionPtr)
+
+class ObjectSerializer(Serializer):
+    __swig_setmethods__ = {}
+    for _s in [Serializer]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ObjectSerializer, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Serializer]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    __getattr__ = lambda self, name: _swig_getattr(self, ObjectSerializer, name)
+    def __repr__(self):
+        return "<C ObjectSerializer instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, ObjectSerializer, 'this', _tst.new_ObjectSerializer(*args))
+        _swig_setattr(self, ObjectSerializer, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_ObjectSerializer):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def write(*args): return _tst.ObjectSerializer_write(*args)
+    def read(*args): return _tst.ObjectSerializer_read(*args)
+
+class ObjectSerializerPtr(ObjectSerializer):
+    def __init__(self, this):
+        _swig_setattr(self, ObjectSerializer, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, ObjectSerializer, 'thisown', 0)
+        _swig_setattr(self, ObjectSerializer,self.__class__,ObjectSerializer)
+_tst.ObjectSerializer_swigregister(ObjectSerializerPtr)
 
 class TST(_object_tst):
     __swig_setmethods__ = {}

@@ -137,8 +137,59 @@ class ListAction : public action<PyObject*> {
         PyObject* list;
 };
 
+class ObjectSerializer : public serializer<PyObject*> {
+    public:
+        ObjectSerializer() {
+            PyObject* name=PyString_FromString("cPickle");
+            cPickle=PyImport_Import(name);
+            if(!cPickle) {
+                printf("Impossible d'importer cPickle\n");
+                PyErr_SetString(PyExc_RuntimeError,"Impossible d'importer cPickle");
+            }
+            Py_DECREF(name);
+        }
+
+        virtual ~ObjectSerializer() {
+            Py_DECREF(cPickle);
+        }
+
+        virtual void write(FILE* file,PyObject* data) {
+            PyObject* dumps = PyObject_GetAttrString(cPickle,"dumps");
+            PyObject* call=Py_BuildValue("(oi)",data,2);
+            PyObject* result=PyObject_CallObject(dumps,call);
+            Py_DECREF(call);
+            Py_DECREF(dumps);
+            char *string;
+            int length;
+            PyString_AsStringAndSize(result,&string,&length);
+            fwrite(&length,sizeof(int),1,file);
+            fwrite(string,sizeof(char),length,file);
+            Py_DECREF(result);
+        }
+
+        virtual PyObject* read(FILE* file) {
+            int length;
+            fread(&length,sizeof(int),1,file);
+            char* string=(char*)malloc(length);
+            fread(string,sizeof(char),length,file);
+            PyObject* dumps=PyString_FromStringAndSize(string,length);
+            PyObject* loads=PyObject_GetAttrString(cPickle,"loads");
+            PyObject* call=Py_BuildValue("(o)",loads);
+            PyObject* result=PyObject_CallObject(loads,call);
+            Py_DECREF(call);
+            Py_DECREF(loads);
+            Py_DECREF(dumps);
+            free(string);
+            return result;
+        }
+    
+    private:
+        PyObject* cPickle;
+};
+
 class TST : public tst<PyObject*> {
     public:
+        TST();
         TST(int initial_size,PyObject* default_value);
         ~TST();
         PyObject* get(char* string);
@@ -151,6 +202,10 @@ class TST : public tst<PyObject*> {
     protected:
         int create_node(tst_node<PyObject*>** current_node,int current_index);
 };
+
+TST::TST() : tst<PyObject*>(16,Py_None) {
+    Py_XINCREF(default_value);
+}
 
 TST::TST(int initial_size,PyObject* default_value) : tst<PyObject*>(initial_size,default_value) {
     Py_XINCREF(default_value);
