@@ -48,6 +48,5 @@ setup(
         'Programming Language :: Python',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Scientific/Engineering :: Information Analysis',
-        'Topic :: Software Development :: Libraries :: Python Modules',
     ]
 )
