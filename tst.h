@@ -636,27 +636,37 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
 }
 
 template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform) {
-    S c;
-    int diff;
-
+    /*if(stop_chars) {
+        printf("\n----- scan \"%s\" with stop chars \"%s\"\n",string,stop_chars);
+    }
+    else {
+        printf("\n----- scan \"%s\"\n",string);
+    }*/
+    
     tst_node<S,T> *current_node=NULL;
-    S *pos=string,*previous_match_end=string,*best_match_end=NULL,*best_match_start=NULL;
 
-    int current_index=root,best_match_node=UNDEFINED_INDEX, temp_node=UNDEFINED_INDEX;
-    int previous_char_was_stop_char=1;
+    S c;
+    S *pos=string;
+    S *previous_match_end=string;
+    S *best_match_end=NULL;
+    S *best_match_start=NULL;
+
+    int current_index=root;
+    int best_match_node=UNDEFINED_INDEX;
+    int is_stop_char=1;
 
     c = *(pos++);
     while(best_match_node!=UNDEFINED_INDEX || c!=0) {
         if(c) {
             // on commence par rechercher le noeud correspondant au caractère courant
-            while(current_index>=0) {
+            while(current_index!=UNDEFINED_INDEX) {
                 current_node=array+current_index;
                 if(current_node->c==0) {
                     current_index=UNDEFINED_INDEX;
                     break;
                 }
                 else {
-                    diff=c-current_node->c;
+                    int diff=c-current_node->c;
                     if(diff>0) {
                         current_index=current_node->right;
                     }
@@ -722,55 +732,101 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     // Ben non, en fait, c'est l'algo Aho-Corasick http://www-sr.informatik.uni-tuebingen.de/~buehler/AC/AC.html :(
                     // La seule différence, c'est qu'ici je vais calculer le 'Failure Pattern' au fur et à mesure des besoins.
                     if(current_node->bt_node==UNDEFINED_INDEX) {
-                       int forward=1;
-                       size_t key_size=pos-best_match_start-1;
-                       S* key=(S*)tst_malloc(key_size+1);
-                       memcpy(key,best_match_start,key_size);
-                       key[key_size]='\0';
+                        size_t key_size=pos-best_match_start-1;
                        
-                       printf("\nCalcul pour %s//%c\n",key,c);
-
-                       while(forward<key_size) {
-                           printf("Test de la sous-cle %s...",key+forward);
-                           current_node->bt_node=root;
-                           find_node(&(current_node->bt_node),&(current_node->bt_bmnode),key+forward);
-                           if(current_node->bt_node==UNDEFINED_INDEX) {
-                               printf("KO");
-                               forward++;
-                               if(forward<key_size) printf("\n");
-                           }
-                           else {
-                            printf("OK");
-                            break;
-                           }
-                        }
-                        
-                        tst_free(key);
-                        
-                        current_node->bt_forward=forward;
-                        if(current_node->bt_node==UNDEFINED_INDEX) {
+                        if(key_size==0) {
+                            //printf("--- bummer ---");
+                            current_node->bt_forward=0;
                             current_node->bt_node=root;
+                            current_node->bt_bmnode=UNDEFINED_INDEX;
                         }
                         else {
-                            current_node->bt_node=(array+current_node->bt_node)->next;
-                            if(current_node->bt_node==UNDEFINED_INDEX) {
-                                printf("________ MERDE ____________\n");
-                                current_node->bt_node=UNDEFINED_INDEX;
+                            int forward=1;
+                       
+                            S* key=(S*)tst_malloc(key_size+1);
+                            memcpy(key,best_match_start,key_size);
+                            key[key_size]='\0';
+                       
+                            //printf("Calcul pour %s(%i)//%c\n",key,current_node-array,c);
+
+                            while(forward<key_size) {
+                                //printf("Test de la sous-cle %s (%i)...",key+forward,is_stop_char);
                                 current_node->bt_node=root;
-                            }
-                            else {
-                                if((array+current_node->bt_node)->data!=default_value) {
-                                    current_node->bt_bmnode=current_node->bt_node;
+                                current_node->bt_bmnode=UNDEFINED_INDEX;
+                                find_node(&(current_node->bt_node),&(current_node->bt_bmnode),key+forward);
+                                if(current_node->bt_node==UNDEFINED_INDEX) {
+                                    //printf("KO");
+                                    forward++;
+                                    //if(forward<key_size) printf("\n");
+                                }
+                                else {
+                                    //printf("OK");
+                                    break;
                                 }
                             }
-                        }
                         
-                        printf("==> %i, %c(%i)=>%c(%i)\n",forward,(array+current_node->bt_node)->c,current_node->bt_node,(array+(array+current_node->bt_node)->next)->c,(array+current_node->bt_node)->next);
+                            tst_free(key);
+                            
+                            if(current_node->bt_node==UNDEFINED_INDEX) {
+                                //printf("forward=0\n");
+                                current_node->bt_forward=0;
+                                current_node->bt_node=root;
+                                current_node->bt_bmnode=UNDEFINED_INDEX;
+                            }
+                            else {
+                                current_node->bt_forward=forward;
+                                current_node->bt_node=(array+current_node->bt_node)->next;
+                                if(current_node->bt_node==UNDEFINED_INDEX) {
+                                    current_node->bt_node=root;
+                                    current_node->bt_bmnode=UNDEFINED_INDEX;
+                                }
+                            }
+                        }                        
                     }
                  
                     pos = best_match_start+1;
                     best_match_start = NULL;
                     current_index=root;   
+                    
+/*                    if(current_node->bt_forward>0) {
+                        if(stop_chars) {
+                            is_stop_char=0;
+                            S next_char = *(best_match_start + current_node->bt_forward - 1);
+                            S* current_stop_char=stop_chars;
+                            do {
+                                if(next_char==(*current_stop_char)) {
+                                    is_stop_char=1;
+                                    break;
+                                }
+                            } while(*(current_stop_char++));
+                            
+                        }
+                        else {
+                            is_stop_char=1;
+                        }
+                        
+                        if(is_stop_char) {
+                            pos--;
+                            printf("JUMP %i\n",current_node->bt_forward);
+                            best_match_start = best_match_start + current_node->bt_forward;
+                            best_match_node  = current_node->bt_bmnode;
+                            current_index = current_node->bt_node;
+                        }
+                        else {
+                            best_match_start = NULL;
+                            best_match_node  = UNDEFINED_INDEX;
+                            current_index = root;
+                        }
+                    }
+                    else {
+                        best_match_start = NULL;
+                        best_match_node  = UNDEFINED_INDEX;
+                        current_index = root;
+                    }
+                    
+                    if(current_index==UNDEFINED_INDEX) printf("WTF ???");
+                    //printf("backtrack to %i(%c) with state %i(%c)=>%i(%c)\n",pos-string,*pos,current_index,(array+current_index)->c,(array+current_index)->next,(array+(array+current_index)->next)->c);
+                    */
                 }
                 else {
                     current_index = root;
@@ -778,7 +834,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             }
             else {
                 if(!best_match_start) {
-                    if(previous_char_was_stop_char) {
+                    if(is_stop_char) {
                         best_match_start=pos-1;
                     }
                     else {
@@ -790,17 +846,17 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     // on enregistre le match
                     if(current_node->data!=default_value) {
                         if(stop_chars) {
-                            previous_char_was_stop_char=0;
+                            is_stop_char=0;
                             S next_char = *pos;
                             S* current_stop_char=stop_chars;
                             do {
                                 if(next_char==(*current_stop_char)) {
-                                    previous_char_was_stop_char=1;
+                                    is_stop_char=1;
                                     break;
                                 }
                             } while(*(current_stop_char++));
 
-                            if(previous_char_was_stop_char) {
+                            if(is_stop_char) {
                                 // le match est acceptable
                                 best_match_node = current_index;
                                 best_match_end = pos;
@@ -849,11 +905,11 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
 
         if(stop_chars) {
             c = *(pos-1);
-            previous_char_was_stop_char=0;
+            is_stop_char=0;
             S* current_stop_char=stop_chars;
             do {
                 if(c==(*current_stop_char)) {
-                    previous_char_was_stop_char=1;
+                    is_stop_char=1;
                     break;
                 }
             } while(*(current_stop_char++));
