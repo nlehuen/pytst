@@ -35,99 +35,99 @@ public:
 };
 
 template<class S,class T> class action {
-    public:
-        virtual ~action() {}
-        virtual void perform(S* key,int remaining_distance,T data)=0;
-        virtual T result()=0;
+public:
+    virtual ~action() {}
+    virtual void perform(S* key,int remaining_distance,T data)=0;
+    virtual T result()=0;
 };
 
 template<class S,class T> class filter {
-    public:
-        virtual ~filter() {}
-        virtual T perform(S* key,int remaining_distance,T data)=0;
+public:
+    virtual ~filter() {}
+    virtual T perform(S* key,int remaining_distance,T data)=0;
 };
 
 template<class S,class T> class serializer {
-    public:
-        virtual ~serializer() {}
-        virtual void write(FILE* file,T data)=0;
-        virtual T read(FILE* file)=0;
+public:
+    virtual ~serializer() {}
+    virtual void write(FILE* file,T data)=0;
+    virtual T read(FILE* file)=0;
 };
 
 template<class S,class T> class tst {
-    public:
-        tst(FILE* file,serializer<S,T>* reader);
-        tst(int initial_size,T default_value);
-        virtual ~tst() {
-            clear_nodes();
-        };
+public:
+    tst(FILE* file,serializer<S,T>* reader);
+    tst(int initial_size,T default_value);
+    virtual ~tst() {
+        clear_nodes();
+    };
 
-        void pack();
-        T walk(filter<S,T>* filter,action<S,T>* to_perform);
-        T almost(S* string,int string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform);
-        T common_prefix(S* string,filter<S,T>* filter,action<S,T>* to_perform);
-        T scan(S* string,action<S,T>* to_perform);
-        T scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform);
-        T get(S* string);
-        virtual T get_or_build(S* string,filter<S,T>* factory);
-        virtual T put(S* string,T data);
-        virtual void remove(S* string);
-        int get_maximum_key_length();
-        size_t bytes_allocated();
-        void write(FILE* file,serializer<S,T>* writer);
+    void pack();
+    T walk(filter<S,T>* filter,action<S,T>* to_perform);
+    T almost(S* string,int string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform);
+    T common_prefix(S* string,filter<S,T>* filter,action<S,T>* to_perform);
+    T scan(S* string,action<S,T>* to_perform);
+    T scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform);
+    T get(S* string);
+    virtual T get_or_build(S* string,filter<S,T>* factory);
+    virtual T put(S* string,T data);
+    virtual void remove(S* string);
+    int get_maximum_key_length();
+    size_t bytes_allocated();
+    void write(FILE* file,serializer<S,T>* writer);
 
-        void debug_print_root() {
-            int next_index=UNDEFINED_INDEX;
-            printf("Size: %i (%i bytes), next: %i (%i bytes)\n",size,size*sizeof(tst_node<S,T>),next,next*sizeof(tst_node<S,T>));
-            if(root!=UNDEFINED_INDEX) {
-                tst_node<S,T>* node=array+root;
-                printf("root index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",root,node->next,node->c,(int)node->data,node->height,node->position);
+    void debug_print_root() {
+        int next_index=UNDEFINED_INDEX;
+        printf("Size: %i (%i bytes), next: %i (%i bytes)\n",size,size*sizeof(tst_node<S,T>),next,next*sizeof(tst_node<S,T>));
+        if(root!=UNDEFINED_INDEX) {
+            tst_node<S,T>* node=array+root;
+            printf("root index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",root,node->next,node->c,(int)node->data,node->height,node->position);
+            next_index = node->next;
+            if(next_index!=UNDEFINED_INDEX) {
+                node=array+next_index;
+                printf("root->next index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",next_index,node->next,node->c,(int)node->data,node->height,node->position);
                 next_index = node->next;
                 if(next_index!=UNDEFINED_INDEX) {
                     node=array+next_index;
-                    printf("root->next index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",next_index,node->next,node->c,(int)node->data,node->height,node->position);
-                    next_index = node->next;
-                    if(next_index!=UNDEFINED_INDEX) {
-                        node=array+next_index;
-                        printf("root->next->next index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",next_index,node->next,node->c,(int)node->data,node->height,node->position);
-                    }
+                    printf("root->next->next index: %i, next: %i, c: %c, data: 0x%x, height: %i, position: %i\n",next_index,node->next,node->c,(int)node->data,node->height,node->position);
                 }
             }
         }
+    }
 
-    protected:
-        tst_node<S,T>* array;
-        T default_value;
-        int root,next,size,empty,maximum_key_length;
+protected:
+    tst_node<S,T>* array;
+    T default_value;
+    int root,next,size,empty,maximum_key_length;
 
-        tst();
-        virtual void read(FILE* file,serializer<S,T>* serializer);
+    tst();
+    virtual void read(FILE* file,serializer<S,T>* serializer);
 
-        void walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform);
-        void almost_recurse(tst_node<S,T>* current_node,S* current_key, int current_key_length, S* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,int current_key_limit);
+    void walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform);
+    void almost_recurse(tst_node<S,T>* current_node,S* current_key, int current_key_length, S* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,int current_key_limit);
 
-        virtual int create_node(tst_node<S,T>** current_node,int current_index);
+    virtual int create_node(tst_node<S,T>** current_node,int current_index);
 
-        virtual int build_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length);
-        virtual void remove_node(int* current_index,S* current_char,int current_key_length);
-        tst_node<S,T>* find_node(int* current_index,int* best_node, S* current_char);
+    virtual int build_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length);
+    virtual void remove_node(int* current_index,S* current_char,int current_key_length);
+    tst_node<S,T>* find_node(int* current_index,int* best_node, S* current_char);
 
-        void compute_backtrack(tst_node<S,T> *current_node,S *start,S *match,S *current_pos);
-            
-        void balance_node(tst_node<S,T>** current_node,int* current_index);
-        void ll(tst_node<S,T>** current_node,int* current_index);
-        void rr(tst_node<S,T>** current_node,int* current_index);
-        void lr(tst_node<S,T>** current_node,int* current_index);
-        void rl(tst_node<S,T>** current_node,int* current_index);
-        int compute_height_and_balance(tst_node<S,T>* current_node);
+    void compute_backtrack(tst_node<S,T> *current_node,S *start,S *match,S *current_pos);
 
-        virtual void clear_nodes();
+    void balance_node(tst_node<S,T>** current_node,int* current_index);
+    void ll(tst_node<S,T>** current_node,int* current_index);
+    void rr(tst_node<S,T>** current_node,int* current_index);
+    void lr(tst_node<S,T>** current_node,int* current_index);
+    void rl(tst_node<S,T>** current_node,int* current_index);
+    int compute_height_and_balance(tst_node<S,T>* current_node);
 
-        virtual T store_data(tst_node<S,T>* node,T data,int want_old_value) {
-            T result=node->data;
-            node->data=data;
-            return result;
-        }
+    virtual void clear_nodes();
+
+    virtual T store_data(tst_node<S,T>* node,T data,int want_old_value) {
+        T result=node->data;
+        node->data=data;
+        return result;
+    }
 };
 
 template<class S,class T> tst<S,T>::tst(int size,T default_value) {
@@ -464,7 +464,7 @@ template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node
     else {
         id=next++;
     }
-    
+
     new_node=array+id;
     new_node->c=0;
     new_node->next=UNDEFINED_INDEX;
@@ -502,7 +502,7 @@ template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,
             next_index = (*current_node)->next;
             if(next_index==UNDEFINED_INDEX) {
                 /* attention cela doit FORCEMENT se faire en deux ligne
-                   car current_node peut être modifié par tst_create_node. */
+                car current_node peut être modifié par tst_create_node. */
                 next_index=create_node(current_node,*current_index);
                 (*current_node)->next=next_index;
             }
@@ -584,18 +584,18 @@ template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* curre
             remove_node(next_index,current_char,current_key_length);
         }
     }
-    
+
     current_node=array+*current_index;
-    
+
     if(   current_node->data==default_value
-       && current_node->next==UNDEFINED_INDEX
-       && current_node->right==UNDEFINED_INDEX
-       && current_node->left==UNDEFINED_INDEX) {
-        // on ajoute le noeud à la liste des noeuds vides
-        current_node->next=empty;
-        empty = *current_index;
-        *current_index=UNDEFINED_INDEX;
-    }
+        && current_node->next==UNDEFINED_INDEX
+        && current_node->right==UNDEFINED_INDEX
+        && current_node->left==UNDEFINED_INDEX) {
+            // on ajoute le noeud à la liste des noeuds vides
+            current_node->next=empty;
+            empty = *current_index;
+            *current_index=UNDEFINED_INDEX;
+        }
     else {
         balance_node(&current_node,current_index);
     }
@@ -621,7 +621,7 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
             if(current_node->data!=default_value) {
                 *best_node=*current_index;
             }
-            
+
             current_char++;
             if(*current_char) {
                 *current_index = current_node->next;
@@ -660,7 +660,7 @@ template<class S,class T> void tst<S,T>::compute_backtrack(tst_node<S,T> *curren
             }
             else {
                 current_node->backtrack=(array+current_node->backtrack)->next;
-                
+
                 printf(" => \"%s\"(%i)",forward_pos,current_node->backtrack);
                 if(current_node->backtrack_match_index!=UNDEFINED_INDEX) {
                     S* best_match_end=forward_pos+(array+current_node->backtrack_match_index)->position+1;
@@ -695,7 +695,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
     S *current_pos=string;
     int current_index=root;
     S *non_match_start=string;
-    
+
     int current_match_index=UNDEFINED_INDEX;
     S *current_match_start=NULL;
 
@@ -736,15 +736,15 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
         else {
             current_index=UNDEFINED_INDEX;
         }
-                
+
         if(current_index==UNDEFINED_INDEX) {
             printf(" KO\n");
-            
+
             // Le caractère courant n'est pas accepté
             if(current_match_index!=UNDEFINED_INDEX) {
                 tst_node<S,T> *match_node;
                 S* current_match_end;
-                
+
                 // envoi de ce qui précède le match
                 if(current_match_start>non_match_start) {
                     temp_char=*current_match_start;
@@ -753,7 +753,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                     to_perform->perform(non_match_start,(int)(non_match_start-current_match_start),default_value);
                     *current_match_start=temp_char;
                 }
-                
+
                 // envoi du match
                 match_node=array+current_match_index;
                 current_match_end=current_match_start+match_node->position+1;
@@ -763,15 +763,15 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                 to_perform->perform(current_match_start,match_node->position+1,match_node->data);
                 *current_match_end=temp_char;
                 non_match_start=current_match_end;
-   
+
                 // annulation du match
                 current_match_index=UNDEFINED_INDEX;
-                
+
                 // backtrack correct !
                 compute_backtrack(current_node,current_match_start,current_match_end,current_pos);
                 current_index = current_node->backtrack;
                 current_match_index=current_node->backtrack_match_index;
-                
+
                 if(current_index==root) {
                     // quand on a un retour à la racine, on n'a aucun match en cours
                     current_match_start=NULL;
@@ -780,7 +780,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                     // sinon c'est qu'un match est en cours, on va recalculer son point de démarrage
                     // grâce à la position du noeud
                     current_match_start=current_pos-(array+current_index)->position;
-                    
+
                     // DEBUG
                     temp_char=*current_pos;
                     *current_pos=0;
@@ -791,12 +791,12 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
             }
             else if(current_match_start!=NULL) {
                 // backtrack correct !
-                
+
                 // on commence par calculer où l'on va aller
                 compute_backtrack(current_node,current_match_start,current_match_start+1,current_pos);
                 current_index = current_node->backtrack;
                 current_match_index=current_node->backtrack_match_index;
-                
+
                 if(current_index==root) {
                     // quand on a un retour à la racine, on n'a aucun match en cours
                     current_match_start=NULL;
@@ -805,7 +805,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
                     // sinon c'est qu'un match est en cours, on va recalculer son point de démarrage
                     // grâce à la position du noeud
                     current_match_start=current_pos-(array+current_index)->position;
-                    
+
                     // DEBUG
                     temp_char=*current_pos;
                     *current_pos=0;
@@ -840,7 +840,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
         to_perform->perform(non_match_start,(int)(non_match_start-current_pos),default_value);
         *current_pos=temp_char;
     }
-    
+
     return to_perform->result();
 }
 
@@ -889,12 +889,12 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     }
                 }
             }
-    
+
             if(current_index==UNDEFINED_INDEX) {
                 // le caractère courant ne matche pas
                 if(best_match_node!=UNDEFINED_INDEX) {
                     // on backtracke
-    
+
                     // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
                     size_t key_size=best_match_start-previous_match_end;
                     if(key_size>0) {
@@ -904,7 +904,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                         to_perform->perform(key,-(int)key_size,default_value);
                         tst_free(key);
                     }
-    
+
                     // puis on envoie le match actuel
                     key_size=best_match_end-best_match_start;
                     S* key=(S*)tst_malloc(key_size+1);
@@ -912,7 +912,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     key[key_size]='\0';
                     to_perform->perform(key,(int)key_size,(array+best_match_node)->data);
                     tst_free(key);
-    
+
                     // puis on reprend juste après le meilleur match depuis la racine de l'arbre
                     // TODO : on devrait faire un vrai backtrack si l'on veut que (OLAAF,AFRICA)
                     // sur 'OLAAFRICA' renvoie deux matchs et non pas un seul.
@@ -962,8 +962,8 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     current_index=current_node->next;
                 }
             }
-       }
-       else {
+        }
+        else {
             // maintenant on est à la fin de la chaine
             // on se comporte comme si le caractère était incorrect
             // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
@@ -1027,8 +1027,8 @@ template<class S,class T> void tst<S,T>::balance_node(tst_node<S,T>** current_no
         }
     }
     else if(current_balance<-1) {
-       current_balance=compute_height_and_balance(array+(*current_node)->left);
-       if(current_balance<0) {
+        current_balance=compute_height_and_balance(array+(*current_node)->left);
+        if(current_balance<0) {
             ll(current_node,current_index);
         }
         else {
