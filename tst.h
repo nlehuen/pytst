@@ -258,10 +258,8 @@ template<class S,class T> void tst<S,T>::remove(S* string) {
     tst_node<S,T>* current_node=array+root;
     remove_node(&current_node,&root,string,0);
     if(root==UNDEFINED_INDEX) {
-        //printf("Racine next=%i ",next);
-        assert(next==0);
+        next=0;
         root=create_node(&array,0);
-        //printf("%i\n",root);
     }
 }
 
@@ -579,7 +577,7 @@ template<class S,class T> void tst<S,T>::remove_node(tst_node<S,T>** current_nod
         if(*next_index!=UNDEFINED_INDEX) {
             *current_node = array + *next_index;
             remove_node(current_node,next_index,current_char,current_key_length);
-            *current_node=array + *current_index;
+            *current_node = array + *current_index;
         }
     }
     else {
@@ -587,7 +585,7 @@ template<class S,class T> void tst<S,T>::remove_node(tst_node<S,T>** current_nod
         if(*next_index!=UNDEFINED_INDEX) {
             *current_node = array + *next_index;
             remove_node(current_node,next_index,current_char,current_key_length);
-            *current_node=array + *current_index;
+            *current_node = array + *current_index;
         }
     }
     
@@ -595,7 +593,6 @@ template<class S,class T> void tst<S,T>::remove_node(tst_node<S,T>** current_nod
        && (*current_node)->next==UNDEFINED_INDEX
        && (*current_node)->right==UNDEFINED_INDEX
        && (*current_node)->left==UNDEFINED_INDEX) {
-        // printf("Delete %c\n",(*current_node)->c);
         move_last_node_to(*current_index);
         *current_index=UNDEFINED_INDEX;
     }

@@ -94,6 +94,7 @@ int main(int argc,char** argv) {
     tst<char,char*>* linetst=new tst<char,char*>(64,"<nothing>");
     linetst->put("abc","abc");
     linetst->put("abcdef","abcdef");
+    linetst->put("abcdefgh","abcdefgh");
     linetst->put("01","01");
     // linetst->put("02","02");
     printf("%s\n",linetst->get("abc"));
@@ -118,18 +119,23 @@ int main(int argc,char** argv) {
     printf("-----------------------\n");
     linetst->scan("--abcdef---abc--01--abcdef--abc01--",&p);
 
+    printf("Plein: ");
+    linetst->debug_print_root();
     for(int hhk=0;hhk<1000;hhk++) {
-        printf("0\n");
-        linetst->remove("abcdef");
         printf("1\n");
-        linetst->remove("abc");
+        linetst->remove("abcdefgh");
         printf("2\n");
         linetst->remove("01");
+        printf("0\n");
+        linetst->remove("abc");
+        printf("1\n");
+        linetst->remove("abcdef");
         printf("Vide: ");
         linetst->debug_print_root();
         char* buffer=(char*)malloc(256*sizeof(char));
         sprintf(buffer,"new abcdef %i",hhk);
         linetst->put("abcdef","new abcdef");
+        linetst->put("abcdefgh","new abcdefgh");
         linetst->put("abc","new abc");
         linetst->put("01","new 01");
         printf("Plein: ");
@@ -152,10 +158,11 @@ int main3(int argc,char** argv) {
         char* line;
         FILE* input;
 
-        input = fopen("..\\..\\prenoms.txt","r");
+        input = fopen("..\\prenoms.txt","r");
 
         if(input==NULL) {
             printf("Impossible d'ouvrir le fichier prenoms.txt\n");
+            getchar();
             return 1;
         }
 
@@ -167,6 +174,26 @@ int main3(int argc,char** argv) {
         }
         fclose(input);
         tst_free(line);
+
+        input = fopen("..\\prenoms.txt","r");
+
+        if(input==NULL) {
+            printf("Impossible d'ouvrir le fichier prenoms.txt\n");
+            getchar();
+            return 1;
+        }
+
+        line = (char*)tst_malloc(256);
+        while(fgets(line,256,input)!=NULL) {
+            linetst->remove(line);
+            lengthtst->remove(line);
+            line = (char*)tst_malloc(256);
+        }
+        fclose(input);
+        tst_free(line);
+
+        printf("linetst : ");
+        linetst->debug_print_root();
 
         tester* t=new tester(linetst);
         linetst->walk(NULL,t);
