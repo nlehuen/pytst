@@ -854,13 +854,6 @@ template<class S> int is_in(S c,S* stop_chars) {
 }
 
 template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform) {
-    /*if(stop_chars) {
-        printf("\n----- scan \"%s\" with stop chars \"%s\"\n",string,stop_chars);
-    }
-    else {
-        printf("\n----- scan \"%s\"\n",string);
-    }*/
-    
     tst_node<S,T> *current_node=NULL;
 
     S c;
@@ -931,120 +924,9 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     current_index=root;
                 }
                 else if(best_match_start) {
-                    // en fait le début de match n'était pas bon... Il nous faut donc backtracker
-                    
-                    // Puisqu'on a fait tout ce chemin, on sait
-                    // quelle est la chaine de caractère qui devrait commencer à best_match_start+1.
-                    // Supposons qu'on soit dans le noeud NICOLA et que le caractère courant soit A.
-                    // Il n'y a pas de match donc on devrait backtracker. Le truc c'est qu'on sait à l'avance
-                    // que si on commence à best_match_start+1, il faut chercher un I, puis un C, puis un O, etc.
-                    // Or aucun prénom ne commence par 'ICO', donc il n'y aura pas de match commençant à best_match_start+1.
-                    // Autant backtracker directement depuis best_match_start+2. Même motif, même punition, aucun prénom ne commence
-                    // pas COLA, on backtracke à best_match_start+3, où l'on a un match possible avec OLAAF. On avance donc directement de 3+3 (longueur de OLA) caractères
-                    // et on se positionne sur le noeud du TST correspondant à OLA. L'intérêt de la chose est que tout ce calcul
-                    // peut être réutilisé, il suffit de stocker son résultat, sous la forme (avancement (+1,+2,+3 etc), noeud) dans chaque noeud.
-                    // Dans cet exemple, on stocke dans le noeud NICOLA le backtracking (+6,OLA) et non pas (+7,OLAA), car le deuxième A vient de la chaine
-                    // dans laquelle on recherche et non pas de l'arbre lui-même.
-                    // Bien sûr, si l'arbre change, il faut recalculer toutes ces infos de backtrack.
-                    // Au final, on a une version multi-chaines de l'algo Knuth-Morris-Pratt : Knuth-Morris-Pratt-Lehuen ??? ;)
-                    // Ben non, en fait, c'est l'algo Aho-Corasick http://www-sr.informatik.uni-tuebingen.de/~buehler/AC/AC.html :(
-                    // La seule différence, c'est qu'ici je vais calculer le 'backtrack Pattern' au fur et à mesure des besoins.
-                    /*if(current_node->bt_node==UNDEFINED_INDEX) {
-                        size_t key_size=pos-best_match_start-1;
-                       
-                        if(key_size==0) {
-                            //printf("--- bummer ---");
-                            current_node->bt_forward=0;
-                            current_node->bt_node=root;
-                            current_node->bt_bmnode=UNDEFINED_INDEX;
-                        }
-                        else {
-                            int forward=1;
-                       
-                            S* key=(S*)tst_malloc(key_size+1);
-                            memcpy(key,best_match_start,key_size);
-                            key[key_size]='\0';
-                       
-                            //printf("Calcul pour %s(%i)//%c\n",key,current_node-array,c);
-
-                            while(forward<key_size) {
-                                //printf("Test de la sous-cle %s (%i)...",key+forward,is_stop_char);
-                                current_node->bt_node=root;
-                                current_node->bt_bmnode=UNDEFINED_INDEX;
-                                find_node(&(current_node->bt_node),&(current_node->bt_bmnode),key+forward);
-                                if(current_node->bt_node==UNDEFINED_INDEX) {
-                                    //printf("KO");
-                                    forward++;
-                                    //if(forward<key_size) printf("\n");
-                                }
-                                else {
-                                    //printf("OK");
-                                    break;
-                                }
-                            }
-                        
-                            tst_free(key);
-                            
-                            if(current_node->bt_node==UNDEFINED_INDEX) {
-                                //printf("forward=0\n");
-                                current_node->bt_forward=0;
-                                current_node->bt_node=root;
-                                current_node->bt_bmnode=UNDEFINED_INDEX;
-                            }
-                            else {
-                                current_node->bt_forward=forward;
-                                current_node->bt_node=(array+current_node->bt_node)->next;
-                                if(current_node->bt_node==UNDEFINED_INDEX) {
-                                    current_node->bt_node=root;
-                                    current_node->bt_bmnode=UNDEFINED_INDEX;
-                                }
-                            }
-                        }                        
-                    }*/
-                 
                     pos = best_match_start+1;
                     best_match_start = NULL;
                     current_index=root;   
-                    
-/*                    if(current_node->bt_forward>0) {
-                        if(stop_chars) {
-                            is_stop_char=0;
-                            S next_char = *(best_match_start + current_node->bt_forward - 1);
-                            S* current_stop_char=stop_chars;
-                            do {
-                                if(next_char==(*current_stop_char)) {
-                                    is_stop_char=1;
-                                    break;
-                                }
-                            } while(*(current_stop_char++));
-                            
-                        }
-                        else {
-                            is_stop_char=1;
-                        }
-                        
-                        if(is_stop_char) {
-                            pos--;
-                            printf("JUMP %i\n",current_node->bt_forward);
-                            best_match_start = best_match_start + current_node->bt_forward;
-                            best_match_node  = current_node->bt_bmnode;
-                            current_index = current_node->bt_node;
-                        }
-                        else {
-                            best_match_start = NULL;
-                            best_match_node  = UNDEFINED_INDEX;
-                            current_index = root;
-                        }
-                    }
-                    else {
-                        best_match_start = NULL;
-                        best_match_node  = UNDEFINED_INDEX;
-                        current_index = root;
-                    }
-                    
-                    if(current_index==UNDEFINED_INDEX) printf("WTF ???");
-                    //printf("backtrack to %i(%c) with state %i(%c)=>%i(%c)\n",pos-string,*pos,current_index,(array+current_index)->c,(array+current_index)->next,(array+(array+current_index)->next)->c);
-                    */
                 }
                 else {
                     current_index = root;
@@ -1064,17 +946,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     // on enregistre le match
                     if(current_node->data!=default_value) {
                         if(stop_chars) {
-                            is_stop_char=0;
-                            S next_char = *pos;
-                            S* current_stop_char=stop_chars;
-                            do {
-                                if(next_char==(*current_stop_char)) {
-                                    is_stop_char=1;
-                                    break;
-                                }
-                            } while(*(current_stop_char++));
-
-                            if(is_stop_char) {
+                            if(is_in(*pos,stop_chars)) {
                                 // le match est acceptable
                                 best_match_node = current_index;
                                 best_match_end = pos;
@@ -1122,15 +994,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
         }
 
         if(stop_chars) {
-            c = *(pos-1);
-            is_stop_char=0;
-            S* current_stop_char=stop_chars;
-            do {
-                if(c==(*current_stop_char)) {
-                    is_stop_char=1;
-                    break;
-                }
-            } while(*(current_stop_char++));
+            is_stop_char=is_in(*(pos-1),stop_chars);
         }
 
         c = *(pos++);
