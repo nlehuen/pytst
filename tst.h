@@ -85,10 +85,10 @@ template<class S,class T> class tst {
             }
         }
 
-protected:
+    protected:
         tst_node<S,T>* array;
         T default_value;
-        int root,next,size,maximum_key_length;
+        int root,next,size,empty,maximum_key_length;
 
         tst();
         virtual void read(FILE* file,serializer<S,T>* serializer);
@@ -99,9 +99,8 @@ protected:
         virtual int create_node(tst_node<S,T>** current_node,int current_index);
 
         virtual int build_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length);
-        virtual void remove_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length);
+        virtual void remove_node(int* current_index,S* current_char,int current_key_length);
         tst_node<S,T>* find_node(int* current_index,S* current_char);
-        void move_last_node_to(int to_index);
 
         void balance_node(tst_node<S,T>** current_node,int* current_index);
         void ll(tst_node<S,T>** current_node,int* current_index);
@@ -124,6 +123,7 @@ template<class S,class T> tst<S,T>::tst(int size,T default_value) {
     this->default_value=default_value;
     array=(tst_node<S,T>*)tst_malloc(size*sizeof(tst_node<S,T>));
     next=0;
+    empty=UNDEFINED_INDEX;
     root=create_node(&array,0);
     maximum_key_length=0;
 }
@@ -225,28 +225,6 @@ template<class S,class T> T tst<S,T>::get(S* string) {
     }
 }
 
-template<class S,class T> void tst<S,T>::move_last_node_to(int to_index) {
-    next-=1;
-    if(to_index!=next) {
-        tst_node<S,T>* from_node=array+next;
-        tst_node<S,T>* to_node=array+to_index;
-        memcpy(from_node,to_node,sizeof(tst_node<S,T>));
-        tst_node<S,T> *current_node=array,*last_node=array+next;
-        while(current_node<last_node) {
-            if(current_node->next==next) {
-                current_node->next=to_index;
-            }
-            else if(current_node->right==next) {
-                current_node->right=to_index;
-            }
-            else if(current_node->left==next) {
-                current_node->left=to_index;
-            }
-            current_node++;
-        }
-    }
-}
-
 template<class S,class T> T tst<S,T>::put(S* string,T data) {
     tst_node<S,T>* current_node=array+root;
     int node_index=build_node(&current_node,&root,string,0);
@@ -255,10 +233,8 @@ template<class S,class T> T tst<S,T>::put(S* string,T data) {
 }
 
 template<class S,class T> void tst<S,T>::remove(S* string) {
-    tst_node<S,T>* current_node=array+root;
-    remove_node(&current_node,&root,string,0);
+    remove_node(&root,string,0);
     if(root==UNDEFINED_INDEX) {
-        next=0;
         root=create_node(&array,0);
     }
 }
@@ -467,7 +443,16 @@ template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node
         *current_node = array+current_index;
     }
 
-    id=next++;
+    if(empty!=UNDEFINED_INDEX) {
+        // si on a un noeud vide on l'utilise.
+        id=empty;
+        // on passe au noeud vide suivant.
+        empty = (array+empty)->next;
+    }
+    else {
+        id=next++;
+    }
+    
     new_node=array+id;
     new_node->c=0;
     new_node->next=UNDEFINED_INDEX;
@@ -544,14 +529,15 @@ template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,
     }
 }
 
-template<class S,class T> void tst<S,T>::remove_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length) {
+template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* current_char,int current_key_length) {
+    tst_node<S,T>* current_node = array + *current_index;
     int diff,*next_index;
 
-    if((*current_node)->c==0) {
+    if(current_node->c==0) {
         return;
     }
     else {
-        diff=(*current_char)-((*current_node)->c);
+        diff=(*current_char)-(current_node->c);
     }
 
     if(diff==0) {
@@ -561,43 +547,41 @@ template<class S,class T> void tst<S,T>::remove_node(tst_node<S,T>** current_nod
             if(current_key_length>maximum_key_length) {
                 maximum_key_length=current_key_length;
             }
-            next_index = &((*current_node)->next);
+            next_index = &(current_node->next);
             if(*next_index!=UNDEFINED_INDEX) {
-                *current_node = array + *next_index;
-                remove_node(current_node,next_index,current_char,current_key_length);
-                *current_node=array+*current_index;
+                remove_node(next_index,current_char,current_key_length);
             }
         }
         else {
-            store_data(*current_node,default_value,0);
+            store_data(current_node,default_value,0);
         }
     }
     else if(diff>0) {
-        next_index = &((*current_node)->right);
+        next_index = &(current_node->right);
         if(*next_index!=UNDEFINED_INDEX) {
-            *current_node = array + *next_index;
-            remove_node(current_node,next_index,current_char,current_key_length);
-            *current_node = array + *current_index;
+            remove_node(next_index,current_char,current_key_length);
         }
     }
     else {
-        next_index = &((*current_node)->left);
+        next_index = &(current_node->left);
         if(*next_index!=UNDEFINED_INDEX) {
-            *current_node = array + *next_index;
-            remove_node(current_node,next_index,current_char,current_key_length);
-            *current_node = array + *current_index;
+            remove_node(next_index,current_char,current_key_length);
         }
     }
     
-    if(   (*current_node)->data==default_value
-       && (*current_node)->next==UNDEFINED_INDEX
-       && (*current_node)->right==UNDEFINED_INDEX
-       && (*current_node)->left==UNDEFINED_INDEX) {
-        move_last_node_to(*current_index);
+    current_node=array+*current_index;
+    
+    if(   current_node->data==default_value
+       && current_node->next==UNDEFINED_INDEX
+       && current_node->right==UNDEFINED_INDEX
+       && current_node->left==UNDEFINED_INDEX) {
+        // on ajoute le noeud à la liste des noeuds vides
+        current_node->next=empty;
+        empty = *current_index;
         *current_index=UNDEFINED_INDEX;
     }
     else {
-        balance_node(current_node,current_index);
+        balance_node(&current_node,current_index);
     }
 }
 
