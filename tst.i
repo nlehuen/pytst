@@ -6,19 +6,10 @@
 #include "TST.cxx"
 %}
 
-
-
-
-
-
 %exception {
     try { $action }
     catch (TSTException e) { PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;}
 }
-
-%feature("director") action<PyObject*>;
-%feature("director") filter<PyObject*>;
-%feature("director") serializer<PyObject*>;
 
 %include "tst.h"
 

@@ -14,30 +14,4 @@
 class Swig::Director;
 
 
-class SwigDirector__Action : public action<PyObject * >, public Swig::Director {
-
-public:
-    SwigDirector__Action(PyObject* self, bool disown = false);
-    virtual void perform(char *key, int remaining_distance, PyObject *data);
-    virtual PyObject * result();
-};
-
-
-class SwigDirector__Filter : public filter<PyObject * >, public Swig::Director {
-
-public:
-    SwigDirector__Filter(PyObject* self, bool disown = false);
-    virtual PyObject * perform(char *key, int remaining_distance, PyObject *data);
-};
-
-
-class SwigDirector__Serializer : public serializer<PyObject * >, public Swig::Director {
-
-public:
-    SwigDirector__Serializer(PyObject* self, bool disown = false);
-    virtual void write(FILE *file, PyObject *data);
-    virtual PyObject * read(FILE *file);
-};
-
-
 #endif

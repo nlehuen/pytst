@@ -74,6 +74,7 @@ class _Action(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, _Action, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, _Action, name)
+    def __init__(self): raise RuntimeError, "No constructor defined"
     def __repr__(self):
         return "<C action<(p.PyObject)> instance at %s>" % (self.this,)
     def __del__(self, destroy=_tst.delete__Action):
@@ -82,17 +83,6 @@ class _Action(_object):
         except: pass
     def perform(*args): return _tst._Action_perform(*args)
     def result(*args): return _tst._Action_result(*args)
-    def __init__(self, *args):
-        if self.__class__ == _Action:
-            args = (None,) + args
-        else:
-            args = (self,) + args
-        _swig_setattr(self, _Action, 'this', _tst.new__Action(*args))
-        _swig_setattr(self, _Action, 'thisown', 1)
-    def __disown__(self):
-        self.thisown = 0
-        _tst.disown__Action(self)
-        return weakref_proxy(self)
 
 class _ActionPtr(_Action):
     def __init__(self, this):
@@ -106,6 +96,7 @@ class _Filter(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, _Filter, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, _Filter, name)
+    def __init__(self): raise RuntimeError, "No constructor defined"
     def __repr__(self):
         return "<C filter<(p.PyObject)> instance at %s>" % (self.this,)
     def __del__(self, destroy=_tst.delete__Filter):
@@ -113,17 +104,6 @@ class _Filter(_object):
             if self.thisown: destroy(self)
         except: pass
     def perform(*args): return _tst._Filter_perform(*args)
-    def __init__(self, *args):
-        if self.__class__ == _Filter:
-            args = (None,) + args
-        else:
-            args = (self,) + args
-        _swig_setattr(self, _Filter, 'this', _tst.new__Filter(*args))
-        _swig_setattr(self, _Filter, 'thisown', 1)
-    def __disown__(self):
-        self.thisown = 0
-        _tst.disown__Filter(self)
-        return weakref_proxy(self)
 
 class _FilterPtr(_Filter):
     def __init__(self, this):
@@ -137,6 +117,7 @@ class _Serializer(_object):
     __setattr__ = lambda self, name, value: _swig_setattr(self, _Serializer, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, _Serializer, name)
+    def __init__(self): raise RuntimeError, "No constructor defined"
     def __repr__(self):
         return "<C serializer<(p.PyObject)> instance at %s>" % (self.this,)
     def __del__(self, destroy=_tst.delete__Serializer):
@@ -145,17 +126,6 @@ class _Serializer(_object):
         except: pass
     def write(*args): return _tst._Serializer_write(*args)
     def read(*args): return _tst._Serializer_read(*args)
-    def __init__(self, *args):
-        if self.__class__ == _Serializer:
-            args = (None,) + args
-        else:
-            args = (self,) + args
-        _swig_setattr(self, _Serializer, 'this', _tst.new__Serializer(*args))
-        _swig_setattr(self, _Serializer, 'thisown', 1)
-    def __disown__(self):
-        self.thisown = 0
-        _tst.disown__Serializer(self)
-        return weakref_proxy(self)
 
 class _SerializerPtr(_Serializer):
     def __init__(self, this):

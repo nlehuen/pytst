@@ -271,9 +271,9 @@ TST::~TST() {
 PyObject* TST::store_data(tst_node<PyObject*>* node,PyObject* data,int want_old_value) {
     PyObject* result=node->data;
     if(want_old_value==0) {
-        Py_DECREF(result);
+        Py_XDECREF(result);
     }
-    Py_INCREF(data);
+    Py_XINCREF(data);
     node->data=data;
     return result;
 }
