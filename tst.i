@@ -6,6 +6,11 @@
 #include "TST.cxx"
 %}
 
+%typemap(out) PyObject* {
+	Py_INCREF($1);
+	$result = $1;
+}
+
 %exception {
     try { $action }
     catch (TSTException e) { PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;}
@@ -32,11 +37,6 @@
 %template(IntegerAction)      action<int>;
 %template(IntegerFilter)      filter<int>;
 %template(IntegerSerializer)  serializer<int>;
-
-%typemap(out) PyObject* {
-	Py_INCREF($1);
-	$result = $1;
-}
 
 %include "TST.cxx"
 

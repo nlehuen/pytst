@@ -32,16 +32,16 @@ class action(tst.Action):
             self._dict[key]=(diff,data)
     def result(self):
         #TODO: problème ici car la référence n'est pas incrémentée...
-        #print "_result_%i"%self._id
+        print "_result_%i"%self._id
         return self._dict
     def __del__(self):
-        #print "_dl_%i"%self._id
+        print "_dl_%i"%self._id
         tst.Action.__del__(self)
 
 for s in ('Nicolas;H','Yohan;H'):
     print '------------',s
     for i in range(7):
-        print "almost(%i)"%i
+        # print "almost(%i)"%i
         print len(t.almost(s,i,None,tst.DictAction()))
 
 print 'maximum key length :', t.get_maximum_key_length()

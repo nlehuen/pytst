@@ -182,11 +182,9 @@ template<class T> void tst<T>::write(FILE* file, serializer<T>* writer) {
 
 template<class T> void tst<T>::clear_nodes() {
     if(array) {
-        LOG2("tst::~clear_nodes() : Deallocating %i nodes of %x\n",next,(int)this);
         for(int i=0;i<next;i++) {
             store_data(array+i,(T)NULL);
         }
-        LOG1("tst::~clear_nodes() : Removing array of %i elements\n",size);
         tst_free(array);
         array=NULL;
     }
@@ -200,8 +198,6 @@ template<class T> void tst<T>::adjust() {
 }
 
 template<class T> T tst<T>::get(char* string) {
-    // LOG1("get(%s)\n",string);
-
     int current_index=root;
     tst_node<T>* current_node=find_node(&current_index,string);
     if(current_node) {
@@ -217,8 +213,6 @@ template<class T> T tst<T>::__getitem__(char* string) {
 }
 
 template<class T> void tst<T>::put(char* string,T data) {
-    // LOG2("put(%s,%i)\n",string,(int)data);
-
     tst_node<T>* current_node=array+root;
     int node_index=build_node(&current_node,&root,string,0);
     current_node=array+node_index;
@@ -230,17 +224,14 @@ template<class T> void tst<T>::__setitem__(char* string,T data) {
 }
 
 template<class T> T tst<T>::almost(char* string, int string_length, int maximum_distance,filter<T>* filter,action<T>* to_perform) {
-    LOG1("almost, malloc de %i\n",string_length+maximum_distance+1);
     char* current_key=(char*)tst_malloc((string_length+maximum_distance+1)*sizeof(char));
     *current_key='\0';
-    LOG1("malloc : %x\n",(int)current_key);
     almost_recurse(array+root,current_key,0,string,0,string_length,string_length,maximum_distance,filter,to_perform,string_length+maximum_distance);
     tst_free(current_key);
     return to_perform->result();
 }
 
 template<class T> T tst<T>::walk(filter<T>* filter,action<T>* to_perform) {
-    LOG1("walk, malloc de %i\n",(maximum_key_length+2));
     char* key=(char*)tst_malloc((maximum_key_length+2)*sizeof(char));
     *key='\0';
     walk_recurse(array+root,key,0,maximum_key_length+1,filter,to_perform);
@@ -250,8 +241,6 @@ template<class T> T tst<T>::walk(filter<T>* filter,action<T>* to_perform) {
 
 template<class T> void tst<T>::walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,filter<T>* filter,action<T>* to_perform) {
     int other_index;
-
-    LOG1("walk recurse %s\n",current_key);
 
     other_index=current_node->left;
     if(other_index>=0) {
@@ -288,7 +277,6 @@ template<class T> void tst<T>::walk_recurse(tst_node<T>* current_node,char* curr
 }
 
 template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,char* string, int current_index, int real_string_length, int string_length, int remaining_distance,filter<T>* filter, action<T>* to_perform,int current_key_limit) {
-    LOG1("almost recurse %s\n",current_key);
     int other_index;
     int diff,diff2;
 
@@ -423,7 +411,6 @@ template<class T> int tst<T>::create_node(tst_node<T>** current_node,int current
 
     if(next==size) {
         size+=(size>>1);
-        LOG1("===> Resize to %i\n",size);
         array=(tst_node<T>*)tst_realloc(array,size*sizeof(tst_node<T>));
         *current_node = array+current_index;
     }

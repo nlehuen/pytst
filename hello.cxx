@@ -36,7 +36,7 @@ char* donothing::result() {
 class printer : public donothing {
     public:
         virtual void perform(char* key,int remaining_distance,char* data) {
-            LOG2("%s = %s\n",key,data);
+            printf("%s = %s\n",key,data);
         }
 };
 

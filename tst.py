@@ -336,6 +336,57 @@ class TSTExceptionPtr(TSTException):
         _swig_setattr(self, TSTException,self.__class__,TSTException)
 _tst.TSTException_swigregister(TSTExceptionPtr)
 
+class CallableAction(Action):
+    __swig_setmethods__ = {}
+    for _s in [Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, CallableAction, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    __getattr__ = lambda self, name: _swig_getattr(self, CallableAction, name)
+    def __repr__(self):
+        return "<C CallableAction instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, CallableAction, 'this', _tst.new_CallableAction(*args))
+        _swig_setattr(self, CallableAction, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_CallableAction):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.CallableAction_perform(*args)
+    def result(*args): return _tst.CallableAction_result(*args)
+
+class CallableActionPtr(CallableAction):
+    def __init__(self, this):
+        _swig_setattr(self, CallableAction, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, CallableAction, 'thisown', 0)
+        _swig_setattr(self, CallableAction,self.__class__,CallableAction)
+_tst.CallableAction_swigregister(CallableActionPtr)
+
+class CallableFilter(Filter):
+    __swig_setmethods__ = {}
+    for _s in [Filter]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, CallableFilter, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Filter]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    __getattr__ = lambda self, name: _swig_getattr(self, CallableFilter, name)
+    def __repr__(self):
+        return "<C CallableFilter instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, CallableFilter, 'this', _tst.new_CallableFilter(*args))
+        _swig_setattr(self, CallableFilter, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_CallableFilter):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.CallableFilter_perform(*args)
+
+class CallableFilterPtr(CallableFilter):
+    def __init__(self, this):
+        _swig_setattr(self, CallableFilter, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, CallableFilter, 'thisown', 0)
+        _swig_setattr(self, CallableFilter,self.__class__,CallableFilter)
+_tst.CallableFilter_swigregister(CallableFilterPtr)
+
 class DictAction(Action):
     __swig_setmethods__ = {}
     for _s in [Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
