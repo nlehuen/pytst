@@ -735,27 +735,6 @@ template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
         current_char=*current_pos;
     }
 
-    if(current_match_index!=UNDEFINED_INDEX) {
-        // envoi de ce qui précède le match
-        if(current_match_start>non_match_start) {
-            temp_char=*current_match_start;
-            *current_match_start=0;
-            to_perform->perform(non_match_start,non_match_start-current_match_start,default_value);
-            *current_match_start=temp_char;
-        }
-
-        // envoi du match
-        match_node=array+current_match_index;
-        temp_char=*current_match_end;
-        *current_match_end=0;
-        to_perform->perform(current_match_start,current_match_end-current_match_start,match_node->data);
-        *current_match_end=temp_char;
-        non_match_start=current_match_end;
-        
-        // annulation du match
-        current_match_index=UNDEFINED_INDEX;
-    }
-    current_match_start=NULL;
     if(current_pos>non_match_start) {
         temp_char=*current_pos;
         *current_pos=0;
