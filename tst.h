@@ -668,7 +668,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     memcpy(key,previous_match_end,key_size);
                     key[key_size]='\0';
                     to_perform->perform(key,-key_size,default_value);
-                    free(key);
+                    tst_free(key);
                 }
 
                 // puis on envoie le match actuel
@@ -677,7 +677,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                 memcpy(key,best_match_start,key_size);
                 key[key_size]='\0';
                 to_perform->perform(key,key_size,best_match_node->data);
-                free(key);
+                tst_free(key);
 
                 // puis on reprend juste après le meilleur match depuis la racine de l'arbre
                 previous_match_end = best_match_end;
@@ -744,7 +744,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             memcpy(key,previous_match_end,key_size);
             key[key_size]='\0';
             to_perform->perform(key,-key_size,default_value);
-            free(key);
+            tst_free(key);
         }
 
         // puis on envoie le match actuel
@@ -753,7 +753,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
         memcpy(key,best_match_start,key_size);
         key[key_size]='\0';
         to_perform->perform(key,key_size,best_match_node->data);
-        free(key);
+        tst_free(key);
 
         // Code inutile car variable non réutilisée
         // Mais cela permet de se rendre compte que le code après le 'else' suivant
@@ -766,13 +766,13 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
     }
     else {
         // A la fin du parcours on envoie les derniers caractères s'il y a lieu
-        size_t key_size=pos-previous_match_end;
+        size_t key_size=pos-previous_match_end-1;
         if(key_size>0) {
-            S* key=(S*)tst_malloc(key_size);
-            memcpy(key,previous_match_end,key_size-1);
-            key[key_size-1]='\0';
-            to_perform->perform(key,-key_size+1,default_value);
-            free(key);
+            S* key=(S*)tst_malloc(key_size+1);
+            memcpy(key,previous_match_end,key_size);
+            key[key_size]='\0';
+            to_perform->perform(key,-key_size,default_value);
+            tst_free(key);
         }
     }
 
