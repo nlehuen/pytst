@@ -347,7 +347,7 @@ template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* cu
 
 template<class T> T tst<T>::common_prefix(char* string,filter<T>* filter,action<T>* to_perform) {
     char* current_key=(char*)tst_malloc((maximum_key_length+2)*sizeof(char));
-    int current_key_length=0,current_key_limit=maximum_key_length+1;
+    int current_key_length=0;
     *current_key='\0';
 
     T biggest=default_value;
@@ -357,6 +357,7 @@ template<class T> T tst<T>::common_prefix(char* string,filter<T>* filter,action<
     char c;
 
     while(c=*(string++)) {
+        assert(current_key_length<=maximum_key_length);
         current_key[current_key_length]=c;
         current_key[current_key_length+1]='\0';
         current_key_length++;
@@ -376,11 +377,11 @@ template<class T> T tst<T>::common_prefix(char* string,filter<T>* filter,action<
                 }
                 else {
                     if(biggest!=default_value && to_perform) {
-                        to_perform->perform(current_key,current_key_length,biggest);
+                        to_perform->perform(current_key,0,biggest);
                     }
                     current_index=current_node->next;
                     if(current_index>=0) {
-                        walk_recurse(array+current_index,current_key,current_key_length,current_key_limit,filter,to_perform);
+                        walk_recurse(array+current_index,current_key,current_key_length,maximum_key_length+2,filter,to_perform);
                     }
                     tst_free(current_key);
                     return to_perform->result();
@@ -393,13 +394,13 @@ template<class T> T tst<T>::common_prefix(char* string,filter<T>* filter,action<
                 current_index=current_node->left;
             }
         }
-        if(current_index==0) {
+        if(current_index==-1) {
             break;
         }
     }
 
     if(biggest!=default_value && to_perform) {
-        to_perform->perform(current_key,current_key_length,biggest);
+        to_perform->perform(current_key,0,biggest);
     }
     tst_free(current_key);
     return to_perform->result();

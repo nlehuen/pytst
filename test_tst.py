@@ -32,10 +32,10 @@ class action(tst.Action):
             self._dict[key]=(diff,data)
     def result(self):
         #TODO: problème ici car la référence n'est pas incrémentée...
-        print "_result_%i"%self._id
+        #print "_result_%i"%self._id
         return self._dict
     def __del__(self):
-        print "_dl_%i"%self._id
+        #print "_dl_%i"%self._id
         tst.Action.__del__(self)
 
 for s in ('Nicolas;H','Yohan;H'):
@@ -50,7 +50,8 @@ import re
 r = re.compile('(.*)[;=](.*)')
 
 start = time.time()
-for i in range(500):
+for i in range(5000):
+    print i
     la = action();
     #TODO: si on enlève le "d=" le résultat est immédiatement décrémenté ce qui coince quand on passe au bench suivant...
     t.walk(tst.CallableFilter(lambda x,y,z: r.match(z).group(1)),la)
@@ -81,5 +82,7 @@ for line in file('prenoms.txt','r').readlines():
     la1 = tst.ListAction()
     la2 = tst.DictAction()
     t.almost(line,4,None,la1)
-    t.almost(line,4,None,la2)
+    t.common_prefix(line,None,la2)
+    t.almost(line+line,4,None,la1)
+    t.common_prefix(line+line,None,la2)
 print time.time()-start
