@@ -3,15 +3,18 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <malloc.h>
+#include <memory.h>
 
 #ifdef __PYTHON__BUILD__
     #include "Python.h"
-    #define malloc PyMem_Malloc
-    #define realloc PyMem_Realloc
-    #define free PyMem_Free
+    void* (*tst_malloc)(size_t)=PyMem_Malloc;
+    void* (*tst_realloc)(void*,size_t)=PyMem_Realloc;
+    void (*tst_free)(void*)=PyMem_Free;
 #else
-    #include <malloc.h>
-    #include <memory.h>
+    void* (*tst_malloc)(size_t)=malloc;
+    void* (*tst_realloc)(void*,size_t)=realloc;
+    void (*tst_free)(void*)=free;
 #endif
 
 #include "debug.h"
@@ -51,22 +54,21 @@ template<class T> class tst {
         tst(FILE* file,serializer<T>* reader);
         tst(int initial_size,T default_value);
         virtual ~tst() {
-            printf("youpala\n");
             clear_nodes();
         };
 
-        void adjust();
+        virtual void adjust();
         virtual T walk(filter<T>* filter,action<T>* to_perform);
         virtual T almost(char* string,int string_length,int maximum_distance,filter<T>* filter,action<T>* to_perform);
         virtual T common_prefix(char* string,filter<T>* filter,action<T>* to_perform);
         virtual T get(char* string);
         virtual T __getitem__(char* string);
-        virtual T put(char* string,T data);
-        virtual T __setitem__(char* string,T data);
-        void debug();
-        int get_maximum_key_length();
-        size_t bytes_allocated();
-        void write(FILE* file,serializer<T>* writer);
+        virtual void put(char* string,T data);
+        virtual void __setitem__(char* string,T data);
+        virtual void debug();
+        virtual int get_maximum_key_length();
+        virtual size_t bytes_allocated();
+        virtual void write(FILE* file,serializer<T>* writer);
 
     protected:
         tst_node<T>* array;
@@ -74,29 +76,28 @@ template<class T> class tst {
         int root,next,size,maximum_key_length;
 
         tst();
-        void read(FILE* file,serializer<T>* serializer);
+        virtual void read(FILE* file,serializer<T>* serializer);
 
-        void walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,filter<T>* filter,action<T>* to_perform);
-        void almost_recurse(tst_node<T>* current_node,char* current_key, int current_key_length, char* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<T>* filter,action<T>* to_perform,int current_key_limit);
+        virtual void walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,filter<T>* filter,action<T>* to_perform);
+        virtual void almost_recurse(tst_node<T>* current_node,char* current_key, int current_key_length, char* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<T>* filter,action<T>* to_perform,int current_key_limit);
 
         virtual int create_node(tst_node<T>** current_node,int current_index);
 
-        int build_node(tst_node<T>** current_node,int* current_index,char* current_char,int current_key_length);
-        tst_node<T>* find_node(int* current_index,char* current_char);
+        virtual int build_node(tst_node<T>** current_node,int* current_index,char* current_char,int current_key_length);
+        virtual tst_node<T>* find_node(int* current_index,char* current_char);
 
-        void balance_node(tst_node<T>** current_node,int* current_index);
-        void ll(tst_node<T>** current_node,int* current_index);
-        void rr(tst_node<T>** current_node,int* current_index);
-        void lr(tst_node<T>** current_node,int* current_index);
-        void rl(tst_node<T>** current_node,int* current_index);
-        int compute_height_and_balance(tst_node<T>* current_node);
+        virtual void balance_node(tst_node<T>** current_node,int* current_index);
+        virtual void ll(tst_node<T>** current_node,int* current_index);
+        virtual void rr(tst_node<T>** current_node,int* current_index);
+        virtual void lr(tst_node<T>** current_node,int* current_index);
+        virtual void rl(tst_node<T>** current_node,int* current_index);
+        virtual int compute_height_and_balance(tst_node<T>* current_node);
 
-        void debug(tst_node<T>* current_node);
+        virtual void debug(tst_node<T>* current_node);
 
-        void clear_nodes();
+        virtual void clear_nodes();
 
         virtual void store_data(tst_node<T>* node,T data) {
-            LOG0("default store data");
             node->data=data;
         }
 };
@@ -104,7 +105,7 @@ template<class T> class tst {
 template<class T> tst<T>::tst(int size,T default_value) {
     this->size=size;
     this->default_value=default_value;
-    array=(tst_node<T>*)malloc(size*sizeof(tst_node<T>));
+    array=(tst_node<T>*)tst_malloc(size*sizeof(tst_node<T>));
     next=0;
     root=create_node(&array,0);
     maximum_key_length=0;
@@ -129,7 +130,8 @@ template<class T> void tst<T>::read(FILE* file, serializer<T>* reader) {
     else {
         default_value=NULL;
     }
-    array=(tst_node<T>*)malloc(size*sizeof(tst_node<T>));
+    array=(tst_node<T>*)tst_malloc(size*sizeof(tst_node<T>));
+    memset(array,0,size*sizeof(tst_node<T>));
     for(int i=0;i<size;i++) {
         tst_node<T>* node=array+i;
 
@@ -179,19 +181,21 @@ template<class T> void tst<T>::write(FILE* file, serializer<T>* writer) {
 }
 
 template<class T> void tst<T>::clear_nodes() {
-    printf("tst::~clear_nodes() : Deallocating %i nodes of %x\n",next,(int)this);
-    tst_node<T>* current_node=array;
-    for(int i=0;i<next;i++,current_node++) {
-        store_data(current_node,(T)NULL);
+    if(array) {
+        LOG2("tst::~clear_nodes() : Deallocating %i nodes of %x\n",next,(int)this);
+        for(int i=0;i<next;i++) {
+            store_data(array+i,(T)NULL);
+        }
+        LOG1("tst::~clear_nodes() : Removing array of %i elements\n",size);
+        tst_free(array);
+        array=NULL;
     }
-    printf("tst::~clear_nodes() : Removing array of %i elements\n",size);
-    free(array);
 }
 
 template<class T> void tst<T>::adjust() {
     if(next<size) {
         size=next;
-        array=(tst_node<T>*)realloc(array,size*sizeof(tst_node<T>));
+        array=(tst_node<T>*)tst_realloc(array,size*sizeof(tst_node<T>));
     }
 }
 
@@ -212,39 +216,35 @@ template<class T> T tst<T>::__getitem__(char* string) {
     return get(string);
 }
 
-template<class T> T tst<T>::put(char* string,T data) {
+template<class T> void tst<T>::put(char* string,T data) {
     // LOG2("put(%s,%i)\n",string,(int)data);
 
     tst_node<T>* current_node=array+root;
     int node_index=build_node(&current_node,&root,string,0);
-    T result;
-
     current_node=array+node_index;
-    result = current_node->data;
     store_data(current_node,data);
-    return result;
 }
 
-template<class T> T tst<T>::__setitem__(char* string,T data) {
-    return put(string,data);
+template<class T> void tst<T>::__setitem__(char* string,T data) {
+    put(string,data);
 }
 
 template<class T> T tst<T>::almost(char* string, int string_length, int maximum_distance,filter<T>* filter,action<T>* to_perform) {
     LOG1("almost, malloc de %i\n",string_length+maximum_distance+1);
-    char* current_key=(char*)malloc((string_length+maximum_distance+1)*sizeof(char));
+    char* current_key=(char*)tst_malloc((string_length+maximum_distance+1)*sizeof(char));
     *current_key='\0';
     LOG1("malloc : %x\n",(int)current_key);
     almost_recurse(array+root,current_key,0,string,0,string_length,string_length,maximum_distance,filter,to_perform,string_length+maximum_distance);
-    free(current_key);
+    tst_free(current_key);
     return to_perform->result();
 }
 
 template<class T> T tst<T>::walk(filter<T>* filter,action<T>* to_perform) {
     LOG1("walk, malloc de %i\n",(maximum_key_length+2));
-    char* key=(char*)malloc((maximum_key_length+2)*sizeof(char));
+    char* key=(char*)tst_malloc((maximum_key_length+2)*sizeof(char));
     *key='\0';
     walk_recurse(array+root,key,0,maximum_key_length+1,filter,to_perform);
-    free(key);
+    tst_free(key);
     return to_perform->result();
 }
 
@@ -358,7 +358,7 @@ template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* cu
 }
 
 template<class T> T tst<T>::common_prefix(char* string,filter<T>* filter,action<T>* to_perform) {
-    char* current_key=(char*)malloc((maximum_key_length+2)*sizeof(char));
+    char* current_key=(char*)tst_malloc((maximum_key_length+2)*sizeof(char));
     int current_key_length=0,current_key_limit=maximum_key_length+1;
     *current_key='\0';
 
@@ -394,7 +394,7 @@ template<class T> T tst<T>::common_prefix(char* string,filter<T>* filter,action<
                     if(current_index>=0) {
                         walk_recurse(array+current_index,current_key,current_key_length,current_key_limit,filter,to_perform);
                     }
-                    free(current_key);
+                    tst_free(current_key);
                     return to_perform->result();
                 }
             }
@@ -413,7 +413,7 @@ template<class T> T tst<T>::common_prefix(char* string,filter<T>* filter,action<
     if(biggest!=default_value && to_perform) {
         to_perform->perform(current_key,current_key_length,biggest);
     }
-    free(current_key);
+    tst_free(current_key);
     return to_perform->result();
 }
 
@@ -424,7 +424,7 @@ template<class T> int tst<T>::create_node(tst_node<T>** current_node,int current
     if(next==size) {
         size+=(size>>1);
         LOG1("===> Resize to %i\n",size);
-        array=(tst_node<T>*)realloc(array,size*sizeof(tst_node<T>));
+        array=(tst_node<T>*)tst_realloc(array,size*sizeof(tst_node<T>));
         *current_node = array+current_index;
     }
 

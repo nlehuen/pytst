@@ -13,7 +13,7 @@ class stringserializer : public serializer<char*> {
     virtual char* read(FILE* file) {
         size_t len;
         fread(&len,sizeof(size_t),1,file);
-        char* data=(char*)malloc((len+1)*sizeof(char));
+        char* data=(char*)tst_malloc((len+1)*sizeof(char));
         fread(data,sizeof(char),len,file);
         data[len]='\0';
         return data;
@@ -42,23 +42,31 @@ class printer : public donothing {
 
 class stringtst : public tst<char*> {
     public:
-        stringtst() : tst<char*>(16,NULL){
+        stringtst() : tst<char*>(16,NULL) {
         }
         
+        virtual ~stringtst() {
+            clear_nodes();
+        }
+
         stringtst(FILE* file) : tst<char*>() {
             stringserializer* s=new stringserializer();
             read(file,s);
             delete s;
         }
 
-        virtual void store_data(tst_node<char*>* node,char* data) {
+    protected:
+       virtual void store_data(tst_node<char*>* node,char* data);
+};
+
+void stringtst::store_data(tst_node<char*>* node,char* data) {
+            // printf("sd %x %x %x %s\n",(int)node,(int)node->data,node->c,data);
             if(node->data) {
-                printf("freeing %x\n",(int)node->data);
-                free(node->data);
+                // printf("freeing %x\n",(int)node->data);
+                tst_free(node->data);
             }
             node->data=data;
         }
-};
 
 int main(int argc,char** argv) {
     printf("Taille d'un noeud char* : %i\n",sizeof(tst_node<char*>));
@@ -71,14 +79,14 @@ int main(int argc,char** argv) {
         FILE* input;
 
         input = fopen("prenoms.txt","r");
-        line = (char*)malloc(256);
+        line = (char*)tst_malloc(256);
         while(fgets(line,256,input)!=NULL) {
             linetst->put(line,line);
             lengthtst->put(line,strlen(line));
-            line = (char*)malloc(256);
+            line = (char*)tst_malloc(256);
         }
         fclose(input);
-        free(line);
+        tst_free(line);
 
         linetst->adjust();
         lengthtst->adjust();
@@ -96,6 +104,8 @@ int main(int argc,char** argv) {
             fclose(output);
         }
 
+        printf("%s",linetst->get("Nicolas;H\n"));
+
         printf("On delete...\n");
 
         delete linetst;
@@ -103,6 +113,8 @@ int main(int argc,char** argv) {
         printf("OK pour linetst\n");
 
         delete lengthtst;
+
+        printf("OK pour lengthtst\n");
 
         FILE* finput=fopen("test.tst","rb");
         if(finput==NULL) {
@@ -116,6 +128,7 @@ int main(int argc,char** argv) {
             action<char*>* myaction=new donothing();
             linetst->walk(NULL,myaction);
             linetst->common_prefix("Yohan",NULL,myaction);
+            linetst->almost("Yohan",5,4,NULL,myaction);
             delete myaction;
 
             delete linetst;
