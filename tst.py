@@ -37,6 +37,7 @@ del types
 
 
 UNDEFINED_INDEX = _tst.UNDEFINED_INDEX
+TST_VERSION = _tst.TST_VERSION
 class _TST(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, _TST, name, value)

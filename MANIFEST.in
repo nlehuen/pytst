@@ -2,3 +2,4 @@ include tst_wrap.cxx
 include tst_wrap.h
 include TST.cxx
 include tst.h
+include LICENSE

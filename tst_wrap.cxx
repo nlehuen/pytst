@@ -1376,6 +1376,27 @@ static swig_type_info *swig_types[19];
 /*@@*/
 
 
+SWIGINTERN PyObject *
+SWIG_FromCharPtr(const char* cptr)
+{ 
+  if (cptr) {
+    size_t size = strlen(cptr);
+    if (size > INT_MAX) {
+      return SWIG_NewPointerObj((char*)(cptr), 
+				SWIG_TypeQuery("char *"), 0);
+    } else {
+      if (size != 0) {
+	return PyString_FromStringAndSize(cptr, size);
+      } else {
+	return PyString_FromString(cptr);
+      }
+    }
+  }
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
 #include <limits.h>
 
 
@@ -1527,27 +1548,6 @@ SWIGINTERNSHORT PyObject*
   return (value > LONG_MAX) ?
     PyLong_FromUnsignedLong(value) 
     : PyInt_FromLong((long)(value)); 
-}
-
-
-SWIGINTERN PyObject *
-SWIG_FromCharPtr(const char* cptr)
-{ 
-  if (cptr) {
-    size_t size = strlen(cptr);
-    if (size > INT_MAX) {
-      return SWIG_NewPointerObj((char*)(cptr), 
-				SWIG_TypeQuery("char *"), 0);
-    } else {
-      if (size != 0) {
-	return PyString_FromStringAndSize(cptr, size);
-      } else {
-	return PyString_FromString(cptr);
-      }
-    }
-  }
-  Py_INCREF(Py_None);
-  return Py_None;
 }
 
 #ifdef __cplusplus
@@ -3623,6 +3623,7 @@ _swigt__p_ObjectSerializer,
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (END) -------- */
 
 static swig_const_info swig_const_table[] = {
+{ SWIG_PY_POINTER, (char*)"TST_VERSION", 0, 0, (void *)"0.95", &SWIGTYPE_p_char},
 {0, 0, 0, 0.0, 0, 0}};
 
 #ifdef __cplusplus
@@ -3969,5 +3970,6 @@ SWIGEXPORT(void) SWIG_init(void) {
     {
         PyDict_SetItemString(d,"UNDEFINED_INDEX", SWIG_From_int((int)(-1))); 
     }
+    PyDict_SetItemString(d,"TST_VERSION", SWIG_FromCharPtr("0.95"));
 }
 
