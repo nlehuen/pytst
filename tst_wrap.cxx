@@ -702,26 +702,23 @@ SWIG_Python_InstallConstants(PyObject *d, swig_const_info constants[]) {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define  SWIGTYPE_p_size_t swig_types[0] 
-#define  SWIGTYPE_p_f_p_void__void swig_types[1] 
-#define  SWIGTYPE_p_TST swig_types[2] 
-#define  SWIGTYPE_p_tstTint_t swig_types[3] 
-#define  SWIGTYPE_p_serializerTint_t swig_types[4] 
-#define  SWIGTYPE_p_actionTint_t swig_types[5] 
-#define  SWIGTYPE_p_filterTint_t swig_types[6] 
-#define  SWIGTYPE_p_f_p_void_size_t__p_void swig_types[7] 
-#define  SWIGTYPE_p_f_size_t__p_void swig_types[8] 
-#define  SWIGTYPE_p_TSTException swig_types[9] 
-#define  SWIGTYPE_p_CallableAction swig_types[10] 
-#define  SWIGTYPE_p_CallableFilter swig_types[11] 
-#define  SWIGTYPE_p_FILE swig_types[12] 
-#define  SWIGTYPE_p_tstTPyObject_p_t swig_types[13] 
-#define  SWIGTYPE_p_serializerTPyObject_p_t swig_types[14] 
-#define  SWIGTYPE_p_filterTPyObject_p_t swig_types[15] 
-#define  SWIGTYPE_p_actionTPyObject_p_t swig_types[16] 
-#define  SWIGTYPE_p_DictAction swig_types[17] 
-#define  SWIGTYPE_p_ListAction swig_types[18] 
-#define  SWIGTYPE_p_ObjectSerializer swig_types[19] 
-static swig_type_info *swig_types[21];
+#define  SWIGTYPE_p_TST swig_types[1] 
+#define  SWIGTYPE_p_tstTint_t swig_types[2] 
+#define  SWIGTYPE_p_serializerTint_t swig_types[3] 
+#define  SWIGTYPE_p_actionTint_t swig_types[4] 
+#define  SWIGTYPE_p_filterTint_t swig_types[5] 
+#define  SWIGTYPE_p_TSTException swig_types[6] 
+#define  SWIGTYPE_p_CallableAction swig_types[7] 
+#define  SWIGTYPE_p_CallableFilter swig_types[8] 
+#define  SWIGTYPE_p_FILE swig_types[9] 
+#define  SWIGTYPE_p_DictAction swig_types[10] 
+#define  SWIGTYPE_p_tstTPyObject_p_t swig_types[11] 
+#define  SWIGTYPE_p_serializerTPyObject_p_t swig_types[12] 
+#define  SWIGTYPE_p_filterTPyObject_p_t swig_types[13] 
+#define  SWIGTYPE_p_actionTPyObject_p_t swig_types[14] 
+#define  SWIGTYPE_p_ListAction swig_types[15] 
+#define  SWIGTYPE_p_ObjectSerializer swig_types[16] 
+static swig_type_info *swig_types[18];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -1494,69 +1491,6 @@ void SwigDirector_IntegerSerializer::write(FILE *file, int data) {
 #ifdef __cplusplus
 extern "C" {
 #endif
-static int _wrap_tst_malloc_set(PyObject *_val) {
-    {
-        void *temp;
-        if ((SWIG_ConvertPtr(_val,(void **) &temp, SWIGTYPE_p_f_size_t__p_void, SWIG_POINTER_EXCEPTION | SWIG_POINTER_DISOWN)) == -1) {
-            PyErr_SetString(PyExc_TypeError, "C variable 'tst_malloc (void *(*)(size_t))'");
-            return 1;
-        }
-        tst_malloc = (void *(*)(size_t)) temp;
-    }
-    return 0;
-}
-
-
-static PyObject *_wrap_tst_malloc_get() {
-    PyObject *pyobj;
-    
-    pyobj = SWIG_NewPointerObj((void *) tst_malloc, SWIGTYPE_p_f_size_t__p_void, 0);
-    return pyobj;
-}
-
-
-static int _wrap_tst_realloc_set(PyObject *_val) {
-    {
-        void *temp;
-        if ((SWIG_ConvertPtr(_val,(void **) &temp, SWIGTYPE_p_f_p_void_size_t__p_void, SWIG_POINTER_EXCEPTION | SWIG_POINTER_DISOWN)) == -1) {
-            PyErr_SetString(PyExc_TypeError, "C variable 'tst_realloc (void *(*)(void *,size_t))'");
-            return 1;
-        }
-        tst_realloc = (void *(*)(void *,size_t)) temp;
-    }
-    return 0;
-}
-
-
-static PyObject *_wrap_tst_realloc_get() {
-    PyObject *pyobj;
-    
-    pyobj = SWIG_NewPointerObj((void *) tst_realloc, SWIGTYPE_p_f_p_void_size_t__p_void, 0);
-    return pyobj;
-}
-
-
-static int _wrap_tst_free_set(PyObject *_val) {
-    {
-        void *temp;
-        if ((SWIG_ConvertPtr(_val,(void **) &temp, SWIGTYPE_p_f_p_void__void, SWIG_POINTER_EXCEPTION | SWIG_POINTER_DISOWN)) == -1) {
-            PyErr_SetString(PyExc_TypeError, "C variable 'tst_free (void (*)(void *))'");
-            return 1;
-        }
-        tst_free = (void (*)(void *)) temp;
-    }
-    return 0;
-}
-
-
-static PyObject *_wrap_tst_free_get() {
-    PyObject *pyobj;
-    
-    pyobj = SWIG_NewPointerObj((void *) tst_free, SWIGTYPE_p_f_p_void__void, 0);
-    return pyobj;
-}
-
-
 static PyObject *_wrap_new__object_tst__SWIG_0(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     PyObject *arg1 = (PyObject *) 0 ;
@@ -4262,45 +4196,39 @@ static void *_p_CallableActionTo_p_actionTPyObject_p_t(void *x) {
     return (void *)((action<PyObject * > *)  ((CallableAction *) x));
 }
 static swig_type_info _swigt__p_size_t[] = {{"_p_size_t", 0, "size_t *", 0},{"_p_size_t"},{0}};
-static swig_type_info _swigt__p_f_p_void__void[] = {{"_p_f_p_void__void", 0, "void (*)(void *)", 0},{"_p_f_p_void__void"},{0}};
 static swig_type_info _swigt__p_TST[] = {{"_p_TST", 0, "TST *", 0},{"_p_TST"},{0}};
 static swig_type_info _swigt__p_tstTint_t[] = {{"_p_tstTint_t", 0, "tst<int > *", 0},{"_p_tstTint_t"},{0}};
 static swig_type_info _swigt__p_serializerTint_t[] = {{"_p_serializerTint_t", 0, "serializer<int > *", 0},{"_p_serializerTint_t"},{0}};
 static swig_type_info _swigt__p_actionTint_t[] = {{"_p_actionTint_t", 0, "action<int > *", 0},{"_p_actionTint_t"},{0}};
 static swig_type_info _swigt__p_filterTint_t[] = {{"_p_filterTint_t", 0, "filter<int > *", 0},{"_p_filterTint_t"},{0}};
-static swig_type_info _swigt__p_f_p_void_size_t__p_void[] = {{"_p_f_p_void_size_t__p_void", 0, "void *(*)(void *,size_t)", 0},{"_p_f_p_void_size_t__p_void"},{0}};
-static swig_type_info _swigt__p_f_size_t__p_void[] = {{"_p_f_size_t__p_void", 0, "void *(*)(size_t)", 0},{"_p_f_size_t__p_void"},{0}};
 static swig_type_info _swigt__p_TSTException[] = {{"_p_TSTException", 0, "TSTException *", 0},{"_p_TSTException"},{0}};
 static swig_type_info _swigt__p_CallableAction[] = {{"_p_CallableAction", 0, "CallableAction *", 0},{"_p_CallableAction"},{0}};
 static swig_type_info _swigt__p_CallableFilter[] = {{"_p_CallableFilter", 0, "CallableFilter *", 0},{"_p_CallableFilter"},{0}};
 static swig_type_info _swigt__p_FILE[] = {{"_p_FILE", 0, "FILE *", 0},{"_p_FILE"},{0}};
+static swig_type_info _swigt__p_DictAction[] = {{"_p_DictAction", 0, "DictAction *", 0},{"_p_DictAction"},{0}};
 static swig_type_info _swigt__p_tstTPyObject_p_t[] = {{"_p_tstTPyObject_p_t", 0, "tst<PyObject * > *", 0},{"_p_tstTPyObject_p_t"},{"_p_TST", _p_TSTTo_p_tstTPyObject_p_t},{0}};
 static swig_type_info _swigt__p_serializerTPyObject_p_t[] = {{"_p_serializerTPyObject_p_t", 0, "serializer<PyObject * > *", 0},{"_p_serializerTPyObject_p_t"},{"_p_ObjectSerializer", _p_ObjectSerializerTo_p_serializerTPyObject_p_t},{0}};
 static swig_type_info _swigt__p_filterTPyObject_p_t[] = {{"_p_filterTPyObject_p_t", 0, "filter<PyObject * > *", 0},{"_p_CallableFilter", _p_CallableFilterTo_p_filterTPyObject_p_t},{"_p_filterTPyObject_p_t"},{0}};
 static swig_type_info _swigt__p_actionTPyObject_p_t[] = {{"_p_actionTPyObject_p_t", 0, "action<PyObject * > *", 0},{"_p_actionTPyObject_p_t"},{"_p_DictAction", _p_DictActionTo_p_actionTPyObject_p_t},{"_p_ListAction", _p_ListActionTo_p_actionTPyObject_p_t},{"_p_CallableAction", _p_CallableActionTo_p_actionTPyObject_p_t},{0}};
-static swig_type_info _swigt__p_DictAction[] = {{"_p_DictAction", 0, "DictAction *", 0},{"_p_DictAction"},{0}};
 static swig_type_info _swigt__p_ListAction[] = {{"_p_ListAction", 0, "ListAction *", 0},{"_p_ListAction"},{0}};
 static swig_type_info _swigt__p_ObjectSerializer[] = {{"_p_ObjectSerializer", 0, "ObjectSerializer *", 0},{"_p_ObjectSerializer"},{0}};
 
 static swig_type_info *swig_types_initial[] = {
 _swigt__p_size_t, 
-_swigt__p_f_p_void__void, 
 _swigt__p_TST, 
 _swigt__p_tstTint_t, 
 _swigt__p_serializerTint_t, 
 _swigt__p_actionTint_t, 
 _swigt__p_filterTint_t, 
-_swigt__p_f_p_void_size_t__p_void, 
-_swigt__p_f_size_t__p_void, 
 _swigt__p_TSTException, 
 _swigt__p_CallableAction, 
 _swigt__p_CallableFilter, 
 _swigt__p_FILE, 
+_swigt__p_DictAction, 
 _swigt__p_tstTPyObject_p_t, 
 _swigt__p_serializerTPyObject_p_t, 
 _swigt__p_filterTPyObject_p_t, 
 _swigt__p_actionTPyObject_p_t, 
-_swigt__p_DictAction, 
 _swigt__p_ListAction, 
 _swigt__p_ObjectSerializer, 
 0
@@ -4336,9 +4264,5 @@ SWIGEXPORT(void) SWIG_init(void) {
     }
     SWIG_InstallConstants(d,swig_const_table);
     
-    PyDict_SetItemString(d,(char*)"cvar", SWIG_globals);
-    SWIG_addvarlink(SWIG_globals,(char*)"tst_malloc",_wrap_tst_malloc_get, _wrap_tst_malloc_set);
-    SWIG_addvarlink(SWIG_globals,(char*)"tst_realloc",_wrap_tst_realloc_get, _wrap_tst_realloc_set);
-    SWIG_addvarlink(SWIG_globals,(char*)"tst_free",_wrap_tst_free_get, _wrap_tst_free_set);
 }
 

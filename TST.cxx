@@ -103,7 +103,6 @@ class DictAction : public action<PyObject*> {
             PyTuple_SetItem(tuple,1,data);
             PyDict_SetItemString(dict,key,tuple);
             Py_DECREF(tuple);
-            Py_XDECREF(old_tuple);
         };
 
         virtual PyObject* result() {
@@ -222,7 +221,7 @@ class TST : public tst<PyObject*> {
         TST(int initial_size,PyObject* default_value);
         virtual ~TST();
         PyObject* write(PyObject* file);
-        
+
     protected:
         virtual void store_data(tst_node<PyObject*>* node,PyObject* data);
 };

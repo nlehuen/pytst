@@ -8,13 +8,13 @@
 
 #ifdef __PYTHON__BUILD__
     #include "Python.h"
-    void* (*tst_malloc)(size_t)=PyMem_Malloc;
-    void* (*tst_realloc)(void*,size_t)=PyMem_Realloc;
-    void (*tst_free)(void*)=PyMem_Free;
+    #define tst_malloc PyMem_Malloc
+    #define tst_realloc PyMem_Realloc
+    #define tst_free PyMem_Free
 #else
-    void* (*tst_malloc)(size_t)=malloc;
-    void* (*tst_realloc)(void*,size_t)=realloc;
-    void (*tst_free)(void*)=free;
+    #define tst_malloc malloc
+    #define tst_realloc realloc
+    #define tst_free free
 #endif
 
 #include "debug.h"

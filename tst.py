@@ -77,7 +77,6 @@ class _object_tstPtr(_object_tst):
         if not hasattr(self,"thisown"): _swig_setattr(self, _object_tst, 'thisown', 0)
         _swig_setattr(self, _object_tst,self.__class__,_object_tst)
 _tst._object_tst_swigregister(_object_tstPtr)
-cvar = _tst.cvar
 
 class Action(_object):
     __swig_setmethods__ = {}

@@ -70,6 +70,18 @@ print 'la en C++ sans filter : ',time.time()-start
 
 start = time.time()
 for i in range(500):
-    la = tst.ListAction();
+    la = tst.ListAction()
     t.walk(None,la)
 print 'listaction en C++ sans filter: ',time.time()-start
+
+for i in range(10):
+    print 'iteration %i'%i
+    start = time.time()
+    for line in file('prenoms.txt','r').readlines():
+        line = line.strip()
+        t.put(line,line+str(i))
+        la1 = tst.ListAction()
+        la2 = tst.DictAction()
+        t.almost(line,4,None,la1)
+        t.almost(line,4,None,la2)
+    print time.time()-start
