@@ -3,7 +3,8 @@
 #include <string.h>
 #include "tst.h"
 
-class stringserializer : public serializer<char*> {
+
+class stringserializer : public serializer<char,char*> {
     virtual void write(FILE* file,char* data) {
         size_t len=strlen(data);
         fwrite(&len,sizeof(int),1,file);
@@ -20,7 +21,7 @@ class stringserializer : public serializer<char*> {
     }
 };
 
-class donothing : public action<char*> {
+class donothing : public action<char,char*> {
     public:
         virtual void perform(char* key,int remaining_distance,char* data);
         virtual char* result();
@@ -40,28 +41,28 @@ class printer : public donothing {
         }
 };
 
-class stringtst : public tst<char*> {
+class stringtst : public tst<char,char*> {
     public:
-        stringtst() : tst<char*>(16,NULL) {
+        stringtst() : tst<char,char*>(16,NULL) {
         }
 
         virtual ~stringtst() {
             clear_nodes();
         }
 
-        stringtst(FILE* file) : tst<char*>() {
+        stringtst(FILE* file) : tst<char,char*>() {
             stringserializer* s=new stringserializer();
             read(file,s);
             delete s;
         }
 
     protected:
-       virtual void store_data(tst_node<char*>* node,char* data);
+       virtual void store_data(tst_node<char,char*>* node,char* data);
 };
 
 class tester : public donothing {
     public:
-        tester(tst<char*>* mytst) : donothing() {
+        tester(tst<char,char*>* mytst) : donothing() {
             this->mytst=mytst;
         }
 
@@ -73,11 +74,11 @@ class tester : public donothing {
         }
 
     private:
-        tst<char*>* mytst;
+        tst<char,char*>* mytst;
 };
 
 
-void stringtst::store_data(tst_node<char*>* node,char* data) {
+void stringtst::store_data(tst_node<char,char*>* node,char* data) {
             // printf("sd %x %x %x %s\n",(int)node,(int)node->data,node->c,data);
             if(node->data) {
                 // printf("freeing %x\n",(int)node->data);
@@ -87,7 +88,10 @@ void stringtst::store_data(tst_node<char*>* node,char* data) {
         }
 
 int main(int argc,char** argv) {
-    tst<char*>* linetst=new tst<char*>(16,"<nothing>");
+    printf("Taille d'un noeud char* : %i\n",sizeof(tst_node<char,char*>));
+    printf("Taille d'un noeud size_t : %i\n",sizeof(tst_node<char,int>));
+
+    tst<char,char*>* linetst=new tst<char,char*>(16,"<nothing>");
     linetst->put("abc","abc");
     linetst->put("abcdef","abcdef");
     linetst->put("01","01");
@@ -114,19 +118,21 @@ int main(int argc,char** argv) {
     linetst->scan("--abcdef---abc--01--abcdef--abc01--",&p);
 
     delete linetst;
+
+    return 0;
 }
 
-int main2(int argc,char** argv) {
-    printf("Taille d'un noeud char* : %i\n",sizeof(tst_node<char*>));
-    printf("Taille d'un noeud size_t : %i\n",sizeof(tst_node<int>));
+int main3(int argc,char** argv) {
+    printf("Taille d'un noeud char* : %i\n",sizeof(tst_node<char,char*>));
+    printf("Taille d'un noeud size_t : %i\n",sizeof(tst_node<char,int>));
 
     for(int i=0;i<10;i++) {
-        tst<char*>* linetst=new stringtst();
-        tst<size_t>* lengthtst=new tst<size_t>(16,0);
+        tst<char,char*>* linetst=new stringtst();
+        tst<char,size_t>* lengthtst=new tst<char,size_t>(16,0);
         char* line;
         FILE* input;
 
-        input = fopen("..\\prenoms.txt","r");
+        input = fopen("..\\..\\prenoms.txt","r");
         
         if(input==NULL) {
             printf("Impossible d'ouvrir le fichier prenoms.txt\n");
@@ -183,7 +189,7 @@ int main2(int argc,char** argv) {
 
             printf("linetst read from disk\n");
 
-            action<char*>* myaction=new donothing();
+            action<char,char*>* myaction=new donothing();
             linetst->walk(NULL,myaction);
             linetst->common_prefix("Yohan",NULL,myaction);
             linetst->almost("Yohan",5,4,NULL,myaction);

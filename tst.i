@@ -13,10 +13,10 @@
 
 %include "tst.h"
 
-%template(_TST)         tst<PyObject*>;
-%template(_Action)      action<PyObject*>;
-%template(_Filter)      filter<PyObject*>;
-%template(_Serializer)  serializer<PyObject*>;
+%template(_TST)         tst<char,PyObject*>;
+%template(_Action)      action<char,PyObject*>;
+%template(_Filter)      filter<char,PyObject*>;
+%template(_Serializer)  serializer<char,PyObject*>;
 
 %include "TST.cxx"
 

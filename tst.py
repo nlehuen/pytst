@@ -42,7 +42,7 @@ class _TST(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, _TST, name)
     def __repr__(self):
-        return "<C tst<(p.PyObject)> instance at %s>" % (self.this,)
+        return "<C tst<(char,p.PyObject)> instance at %s>" % (self.this,)
     def __init__(self, *args):
         _swig_setattr(self, _TST, 'this', _tst.new__TST(*args))
         _swig_setattr(self, _TST, 'thisown', 1)
@@ -76,7 +76,7 @@ class _Action(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, _Action, name)
     def __init__(self): raise RuntimeError, "No constructor defined"
     def __repr__(self):
-        return "<C action<(p.PyObject)> instance at %s>" % (self.this,)
+        return "<C action<(char,p.PyObject)> instance at %s>" % (self.this,)
     def __del__(self, destroy=_tst.delete__Action):
         try:
             if self.thisown: destroy(self)
@@ -98,7 +98,7 @@ class _Filter(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, _Filter, name)
     def __init__(self): raise RuntimeError, "No constructor defined"
     def __repr__(self):
-        return "<C filter<(p.PyObject)> instance at %s>" % (self.this,)
+        return "<C filter<(char,p.PyObject)> instance at %s>" % (self.this,)
     def __del__(self, destroy=_tst.delete__Filter):
         try:
             if self.thisown: destroy(self)
@@ -119,7 +119,7 @@ class _Serializer(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, _Serializer, name)
     def __init__(self): raise RuntimeError, "No constructor defined"
     def __repr__(self):
-        return "<C serializer<(p.PyObject)> instance at %s>" % (self.this,)
+        return "<C serializer<(char,p.PyObject)> instance at %s>" % (self.this,)
     def __del__(self, destroy=_tst.delete__Serializer):
         try:
             if self.thisown: destroy(self)

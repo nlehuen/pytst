@@ -15,6 +15,7 @@
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
+			UseOfATL="0"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"

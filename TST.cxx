@@ -13,7 +13,7 @@ class TSTException {
         char* message;
 };
 
-class CallableAction : public action<PyObject*> {
+class CallableAction : public action<char,PyObject*> {
     public:
         CallableAction(PyObject* perform,PyObject* result) {
             if(!perform) perform=Py_None;
@@ -55,7 +55,7 @@ class CallableAction : public action<PyObject*> {
         PyObject *_perform,*_result;
 };
 
-class CallableFilter : public filter<PyObject*> {
+class CallableFilter : public filter<char,PyObject*> {
     public:
         CallableFilter(PyObject* _callable) {
             Py_INCREF(_callable);
@@ -84,7 +84,7 @@ class CallableFilter : public filter<PyObject*> {
         PyObject* callable;
 };
 
-class DictAction : public action<PyObject*> {
+class DictAction : public action<char,PyObject*> {
     public:
         DictAction() {
             dict=PyDict_New();
@@ -127,7 +127,7 @@ class DictAction : public action<PyObject*> {
         PyObject* dict;
 };
 
-class ListAction : public action<PyObject*> {
+class ListAction : public action<char,PyObject*> {
     public:
         ListAction() {
             list=PyList_New(0);
@@ -156,7 +156,7 @@ class ListAction : public action<PyObject*> {
         PyObject* list;
 };
 
-class TupleListAction : public action<PyObject*> {
+class TupleListAction : public action<char,PyObject*> {
     public:
         TupleListAction() {
             list=PyList_New(0);
@@ -187,7 +187,7 @@ class TupleListAction : public action<PyObject*> {
         PyObject* list;
 };
 
-class ObjectSerializer : public serializer<PyObject*> {
+class ObjectSerializer : public serializer<char,PyObject*> {
     public:
         ObjectSerializer() {
             PyObject* name=PyString_FromString("cPickle");
@@ -259,7 +259,7 @@ class ObjectSerializer : public serializer<PyObject*> {
         PyObject *dumps,*loads;
 };
 
-class TST : public tst<PyObject*> {
+class TST : public tst<char,PyObject*> {
     public:
         TST();
         TST(PyObject* file);
@@ -267,28 +267,28 @@ class TST : public tst<PyObject*> {
         virtual ~TST();
         PyObject* write(PyObject* file);
         virtual PyObject* get(char* string);
-        virtual PyObject* get_or_build(char* string,filter<PyObject*>* factory);
+        virtual PyObject* get_or_build(char* string,filter<char,PyObject*>* factory);
         virtual PyObject* put(char* string,PyObject* data);
         PyObject* __getitem__(char* string);
         PyObject* __setitem__(char* string,PyObject* data);
 
     protected:
-        virtual PyObject* store_data(tst_node<PyObject*>* node,PyObject* data,int want_old_value);
+        virtual PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data,int want_old_value);
 };
 
-TST::TST() : tst<PyObject*>(16,Py_None) {
+TST::TST() : tst<char,PyObject*>(16,Py_None) {
     Py_INCREF(Py_None);
 }
 
-TST::TST(PyObject* file) : tst<PyObject*>() {
+TST::TST(PyObject* file) : tst<char,PyObject*>() {
     if(!PyFile_Check(file)) {
         throw TSTException("Argument of constructor must be a file object");
     }
     ObjectSerializer os;
-    tst<PyObject*>::read(PyFile_AsFile(file),&os);
+    tst<char,PyObject*>::read(PyFile_AsFile(file),&os);
 }
 
-TST::TST(int initial_size,PyObject* default_value) : tst<PyObject*>(initial_size,default_value) {
+TST::TST(int initial_size,PyObject* default_value) : tst<char,PyObject*>(initial_size,default_value) {
     if(!default_value) default_value=Py_None;
     Py_INCREF(default_value);
 }
@@ -299,7 +299,7 @@ TST::~TST() {
     // Py_DECREF(default_value);
 }
 
-PyObject* TST::store_data(tst_node<PyObject*>* node,PyObject* data,int want_old_value) {
+PyObject* TST::store_data(tst_node<char,PyObject*>* node,PyObject* data,int want_old_value) {
     PyObject* result=node->data;
     if(want_old_value==0) {
         Py_XDECREF(result);
@@ -314,26 +314,26 @@ PyObject* TST::write(PyObject* file) {
         throw TSTException("Argument of write() must be a file object");
     }
     ObjectSerializer *os=new ObjectSerializer();
-    tst<PyObject*>::write(PyFile_AsFile(file),os);
+    tst<char,PyObject*>::write(PyFile_AsFile(file),os);
     delete os;
     return Py_None;
 }
 
 PyObject* TST::get(char* string) {
-    PyObject* result=tst<PyObject*>::get(string);
+    PyObject* result=tst<char,PyObject*>::get(string);
     Py_INCREF(result);
     return result;
 }
 
-PyObject* TST::get_or_build(char* string,filter<PyObject*>* factory) {
-    PyObject* result=tst<PyObject*>::get_or_build(string,factory);
+PyObject* TST::get_or_build(char* string,filter<char,PyObject*>* factory) {
+    PyObject* result=tst<char,PyObject*>::get_or_build(string,factory);
     Py_INCREF(result);
     return result;
 }
 
 
 PyObject* TST::put(char* string,PyObject* data) {
-    PyObject* result=tst<PyObject*>::put(string,data);
+    PyObject* result=tst<char,PyObject*>::put(string,data);
     return result;
 }
 
