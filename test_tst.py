@@ -37,8 +37,22 @@ for s in ('Nicolas;H','Yohan;H'):
             assert(d==(i-item[0]))
         print 'OK'
 
-la = tst.ListAction();
+def test(key,dist,data):
+    print 'test',key,dist,data
+
+def predicate(data):
+    # raise Exception, 'coucou'
+    return data[:5]
+
+la = tst.ListAction(None);
 t.walk(la)
 print len(la.get_list())
+
+la = tst.DictAction(predicate);
+t.walk(la)
+print la.get_dict()
+
+la = tst.CallableAction(test);
+t.common_prefix('Nico',la)
 
 print t.get_maximum_key_length()

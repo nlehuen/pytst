@@ -1,15 +1,71 @@
+#define __PYTHON__BUILD__
+
 #include "tst.h"
 
 #include "Python.h"
-// typedef char PyObject;
+
+class CallableAction : public action<PyObject*> {
+    public:
+        CallableAction(PyObject* _callable) {
+            Py_XINCREF(_callable);
+            callable=_callable;
+        }
+
+        ~CallableAction() {
+            Py_DECREF(callable);
+        }
+
+        virtual void perform(char* key,int remaining_distance,PyObject* data) {
+            PyObject* tuple=PyTuple_New(3);
+            PyTuple_SetItem(tuple,0,PyString_FromString(key));
+            PyTuple_SetItem(tuple,1,PyInt_FromLong(remaining_distance));
+            Py_XINCREF(data);
+            PyTuple_SetItem(tuple,2,data);
+            PyObject_CallObject(callable,tuple);
+            Py_DECREF(tuple);
+        }
+
+    private:
+        PyObject* callable;
+};
+
+class CallablePredicate : public predicate<PyObject*> {
+    public:
+        CallablePredicate(PyObject* _callable) {
+            Py_XINCREF(_callable);
+            callable=_callable;
+        }
+
+        ~CallablePredicate() {
+            Py_DECREF(callable);
+        }
+
+        virtual PyObject* perform(char* key,int remaining_distance,PyObject* data) {
+            PyObject* tuple=PyTuple_New(3);
+            PyTuple_SetItem(tuple,0,PyString_FromString(key));
+            PyTuple_SetItem(tuple,1,PyInt_FromLong(remaining_distance));
+            Py_XINCREF(data);
+            PyTuple_SetItem(tuple,2,data);
+            PyObject* result=PyObject_CallObject(callable,tuple);
+            Py_XINCREF(result);
+            Py_DECREF(tuple);
+            return result;
+        }
+
+    private:
+        PyObject* callable;
+};
 
 class DictAction : public action<PyObject*> {
     public:
-        DictAction() {
+        DictAction(PyObject* _predicate) {
+            Py_INCREF(_predicate);
+            predicate=_predicate;
             dict=PyDict_New();
         }
 
         ~DictAction() {
+            Py_DECREF(predicate);
             Py_DECREF(dict);
         }
 
@@ -22,6 +78,20 @@ class DictAction : public action<PyObject*> {
                 }
                 else {
                     Py_DECREF(tuple);
+                }
+            }
+
+            if(predicate!=Py_None) {
+                PyObject* tuple2=PyTuple_New(1);
+                Py_XINCREF(data);
+                PyTuple_SetItem(tuple2,0,data);
+                PyObject* data2=PyObject_CallObject(predicate,tuple2);
+                Py_DECREF(tuple2);
+                if(data2) {
+                    data=data2;
+                }
+                else {
+                    return;
                 }
             }
 
@@ -38,27 +108,45 @@ class DictAction : public action<PyObject*> {
         }
 
     private:
-        PyObject* dict;
+        PyObject* dict,*predicate;
 };
 
 class ListAction : public action<PyObject*> {
     public:
-        ListAction() {
+        ListAction(PyObject* _predicate) {
+            Py_INCREF(_predicate);
+            predicate=_predicate;
             list=PyList_New(0);
         }
 
         ~ListAction() {
+            Py_DECREF(predicate);
             Py_DECREF(list);
         }
 
         virtual void perform(char* key,int remaining_distance,PyObject* data) {
             PyObject* tuple=PyTuple_New(2);
             PyTuple_SetItem(tuple,0,PyString_FromString(key));
+
+            if(predicate!=Py_None) {
+                PyObject* tuple2=PyTuple_New(1);
+                Py_XINCREF(data);
+                PyTuple_SetItem(tuple2,0,data);
+                PyObject* data2=PyObject_CallObject(predicate,tuple2);
+                Py_DECREF(tuple2);
+                if(data2) {
+                    data=data2;
+                }
+                else {
+                    return;
+                }
+            }
+
             Py_XINCREF(data);
-            PyTuple_SetItem(tuple,1,data);
-            if(PyList_Append(list,tuple)!=0) {
-                printf("meeeeeeeeerde \n");
-            };
+            if(data!=Py_None) {
+                PyTuple_SetItem(tuple,1,data);
+                PyList_Append(list,tuple);
+            }
         };
 
         PyObject* get_list() {
@@ -67,7 +155,7 @@ class ListAction : public action<PyObject*> {
         }
 
     private:
-        PyObject* list;
+        PyObject* list,*predicate;
 };
 
 class TST : public tst<PyObject*> {
@@ -114,7 +202,7 @@ PyObject* TST::__setitem__(char* string,PyObject* data) {
 }
 
 PyObject* TST::almost(char* string, int string_length, int remaining_distance) {
-    DictAction action;
+    DictAction action(Py_None);
     tst<PyObject*>::almost_perform(string,string_length,remaining_distance,&action);
     return action.get_dict();
 }

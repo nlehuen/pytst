@@ -59,6 +59,7 @@ int main(int argc,char** argv) {
 
     myaction=new printer();
     linetst->walk(myaction);
+    linetst->common_prefix("Yohan",myaction);
     delete myaction;
     
 

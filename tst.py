@@ -53,6 +53,7 @@ class IntegerTST(_object):
     def adjust(*args): return _tst.IntegerTST_adjust(*args)
     def walk(*args): return _tst.IntegerTST_walk(*args)
     def almost_perform(*args): return _tst.IntegerTST_almost_perform(*args)
+    def common_prefix(*args): return _tst.IntegerTST_common_prefix(*args)
     def get(*args): return _tst.IntegerTST_get(*args)
     def __getitem__(*args): return _tst.IntegerTST___getitem__(*args)
     def put(*args): return _tst.IntegerTST_put(*args)
@@ -99,6 +100,29 @@ class IntegerActionPtr(IntegerAction):
         _swig_setattr(self, IntegerAction,self.__class__,IntegerAction)
 _tst.IntegerAction_swigregister(IntegerActionPtr)
 
+class IntegerPredicate(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, IntegerPredicate, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, IntegerPredicate, name)
+    def __repr__(self):
+        return "<C predicate<(int)> instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, IntegerPredicate, 'this', _tst.new_IntegerPredicate(*args))
+        _swig_setattr(self, IntegerPredicate, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_IntegerPredicate):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.IntegerPredicate_perform(*args)
+
+class IntegerPredicatePtr(IntegerPredicate):
+    def __init__(self, this):
+        _swig_setattr(self, IntegerPredicate, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, IntegerPredicate, 'thisown', 0)
+        _swig_setattr(self, IntegerPredicate,self.__class__,IntegerPredicate)
+_tst.IntegerPredicate_swigregister(IntegerPredicatePtr)
+
 class StringTST(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, StringTST, name, value)
@@ -116,6 +140,7 @@ class StringTST(_object):
     def adjust(*args): return _tst.StringTST_adjust(*args)
     def walk(*args): return _tst.StringTST_walk(*args)
     def almost_perform(*args): return _tst.StringTST_almost_perform(*args)
+    def common_prefix(*args): return _tst.StringTST_common_prefix(*args)
     def get(*args): return _tst.StringTST_get(*args)
     def __getitem__(*args): return _tst.StringTST___getitem__(*args)
     def put(*args): return _tst.StringTST_put(*args)
@@ -162,6 +187,29 @@ class StringActionPtr(StringAction):
         _swig_setattr(self, StringAction,self.__class__,StringAction)
 _tst.StringAction_swigregister(StringActionPtr)
 
+class StringPredicate(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, StringPredicate, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, StringPredicate, name)
+    def __repr__(self):
+        return "<C predicate<(p.char)> instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, StringPredicate, 'this', _tst.new_StringPredicate(*args))
+        _swig_setattr(self, StringPredicate, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_StringPredicate):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.StringPredicate_perform(*args)
+
+class StringPredicatePtr(StringPredicate):
+    def __init__(self, this):
+        _swig_setattr(self, StringPredicate, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, StringPredicate, 'thisown', 0)
+        _swig_setattr(self, StringPredicate,self.__class__,StringPredicate)
+_tst.StringPredicate_swigregister(StringPredicatePtr)
+
 class _object_tst(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, _object_tst, name, value)
@@ -179,6 +227,7 @@ class _object_tst(_object):
     def adjust(*args): return _tst._object_tst_adjust(*args)
     def walk(*args): return _tst._object_tst_walk(*args)
     def almost_perform(*args): return _tst._object_tst_almost_perform(*args)
+    def common_prefix(*args): return _tst._object_tst_common_prefix(*args)
     def get(*args): return _tst._object_tst_get(*args)
     def __getitem__(*args): return _tst._object_tst___getitem__(*args)
     def put(*args): return _tst._object_tst_put(*args)
@@ -224,6 +273,79 @@ class ActionPtr(Action):
         if not hasattr(self,"thisown"): _swig_setattr(self, Action, 'thisown', 0)
         _swig_setattr(self, Action,self.__class__,Action)
 _tst.Action_swigregister(ActionPtr)
+
+class Predicate(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Predicate, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Predicate, name)
+    def __repr__(self):
+        return "<C predicate<(p.PyObject)> instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, Predicate, 'this', _tst.new_Predicate(*args))
+        _swig_setattr(self, Predicate, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_Predicate):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.Predicate_perform(*args)
+
+class PredicatePtr(Predicate):
+    def __init__(self, this):
+        _swig_setattr(self, Predicate, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, Predicate, 'thisown', 0)
+        _swig_setattr(self, Predicate,self.__class__,Predicate)
+_tst.Predicate_swigregister(PredicatePtr)
+
+class CallableAction(Action):
+    __swig_setmethods__ = {}
+    for _s in [Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, CallableAction, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    __getattr__ = lambda self, name: _swig_getattr(self, CallableAction, name)
+    def __repr__(self):
+        return "<C CallableAction instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, CallableAction, 'this', _tst.new_CallableAction(*args))
+        _swig_setattr(self, CallableAction, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_CallableAction):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.CallableAction_perform(*args)
+
+class CallableActionPtr(CallableAction):
+    def __init__(self, this):
+        _swig_setattr(self, CallableAction, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, CallableAction, 'thisown', 0)
+        _swig_setattr(self, CallableAction,self.__class__,CallableAction)
+_tst.CallableAction_swigregister(CallableActionPtr)
+
+class CallablePredicate(Predicate):
+    __swig_setmethods__ = {}
+    for _s in [Predicate]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, CallablePredicate, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Predicate]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    __getattr__ = lambda self, name: _swig_getattr(self, CallablePredicate, name)
+    def __repr__(self):
+        return "<C CallablePredicate instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, CallablePredicate, 'this', _tst.new_CallablePredicate(*args))
+        _swig_setattr(self, CallablePredicate, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_CallablePredicate):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.CallablePredicate_perform(*args)
+
+class CallablePredicatePtr(CallablePredicate):
+    def __init__(self, this):
+        _swig_setattr(self, CallablePredicate, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, CallablePredicate, 'thisown', 0)
+        _swig_setattr(self, CallablePredicate,self.__class__,CallablePredicate)
+_tst.CallablePredicate_swigregister(CallablePredicatePtr)
 
 class DictAction(Action):
     __swig_setmethods__ = {}

@@ -3,8 +3,17 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <malloc.h>
-#include <memory.h>
+
+#ifdef __PYTHON__BUILD__
+    #include "Python.h"
+    #define malloc PyMem_Malloc
+    #define realloc PyMem_Realloc
+    #define free PyMem_Free
+#else
+    #include <malloc.h>
+    #include <memory.h>
+#endif
+
 #include "debug.h"
 
 template<class T> class tst_node {
@@ -30,6 +39,20 @@ template<class T> class action {
         };
 };
 
+template<class T> class predicate {
+    public:
+        predicate() {
+            LOG0("predicate()\n");
+        }
+
+        virtual ~predicate() { LOG0("~predicate\n"); }
+
+        virtual T perform(char* key,int remaining_distance,T data) {
+            LOG0("default predicate \n");
+            return data;
+        };
+};
+
 template<class T> class tst {
     public:
         tst(int initial_size,T default_value);
@@ -38,6 +61,7 @@ template<class T> class tst {
         void adjust();
         void walk(action<T>* to_perform);
         void almost_perform(char* string,int string_length,int maximum_distance,action<T>* to_perform);
+        void common_prefix(char* string,action<T>* to_perform);
         T get(char* string);
         T __getitem__(char* string);
         T put(char* string,T data);
@@ -236,6 +260,62 @@ template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* cu
         assert(current_key[current_key_length]=='\0');
         almost_recurse(array+other_index,current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,to_perform,current_key_limit);
     }
+}
+
+template<class T> void tst<T>::common_prefix(char* string,action<T>* to_perform) {
+    char* current_key=(char*)malloc((maximum_key_length+2)*sizeof(char));
+    int current_key_length=0,current_key_limit=maximum_key_length+1;
+    *current_key='\0';
+
+    T biggest=default_value;
+    int current_index=root;
+    tst_node<T>* current_node;
+    int diff;
+    char c;
+
+    while(c=*(string++)) {
+        current_key[current_key_length]=c;
+        current_key[current_key_length+1]='\0';
+        current_key_length++;
+        while(current_index>=0) {
+            current_node=array+current_index;
+            diff=c-current_node->c;
+            if(diff==0) {
+                if(current_node->data!=default_value) {
+                    biggest=current_node->data;
+                }
+                if(*string) {
+                    current_index=current_node->next;
+                    break;
+                }
+                else {
+                    if(biggest!=default_value) {
+                        to_perform->perform(current_key,current_key_length,biggest);
+                    }
+                    current_index=current_node->next;
+                    if(current_index>=0) {
+                        walk_recurse(array+current_index,current_key,current_key_length,current_key_limit,to_perform);
+                    }
+                    free(current_key);
+                    return;
+                }
+            }
+            else if(diff>0) {
+                current_index=current_node->right;
+            }
+            else {
+                current_index=current_node->left;
+            }
+        }
+        if(current_index==0) {
+            break;
+        }
+    }
+
+    if(biggest!=default_value) {
+        to_perform->perform(current_key,current_key_length,biggest);
+    }
+    free(current_key);
 }
 
 template<class T> int tst<T>::create_node(tst_node<T>** current_node,int current_index) {
