@@ -271,6 +271,7 @@ class TST : public tst<char,PyObject*> {
         virtual PyObject* put(char* string,PyObject* data);
         PyObject* __getitem__(char* string);
         PyObject* __setitem__(char* string,PyObject* data);
+        PyObject* __delitem__(char* string);
 
     protected:
         virtual PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data,int want_old_value);
@@ -343,5 +344,9 @@ PyObject* TST::__getitem__(char* string) {
 
 PyObject* TST::__setitem__(char* string,PyObject* data) {
     return put(string,data);
+}
+
+PyObject* TST::__delitem__(char* string) {
+    return remove(string);
 }
 

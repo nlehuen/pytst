@@ -117,6 +117,33 @@ int main(int argc,char** argv) {
     printf("-----------------------\n");
     linetst->scan("--abcdef---abc--01--abcdef--abc01--",&p);
 
+    for(int hhk=0;hhk<10;hhk++) {
+    printf("---- suppressions ---\n");
+    linetst->walk(NULL,&p);
+    printf("01 =>\n");
+    linetst->remove("01");
+    linetst->walk(NULL,&p);
+    printf("abcdef =>\n");
+    linetst->remove("abcdef");
+    linetst->walk(NULL,&p);
+    printf("abc =>\n");
+    linetst->remove("abc");
+    linetst->walk(NULL,&p);
+    printf("---- suppressions ---\n");
+
+    linetst->debug_print_root();
+
+    char* buffer=(char*)malloc(256*sizeof(char));
+    sprintf(buffer,"new abc %i",hhk);
+    printf("---- ajout ---\n");
+    linetst->put("abcdef",buffer);
+    linetst->put("abc","new abc");
+    linetst->put("01","new 01");
+    linetst->walk(NULL,&p);
+    printf("---- ajout ---\n");
+
+    linetst->debug_print_root();
+    }
     delete linetst;
 
     return 0;
