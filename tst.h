@@ -257,6 +257,12 @@ template<class S,class T> T tst<S,T>::put(S* string,T data) {
 template<class S,class T> void tst<S,T>::remove(S* string) {
     tst_node<S,T>* current_node=array+root;
     remove_node(&current_node,&root,string,0);
+    if(root==UNDEFINED_INDEX) {
+        //printf("Racine next=%i ",next);
+        assert(next==0);
+        root=create_node(&array,0);
+        //printf("%i\n",root);
+    }
 }
 
 template<class S,class T> T tst<S,T>::get_or_build(S* string,filter<S,T>* factory) {
@@ -503,7 +509,7 @@ template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,
             }
             *current_node = array + next_index;
             result=build_node(current_node,&next_index,current_char,current_key_length);
-            *current_node = array+*current_index;
+            *current_node = array + *current_index;
             (*current_node)->next=next_index;
             balance_node(current_node,current_index); // XXX est-ce vraiment utile ?
             return result;
@@ -541,8 +547,7 @@ template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,
 }
 
 template<class S,class T> void tst<S,T>::remove_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length) {
-    int diff,result,next_index;
-    tst_node<S,T>* next_node;
+    int diff,result,*next_index;
 
     if((*current_node)->c==0) {
         return;
@@ -558,61 +563,44 @@ template<class S,class T> void tst<S,T>::remove_node(tst_node<S,T>** current_nod
             if(current_key_length>maximum_key_length) {
                 maximum_key_length=current_key_length;
             }
-            next_index = (*current_node)->next;
-            if(next_index!=UNDEFINED_INDEX) {
-                next_node = array + next_index;
-                remove_node(&next_node,&next_index,current_char,current_key_length);
-                (*current_node)->next=next_index;
-                if(    next_node->data==default_value
-                    && next_node->next==UNDEFINED_INDEX
-                    && next_node->right==UNDEFINED_INDEX
-                    && next_node->left==UNDEFINED_INDEX) {
-                    move_last_node_to(next_index);
-                    (*current_node)->next=UNDEFINED_INDEX;
-                }
-                balance_node(current_node,current_index); // XXX est-ce vraiment utile ?
-                return;
+            next_index = &((*current_node)->next);
+            if(*next_index!=UNDEFINED_INDEX) {
+                *current_node = array + *next_index;
+                remove_node(current_node,next_index,current_char,current_key_length);
+                *current_node=array+*current_index;
             }
         }
         else {
             store_data(*current_node,default_value,0);
-            *current_index=UNDEFINED_INDEX;
-            return;
         }
     }
     else if(diff>0) {
-        next_index = (*current_node)->right;
-        if(next_index!=UNDEFINED_INDEX) {
-            next_node = array + next_index;
-            remove_node(&next_node,&next_index,current_char,current_key_length);
-            (*current_node)->right=next_index;
-            if(    next_node->data==default_value
-                && next_node->next==UNDEFINED_INDEX
-                && next_node->right==UNDEFINED_INDEX
-                && next_node->left==UNDEFINED_INDEX) {
-                move_last_node_to(next_index);
-                (*current_node)->right=UNDEFINED_INDEX;
-            }
-            balance_node(current_node,current_index);
-            return;
+        next_index = &((*current_node)->right);
+        if(*next_index!=UNDEFINED_INDEX) {
+            *current_node = array + *next_index;
+            remove_node(current_node,next_index,current_char,current_key_length);
+            *current_node=array + *current_index;
         }
     }
     else {
-        next_index = (*current_node)->left;
-        if(next_index!=UNDEFINED_INDEX) {
-            next_node = array + next_index;
-            remove_node(&next_node,&next_index,current_char,current_key_length);
-            (*current_node)->left=next_index;
-            if(    next_node->data==default_value
-                && next_node->next==UNDEFINED_INDEX
-                && next_node->right==UNDEFINED_INDEX
-                && next_node->left==UNDEFINED_INDEX) {
-                move_last_node_to(next_index);
-                (*current_node)->left=UNDEFINED_INDEX;
-            }
-            balance_node(current_node,current_index);
-            return;
+        next_index = &((*current_node)->left);
+        if(*next_index!=UNDEFINED_INDEX) {
+            *current_node = array + *next_index;
+            remove_node(current_node,next_index,current_char,current_key_length);
+            *current_node=array + *current_index;
         }
+    }
+    
+    if(   (*current_node)->data==default_value
+       && (*current_node)->next==UNDEFINED_INDEX
+       && (*current_node)->right==UNDEFINED_INDEX
+       && (*current_node)->left==UNDEFINED_INDEX) {
+        // printf("Delete %c\n",(*current_node)->c);
+        move_last_node_to(*current_index);
+        *current_index=UNDEFINED_INDEX;
+    }
+    else {
+        balance_node(current_node,current_index);
     }
 }
 

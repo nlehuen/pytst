@@ -91,10 +91,11 @@ int main(int argc,char** argv) {
     printf("Taille d'un noeud char* : %i\n",sizeof(tst_node<char,char*>));
     printf("Taille d'un noeud size_t : %i\n",sizeof(tst_node<char,int>));
 
-    tst<char,char*>* linetst=new tst<char,char*>(16,"<nothing>");
+    tst<char,char*>* linetst=new tst<char,char*>(64,"<nothing>");
     linetst->put("abc","abc");
     linetst->put("abcdef","abcdef");
     linetst->put("01","01");
+    // linetst->put("02","02");
     printf("%s\n",linetst->get("abc"));
     printf("%s\n",linetst->get("01"));
     printf("%s\n",linetst->get("foobar"));
@@ -117,34 +118,26 @@ int main(int argc,char** argv) {
     printf("-----------------------\n");
     linetst->scan("--abcdef---abc--01--abcdef--abc01--",&p);
 
-    for(int hhk=0;hhk<10;hhk++) {
-    printf("---- suppressions ---\n");
-    linetst->walk(NULL,&p);
-    printf("01 =>\n");
-    linetst->remove("01");
-    linetst->walk(NULL,&p);
-    printf("abcdef =>\n");
-    linetst->remove("abcdef");
-    linetst->walk(NULL,&p);
-    printf("abc =>\n");
-    linetst->remove("abc");
-    linetst->walk(NULL,&p);
-    printf("---- suppressions ---\n");
-
-    linetst->debug_print_root();
-
-    char* buffer=(char*)malloc(256*sizeof(char));
-    sprintf(buffer,"new abc %i",hhk);
-    printf("---- ajout ---\n");
-    linetst->put("abcdef",buffer);
-    linetst->put("abc","new abc");
-    linetst->put("01","new 01");
-    linetst->walk(NULL,&p);
-    printf("---- ajout ---\n");
-
-    linetst->debug_print_root();
+    for(int hhk=0;hhk<1000;hhk++) {
+        printf("0\n");
+        linetst->remove("abcdef");
+        printf("1\n");
+        linetst->remove("abc");
+        printf("2\n");
+        linetst->remove("01");
+        printf("Vide: ");
+        linetst->debug_print_root();
+        char* buffer=(char*)malloc(256*sizeof(char));
+        sprintf(buffer,"new abcdef %i",hhk);
+        linetst->put("abcdef","new abcdef");
+        linetst->put("abc","new abc");
+        linetst->put("01","new 01");
+        printf("Plein: ");
+        linetst->debug_print_root();
     }
     delete linetst;
+
+    getchar();
 
     return 0;
 }
