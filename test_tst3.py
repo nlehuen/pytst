@@ -1,5 +1,5 @@
 if __name__=='__main__':
-    from tcc.tst import *
+    from tst import *
     import unittest
 
     class TestScan(unittest.TestCase):

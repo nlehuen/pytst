@@ -1,5 +1,5 @@
 # -*- coding: CP1252 -*-
-from tcc import tst
+import tst
 from tcc.util import levenshtein
 
 import time, sys
