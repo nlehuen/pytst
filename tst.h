@@ -75,25 +75,7 @@ public:
     int get_maximum_key_length();
     size_t bytes_allocated();
     void write(FILE* file,serializer<S,T>* writer);
-
-    void debug_print_root() {
-        int next_index=UNDEFINED_INDEX;
-        printf("Size: %i (%i bytes), next: %i (%i bytes)\n",size,size*sizeof(tst_node<S,T>),next,next*sizeof(tst_node<S,T>));
-        if(root!=UNDEFINED_INDEX) {
-            tst_node<S,T>* node=array+root;
-            printf("root index: %i, next: %i, c: %c, height: %i, position: %i\n",root,node->next,node->c,node->height,node->position);
-            next_index = node->next;
-            if(next_index!=UNDEFINED_INDEX) {
-                node=array+next_index;
-                printf("root->next index: %i, next: %i, c: %c, height: %i, position: %i\n",next_index,node->next,node->c,node->height,node->position);
-                next_index = node->next;
-                if(next_index!=UNDEFINED_INDEX) {
-                    node=array+next_index;
-                    printf("root->next->next index: %i, next: %i, c: %c, height: %i, position: %i\n",next_index,node->next,node->c,node->height,node->position);
-                }
-            }
-        }
-    }
+    void debug_print_root();
 
 protected:
     tst_node<S,T>* array;
@@ -120,15 +102,34 @@ protected:
     void lr(tst_node<S,T>** current_node,int* current_index);
     void rl(tst_node<S,T>** current_node,int* current_index);
     int compute_height_and_balance(tst_node<S,T>* current_node);
-
+    virtual T store_data(tst_node<S,T>* node,T data,int want_old_value);
     virtual void clear_nodes();
-
-    virtual T store_data(tst_node<S,T>* node,T data,int want_old_value) {
-        T result=node->data;
-        node->data=data;
-        return result;
-    }
 };
+
+template<class S,class T> void tst<S,T>::debug_print_root() {
+    int next_index=UNDEFINED_INDEX;
+    printf("Size: %i (%i bytes), next: %i (%i bytes)\n",size,size*sizeof(tst_node<S,T>),next,next*sizeof(tst_node<S,T>));
+    if(root!=UNDEFINED_INDEX) {
+        tst_node<S,T>* node=array+root;
+        printf("root index: %i, next: %i, c: %c, height: %i, position: %i\n",root,node->next,node->c,node->height,node->position);
+        next_index = node->next;
+        if(next_index!=UNDEFINED_INDEX) {
+            node=array+next_index;
+            printf("root->next index: %i, next: %i, c: %c, height: %i, position: %i\n",next_index,node->next,node->c,node->height,node->position);
+            next_index = node->next;
+            if(next_index!=UNDEFINED_INDEX) {
+                node=array+next_index;
+                printf("root->next->next index: %i, next: %i, c: %c, height: %i, position: %i\n",next_index,node->next,node->c,node->height,node->position);
+            }
+        }
+    }
+}
+
+template<class S,class T> T tst<S,T>::store_data(tst_node<S,T>* node,T data,int want_old_value) {
+    T result=node->data;
+    node->data=data;
+    return result;
+}
 
 template<class S,class T> tst<S,T>::tst(int size,T default_value) {
     this->size=size;

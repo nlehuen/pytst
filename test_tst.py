@@ -7,12 +7,13 @@ import time, sys
 t = tst.TST(8,None)
 u = tst.TST(8,0)
 
+print 'Loading file'
 start = time.time()
 for i in range(5):
     for line in file('prenoms.txt','r').readlines():
         line=line.strip()
-        t.put(line,line)
-        u.put(line,len(line))
+        t[line]=line
+        u[line]=len(line)
 print 'C++ version : ',time.time()-start
 
 class action(object):
@@ -80,7 +81,7 @@ print 'listaction en C++ sans filter: ',time.time()-start
 start = time.time()
 for line in file('prenoms.txt','r').readlines():
     line = line.strip()
-    t.put(line,line+str(i))
+    t[line]=line+str(i)
     for k,v in t.almost(line,4,None,tst.DictAction()).items():
         ld = levenshtein(line,k)
         if ld!=(4-v[0]):
