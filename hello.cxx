@@ -54,12 +54,12 @@ int main(int argc,char** argv) {
     printf("Taille totale length : %i\n",lengthtst->bytes_allocated());
 
     action<char*>* myaction=new donothing();
-    linetst->almost_perform("Yohan;H\r\n",(int)strlen("Yohan;H\r\n"),7,myaction);
+    linetst->almost("Yohan;H\r\n",(int)strlen("Yohan;H\r\n"),7,NULL,myaction);
     delete myaction;
 
     myaction=new printer();
-    linetst->walk(myaction);
-    linetst->common_prefix("Yohan",myaction);
+    linetst->walk(NULL,myaction);
+    linetst->common_prefix("Yohan",NULL,myaction);
     delete myaction;
     
 

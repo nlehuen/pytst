@@ -39,16 +39,16 @@ template<class T> class action {
         };
 };
 
-template<class T> class predicate {
+template<class T> class filter {
     public:
-        predicate() {
-            LOG0("predicate()\n");
+        filter() {
+            LOG0("filter()\n");
         }
 
-        virtual ~predicate() { LOG0("~predicate\n"); }
+        virtual ~filter() { LOG0("~filter\n"); }
 
         virtual T perform(char* key,int remaining_distance,T data) {
-            LOG0("default predicate \n");
+            LOG0("default filter \n");
             return data;
         };
 };
@@ -59,9 +59,9 @@ template<class T> class tst {
         ~tst();
 
         void adjust();
-        void walk(action<T>* to_perform);
-        void almost_perform(char* string,int string_length,int maximum_distance,action<T>* to_perform);
-        void common_prefix(char* string,action<T>* to_perform);
+        void walk(filter<T>* filter,action<T>* to_perform);
+        void almost(char* string,int string_length,int maximum_distance,filter<T>* filter,action<T>* to_perform);
+        void common_prefix(char* string,filter<T>* filter,action<T>* to_perform);
         T get(char* string);
         T __getitem__(char* string);
         T put(char* string,T data);
@@ -75,8 +75,8 @@ template<class T> class tst {
         T default_value;
         int root,next,size,maximum_key_length;
 
-        void walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,action<T>* to_perform);
-        void almost_recurse(tst_node<T>* current_node,char* current_key, int current_key_length, char* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,action<T>* to_perform,int current_key_limit);
+        void walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,filter<T>* filter,action<T>* to_perform);
+        void almost_recurse(tst_node<T>* current_node,char* current_key, int current_key_length, char* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<T>* filter,action<T>* to_perform,int current_key_limit);
 
         int create_node(tst_node<T>** current_node,int current_index);
 
@@ -148,36 +148,40 @@ template<class T> T tst<T>::__setitem__(char* string,T data) {
     return put(string,data);
 }
 
-template<class T> void tst<T>::almost_perform(char* string, int string_length, int maximum_distance, action<T>* to_perform) {
+template<class T> void tst<T>::almost(char* string, int string_length, int maximum_distance,filter<T>* filter,action<T>* to_perform) {
     LOG1("malloc de %i\n",string_length+maximum_distance+1);
     char* current_key=(char*)malloc((string_length+maximum_distance+1)*sizeof(char));
     *current_key='\0';
     LOG1("malloc : %x\n",(int)current_key);
-    almost_recurse(array+root,current_key,0,string,0,string_length,string_length,maximum_distance,to_perform,string_length+maximum_distance);
+    almost_recurse(array+root,current_key,0,string,0,string_length,string_length,maximum_distance,filter,to_perform,string_length+maximum_distance);
     free(current_key);
 }
 
-template<class T> void tst<T>::walk(action<T>* to_perform) {
+template<class T> void tst<T>::walk(filter<T>* filter,action<T>* to_perform) {
     char* key=(char*)malloc((maximum_key_length+2)*sizeof(char));
     *key='\0';
-    walk_recurse(array+root,key,0,maximum_key_length+1,to_perform);
+    walk_recurse(array+root,key,0,maximum_key_length+1,filter,to_perform);
     free(key);
 }
 
-template<class T> void tst<T>::walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,action<T>* to_perform) {
+template<class T> void tst<T>::walk_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,int current_key_limit,filter<T>* filter,action<T>* to_perform) {
     int other_index;
 
     other_index=current_node->left;
     if(other_index>=0) {
-        walk_recurse(array+other_index,current_key,current_key_length,current_key_limit,to_perform);
+        walk_recurse(array+other_index,current_key,current_key_length,current_key_limit,filter,to_perform);
     }
 
-    if(current_node->data!=default_value) {
+    T data = current_node->data;
+    if(filter) {
+        data = filter->perform(current_key,0,data);
+    }
+    if(data!=default_value && to_perform) {
         assert(current_key[current_key_length]=='\0');
         assert(current_key_length < current_key_limit);
         current_key[current_key_length]=current_node->c;
         current_key[current_key_length+1]='\0';
-        to_perform->perform(current_key,0,current_node->data);
+        to_perform->perform(current_key,0,data);
         current_key[current_key_length]='\0';
     }
 
@@ -187,23 +191,23 @@ template<class T> void tst<T>::walk_recurse(tst_node<T>* current_node,char* curr
         assert(current_key_length < current_key_limit);
         current_key[current_key_length]=current_node->c;
         current_key[current_key_length+1]='\0';
-        walk_recurse(array+other_index,current_key,current_key_length+1,current_key_limit,to_perform);
+        walk_recurse(array+other_index,current_key,current_key_length+1,current_key_limit,filter,to_perform);
         current_key[current_key_length]='\0';
     }
 
     other_index=current_node->right;
     if(other_index>=0) {
-        walk_recurse(array+other_index,current_key,current_key_length,current_key_limit,to_perform);
+        walk_recurse(array+other_index,current_key,current_key_length,current_key_limit,filter,to_perform);
     }
 }
 
-template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,char* string, int current_index, int real_string_length, int string_length, int remaining_distance, action<T>* to_perform,int current_key_limit) {
+template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* current_key,int current_key_length,char* string, int current_index, int real_string_length, int string_length, int remaining_distance,filter<T>* filter, action<T>* to_perform,int current_key_limit) {
     int other_index;
     int diff,diff2;
 
     other_index=current_node->left;
     if (other_index>=0) {
-        almost_recurse(array+other_index,current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,to_perform,current_key_limit);
+        almost_recurse(array+other_index,current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,filter,to_perform,current_key_limit);
     }
 
     diff=0;
@@ -216,14 +220,18 @@ template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* cu
         diff=1;
     }
 
-    if(current_node->data!=default_value) {
+    T data = current_node->data;
+    if(filter) {
+        data = filter->perform(current_key,0,data);
+    }
+    if(data!=default_value && to_perform) {
         diff2=(remaining_distance-abs(current_key_length+1-string_length))-diff;
         if(diff2>=0) {
             assert(current_key[current_key_length]=='\0');
             assert(current_key_length < current_key_limit);
             current_key[current_key_length]=current_node->c;
             current_key[current_key_length+1]='\0';
-            to_perform->perform(current_key,diff2,current_node->data);
+            to_perform->perform(current_key,diff2,data);
             current_key[current_key_length]='\0';
         }
     }
@@ -236,14 +244,14 @@ template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* cu
             assert(current_key_length < current_key_limit);
             current_key[current_key_length]=current_node->c;
             current_key[current_key_length+1]='\0';
-            almost_recurse(array+other_index,current_key,current_key_length+1,string,current_index+1,real_string_length,string_length,diff2,to_perform,current_key_limit);
+            almost_recurse(array+other_index,current_key,current_key_length+1,string,current_index+1,real_string_length,string_length,diff2,filter,to_perform,current_key_limit);
             current_key[current_key_length]='\0';
         }
     }
 
     if(current_index<string_length && remaining_distance>0) {
         assert(current_key[current_key_length]=='\0');
-        almost_recurse(current_node,current_key,current_key_length,string,current_index+1,real_string_length,string_length-1,remaining_distance-1,to_perform,current_key_limit);
+        almost_recurse(current_node,current_key,current_key_length,string,current_index+1,real_string_length,string_length-1,remaining_distance-1,filter,to_perform,current_key_limit);
     }
 
     if(other_index>=0 && remaining_distance>0) {
@@ -251,18 +259,18 @@ template<class T> void tst<T>::almost_recurse(tst_node<T>* current_node,char* cu
         assert(current_key_length < current_key_limit);
         current_key[current_key_length]=current_node->c;
         current_key[current_key_length+1]='\0';
-        almost_recurse(array+other_index,current_key,current_key_length+1,string,current_index,real_string_length,string_length+1,remaining_distance-1,to_perform,current_key_limit);
+        almost_recurse(array+other_index,current_key,current_key_length+1,string,current_index,real_string_length,string_length+1,remaining_distance-1,filter,to_perform,current_key_limit);
         current_key[current_key_length]='\0';
     }
 
     other_index = current_node->right;
     if(other_index>=0) {
         assert(current_key[current_key_length]=='\0');
-        almost_recurse(array+other_index,current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,to_perform,current_key_limit);
+        almost_recurse(array+other_index,current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,filter,to_perform,current_key_limit);
     }
 }
 
-template<class T> void tst<T>::common_prefix(char* string,action<T>* to_perform) {
+template<class T> void tst<T>::common_prefix(char* string,filter<T>* filter,action<T>* to_perform) {
     char* current_key=(char*)malloc((maximum_key_length+2)*sizeof(char));
     int current_key_length=0,current_key_limit=maximum_key_length+1;
     *current_key='\0';
@@ -283,18 +291,21 @@ template<class T> void tst<T>::common_prefix(char* string,action<T>* to_perform)
             if(diff==0) {
                 if(current_node->data!=default_value) {
                     biggest=current_node->data;
+                    if(filter) {
+                        biggest=filter->perform(current_key,0,biggest);
+                    }
                 }
                 if(*string) {
                     current_index=current_node->next;
                     break;
                 }
                 else {
-                    if(biggest!=default_value) {
+                    if(biggest!=default_value && to_perform) {
                         to_perform->perform(current_key,current_key_length,biggest);
                     }
                     current_index=current_node->next;
                     if(current_index>=0) {
-                        walk_recurse(array+current_index,current_key,current_key_length,current_key_limit,to_perform);
+                        walk_recurse(array+current_index,current_key,current_key_length,current_key_limit,filter,to_perform);
                     }
                     free(current_key);
                     return;
@@ -312,7 +323,7 @@ template<class T> void tst<T>::common_prefix(char* string,action<T>* to_perform)
         }
     }
 
-    if(biggest!=default_value) {
+    if(biggest!=default_value && to_perform) {
         to_perform->perform(current_key,current_key_length,biggest);
     }
     free(current_key);

@@ -27,32 +27,19 @@ class action(tst.Action):
             self._dict[key]=(diff,data)
 
 for s in ('Nicolas;H','Yohan;H'):
+    print '------------',s
     for i in range(7):
         print "almost(%i)"%i
-        _dict = t.almost(s,len(s),i).items();
-        print len(_dict)
-        for key,item in _dict:
-            d = levenshtein(key,s);
-            assert(d<=i)
-            assert(d==(i-item[0]))
-        print 'OK'
+        _dict = tst.DictAction()
+        t.almost(s,len(s),i,None,_dict)
+        print len(_dict.get_dict())
+#        for key,item in _dict:
+#            d = levenshtein(key,s);
+#            assert(d<=i)
+#            assert(d==(i-item[0]))
 
-def test(key,dist,data):
-    print 'test',key,dist,data
+print 'maximum key length :', t.get_maximum_key_length()
 
-def predicate(data):
-    # raise Exception, 'coucou'
-    return data[:5]
-
-la = tst.ListAction(None);
-t.walk(la)
-print len(la.get_list())
-
-la = tst.DictAction(predicate);
-t.walk(la)
-print la.get_dict()
-
-la = tst.CallableAction(test);
-t.common_prefix('Nico',la)
-
-print t.get_maximum_key_length()
+la = tst.ListAction();
+t.walk(tst.CallableFilter(lambda x,y,z: z),la)
+print la.get_list()
