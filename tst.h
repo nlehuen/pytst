@@ -638,6 +638,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
     c = *(pos++);
     while(best_match_node!=NULL || c!=0) {
         if(c) {
+            printf("passage dans %c\n",c);
             // on commence par rechercher le noeud correspondant au caractère courant
             while(current_index>=0) {
                 current_node=array+current_index;
@@ -660,7 +661,11 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             }
     
             if(current_index==UNDEFINED_INDEX) {
+                
+                printf("%c pas bon...\n",c);
+                
                 if(best_match_node) {
+                    printf("on sort le match\n");
                     // le caractère courant ne matche pas => on backtracke
     
                     // c'est à dire qu'on envoie tous les caractères jusqu'au meilleur match actuel
@@ -683,19 +688,22 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
     
                     // puis on reprend juste après le meilleur match depuis la racine de l'arbre
                     previous_match_end = best_match_end;
-                    pos = best_match_end;
+                    pos = best_match_end-1;
                     best_match_node = NULL;
                     best_match_end = NULL;
                 }
+                
                 best_match_start = NULL;
                 current_index = root;
             }
             else {
                 if(!best_match_start) {
                     if(previous_char_was_stop_char) {
+                        printf("youpi on commence avec %c\n",c);
                         best_match_start=pos-1;
                     }
                     else {
+                        printf("%c pas bon car pas precede d un stopchar\n",c);
                         current_index = root;
                     }
                 }
@@ -704,15 +712,37 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     // on enregistre le match
                     if(current_node->data!=default_value) {
                         if(stop_chars) {
+                            int next_char_is_stop_char=0;
                             S next_char = *pos;
                             S* current_stop_char=stop_chars;
                             do {
                                 if(next_char==(*current_stop_char)) {
-                                    best_match_node = current_node;
-                                    best_match_end = pos;
+                                    next_char_is_stop_char=1;
                                     break;
                                 }
                             } while(*(current_stop_char++));
+
+                            if(next_char_is_stop_char) {
+                                // le match est acceptable
+                                best_match_node = current_node;
+                                best_match_end = pos;
+                            }
+                            else {
+                                printf("ben non il etait pas terminal\n");
+                                if(next_char) {
+                                    printf("on peut continuer, ouf\n");
+                                }
+                                else {
+                                    printf("ben non on peut pas continuer, on backtracke\n");
+                                    // le match n'est pas acceptable, il faut backtracker                                
+                                    pos--;
+                                    c=(*pos);
+                                    best_match_start = NULL;
+                                    best_match_node = NULL;
+                                    best_match_end = NULL;
+                                    current_index = root;
+                                }
+                            }
                         }
                         else {
                             best_match_node = current_node;
@@ -753,6 +783,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             S* key=(S*)tst_malloc(key_size+1);
             memcpy(key,best_match_start,key_size);
             key[key_size]='\0';
+            printf(">>>>%s\n",key);
             to_perform->perform(key,key_size,best_match_node->data);
             tst_free(key);
 
@@ -765,10 +796,11 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             current_index = root;
 
             if(stop_chars) {
+                c = *(pos-1);
                 previous_char_was_stop_char=0;
                 S* current_stop_char=stop_chars;
                 do {
-                    if(*(pos-1)==(*current_stop_char)) {
+                    if(c==(*current_stop_char)) {
                         previous_char_was_stop_char=1;
                         break;
                     }
