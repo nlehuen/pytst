@@ -1,3 +1,4 @@
+# -*- coding: CP1252 -*-
 import tst
 from tcc.util import levenshtein
 
@@ -15,9 +16,13 @@ for i in range(5):
 print 'C++ version : ',time.time()-start
 
 class action(tst.Action):
+    counter = 0
+    
     def __init__(self):
         tst.Action.__init__(self)
         self._dict=dict()
+        self._id = action.counter
+        action.counter+=1
     def perform(self,key,diff,data):
         if self._dict.has_key(key):
             odiff, odata = self._dict[key]
@@ -25,18 +30,19 @@ class action(tst.Action):
                 self._dict[key]=(diff,data)
         else:
             self._dict[key]=(diff,data)
+    def result(self):
+        #TODO: problème ici car la référence n'est pas incrémentée...
+        #print "_result_%i"%self._id
+        return self._dict
+    def __del__(self):
+        #print "_dl_%i"%self._id
+        tst.Action.__del__(self)
 
 for s in ('Nicolas;H','Yohan;H'):
     print '------------',s
     for i in range(7):
         print "almost(%i)"%i
-        _dict = tst.DictAction()
-        t.almost(s,i,None,_dict)
-        print len(_dict.get_dict())
-#        for key,item in _dict:
-#            d = levenshtein(key,s);
-#            assert(d<=i)
-#            assert(d==(i-item[0]))
+        print len(t.almost(s,i,None,tst.DictAction()))
 
 print 'maximum key length :', t.get_maximum_key_length()
 
@@ -46,7 +52,8 @@ r = re.compile('(.*)[;=](.*)')
 start = time.time()
 for i in range(500):
     la = action();
-    t.walk(tst.CallableFilter(lambda x,y,z: r.match(z).group(1)),la)
+    #TODO: si on enlève le "d=" le résultat est immédiatement décrémenté ce qui coince quand on passe au bench suivant...
+    d=t.walk(tst.CallableFilter(lambda x,y,z: r.match(z).group(1)),la)
 print 'la en python : ',time.time()-start
 
 start = time.time()

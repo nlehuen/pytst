@@ -77,6 +77,12 @@ class IntegerAction(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, IntegerAction, name)
     def __repr__(self):
         return "<C action<(int)> instance at %s>" % (self.this,)
+    def __del__(self, destroy=_tst.delete_IntegerAction):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.IntegerAction_perform(*args)
+    def result(*args): return _tst.IntegerAction_result(*args)
     def __init__(self, *args):
         if self.__class__ == IntegerAction:
             args = (None,) + args
@@ -84,11 +90,6 @@ class IntegerAction(_object):
             args = (self,) + args
         _swig_setattr(self, IntegerAction, 'this', _tst.new_IntegerAction(*args))
         _swig_setattr(self, IntegerAction, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete_IntegerAction):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-    def perform(*args): return _tst.IntegerAction_perform(*args)
     def __disown__(self):
         self.thisown = 0
         _tst.disown_IntegerAction(self)
@@ -108,6 +109,11 @@ class IntegerFilter(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, IntegerFilter, name)
     def __repr__(self):
         return "<C filter<(int)> instance at %s>" % (self.this,)
+    def __del__(self, destroy=_tst.delete_IntegerFilter):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.IntegerFilter_perform(*args)
     def __init__(self, *args):
         if self.__class__ == IntegerFilter:
             args = (None,) + args
@@ -115,11 +121,6 @@ class IntegerFilter(_object):
             args = (self,) + args
         _swig_setattr(self, IntegerFilter, 'this', _tst.new_IntegerFilter(*args))
         _swig_setattr(self, IntegerFilter, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete_IntegerFilter):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-    def perform(*args): return _tst.IntegerFilter_perform(*args)
     def __disown__(self):
         self.thisown = 0
         _tst.disown_IntegerFilter(self)
@@ -173,6 +174,12 @@ class Action(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, Action, name)
     def __repr__(self):
         return "<C action<(p.PyObject)> instance at %s>" % (self.this,)
+    def __del__(self, destroy=_tst.delete_Action):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.Action_perform(*args)
+    def result(*args): return _tst.Action_result(*args)
     def __init__(self, *args):
         if self.__class__ == Action:
             args = (None,) + args
@@ -180,11 +187,6 @@ class Action(_object):
             args = (self,) + args
         _swig_setattr(self, Action, 'this', _tst.new_Action(*args))
         _swig_setattr(self, Action, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete_Action):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-    def perform(*args): return _tst.Action_perform(*args)
     def __disown__(self):
         self.thisown = 0
         _tst.disown_Action(self)
@@ -204,6 +206,11 @@ class Filter(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, Filter, name)
     def __repr__(self):
         return "<C filter<(p.PyObject)> instance at %s>" % (self.this,)
+    def __del__(self, destroy=_tst.delete_Filter):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+    def perform(*args): return _tst.Filter_perform(*args)
     def __init__(self, *args):
         if self.__class__ == Filter:
             args = (None,) + args
@@ -211,11 +218,6 @@ class Filter(_object):
             args = (self,) + args
         _swig_setattr(self, Filter, 'this', _tst.new_Filter(*args))
         _swig_setattr(self, Filter, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete_Filter):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-    def perform(*args): return _tst.Filter_perform(*args)
     def __disown__(self):
         self.thisown = 0
         _tst.disown_Filter(self)
@@ -260,6 +262,31 @@ class SerializerPtr(Serializer):
         _swig_setattr(self, Serializer,self.__class__,Serializer)
 _tst.Serializer_swigregister(SerializerPtr)
 
+class TSTException(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, TSTException, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, TSTException, name)
+    def __repr__(self):
+        return "<C TSTException instance at %s>" % (self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, TSTException, 'this', _tst.new_TSTException(*args))
+        _swig_setattr(self, TSTException, 'thisown', 1)
+    __swig_setmethods__["message"] = _tst.TSTException_message_set
+    __swig_getmethods__["message"] = _tst.TSTException_message_get
+    if _newclass:message = property(_tst.TSTException_message_get, _tst.TSTException_message_set)
+    def __del__(self, destroy=_tst.delete_TSTException):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+
+class TSTExceptionPtr(TSTException):
+    def __init__(self, this):
+        _swig_setattr(self, TSTException, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, TSTException, 'thisown', 0)
+        _swig_setattr(self, TSTException,self.__class__,TSTException)
+_tst.TSTException_swigregister(TSTExceptionPtr)
+
 class CallableAction(Action):
     __swig_setmethods__ = {}
     for _s in [Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
@@ -277,6 +304,7 @@ class CallableAction(Action):
             if self.thisown: destroy(self)
         except: pass
     def perform(*args): return _tst.CallableAction_perform(*args)
+    def result(*args): return _tst.CallableAction_result(*args)
 
 class CallableActionPtr(CallableAction):
     def __init__(self, this):
@@ -327,7 +355,7 @@ class DictAction(Action):
             if self.thisown: destroy(self)
         except: pass
     def perform(*args): return _tst.DictAction_perform(*args)
-    def get_dict(*args): return _tst.DictAction_get_dict(*args)
+    def result(*args): return _tst.DictAction_result(*args)
 
 class DictActionPtr(DictAction):
     def __init__(self, this):
@@ -353,7 +381,7 @@ class ListAction(Action):
             if self.thisown: destroy(self)
         except: pass
     def perform(*args): return _tst.ListAction_perform(*args)
-    def get_list(*args): return _tst.ListAction_get_list(*args)
+    def result(*args): return _tst.ListAction_result(*args)
 
 class ListActionPtr(ListAction):
     def __init__(self, this):
@@ -408,6 +436,7 @@ class TST(_object_tst):
     def __getitem__(*args): return _tst.TST___getitem__(*args)
     def put(*args): return _tst.TST_put(*args)
     def __setitem__(*args): return _tst.TST___setitem__(*args)
+    def write(*args): return _tst.TST_write(*args)
 
 class TSTPtr(TST):
     def __init__(self, this):

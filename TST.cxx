@@ -4,10 +4,19 @@
 
 #include "Python.h"
 
+class TSTException {
+    public:
+        TSTException(char* _message) {
+            message=_message;
+        }
+
+        char* message;
+};
+
 class CallableAction : public action<PyObject*> {
     public:
         CallableAction(PyObject* _callable) {
-            Py_XINCREF(_callable);
+            Py_INCREF(_callable);
             callable=_callable;
         }
 
@@ -29,6 +38,11 @@ class CallableAction : public action<PyObject*> {
             Py_DECREF(tuple);
         }
 
+        virtual PyObject* result() {
+            Py_INCREF(Py_None);
+            return Py_None;
+        }
+
     private:
         PyObject* callable;
 };
@@ -36,7 +50,7 @@ class CallableAction : public action<PyObject*> {
 class CallableFilter : public filter<PyObject*> {
     public:
         CallableFilter(PyObject* _callable) {
-            Py_XINCREF(_callable);
+            Py_INCREF(_callable);
             callable=_callable;
         }
 
@@ -101,7 +115,7 @@ class DictAction : public action<PyObject*> {
             PyDict_SetItemString(dict,key,tuple);
         };
 
-        PyObject* get_dict() {
+        virtual PyObject* result() {
             Py_INCREF(dict);
             return dict;
         }
@@ -128,7 +142,7 @@ class ListAction : public action<PyObject*> {
             PyList_Append(list,data);
         }
 
-        PyObject* get_list() {
+        virtual PyObject* result() {
             Py_INCREF(list);
             return list;
         }
@@ -141,24 +155,40 @@ class ObjectSerializer : public serializer<PyObject*> {
     public:
         ObjectSerializer() {
             PyObject* name=PyString_FromString("cPickle");
-            cPickle=PyImport_Import(name);
-            if(!cPickle) {
-                printf("Impossible d'importer cPickle\n");
-                PyErr_SetString(PyExc_RuntimeError,"Impossible d'importer cPickle");
-            }
+            PyObject* cPickle=PyImport_Import(name);
             Py_DECREF(name);
-        }
-
-        virtual ~ObjectSerializer() {
+            if(!cPickle) {
+                throw TSTException("Cannot get module cPickle");
+            }
+            dumps = PyObject_GetAttrString(cPickle,"dumps");
+            if(!dumps) {
+                Py_DECREF(cPickle);
+                throw TSTException("Cannot get cPickle.dumps");
+            }
+            loads = PyObject_GetAttrString(cPickle,"loads");
+            if(!loads) {
+                Py_DECREF(dumps);
+                Py_DECREF(cPickle);
+                throw TSTException("Cannot get cPickle.loads");
+            }
             Py_DECREF(cPickle);
         }
 
+        virtual ~ObjectSerializer() {
+            Py_DECREF(dumps);
+            Py_DECREF(loads);
+        }
+
         virtual void write(FILE* file,PyObject* data) {
-            PyObject* dumps = PyObject_GetAttrString(cPickle,"dumps");
-            PyObject* call=Py_BuildValue("(oi)",data,2);
+            PyObject* call=Py_BuildValue("Oi",data,2);
+            if(!call) {
+                throw TSTException("Py_BuildValue(\"Oi\",data,2) failed");
+            }
             PyObject* result=PyObject_CallObject(dumps,call);
             Py_DECREF(call);
-            Py_DECREF(dumps);
+            if(!result) {
+                throw TSTException("Call to dumps failed");
+            }
             char *string;
             int length;
             PyString_AsStringAndSize(result,&string,&length);
@@ -173,23 +203,30 @@ class ObjectSerializer : public serializer<PyObject*> {
             char* string=(char*)malloc(length);
             fread(string,sizeof(char),length,file);
             PyObject* dumps=PyString_FromStringAndSize(string,length);
-            PyObject* loads=PyObject_GetAttrString(cPickle,"loads");
-            PyObject* call=Py_BuildValue("(o)",loads);
+            PyObject* call=Py_BuildValue("(O)",dumps);
+            if(!call) {
+                Py_DECREF(dumps);
+                free(string);
+                throw TSTException("Py_BuildValue(\"(O)\",dumps) failed");
+            }
             PyObject* result=PyObject_CallObject(loads,call);
             Py_DECREF(call);
-            Py_DECREF(loads);
             Py_DECREF(dumps);
             free(string);
+            if(!result) {
+                throw TSTException("Call to loads failed");
+            }
             return result;
         }
     
     private:
-        PyObject* cPickle;
+        PyObject *dumps,*loads;
 };
 
 class TST : public tst<PyObject*> {
     public:
         TST();
+        TST(PyObject* file);
         TST(int initial_size,PyObject* default_value);
         ~TST();
         PyObject* get(char* string);
@@ -198,13 +235,22 @@ class TST : public tst<PyObject*> {
         PyObject* put(char* string,PyObject* data);
         // surcharge nécessaire car la fonction n'est pas virtuelle
         PyObject* __setitem__(char* string,PyObject* data);
+        PyObject* write(PyObject* file);
 
     protected:
         int create_node(tst_node<PyObject*>** current_node,int current_index);
 };
 
 TST::TST() : tst<PyObject*>(16,Py_None) {
-    Py_XINCREF(default_value);
+    Py_INCREF(Py_None);
+}
+
+TST::TST(PyObject* file) : tst<PyObject*>() {
+    if(!PyFile_Check(file)) {
+        throw TSTException("Argument of constructor must be a file object");
+    }
+    ObjectSerializer os;
+    tst<PyObject*>::read(PyFile_AsFile(file),&os);
 }
 
 TST::TST(int initial_size,PyObject* default_value) : tst<PyObject*>(initial_size,default_value) {
@@ -213,6 +259,17 @@ TST::TST(int initial_size,PyObject* default_value) : tst<PyObject*>(initial_size
 
 TST::~TST() {
     Py_XDECREF(default_value);
+}
+
+PyObject* TST::write(PyObject* file) {
+    if(!PyFile_Check(file)) {
+        throw TSTException("Argument of write() must be a file object");
+    }
+    ObjectSerializer *os=new ObjectSerializer();
+    tst<PyObject*>::write(PyFile_AsFile(file),os);
+    delete os;
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 PyObject* TST::get(char* string) {

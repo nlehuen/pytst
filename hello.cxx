@@ -23,9 +23,14 @@ class stringserializer : public serializer<char*> {
 class donothing : public action<char*> {
     public:
         virtual void perform(char* key,int remaining_distance,char* data);
+        virtual char* result();
 };
 
 void donothing::perform(char* key,int remaining_distance,char* data) {
+}
+
+char* donothing::result() {
+    return NULL;
 }
 
 class printer : public donothing {
