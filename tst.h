@@ -39,7 +39,7 @@
 
 #define UNDEFINED_INDEX -1
 
-#define TST_VERSION "0.95"
+#define TST_VERSION "0.50"
 
 template<class S,class T> class tst_node {
 public:

@@ -19,7 +19,7 @@ from distutils.core import setup, Extension
 
 setup(
     name = "pytst",
-    version = "0.95",
+    version = "0.50",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
     url = "http://nicolas.lehuen.com/",
