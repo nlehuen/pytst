@@ -35,7 +35,6 @@ int tst_create_node(tst* _tst,tst_node** current_node,int current_index) {
     new_node->right=-1;
     new_node->left=-1;
     new_node->height=0;
-    new_node->balance=0;
 
     return id;
 }
@@ -111,15 +110,16 @@ int tst_build_node(tst* _tst,tst_node** current_node,int* current_index,char* cu
     }
 }
 
-int tst_find_node(tst* _tst,int current_index,char* current_char) {
+tst_node* tst_find_node(tst* _tst,int* current_index,char* current_char) {
     tst_node* current_node;
     int diff;
 
-    while(current_index>=0) {
-        current_node=_tst->array+current_index;
+    while(*current_index>=0) {
+        current_node=_tst->array+*current_index;
 
         if(current_node->c==0) {
-            return -1;
+            *current_index=-1;
+            return 0;
         }
         else {
             diff=(*current_char)-(current_node->c);
@@ -129,49 +129,61 @@ int tst_find_node(tst* _tst,int current_index,char* current_char) {
             LOG2("%c = %c\n",*current_char,current_node->c);
             current_char++;
             if(*current_char) {
-                current_index = current_node->next;
+                *current_index = current_node->next;
             }
             else {
-                return current_index;
+                return current_node;
             }
         }
         else if(diff>0) {
             LOG2("%c > %c\n",*current_char,current_node->c);
-            current_index=current_node->right;
+            *current_index=current_node->right;
         }
         else {
             LOG2("%c < %c\n",*current_char,current_node->c);
-            current_index=current_node->left;
+            *current_index=current_node->left;
         }
     }
 
-    return -1;
+    return 0;
+}
+
+TST_NODE_TYPE tst_get(tst* _tst,char* string) {
+    int current_index=_tst->root;
+    tst_node* current_node=tst_find_node(_tst,&current_index,string);
+    return current_node->data;
+}
+
+TST_NODE_TYPE tst_put(tst* _tst,char* string,TST_NODE_TYPE data) {
+    tst_node* current_node=_tst->array+_tst->root;
+    int node_index=tst_build_node(_tst,&current_node,&(_tst->root),string);
+    TST_NODE_TYPE result;
+    current_node=_tst->array+node_index;
+    result = current_node->data;
+    current_node->data=data;
+    return result;
 }
 
 void tst_balance_node(tst_node* array,tst_node** current_node,int* current_index) {
-    int balance;
-    tst_node* other_node;
-    tst_compute_height_and_balance(array,*current_node);
-    balance=(*current_node)->balance;
-    if(balance>1) {
-        other_node=array+(*current_node)->right;
-        if(other_node->balance>0) {
+    int current_balance;
+    current_balance=tst_compute_height_and_balance(array,*current_node);
+    if(current_balance>1) {
+        current_balance=tst_compute_height_and_balance(array,array+(*current_node)->right);
+        if(current_balance>0) {
             tst_rr(array,current_node,current_index);
         }
         else {
             tst_rl(array,current_node,current_index);
         }
-        /* *flag=1; */
     }
-    else if(balance<-1) {
-        other_node=array+(*current_node)->left;
-        if(other_node->balance<0) {
+    else if(current_balance<-1) {
+       current_balance=tst_compute_height_and_balance(array,array+(*current_node)->left);
+       if(current_balance<0) {
             tst_ll(array,current_node,current_index);
         }
         else {
             tst_lr(array,current_node,current_index);
         }
-        /* *flag=1; */
     }
 }
 
@@ -213,10 +225,10 @@ void tst_rl(tst_node* array,tst_node** current_node,int* current_index) {
     tst_rr(array,current_node,current_index);
 }
 
-void tst_compute_height_and_balance(tst_node* array,tst_node* current_node) {
+int tst_compute_height_and_balance(tst_node* array,tst_node* current_node) {
     int left = current_node->left;
     int right = current_node->right;
-    int left_height,right_height;
+    int left_height,right_height,result;
     tst_node* left_node;
     tst_node* right_node;
     
@@ -226,27 +238,28 @@ void tst_compute_height_and_balance(tst_node* array,tst_node* current_node) {
         if(left>=0) {
             left_node=array+left;
             left_height=left_node->height;
-            current_node->balance=right_height-left_height;
+            result=right_height-left_height;
             if(left_height>right_height) {
                 right_height=left_height;
             }
             current_node->height=right_height+1;
+            return result;
         }
         else {
-            current_node->balance=right_height;
             current_node->height=right_height+1;
+            return right_height;
         }
     }
     else {
         if(left>=0) {
             left_node=array+left;
             left_height=left_node->height;
-            current_node->balance=-left_height;
             current_node->height=left_height+1;
+            return -left_height;
         }
         else {
-            current_node->balance=0;
             current_node->height=0;
+            return 0;
         }
     }
 }
