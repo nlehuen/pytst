@@ -8,19 +8,28 @@ void debug(struct tst* _tst,char *string) {
 
 int main(int argc,char** argv) {
     struct tst* mytst=tst_create(2);
-    int i;
-    for(i=0;i<2;i++) {
+    int i,flag;
+    for(i=0;i<3;i++) {
+        printf("root:%i\n",mytst->root);
         printf("------------------ %03i\n",i);
-        debug(mytst,"Nicolas");
-        debug(mytst,"Nicolas");
-        debug(mytst,"Carine");
-        debug(mytst,"Youpila");
-        debug(mytst,"Aaaaron");
-        debug(mytst,"Nicole");
-        debug(mytst,"Tripou");
-        debug(mytst,"Carinette");
-        debug(mytst,"Fripounette");
-        debug(mytst,"Cailloux");
+        debug(mytst,"a");
+        debug(mytst,"b");
+        debug(mytst,"c");
+        debug(mytst,"d");
+        debug(mytst,"e");
+        debug(mytst,"f");
+        debug(mytst,"g");
+        debug(mytst,"h");
+        debug(mytst,"i");
+        debug(mytst,"j");
+        tst_debug_node(mytst,mytst->array+mytst->root);
+        printf("\nbalance\n");
+        do {
+            flag=0;
+            tst_balance(mytst,&flag);
+        } while(flag==1);
+        tst_debug_node(mytst,mytst->array+mytst->root);
+        printf("\n");
     }
     tst_free(mytst);
     return 0;
