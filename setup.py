@@ -17,8 +17,17 @@
 import distutils
 from distutils.core import setup, Extension
 
-setup(name = "pytst",
-      version = "0.95",
-      py_modules = ["tst"],
-      ext_modules = [Extension("_tst", ["tst_wrap.cxx"])],
-    )
+setup(
+    name = "pytst",
+    version = "0.95",
+    author = "Nicolas Lehuen",
+    author_email = "nicolas@lehuen.com",
+    url = "http://nicolas.lehuen.com/",
+    py_modules = ["tst"],
+    ext_modules = [
+        Extension(
+            "_tst",
+            ["tst_wrap.cxx"],
+        ),
+    ]
+)
