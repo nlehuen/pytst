@@ -743,7 +743,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
             S* key=(S*)tst_malloc(key_size+1);
             memcpy(key,previous_match_end,key_size);
             key[key_size]='\0';
-            to_perform->perform(key,-2,default_value);
+            to_perform->perform(key,-key_size,default_value);
             free(key);
         }
 
@@ -752,7 +752,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
         S* key=(S*)tst_malloc(key_size+1);
         memcpy(key,best_match_start,key_size);
         key[key_size]='\0';
-        to_perform->perform(key,0,best_match_node->data);
+        to_perform->perform(key,key_size,best_match_node->data);
         free(key);
 
         // Code inutile car variable non réutilisée
