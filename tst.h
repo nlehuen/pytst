@@ -34,7 +34,8 @@ public:
     int left;
     int height;
     int position;
-    int failure;
+    int backtrack;
+    int backtrack_match_index;
 };
 
 template<class S,class T> class action {
@@ -115,6 +116,8 @@ template<class S,class T> class tst {
         virtual void remove_node(int* current_index,S* current_char,int current_key_length);
         tst_node<S,T>* find_node(int* current_index,int* best_node, S* current_char);
 
+        T compute_backtrack(tst_node<S,T> *current_node,S *match,S *current_pos);
+            
         void balance_node(tst_node<S,T>** current_node,int* current_index);
         void ll(tst_node<S,T>** current_node,int* current_index);
         void rr(tst_node<S,T>** current_node,int* current_index);
@@ -474,7 +477,8 @@ template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node
     new_node->height=0;
     new_node->data=(T)NULL;
     new_node->position=-1;
-    new_node->failure=UNDEFINED_INDEX;
+    new_node->backtrack=UNDEFINED_INDEX;
+    new_node->backtrack_match_index=UNDEFINED_INDEX;
     store_data(new_node,default_value,0);
 
     return id;
@@ -641,7 +645,37 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
     return NULL;
 }
 
+template<class S,class T> T tst<S,T>::compute_backtrack(tst_node<S,T> *current_node,S *match,S *current_pos) {
+    if(current_node->backtrack==UNDEFINED_INDEX) {
+        S* forward_pos=match;
+        S temp_char=*current_pos;
+        *current_pos=(S)0;
+        printf("find backtrack for \"%s\"\n",forward_pos);
+        while(forward_pos<current_pos) {
+            printf("Test de la sous-cle \"%s\" ",forward_pos);
+            current_node->backtrack=root;
+            current_node->backtrack_match_index=UNDEFINED_INDEX;
+            find_node(&(current_node->backtrack),&(current_node->backtrack_match_index),forward_pos);
+            if(current_node->backtrack==UNDEFINED_INDEX) {
+                printf("KO");
+                forward_pos++;
+                if(forward_pos<current_pos) printf("\n");
+            }
+            else {
+                printf("OK\n");
+                break;
+            }
+        }
+        if(current_node->backtrack==UNDEFINED_INDEX) {
+            current_node->backtrack=root;
+            current_node->backtrack_match_index=UNDEFINED_INDEX; // inutile
+        }
+        *current_pos=temp_char;
+    }
+}
+
 template<class S,class T> T tst<S,T>::scan(S* string,action<S,T>* to_perform) {
+    printf("\n--------scan \"%s\"\n",string);
     // return tst<S,T>::scan_with_stop_chars(string,NULL,to_perform);
     tst_node<S,T> *current_node=NULL;
     tst_node<S,T> *match_node=NULL;
@@ -840,7 +874,7 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
                     // Bien sûr, si l'arbre change, il faut recalculer toutes ces infos de backtrack.
                     // Au final, on a une version multi-chaines de l'algo Knuth-Morris-Pratt : Knuth-Morris-Pratt-Lehuen ??? ;)
                     // Ben non, en fait, c'est l'algo Aho-Corasick http://www-sr.informatik.uni-tuebingen.de/~buehler/AC/AC.html :(
-                    // La seule différence, c'est qu'ici je vais calculer le 'Failure Pattern' au fur et à mesure des besoins.
+                    // La seule différence, c'est qu'ici je vais calculer le 'backtrack Pattern' au fur et à mesure des besoins.
                     /*if(current_node->bt_node==UNDEFINED_INDEX) {
                         size_t key_size=pos-best_match_start-1;
                        

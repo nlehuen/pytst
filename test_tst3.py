@@ -24,9 +24,32 @@ if __name__=='__main__':
         def testRoot(self):
             self.t.debug_print_root()
 
+        def testScan0_1(self):
+            self.assertEqual(self.t.scan('Nicolas',TupleListAction()),[('Nicolas', 7, 'Nicolas'),])
+
+        def testScan0_2(self):
+            self.assertEqual(self.t.scan(' Nicolas',TupleListAction()),[(' ',-1,None),('Nicolas', 7, 'Nicolas'),])
+
+        def testScan0_3(self):
+            self.assertEqual(self.t.scan('Nicolas ',TupleListAction()),[('Nicolas', 7, 'Nicolas'),(' ',-1,None),])
+
+        def testScan0_4(self):
+            self.assertEqual(self.t.scan(' Nicolas ',TupleListAction()),[(' ',-1,None),('Nicolas', 7, 'Nicolas'),(' ',-1,None),])
+
+        def testScan0_5(self):
+            self.assertEqual(self.t.scan(' ',TupleListAction()),[(' ',-1,None),])
+
+        def testScan0_6(self):
+            self.assertEqual(self.t.scan('la',TupleListAction()),[('la', -2, None)])
+
+#        def testScan0_7(self):
+#            self.assertEqual(self.t.scan('lazl',TupleListAction()),[('lazl', -4, None)])
+
         def testScan1(self):
             self.assertEqual(self.t.scan('Nicolazlo',TupleListAction()),[('Nico', -4, None), ('lazlo', 5, 'lazlo')])
-            self.assertEqual(self.t.scan('Nicolazlo',TupleListAction()),[('Nico', -4, None), ('lazlo', 5, 'lazlo')])
+
+        def testScan24(self):
+            self.assertEqual(self.t.scan('A NicotrlalaANicoNicoNicoNicolasNicoNicolNicolNicoNicoNico',TupleListAction()),[('A N', 3, 'A N'), ('icotrlalaANicoNicoNico', -22, None), ('Nicolas', 7, 'Nicolas'), ('NicoNicolNicolNicoNicoNico', -26, None)])
         
         def testScan1_1(self):
             self.assertEqual(self.t.scan('hippocampe',TupleListAction()),[('hippocampe', -10, None)])
@@ -34,14 +57,11 @@ if __name__=='__main__':
         def testScan2(self):
             self.assertEqual(self.t.scan('Nicolas',TupleListAction()),[('Nicolas', 7, 'Nicolas')])
         
-        def testScan24(self):
-            self.assertEqual(self.t.scan('A NicotrlalaANicoNicoNicoNicolasNicoNicolNicolNicoNicoNico',TupleListAction()),[('A N', 3, 'A N'), ('icotrlalaANicoNicoNico', -22, None), ('Nicolas', 7, 'Nicolas'), ('NicoNicolNicolNicoNicoNico', -26, None)])
-        
         def testScan25(self):
             self.assertEqual(self.t.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
             self.assertEqual(self.t.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
             self.assertEqual(self.t.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
-
+        
         def testScan3(self):
             self.assertEqual(self.t.scan('Nicolasstupide',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('stupide', -7, None)])
         
@@ -59,19 +79,19 @@ if __name__=='__main__':
         
         def testScan8(self):
             self.assertEqual(self.t.scan('Nicolas-Antoinette',TupleListAction()),[('Nicolas-Antoinette', 18, 'Nicolas-Antoinette')])
-
+        
         def testScan9(self):
             self.assertEqual(self.t.scan('Nicolas-Antoine',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('-', -1, None), ('Antoine', 7, 'Antoine')])
         
         def testScan9_1(self):
             self.assertEqual(self.t.scan('Nicolas-Antoine-Antoine',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('-', -1, None), ('Antoine', 7, 'Antoine'), ('-', -1, None), ('Antoine', 7, 'Antoine')])
-
+        
         def testScan9_2(self):
             self.assertEqual(self.t.scan('Nicolas-Antoine-Antoine-',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('-', -1, None), ('Antoine', 7, 'Antoine'), ('-', -1, None), ('Antoine', 7, 'Antoine'), ('-', -1, None)])
-
+        
         def testScan10(self):
             self.assertEqual(self.t.scan('Nicolas-Antoinet',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('-', -1, None), ('Antoine', 7, 'Antoine'), ('t', -1, None)])
-
+        
         def testScanWithStopChars1(self):
             self.assertEqual(self.t.scan_with_stop_chars('Nicolas',' -',TupleListAction()),[('Nicolas', 7, 'Nicolas')])
         
