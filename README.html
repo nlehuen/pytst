@@ -113,5 +113,92 @@ pytst is a kind of dictionary, which handles string keys only, and
 crash in a not so nice way when given Unicode strings. However, if you
 read the introduction carefuly, you know that there is more to ternary
 search trees than this.<br>
+<h2>Using a TST to tokenize a string<br>
+</h2>
+The first usage you can make of a ternary search tree is to use it to
+tokenize a string. Why would you use a TST when you could use one of
+the thousand lexers you can find on the Internet ? Well, try building a
+ruleset for your favorite lexer with a thousand different token
+definitions. Now try this with ten thousands, a hundred thousands, a
+million token definition. The lexer will explode, whereas a TST will
+not.<br>
+<br>
+Clearly, the features of the TST scanning algorithm are much less
+flexible (don't try to compare them to what you can do with regular
+expressions, for example), but it scales a lot well. Why would you want
+to handle a million different token definition ? Well, that's up to
+you, but DNA sequences parsing comes to mind.<br>
+<br>
+How does the scanning algorithm scales ? Well, like the <a
+ href="http://www-sr.informatik.uni-tuebingen.de/%7Ebuehler/AC/AC.html">Aho-Corasick</a>
+algorithm. The algorithm reads each character from the input string
+only once, then does its little dance within the TST data structures.
+Believe me, this is fast, <a
+ href="http://www.lehuen.com/nicolas/index.php/2005/04/06/48-pytst-performance">as
+described here</a>.<br>
+<br>
+Now let's see a little bit of code. You initialize the TST with all the
+tokens you are looking for, then launch the scan :<br>
+<pre>&gt;&gt;&gt; import tst<br>&gt;&gt;&gt; t = tst.TST()<br>&gt;&gt;&gt; t['1234']='token 1'<br>&gt;&gt;&gt; t['123456']='token 2'<br>&gt;&gt;&gt; t['45678']='token 3'<br>&gt;&gt;&gt; t['5678910']='token 4'<br>&gt;&gt;&gt; result = t.scan('1234561234567891012345',tst.TupleListAction())<br>&gt;&gt;&gt; print result<br>[('123456', 6, 'token 2'), ('123456', 6, 'token 2'), ('78910', -5, None), ('1234', 4, 'token 1'), ('5', -1, None)]</pre>
+The tokenizing algorithm is greedy : it will try to produce the
+longest&nbsp; tokens available, consuming the characters as they come.
+That's why the token 4 was not produced in the above example : the
+sequence <span style="font-family: monospace;">'123456'</span> was
+already consumed. This may be a big limitation for some usages ; it
+means that the patterns you are looking for can only be recognized from
+their prefix, not from their suffix. ( Maybe that's not how ribosoms
+parse the DNA (more exactly, the <a
+ href="http://www.cytochemistry.net/Cell-biology/ribosome.htm">mRNA</a>),
+so this limitation may render the algorithm useless for DNA sequence
+analysis, after all. Anyway... )<br>
+<br>
+<h2>The <span style="font-family: monospace;">TupleListAction</span>
+callback class</h2>
+What about <span style="font-family: monospace;">tst.TupleListAction()</span>
+? This is our first example of giving a callback to the TST so that it
+can perform an action each time a match is found. TupleListAction just
+accumulate all the matches in a list, each match being stored as a
+tuple. The first item of the tuple is either a key from the TST, or a
+substring from the scanned string. If it is a key, this means a match
+has been found, so the second item is the key length and the third item
+is the object associated to the key in the TST. If the first item is a
+substring from the scanned string, the second item is the substring
+length with a negative sign, and the third item is None. Typically, the
+result object can be used like this :<br>
+<pre><br>&gt;&gt;&gt; import sys<br>&gt;&gt;&gt; for matched_string, matched_length, matched_object in result:<br>...     if matched_length&gt;0:<br>...         sys.stdout.write(matched_object)<br>...     else:<br>...         sys.stdout.write(print matched_string)<br>... else:<br>...     print<br>token 2token 278910token 15<br><br></pre>
+Here you are, you have built a transcriber that could handle millions
+of transcribing rules very efficiently.&nbsp; Well, that's not totally
+true,
+since you first have to parse the string to obtain a list of tokens,
+then iterate on the list of tokens to write something. Why not produce
+the output while we're scanning the input string ? That's why the tst
+module has other action callbacks.<br>
+<h2>The <span style="font-family: monospace;">CallableAction</span>
+callback class</h2>
+<span style="font-family: monospace;"></span>
+<pre>&gt;&gt;&gt; def mycallback(key,length,obj):<br>...&nbsp;&nbsp;&nbsp;&nbsp; if length&gt;0:<br>...&nbsp;&nbsp;&nbsp;&nbsp;     sys.stdout.write(obj)<br>...&nbsp;&nbsp;&nbsp;&nbsp; else:<br>...&nbsp;&nbsp;&nbsp;&nbsp;     sys.stdout.write(key)<br>...<br>&gt;&gt;&gt; def myresult():<br>...&nbsp;&nbsp;&nbsp;&nbsp; print<br>...<br>&gt;&gt;&gt; t.scan('1234561234567891012345',tst.CallableAction(mycallback,myresult))<br>token 2token 278910token 15</pre>
+The <span style="font-family: monospace;">CallableAction</span>
+callback class allows you to pass two callables : the first one is
+called for each match or non-match, with exactly the same arguments as
+the one that were found in the tuples built by <span
+ style="font-family: monospace;">TupleListAction</span>. The second one
+is called at the end of the scan, without any arguments. Its return
+value is returned by the <span style="font-family: monospace;">scan</span>
+method, which allows you to write shortcuts like :<br>
+<pre>&gt;&gt;&gt; class Counter(object):<br>...    def __init__(self):<br>...        self.counter = 0 <br>...    def hit(self,key,length,obj):<br>...    &nbsp;&nbsp;&nbsp; if length&gt;0:<br>...&nbsp;&nbsp;&nbsp;&nbsp;        self.counter += 1<br>...    def result(self):<br>...        return 'I found %i hits'%self.counter<br>...<br>&gt;&gt;&gt; c = Counter()<br>&gt;&gt;&gt; print t.scan('1234561234567891012345',tst.CallableAction(c.hit,c.result))<br>I found 3 hits<br></pre>
+You can even subclass <span style="font-family: monospace;">tcc.CallableAction</span>
+for more compacity. For example, you could reimplement <span
+ style="font-family: monospace;">TupleListAction</span> like this :<br>
+<pre>&gt;&gt;&gt; class MyTupleListAction(tst.CallableAction):<br>...     def __init__(self):<br>...         tst.CallableAction.__init__(self,self.callback,self.result)<br>...         self.list = []<br>...     def callback(self,key,length,obj):<br>...         self.list.append((key,length,obj))<br>...     def result(self):<br>...         return self.list<br>...<br>&gt;&gt;&gt; print t.scan('1234561234567891012345',MyTupleListAction())<br>[('123456', 6, 'token 2'), ('123456', 6, 'token 2'), ('78910', -5, None), ('1234', 4, 'token 1'), ('5', -1, None)]<br></pre>
+Of course this version is less efficient than the original <span
+ style="font-family: monospace;">tst.TupleListAction</span> which saves
+one or two layer of wrappers by going directly from the TST C++ API to
+the Python C API.<br>
+<h2>The <span style="font-family: monospace;">DictAction</span> and <span
+ style="font-family: monospace;">ListAction</span> callback classes</h2>
+TBD...<br>
+<br>
+<br>
+<br>
 </body>
 </html>
