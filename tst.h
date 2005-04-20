@@ -41,6 +41,15 @@
 
 #define TST_VERSION "0.51"
 
+class node_info {
+public:
+    int index;
+    int height;
+    int balance;
+    int right_balance;
+    int left_balance;
+};
+
 template<class S,class T> class tst_node {
 public:
     S c;
@@ -48,7 +57,6 @@ public:
     int next;
     int right;
     int left;
-    int height;
     int position;
     int backtrack;
     int backtrack_match_index;
@@ -116,12 +124,12 @@ protected:
 
     void compute_backtrack(tst_node<S,T> *current_node,S *start,S *match,S *current_pos);
 
-    void balance_node(tst_node<S,T>** current_node,int* current_index);
+    void balance_node(tst_node<S,T>** current_node,int* current_index,node_info bal);
     void ll(tst_node<S,T>** current_node,int* current_index);
     void rr(tst_node<S,T>** current_node,int* current_index);
     void lr(tst_node<S,T>** current_node,int* current_index);
     void rl(tst_node<S,T>** current_node,int* current_index);
-    int compute_height_and_balance(tst_node<S,T>* current_node);
+    node_info compute_height_and_balance(tst_node<S,T>* current_node);
     virtual T store_data(tst_node<S,T>* node,T data,int want_old_value);
     virtual void clear_nodes();
 };
@@ -189,7 +197,6 @@ template<class S,class T> void tst<S,T>::read(FILE* file, serializer<S,T>* reade
         fread(&(node->left),sizeof(int),1,file);
         fread(&(node->next),sizeof(int),1,file);
         fread(&(node->right),sizeof(int),1,file);
-        fread(&(node->height),sizeof(int),1,file);
 
         has_data=fgetc(file);
         if(has_data) {
@@ -218,7 +225,6 @@ template<class S,class T> void tst<S,T>::write(FILE* file, serializer<S,T>* writ
         fwrite(&(node->left),sizeof(int),1,file);
         fwrite(&(node->next),sizeof(int),1,file);
         fwrite(&(node->right),sizeof(int),1,file);
-        fwrite(&(node->height),sizeof(int),1,file);
         T data=node->data;
         if(data!=default_value) {
             fputc('\1',file);
@@ -492,7 +498,6 @@ template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node
     new_node->next=UNDEFINED_INDEX;
     new_node->right=UNDEFINED_INDEX;
     new_node->left=UNDEFINED_INDEX;
-    new_node->height=0;
     new_node->data=(T)NULL;
     new_node->position=-1;
     new_node->backtrack=UNDEFINED_INDEX;
@@ -514,6 +519,9 @@ template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,
         diff=(*current_char)-((*current_node)->c);
     }
 
+    node_info current_node_info;
+    current_node_info.height=-1;
+
     if(diff==0) {
         current_char++;
         current_key_length++;
@@ -532,7 +540,7 @@ template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,
             result=build_node(current_node,&next_index,current_char,current_key_length);
             *current_node = array + *current_index;
             (*current_node)->next=next_index;
-            balance_node(current_node,current_index); // XXX est-ce vraiment utile ?
+            balance_node(current_node,current_index,current_node_info); // XXX est-ce vraiment utile ?
             return result;
         }
         else {
@@ -549,7 +557,7 @@ template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,
         result=build_node(current_node,&next_index,current_char,current_key_length);
         *current_node = array+*current_index;
         (*current_node)->right=next_index;
-        balance_node(current_node,current_index);
+        balance_node(current_node,current_index,current_node_info);
         return result;
     }
     else {
@@ -562,7 +570,7 @@ template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,
         result=build_node(current_node,&next_index,current_char,current_key_length);
         *current_node = array+*current_index;
         (*current_node)->left=next_index;
-        balance_node(current_node,current_index);
+        balance_node(current_node,current_index,current_node_info);
         return result;
     }
 }
@@ -619,7 +627,9 @@ template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* curre
             *current_index=UNDEFINED_INDEX;
         }
     else {
-        balance_node(&current_node,current_index);
+        node_info current_node_info;
+        current_node_info.height=-1;
+        balance_node(&current_node,current_index,current_node_info);
     }
 }
 
@@ -1062,21 +1072,20 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
 }
 
 
-template<class S,class T> void tst<S,T>::balance_node(tst_node<S,T>** current_node,int* current_index) {
-    int current_balance;
-    current_balance=compute_height_and_balance(*current_node);
-    if(current_balance>1) {
-        current_balance=compute_height_and_balance(array+(*current_node)->right);
-        if(current_balance>0) {
+template<class S,class T> void tst<S,T>::balance_node(tst_node<S,T>** current_node,int* current_index,node_info bal) {
+    if(bal.height==-1) {
+        bal = compute_height_and_balance(*current_node);
+    }
+    if(bal.balance>1) {
+        if(bal.right_balance>0) {
             rr(current_node,current_index);
         }
         else {
             rl(current_node,current_index);
         }
     }
-    else if(current_balance<-1) {
-        current_balance=compute_height_and_balance(array+(*current_node)->left);
-        if(current_balance<0) {
+    else if(bal.balance<-1) {
+        if(bal.left_balance<0) {
             ll(current_node,current_index);
         }
         else {
@@ -1090,9 +1099,7 @@ template<class S,class T> void tst<S,T>::ll(tst_node<S,T>** current_node,int* cu
     tst_node<S,T>* left_node=array+left_index;
     int left_right_index=left_node->right;
     (*current_node)->left=left_right_index;
-    compute_height_and_balance(*current_node);
     left_node->right=*current_index;
-    compute_height_and_balance(left_node);
     *current_index=left_index;
     *current_node=array+left_index;
 }
@@ -1102,7 +1109,6 @@ template<class S,class T> void tst<S,T>::rr(tst_node<S,T>** current_node,int* cu
     tst_node<S,T>* right_node=array+right_index;
     int right_left_index=right_node->left;
     (*current_node)->right=right_left_index;
-    compute_height_and_balance(*current_node);
     right_node->left=*current_index;
     compute_height_and_balance(right_node);
     *current_index=right_index;
@@ -1123,43 +1129,56 @@ template<class S,class T> void tst<S,T>::rl(tst_node<S,T>** current_node,int* cu
     rr(current_node,current_index);
 }
 
-template<class S,class T> int tst<S,T>::compute_height_and_balance(tst_node<S,T>* current_node) {
+template<class S,class T> node_info tst<S,T>::compute_height_and_balance(tst_node<S,T>* current_node) {
     int left = current_node->left;
     int right = current_node->right;
-    int left_height,right_height,result;
     tst_node<S,T>* left_node;
     tst_node<S,T>* right_node;
 
+    node_info result;
+    result.index=UNDEFINED_INDEX;
+
     if(right!=UNDEFINED_INDEX) {
         right_node=array+right;
-        right_height=right_node->height;
+        node_info right_balance = compute_height_and_balance(right_node);
         if(left!=UNDEFINED_INDEX) {
             left_node=array+left;
-            left_height=left_node->height;
-            result=right_height-left_height;
-            if(left_height>right_height) {
-                right_height=left_height;
+            node_info left_balance = compute_height_and_balance(left_node);
+            if(left_balance.height > right_balance.height) {
+                result.height = left_balance.height+1;
             }
-            current_node->height=right_height+1;
-            return result;
+            else {
+                result.height = right_balance.height+1;
+            }
+            result.balance = right_balance.height-left_balance.height;
+            result.right_balance = right_balance.balance;
+            result.left_balance = left_balance.balance;
         }
         else {
-            current_node->height=right_height+1;
-            return right_height;
+            result.height = right_balance.height + 1;
+            result.balance = right_balance.height;
+            result.right_balance = right_balance.balance;
+            result.left_balance = 0;
         }
     }
     else {
         if(left!=UNDEFINED_INDEX) {
             left_node=array+left;
-            left_height=left_node->height;
-            current_node->height=left_height+1;
-            return -left_height;
+            node_info left_balance = compute_height_and_balance(left_node);
+            result.height = left_balance.height + 1;
+            result.balance = -left_balance.height;
+            result.right_balance = 0;
+            result.left_balance = left_balance.balance;
         }
         else {
-            current_node->height=0;
-            return 0;
+            result.height = 0;
+            result.balance = 0;
+            result.right_balance = 0;
+            result.left_balance = 0;
         }
     }
+
+    return result;
 }
 
 template<class S,class T> size_t tst<S,T>::bytes_allocated() {
