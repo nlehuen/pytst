@@ -7,12 +7,11 @@
  * ----------------------------------------------------------------------------- */
 
 
-public class Action {
+public class Action extends _Action {
   private long swigCPtr;
-  protected boolean swigCMemOwn;
 
   protected Action(long cPtr, boolean cMemoryOwn) {
-    swigCMemOwn = cMemoryOwn;
+    super(tstJNI.SWIGActionUpcast(cPtr), cMemoryOwn);
     swigCPtr = cPtr;
   }
 
@@ -34,6 +33,11 @@ public class Action {
       tstJNI.delete_Action(swigCPtr);
     }
     swigCPtr = 0;
+    super.delete();
+  }
+
+  public Action(Object target) {
+    this(tstJNI.new_Action(target), true);
   }
 
   public void perform(String key, int remaining_distance, Object data) {

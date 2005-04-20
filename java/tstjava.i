@@ -16,17 +16,17 @@
  # License along with this library; if not, write to the Free Software
  # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-/* %module(directors="1") tst */
 %module tst
 
 %{
-#include "tst.h"
+#include "javaTST.h"
 %}
 
 %include "tst.h"
 
-%template(JavaTST)     tst<char,jobject>;
-%template(Action)      action<char,jobject>;
-%template(Filter)      filter<char,jobject>;
-%template(Serializer)  serializer<char,jobject>;
+%template(_JavaTST) tst<char,jobject>;
+%template(_Action) action<char,jobject>;
+%template(_Filter) filter<char,jobject>;
+%template(_Serializer) serializer<char,jobject>;
 
+%include "javaTST.h"

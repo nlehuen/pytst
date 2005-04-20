@@ -7,21 +7,16 @@
  * ----------------------------------------------------------------------------- */
 
 
-public class Filter {
+public class Filter extends _Filter {
   private long swigCPtr;
-  protected boolean swigCMemOwn;
 
   protected Filter(long cPtr, boolean cMemoryOwn) {
-    swigCMemOwn = cMemoryOwn;
+    super(tstJNI.SWIGFilterUpcast(cPtr), cMemoryOwn);
     swigCPtr = cPtr;
   }
 
   protected static long getCPtr(Filter obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
-  }
-
-  protected Filter() {
-    this(0, false);
   }
 
   protected void finalize() {
@@ -34,10 +29,15 @@ public class Filter {
       tstJNI.delete_Filter(swigCPtr);
     }
     swigCPtr = 0;
+    super.delete();
   }
 
   public Object perform(String key, int remaining_distance, Object data) {
     return tstJNI.Filter_perform(swigCPtr, key, remaining_distance, data);
+  }
+
+  public Filter() {
+    this(tstJNI.new_Filter(), true);
   }
 
 }

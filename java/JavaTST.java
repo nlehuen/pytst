@@ -7,21 +7,16 @@
  * ----------------------------------------------------------------------------- */
 
 
-public class JavaTST {
+public class JavaTST extends _JavaTST {
   private long swigCPtr;
-  protected boolean swigCMemOwn;
 
   protected JavaTST(long cPtr, boolean cMemoryOwn) {
-    swigCMemOwn = cMemoryOwn;
+    super(tstJNI.SWIGJavaTSTUpcast(cPtr), cMemoryOwn);
     swigCPtr = cPtr;
   }
 
   protected static long getCPtr(JavaTST obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
-  }
-
-  protected JavaTST() {
-    this(0, false);
   }
 
   protected void finalize() {
@@ -34,70 +29,11 @@ public class JavaTST {
       tstJNI.delete_JavaTST(swigCPtr);
     }
     swigCPtr = 0;
+    super.delete();
   }
 
-  public JavaTST(SWIGTYPE_p_FILE file, Serializer reader) {
-    this(tstJNI.new_JavaTST__SWIG_0(SWIGTYPE_p_FILE.getCPtr(file), Serializer.getCPtr(reader)), true);
-  }
-
-  public JavaTST(int initial_size, Object default_value) {
-    this(tstJNI.new_JavaTST__SWIG_1(initial_size, default_value), true);
-  }
-
-  public void pack() {
-    tstJNI.JavaTST_pack(swigCPtr);
-  }
-
-  public Object walk(Filter filter, Action to_perform) {
-    return tstJNI.JavaTST_walk(swigCPtr, Filter.getCPtr(filter), Action.getCPtr(to_perform));
-  }
-
-  public Object almost(String string, int string_length, int maximum_distance, Filter filter, Action to_perform) {
-    return tstJNI.JavaTST_almost(swigCPtr, string, string_length, maximum_distance, Filter.getCPtr(filter), Action.getCPtr(to_perform));
-  }
-
-  public Object common_prefix(String string, Filter filter, Action to_perform) {
-    return tstJNI.JavaTST_common_prefix(swigCPtr, string, Filter.getCPtr(filter), Action.getCPtr(to_perform));
-  }
-
-  public Object scan(String string, Action to_perform) {
-    return tstJNI.JavaTST_scan(swigCPtr, string, Action.getCPtr(to_perform));
-  }
-
-  public Object scan_with_stop_chars(String string, String stop_chars, Action to_perform) {
-    return tstJNI.JavaTST_scan_with_stop_chars(swigCPtr, string, stop_chars, Action.getCPtr(to_perform));
-  }
-
-  public Object get(String string) {
-    return tstJNI.JavaTST_get(swigCPtr, string);
-  }
-
-  public Object get_or_build(String string, Filter factory) {
-    return tstJNI.JavaTST_get_or_build(swigCPtr, string, Filter.getCPtr(factory));
-  }
-
-  public Object put(String string, Object data) {
-    return tstJNI.JavaTST_put(swigCPtr, string, data);
-  }
-
-  public void remove(String string) {
-    tstJNI.JavaTST_remove(swigCPtr, string);
-  }
-
-  public int get_maximum_key_length() {
-    return tstJNI.JavaTST_get_maximum_key_length(swigCPtr);
-  }
-
-  public long bytes_allocated() {
-    return tstJNI.JavaTST_bytes_allocated(swigCPtr);
-  }
-
-  public void write(SWIGTYPE_p_FILE file, Serializer writer) {
-    tstJNI.JavaTST_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), Serializer.getCPtr(writer));
-  }
-
-  public void debug_print_root() {
-    tstJNI.JavaTST_debug_print_root(swigCPtr);
+  public JavaTST() {
+    this(tstJNI.new_JavaTST(), true);
   }
 
 }

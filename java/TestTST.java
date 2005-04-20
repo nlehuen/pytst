@@ -1,8 +1,17 @@
 public class TestTST {
+	static class PrintAction extends Action {
+		public void perform(String key, int remaining_distance, Object data) {
+			System.out.println(key);
+		}
+	}
+
     public static void main(String[] args) throws Exception {
         System.loadLibrary("jtst");
         
-        JavaTST tP=new JavaTST(256,null);
+        Action aP=new Action("toto");
+        aP.perform("Coucou",0,"Coucou");
+
+        JavaTST tP=new JavaTST();
         long startP,endP;
         
         startP=System.currentTimeMillis();
@@ -29,11 +38,14 @@ public class TestTST {
         }
         endP=System.currentTimeMillis();
         System.out.println("Read : "+(1.0*(endP-startP)/1000));
+                
+        tP.scan("35465432132123431.2131324135431321",new Action("toto"));
         
         System.gc();
         System.gc();
         System.gc();
         
+        System.out.println("OK");
         System.in.read();
     }
 }

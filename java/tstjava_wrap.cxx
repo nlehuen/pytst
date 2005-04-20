@@ -92,7 +92,7 @@ static void SWIG_JavaThrowException(JNIEnv *jenv, SWIG_JavaExceptionCodes code, 
 #define SWIG_contract_assert(nullreturn, expr, msg) if (!(expr)) {SWIG_JavaThrowException(jenv, SWIG_JavaIllegalArgumentException, msg); return nullreturn; } else
 
 
-#include "tst.h"
+#include "javaTST.h"
 
 
 #ifdef __cplusplus
@@ -127,7 +127,7 @@ JNIEXPORT jstring JNICALL Java_tstJNI_get_1TST_1VERSION(JNIEnv *jenv, jclass jcl
 }
 
 
-JNIEXPORT jlong JNICALL Java_tstJNI_new_1JavaTST_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2) {
+JNIEXPORT jlong JNICALL Java_tstJNI_new_1_1JavaTST_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2) {
     jlong jresult = 0 ;
     FILE *arg1 = (FILE *) 0 ;
     serializer<char,jobject > *arg2 = (serializer<char,jobject > *) 0 ;
@@ -144,7 +144,7 @@ JNIEXPORT jlong JNICALL Java_tstJNI_new_1JavaTST_1_1SWIG_10(JNIEnv *jenv, jclass
 }
 
 
-JNIEXPORT jlong JNICALL Java_tstJNI_new_1JavaTST_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jint jarg1, jobject jarg2) {
+JNIEXPORT jlong JNICALL Java_tstJNI_new_1_1JavaTST_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jint jarg1, jobject jarg2) {
     jlong jresult = 0 ;
     int arg1 ;
     jobject arg2 ;
@@ -161,7 +161,7 @@ JNIEXPORT jlong JNICALL Java_tstJNI_new_1JavaTST_1_1SWIG_11(JNIEnv *jenv, jclass
 }
 
 
-JNIEXPORT void JNICALL Java_tstJNI_delete_1JavaTST(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+JNIEXPORT void JNICALL Java_tstJNI_delete_1_1JavaTST(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     
     (void)jenv;
@@ -172,7 +172,7 @@ JNIEXPORT void JNICALL Java_tstJNI_delete_1JavaTST(JNIEnv *jenv, jclass jcls, jl
 }
 
 
-JNIEXPORT void JNICALL Java_tstJNI_JavaTST_1pack(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+JNIEXPORT void JNICALL Java_tstJNI__1JavaTST_1pack(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     
     (void)jenv;
@@ -183,7 +183,7 @@ JNIEXPORT void JNICALL Java_tstJNI_JavaTST_1pack(JNIEnv *jenv, jclass jcls, jlon
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1walk(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1JavaTST_1walk(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     filter<char,jobject > *arg2 = (filter<char,jobject > *) 0 ;
@@ -202,7 +202,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1walk(JNIEnv *jenv, jclass jcls, j
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1almost(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg3, jint jarg4, jlong jarg5, jlong jarg6) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1JavaTST_1almost(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg3, jint jarg4, jlong jarg5, jlong jarg6) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -236,7 +236,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1almost(JNIEnv *jenv, jclass jcls,
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1common_1prefix(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3, jlong jarg4) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1JavaTST_1common_1prefix(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3, jlong jarg4) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -266,7 +266,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1common_1prefix(JNIEnv *jenv, jcla
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1scan(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1JavaTST_1scan(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -294,7 +294,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1scan(JNIEnv *jenv, jclass jcls, j
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1scan_1with_1stop_1chars(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jlong jarg4) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1JavaTST_1scan_1with_1stop_1chars(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg3, jlong jarg4) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -333,7 +333,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1scan_1with_1stop_1chars(JNIEnv *j
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1JavaTST_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -359,7 +359,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1get(JNIEnv *jenv, jclass jcls, jl
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1get_1or_1build(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1JavaTST_1get_1or_1build(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -387,7 +387,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1get_1or_1build(JNIEnv *jenv, jcla
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1put(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jobject jarg3) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1JavaTST_1put(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jobject jarg3) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -415,7 +415,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI_JavaTST_1put(JNIEnv *jenv, jclass jcls, jl
 }
 
 
-JNIEXPORT void JNICALL Java_tstJNI_JavaTST_1remove(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
+JNIEXPORT void JNICALL Java_tstJNI__1JavaTST_1remove(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
     
@@ -437,7 +437,7 @@ JNIEXPORT void JNICALL Java_tstJNI_JavaTST_1remove(JNIEnv *jenv, jclass jcls, jl
 }
 
 
-JNIEXPORT jint JNICALL Java_tstJNI_JavaTST_1get_1maximum_1key_1length(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+JNIEXPORT jint JNICALL Java_tstJNI__1JavaTST_1get_1maximum_1key_1length(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     jint jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     int result;
@@ -452,7 +452,7 @@ JNIEXPORT jint JNICALL Java_tstJNI_JavaTST_1get_1maximum_1key_1length(JNIEnv *je
 }
 
 
-JNIEXPORT jlong JNICALL Java_tstJNI_JavaTST_1bytes_1allocated(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+JNIEXPORT jlong JNICALL Java_tstJNI__1JavaTST_1bytes_1allocated(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     jlong jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     size_t result;
@@ -467,7 +467,7 @@ JNIEXPORT jlong JNICALL Java_tstJNI_JavaTST_1bytes_1allocated(JNIEnv *jenv, jcla
 }
 
 
-JNIEXPORT void JNICALL Java_tstJNI_JavaTST_1write(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3) {
+JNIEXPORT void JNICALL Java_tstJNI__1JavaTST_1write(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3) {
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     FILE *arg2 = (FILE *) 0 ;
     serializer<char,jobject > *arg3 = (serializer<char,jobject > *) 0 ;
@@ -482,7 +482,7 @@ JNIEXPORT void JNICALL Java_tstJNI_JavaTST_1write(JNIEnv *jenv, jclass jcls, jlo
 }
 
 
-JNIEXPORT void JNICALL Java_tstJNI_JavaTST_1debug_1print_1root(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+JNIEXPORT void JNICALL Java_tstJNI__1JavaTST_1debug_1print_1root(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     
     (void)jenv;
@@ -493,7 +493,7 @@ JNIEXPORT void JNICALL Java_tstJNI_JavaTST_1debug_1print_1root(JNIEnv *jenv, jcl
 }
 
 
-JNIEXPORT void JNICALL Java_tstJNI_delete_1Action(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+JNIEXPORT void JNICALL Java_tstJNI_delete_1_1Action(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     action<char,jobject > *arg1 = (action<char,jobject > *) 0 ;
     
     (void)jenv;
@@ -504,7 +504,7 @@ JNIEXPORT void JNICALL Java_tstJNI_delete_1Action(JNIEnv *jenv, jclass jcls, jlo
 }
 
 
-JNIEXPORT void JNICALL Java_tstJNI_Action_1perform(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg3, jobject jarg4) {
+JNIEXPORT void JNICALL Java_tstJNI__1Action_1perform(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg3, jobject jarg4) {
     action<char,jobject > *arg1 = (action<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
     int arg3 ;
@@ -530,7 +530,7 @@ JNIEXPORT void JNICALL Java_tstJNI_Action_1perform(JNIEnv *jenv, jclass jcls, jl
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_Action_1result(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1Action_1result(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     jobject jresult = 0 ;
     action<char,jobject > *arg1 = (action<char,jobject > *) 0 ;
     jobject result;
@@ -545,7 +545,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI_Action_1result(JNIEnv *jenv, jclass jcls, 
 }
 
 
-JNIEXPORT void JNICALL Java_tstJNI_delete_1Filter(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+JNIEXPORT void JNICALL Java_tstJNI_delete_1_1Filter(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     filter<char,jobject > *arg1 = (filter<char,jobject > *) 0 ;
     
     (void)jenv;
@@ -556,7 +556,7 @@ JNIEXPORT void JNICALL Java_tstJNI_delete_1Filter(JNIEnv *jenv, jclass jcls, jlo
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_Filter_1perform(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg3, jobject jarg4) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1Filter_1perform(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg3, jobject jarg4) {
     jobject jresult = 0 ;
     filter<char,jobject > *arg1 = (filter<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -586,7 +586,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI_Filter_1perform(JNIEnv *jenv, jclass jcls,
 }
 
 
-JNIEXPORT void JNICALL Java_tstJNI_delete_1Serializer(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+JNIEXPORT void JNICALL Java_tstJNI_delete_1_1Serializer(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     serializer<char,jobject > *arg1 = (serializer<char,jobject > *) 0 ;
     
     (void)jenv;
@@ -597,7 +597,7 @@ JNIEXPORT void JNICALL Java_tstJNI_delete_1Serializer(JNIEnv *jenv, jclass jcls,
 }
 
 
-JNIEXPORT void JNICALL Java_tstJNI_Serializer_1write(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jobject jarg3) {
+JNIEXPORT void JNICALL Java_tstJNI__1Serializer_1write(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jobject jarg3) {
     serializer<char,jobject > *arg1 = (serializer<char,jobject > *) 0 ;
     FILE *arg2 = (FILE *) 0 ;
     jobject arg3 ;
@@ -612,7 +612,7 @@ JNIEXPORT void JNICALL Java_tstJNI_Serializer_1write(JNIEnv *jenv, jclass jcls, 
 }
 
 
-JNIEXPORT jobject JNICALL Java_tstJNI_Serializer_1read(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2) {
+JNIEXPORT jobject JNICALL Java_tstJNI__1Serializer_1read(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2) {
     jobject jresult = 0 ;
     serializer<char,jobject > *arg1 = (serializer<char,jobject > *) 0 ;
     FILE *arg2 = (FILE *) 0 ;
@@ -628,6 +628,239 @@ JNIEXPORT jobject JNICALL Java_tstJNI_Serializer_1read(JNIEnv *jenv, jclass jcls
     return jresult;
 }
 
+
+JNIEXPORT jlong JNICALL Java_tstJNI_new_1JavaTST(JNIEnv *jenv, jclass jcls) {
+    jlong jresult = 0 ;
+    JavaTST *result;
+    
+    (void)jenv;
+    (void)jcls;
+    result = (JavaTST *)new JavaTST();
+    
+    *(JavaTST **)&jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_tstJNI_delete_1JavaTST(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    JavaTST *arg1 = (JavaTST *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(JavaTST **)&jarg1; 
+    delete arg1;
+    
+}
+
+
+JNIEXPORT jlong JNICALL Java_tstJNI_new_1Action(JNIEnv *jenv, jclass jcls, jobject jarg1) {
+    jlong jresult = 0 ;
+    jobject arg1 ;
+    Action *result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = jarg1; 
+    result = (Action *)new Action(arg1);
+    
+    *(Action **)&jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_tstJNI_Action_1perform(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg3, jobject jarg4) {
+    Action *arg1 = (Action *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    jobject arg4 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(Action **)&jarg1; 
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
+            if (!arg2) return ;
+        }
+    }
+    arg3 = (int)jarg3; 
+    arg4 = jarg4; 
+    (arg1)->perform(arg2,arg3,arg4);
+    
+    {
+        if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
+    }
+}
+
+
+JNIEXPORT jobject JNICALL Java_tstJNI_Action_1result(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    jobject jresult = 0 ;
+    Action *arg1 = (Action *) 0 ;
+    jobject result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(Action **)&jarg1; 
+    result = (arg1)->result();
+    
+    jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_tstJNI_delete_1Action(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    Action *arg1 = (Action *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(Action **)&jarg1; 
+    delete arg1;
+    
+}
+
+
+JNIEXPORT jobject JNICALL Java_tstJNI_Filter_1perform(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg3, jobject jarg4) {
+    jobject jresult = 0 ;
+    Filter *arg1 = (Filter *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    jobject arg4 ;
+    jobject result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(Filter **)&jarg1; 
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
+            if (!arg2) return 0;
+        }
+    }
+    arg3 = (int)jarg3; 
+    arg4 = jarg4; 
+    result = (arg1)->perform(arg2,arg3,arg4);
+    
+    jresult = result; 
+    {
+        if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
+    }
+    return jresult;
+}
+
+
+JNIEXPORT jlong JNICALL Java_tstJNI_new_1Filter(JNIEnv *jenv, jclass jcls) {
+    jlong jresult = 0 ;
+    Filter *result;
+    
+    (void)jenv;
+    (void)jcls;
+    result = (Filter *)new Filter();
+    
+    *(Filter **)&jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_tstJNI_delete_1Filter(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    Filter *arg1 = (Filter *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(Filter **)&jarg1; 
+    delete arg1;
+    
+}
+
+
+JNIEXPORT void JNICALL Java_tstJNI_Serializer_1write(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jobject jarg3) {
+    Serializer *arg1 = (Serializer *) 0 ;
+    FILE *arg2 = (FILE *) 0 ;
+    jobject arg3 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(Serializer **)&jarg1; 
+    arg2 = *(FILE **)&jarg2; 
+    arg3 = jarg3; 
+    (arg1)->write(arg2,arg3);
+    
+}
+
+
+JNIEXPORT jobject JNICALL Java_tstJNI_Serializer_1read(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2) {
+    jobject jresult = 0 ;
+    Serializer *arg1 = (Serializer *) 0 ;
+    FILE *arg2 = (FILE *) 0 ;
+    jobject result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(Serializer **)&jarg1; 
+    arg2 = *(FILE **)&jarg2; 
+    result = (arg1)->read(arg2);
+    
+    jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT jlong JNICALL Java_tstJNI_new_1Serializer(JNIEnv *jenv, jclass jcls) {
+    jlong jresult = 0 ;
+    Serializer *result;
+    
+    (void)jenv;
+    (void)jcls;
+    result = (Serializer *)new Serializer();
+    
+    *(Serializer **)&jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_tstJNI_delete_1Serializer(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    Serializer *arg1 = (Serializer *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(Serializer **)&jarg1; 
+    delete arg1;
+    
+}
+
+
+JNIEXPORT jlong JNICALL Java_tstJNI_SWIGJavaTSTUpcast(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    jlong baseptr = 0;
+    (void)jenv;
+    (void)jcls;
+    *(tst<char,jobject > **)&baseptr = *(JavaTST **)&jarg1;
+    return baseptr;
+}
+
+JNIEXPORT jlong JNICALL Java_tstJNI_SWIGActionUpcast(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    jlong baseptr = 0;
+    (void)jenv;
+    (void)jcls;
+    *(action<char,jobject > **)&baseptr = *(Action **)&jarg1;
+    return baseptr;
+}
+
+JNIEXPORT jlong JNICALL Java_tstJNI_SWIGFilterUpcast(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    jlong baseptr = 0;
+    (void)jenv;
+    (void)jcls;
+    *(filter<char,jobject > **)&baseptr = *(Filter **)&jarg1;
+    return baseptr;
+}
+
+JNIEXPORT jlong JNICALL Java_tstJNI_SWIGSerializerUpcast(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    jlong baseptr = 0;
+    (void)jenv;
+    (void)jcls;
+    *(serializer<char,jobject > **)&baseptr = *(Serializer **)&jarg1;
+    return baseptr;
+}
 
 #ifdef __cplusplus
 }
