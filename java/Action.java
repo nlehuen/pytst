@@ -36,8 +36,8 @@ public class Action extends _Action {
     super.delete();
   }
 
-  public Action(Object target) {
-    this(tstJNI.new_Action(target), true);
+  public Action(Object target, String perform, String result) {
+    this(tstJNI.new_Action(target, perform, result), true);
   }
 
   public void perform(String key, int remaining_distance, Object data) {

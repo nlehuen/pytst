@@ -351,7 +351,9 @@ JNIEXPORT jobject JNICALL Java_tstJNI__1JavaTST_1get(JNIEnv *jenv, jclass jcls, 
     }
     result = (arg1)->get(arg2);
     
-    jresult = result; 
+        printf("--> %d\n",result);
+    
+jresult = result; 
     {
         if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
     }
@@ -629,13 +631,19 @@ JNIEXPORT jobject JNICALL Java_tstJNI__1Serializer_1read(JNIEnv *jenv, jclass jc
 }
 
 
-JNIEXPORT jlong JNICALL Java_tstJNI_new_1JavaTST(JNIEnv *jenv, jclass jcls) {
+JNIEXPORT jlong JNICALL Java_tstJNI_new_1JavaTST(JNIEnv *jenv, jclass jcls, jobject jarg1) {
     jlong jresult = 0 ;
+    jobject arg1 ;
+    JNIEnv *arg2 = (JNIEnv *) 0 ;
     JavaTST *result;
     
     (void)jenv;
     (void)jcls;
-    result = (JavaTST *)new JavaTST();
+    {
+        arg1 = (jobject)jarg1;
+        arg2 = jenv;
+    }
+    result = (JavaTST *)new JavaTST(arg1,arg2);
     
     *(JavaTST **)&jresult = result; 
     return jresult;
@@ -653,18 +661,53 @@ JNIEXPORT void JNICALL Java_tstJNI_delete_1JavaTST(JNIEnv *jenv, jclass jcls, jl
 }
 
 
-JNIEXPORT jlong JNICALL Java_tstJNI_new_1Action(JNIEnv *jenv, jclass jcls, jobject jarg1) {
+JNIEXPORT jlong JNICALL Java_tstJNI_new_1Action(JNIEnv *jenv, jclass jcls, jobject jarg1, jstring jarg2, jstring jarg3) {
     jlong jresult = 0 ;
     jobject arg1 ;
+    char *arg2 = (char *) 0 ;
+    char *arg3 = (char *) 0 ;
+    JNIEnv *arg4 = (JNIEnv *) 0 ;
     Action *result;
     
     (void)jenv;
     (void)jcls;
     arg1 = jarg1; 
-    result = (Action *)new Action(arg1);
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
+            if (!arg2) return 0;
+        }
+    }
+    {
+        arg3 = 0;
+        if (jarg3) {
+            arg3 = (char *)jenv->GetStringUTFChars(jarg3, 0);
+            if (!arg3) return 0;
+        }
+        arg4 = jenv;
+    }
+    result = (Action *)new Action(arg1,arg2,arg3,arg4);
     
     *(Action **)&jresult = result; 
+    {
+        if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
+    }
+    {
+        if (arg3) jenv->ReleaseStringUTFChars(jarg3, arg3); 
+    }
     return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_tstJNI_delete_1Action(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    Action *arg1 = (Action *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(Action **)&jarg1; 
+    delete arg1;
+    
 }
 
 
@@ -706,17 +749,6 @@ JNIEXPORT jobject JNICALL Java_tstJNI_Action_1result(JNIEnv *jenv, jclass jcls, 
     
     jresult = result; 
     return jresult;
-}
-
-
-JNIEXPORT void JNICALL Java_tstJNI_delete_1Action(JNIEnv *jenv, jclass jcls, jlong jarg1) {
-    Action *arg1 = (Action *) 0 ;
-    
-    (void)jenv;
-    (void)jcls;
-    arg1 = *(Action **)&jarg1; 
-    delete arg1;
-    
 }
 
 

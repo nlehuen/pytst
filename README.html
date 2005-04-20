@@ -89,14 +89,17 @@ Well, for now, the test are really crappy. I only have one script using
 unittest, the other ones don't say anything&nbsp; about the test
 passing or failing. So for now, forget about running the test and go
 straight to the...<br>
-<h2>Ternary Search Tree crash course</h2>
+<h2>Ternary Search Tree crash
+course</h2>
 OK, so first, the basics :<br>
-<pre>&gt;&gt;&gt; import tst<br>&gt;&gt;&gt; t = tst.TST()<br>&gt;&gt;&gt; t['foo']='bar'<br>&gt;&gt;&gt; print t['foo']<br>bar<br>&gt;&gt;&gt; print t['fo']<br>None<br>&gt;&gt;&gt; t['foo']='baz'<br>&gt;&gt;&gt; print t['foo']<br>baz<br>&gt;&gt;&gt; print t[1]<br>Traceback (most recent call last):<br>  File "&lt;stdin&gt;", line 1, in ?<br>  File "tst.py", line 354, in __getitem__<br>    def __getitem__(*args): return _tst.TST___getitem__(*args)<br>TypeError: argument number 2: a 'char *' is expected, 'int(1)' is received<br></pre>
+<pre>&gt;&gt;&gt; import tst<br>&gt;&gt;&gt; t = tst.TST()<br>&gt;&gt;&gt; t['foo']='bar'<br>&gt;&gt;&gt; print t['foo']<br>bar<br>&gt;&gt;&gt; print t['fo']<br>None<br>&gt;&gt;&gt; t['foo']='baz'<br>&gt;&gt;&gt; print t['foo']<br>baz<br>&gt;&gt;&gt; print t[1]<br>Traceback (most recent call last):<br> File "&lt;stdin&gt;", line 1, in ?<br> File "tst.py", line 354, in __getitem__<br> def __getitem__(*args): return _tst.TST___getitem__(*args)<br>TypeError: argument number 2: a 'char *' is expected, 'int(1)' is received<br></pre>
 A TST instance behaves a bit like a Python <span
- style="font-family: monospace;">dict</span>, but the keys can only be
+ style="font-family: monospace;">dict</span>,
+but the keys can only be
 strings, more precisely <span style="font-family: monospace;">str</span>
 instances. Sorry, Unicode is not supported now, mostly because I
-haven't found a way yet to have SWIG handle Unicode. If&nbsp; you want
+haven't found a way yet to have SWIG handle Unicode. If&nbsp; you
+want
 to use Unicode strings as keys, you have to consistently encode them
 before storing them, preferably in UTF8 since it has the nice property
 of not breaking the measurement of Levenshtein distances :<br>
@@ -107,13 +110,13 @@ dirty, but the nice thing about the process being killed is that it
 saves you from the mess that would result of mixing byte strings and
 Unicode strings in the same TST.<br>
 <br>
-<span style="font-style: italic;"></span><span
- style="font-style: italic;"></span>So, what have we learned so far ?
+So, what have we learned so far ?
 pytst is a kind of dictionary, which handles string keys only, and
 crash in a not so nice way when given Unicode strings. However, if you
 read the introduction carefuly, you know that there is more to ternary
 search trees than this.<br>
-<h2>Using a TST to tokenize a string<br>
+<h2>Using a TST to tokenize a
+string<br>
 </h2>
 The first usage you can make of a ternary search tree is to use it to
 tokenize a string. Why would you use a TST when you could use one of
@@ -141,9 +144,11 @@ Now let's see a little bit of code. You initialize the TST with all the
 tokens you are looking for, then launch the scan :<br>
 <pre>&gt;&gt;&gt; import tst<br>&gt;&gt;&gt; t = tst.TST()<br>&gt;&gt;&gt; t['1234']='token 1'<br>&gt;&gt;&gt; t['123456']='token 2'<br>&gt;&gt;&gt; t['45678']='token 3'<br>&gt;&gt;&gt; t['5678910']='token 4'<br>&gt;&gt;&gt; result = t.scan('1234561234567891012345',tst.TupleListAction())<br>&gt;&gt;&gt; print result<br>[('123456', 6, 'token 2'), ('123456', 6, 'token 2'), ('78910', -5, None), ('1234', 4, 'token 1'), ('5', -1, None)]</pre>
 The tokenizing algorithm is greedy : it will try to produce the
-longest&nbsp; tokens available, consuming the characters as they come.
+longest&nbsp; tokens available, consuming the characters as they
+come.
 That's why the token 4 was not produced in the above example : the
-sequence <span style="font-family: monospace;">'123456'</span> was
+sequence <span style="font-family: monospace;">'123456'</span>
+was
 already consumed. This may be a big limitation for some usages ; it
 means that the patterns you are looking for can only be recognized from
 their prefix, not from their suffix. ( Maybe that's not how ribosoms
@@ -165,9 +170,10 @@ is the object associated to the key in the TST. If the first item is a
 substring from the scanned string, the second item is the substring
 length with a negative sign, and the third item is None. Typically, the
 result object can be used like this :<br>
-<pre><br>&gt;&gt;&gt; import sys<br>&gt;&gt;&gt; for matched_string, matched_length, matched_object in result:<br>...     if matched_length&gt;0:<br>...         sys.stdout.write(matched_object)<br>...     else:<br>...         sys.stdout.write(print matched_string)<br>... else:<br>...     print<br>token 2token 278910token 15<br><br></pre>
+<pre><br>&gt;&gt;&gt; import sys<br>&gt;&gt;&gt; for matched_string, matched_length, matched_object in result:<br>... if matched_length&gt;0:<br>... sys.stdout.write(matched_object)<br>... else:<br>... sys.stdout.write(print matched_string)<br>... else:<br>... print<br>token 2token 278910token 15<br><br></pre>
 Here you are, you have built a transcriber that could handle millions
-of transcribing rules very efficiently.&nbsp; Well, that's not totally
+of transcribing rules very efficiently.&nbsp; Well, that's not
+totally
 true,
 since you first have to parse the string to obtain a list of tokens,
 then iterate on the list of tokens to write something. Why not produce
@@ -176,29 +182,30 @@ module has other action callbacks.<br>
 <h2>The <span style="font-family: monospace;">CallableAction</span>
 callback class</h2>
 <span style="font-family: monospace;"></span>
-<pre>&gt;&gt;&gt; def mycallback(key,length,obj):<br>...&nbsp;&nbsp;&nbsp;&nbsp; if length&gt;0:<br>...&nbsp;&nbsp;&nbsp;&nbsp;     sys.stdout.write(obj)<br>...&nbsp;&nbsp;&nbsp;&nbsp; else:<br>...&nbsp;&nbsp;&nbsp;&nbsp;     sys.stdout.write(key)<br>...<br>&gt;&gt;&gt; def myresult():<br>...&nbsp;&nbsp;&nbsp;&nbsp; print<br>...<br>&gt;&gt;&gt; t.scan('1234561234567891012345',tst.CallableAction(mycallback,myresult))<br>token 2token 278910token 15</pre>
+<pre>&gt;&gt;&gt; def mycallback(key,length,obj):<br>...&nbsp;&nbsp;&nbsp;&nbsp; if length&gt;0:<br>...&nbsp;&nbsp;&nbsp;&nbsp; sys.stdout.write(obj)<br>...&nbsp;&nbsp;&nbsp;&nbsp; else:<br>...&nbsp;&nbsp;&nbsp;&nbsp; sys.stdout.write(key)<br>...<br>&gt;&gt;&gt; def myresult():<br>...&nbsp;&nbsp;&nbsp;&nbsp; print<br>...<br>&gt;&gt;&gt; t.scan('1234561234567891012345',tst.CallableAction(mycallback,myresult))<br>token 2token 278910token 15</pre>
 The <span style="font-family: monospace;">CallableAction</span>
 callback class allows you to pass two callables : the first one is
 called for each match or non-match, with exactly the same arguments as
 the one that were found in the tuples built by <span
- style="font-family: monospace;">TupleListAction</span>. The second one
+ style="font-family: monospace;">TupleListAction</span>.
+The second one
 is called at the end of the scan, without any arguments. Its return
 value is returned by the <span style="font-family: monospace;">scan</span>
 method, which allows you to write shortcuts like :<br>
-<pre>&gt;&gt;&gt; class Counter(object):<br>...    def __init__(self):<br>...        self.counter = 0 <br>...    def hit(self,key,length,obj):<br>...    &nbsp;&nbsp;&nbsp; if length&gt;0:<br>...&nbsp;&nbsp;&nbsp;&nbsp;        self.counter += 1<br>...    def result(self):<br>...        return 'I found %i hits'%self.counter<br>...<br>&gt;&gt;&gt; c = Counter()<br>&gt;&gt;&gt; print t.scan('1234561234567891012345',tst.CallableAction(c.hit,c.result))<br>I found 3 hits<br></pre>
+<pre>&gt;&gt;&gt; class Counter(object):<br>... def __init__(self):<br>... self.counter = 0 <br>... def hit(self,key,length,obj):<br>... &nbsp;&nbsp;&nbsp; if length&gt;0:<br>...&nbsp;&nbsp;&nbsp;&nbsp; self.counter += 1<br>... def result(self):<br>... return 'I found %i hits'%self.counter<br>...<br>&gt;&gt;&gt; c = Counter()<br>&gt;&gt;&gt; print t.scan('1234561234567891012345',tst.CallableAction(c.hit,c.result))<br>I found 3 hits<br></pre>
 You can even subclass <span style="font-family: monospace;">tcc.CallableAction</span>
 for more compacity. For example, you could reimplement <span
- style="font-family: monospace;">TupleListAction</span> like this :<br>
-<pre>&gt;&gt;&gt; class MyTupleListAction(tst.CallableAction):<br>...     def __init__(self):<br>...         tst.CallableAction.__init__(self,self.callback,self.result)<br>...         self.list = []<br>...     def callback(self,key,length,obj):<br>...         self.list.append((key,length,obj))<br>...     def result(self):<br>...         return self.list<br>...<br>&gt;&gt;&gt; print t.scan('1234561234567891012345',MyTupleListAction())<br>[('123456', 6, 'token 2'), ('123456', 6, 'token 2'), ('78910', -5, None), ('1234', 4, 'token 1'), ('5', -1, None)]<br></pre>
+ style="font-family: monospace;">TupleListAction</span>
+like this :<br>
+<pre>&gt;&gt;&gt; class MyTupleListAction(tst.CallableAction):<br>... def __init__(self):<br>... tst.CallableAction.__init__(self,self.callback,self.result)<br>... self.list = []<br>... def callback(self,key,length,obj):<br>... self.list.append((key,length,obj))<br>... def result(self):<br>... return self.list<br>...<br>&gt;&gt;&gt; print t.scan('1234561234567891012345',MyTupleListAction())<br>[('123456', 6, 'token 2'), ('123456', 6, 'token 2'), ('78910', -5, None), ('1234', 4, 'token 1'), ('5', -1, None)]<br></pre>
 Of course this version is less efficient than the original <span
- style="font-family: monospace;">tst.TupleListAction</span> which saves
+ style="font-family: monospace;">tst.TupleListAction</span>
+which saves
 one or two layer of wrappers by going directly from the TST C++ API to
 the Python C API.<br>
-<h2>The <span style="font-family: monospace;">DictAction</span> and <span
- style="font-family: monospace;">ListAction</span> callback classes</h2>
+<h2>The <span style="font-family: monospace;">DictAction</span>
+and <span style="font-family: monospace;">ListAction</span>
+callback classes</h2>
 TBD...<br>
-<br>
-<br>
-<br>
 </body>
 </html>

@@ -35,12 +35,12 @@ class tstJNI {
   public final static native void delete__Serializer(long jarg1);
   public final static native void _Serializer_write(long jarg1, long jarg2, Object jarg3);
   public final static native Object _Serializer_read(long jarg1, long jarg2);
-  public final static native long new_JavaTST();
+  public final static native long new_JavaTST(Object jarg1);
   public final static native void delete_JavaTST(long jarg1);
-  public final static native long new_Action(Object jarg1);
+  public final static native long new_Action(Object jarg1, String jarg2, String jarg3);
+  public final static native void delete_Action(long jarg1);
   public final static native void Action_perform(long jarg1, String jarg2, int jarg3, Object jarg4);
   public final static native Object Action_result(long jarg1);
-  public final static native void delete_Action(long jarg1);
   public final static native Object Filter_perform(long jarg1, String jarg2, int jarg3, Object jarg4);
   public final static native long new_Filter();
   public final static native void delete_Filter(long jarg1);

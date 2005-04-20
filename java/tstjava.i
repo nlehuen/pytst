@@ -24,6 +24,24 @@
 
 %include "tst.h"
 
+%typemap(in) (char* result,JNIEnv* jenv) {
+    $1 = 0;
+    if ($input) {
+        $1 = (char *)jenv->GetStringUTFChars($input, 0);
+        if (!$1) return $null;
+    }
+	$2 = jenv;
+}
+
+%typemap(in) (jobject data,JNIEnv* jenv2) {
+    $1 = (jobject)$input;
+	$2 = jenv;
+}
+
+%typemap(freearg) (char* result,JNIEnv* jenv) {
+	if ($1) jenv->ReleaseStringUTFChars($input, $1); 
+}
+
 %template(_JavaTST) tst<char,jobject>;
 %template(_Action) action<char,jobject>;
 %template(_Filter) filter<char,jobject>;

@@ -19,6 +19,10 @@ public class JavaTST extends _JavaTST {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
+  protected JavaTST() {
+    this(0, false);
+  }
+
   protected void finalize() {
     delete();
   }
@@ -32,8 +36,8 @@ public class JavaTST extends _JavaTST {
     super.delete();
   }
 
-  public JavaTST() {
-    this(tstJNI.new_JavaTST(), true);
+  public JavaTST(Object data) {
+    this(tstJNI.new_JavaTST(data), true);
   }
 
 }
