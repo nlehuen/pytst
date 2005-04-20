@@ -111,7 +111,16 @@ int main(int argc,char** argv) {
     double elapsed;
 
     start = clock();
-    for(int i=0;i<1000000;i++) {
+    for(int i=0;i<4000000;i++) {
+        char line[256];
+        sprintf(line,"%d",i);
+    }
+    end = clock();
+    elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Build : %f\n",elapsed);
+
+    start = clock();
+    for(int i=0;i<4000000;i++) {
         char line[256];
         sprintf(line,"%d",i);
         linetst->put(line,line);
@@ -124,7 +133,7 @@ int main(int argc,char** argv) {
     linetst->debug_print_root();
 
     start = clock();
-    for(int i=0;i<1000000;i++) {
+    for(int i=0;i<4000000;i++) {
         char line[256];
         sprintf(line,"%d",i);
         linetst->get(line);
@@ -132,6 +141,10 @@ int main(int argc,char** argv) {
     end = clock();
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Read : %f\n",elapsed);
+
+    char line[256];    
+    printf("OK...");
+    scanf("%s\n",line);
 
     return 0;
 }
