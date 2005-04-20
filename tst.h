@@ -39,16 +39,10 @@
 
 #define UNDEFINED_INDEX -1
 
-#define TST_VERSION "0.51"
+#define TST_VERSION "0.6"
 
-class node_info {
-public:
-    int index;
-    int height;
-    int balance;
-    int right_balance;
-    int left_balance;
-};
+// Pour ajouter/supprimer les fonctions de scanning.
+#define SCANNER
 
 template<class S,class T> class tst_node {
 public:
@@ -57,9 +51,22 @@ public:
     int next;
     int right;
     int left;
+#ifdef SCANNER
     int position;
     int backtrack;
     int backtrack_match_index;
+#endif
+};
+
+template<class S,class T> class node_info {
+public:
+    int index;
+    tst_node<S,T>* node;
+
+    int height;
+    int balance;
+    int right_balance;
+    int left_balance;
 };
 
 template<class S,class T> class action {
@@ -94,8 +101,11 @@ public:
     T walk(filter<S,T>* filter,action<S,T>* to_perform);
     T almost(S* string,int string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform);
     T common_prefix(S* string,filter<S,T>* filter,action<S,T>* to_perform);
+
+#ifdef SCANNER
     T scan(S* string,action<S,T>* to_perform);
     T scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform);
+#endif
     T get(S* string);
     virtual T get_or_build(S* string,filter<S,T>* factory);
     virtual T put(S* string,T data);
@@ -116,20 +126,22 @@ protected:
     void walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform);
     void almost_recurse(tst_node<S,T>* current_node,S* current_key, int current_key_length, S* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,int current_key_limit);
 
-    virtual int create_node(tst_node<S,T>** current_node,int current_index);
+    virtual void create_node(node_info<S,T>* current_node_info);
 
-    virtual int build_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length);
+    virtual int build_node(node_info<S,T>* current_node,S* current_char,int current_key_length);
     virtual void remove_node(int* current_index,S* current_char,int current_key_length);
     tst_node<S,T>* find_node(int* current_index,int* best_node, S* current_char);
 
+#ifdef SCANNER
     void compute_backtrack(tst_node<S,T> *current_node,S *start,S *match,S *current_pos);
+#endif
 
-    void balance_node(tst_node<S,T>** current_node,int* current_index,node_info bal);
-    void ll(tst_node<S,T>** current_node,int* current_index);
-    void rr(tst_node<S,T>** current_node,int* current_index);
-    void lr(tst_node<S,T>** current_node,int* current_index);
-    void rl(tst_node<S,T>** current_node,int* current_index);
-    node_info compute_height_and_balance(tst_node<S,T>* current_node);
+    void balance_node(node_info<S,T>* bal);
+    void ll(node_info<S,T>* bal);
+    void rr(node_info<S,T>* bal);
+    void lr(node_info<S,T>* bal);
+    void rl(node_info<S,T>* bal);
+    void compute_height_and_balance(node_info<S,T>* current_node_info);
     virtual T store_data(tst_node<S,T>* node,T data,int want_old_value);
     virtual void clear_nodes();
 };
@@ -139,15 +151,15 @@ template<class S,class T> void tst<S,T>::debug_print_root() {
     printf("Size: %i (%i bytes), next: %i (%i bytes)\n",size,size*sizeof(tst_node<S,T>),next,next*sizeof(tst_node<S,T>));
     if(root!=UNDEFINED_INDEX) {
         tst_node<S,T>* node=array+root;
-        printf("root index: %i, next: %i, c: %c, height: %i, position: %i\n",root,node->next,node->c,node->height,node->position);
+        printf("root index: %i, next: %i, c: %c\n",root,node->next,node->c);
         next_index = node->next;
         if(next_index!=UNDEFINED_INDEX) {
             node=array+next_index;
-            printf("root->next index: %i, next: %i, c: %c, height: %i, position: %i\n",next_index,node->next,node->c,node->height,node->position);
+            printf("root->next index: %i, next: %i, c: %c\n",next_index,node->next,node->c);
             next_index = node->next;
             if(next_index!=UNDEFINED_INDEX) {
                 node=array+next_index;
-                printf("root->next->next index: %i, next: %i, c: %c, height: %i, position: %i\n",next_index,node->next,node->c,node->height,node->position);
+                printf("root->next->next index: %i, next: %i, c: %c\n",next_index,node->next,node->c);
             }
         }
     }
@@ -165,7 +177,9 @@ template<class S,class T> tst<S,T>::tst(int size,T default_value) {
     array=(tst_node<S,T>*)tst_malloc(size*sizeof(tst_node<S,T>));
     next=0;
     empty=UNDEFINED_INDEX;
-    root=create_node(&array,0);
+    node_info<S,T> root_info;
+    create_node(&root_info);
+    root = root_info.index;
     maximum_key_length=0;
 }
 
@@ -265,23 +279,31 @@ template<class S,class T> T tst<S,T>::get(S* string) {
 }
 
 template<class S,class T> T tst<S,T>::put(S* string,T data) {
-    tst_node<S,T>* current_node=array+root;
-    int node_index=build_node(&current_node,&root,string,0);
-    current_node=array+node_index;
-    return store_data(current_node,data,1);
+    node_info<S,T> root_info;
+    root_info.index=root;
+    root_info.node=array+root;
+    int node_index=build_node(&root_info,string,0);
+    root = root_info.index;
+    return store_data(array+node_index,data,1);
 }
 
 template<class S,class T> void tst<S,T>::remove(S* string) {
     remove_node(&root,string,0);
     if(root==UNDEFINED_INDEX) {
-        root=create_node(&array,0);
+        node_info<S,T> root_info;
+        create_node(&root_info);
+        root = root_info.index;
     }
 }
 
 template<class S,class T> T tst<S,T>::get_or_build(S* string,filter<S,T>* factory) {
-    tst_node<S,T>* current_node=array+root;
-    int node_index=build_node(&current_node,&root,string,0);
-    current_node=array+node_index;
+    node_info<S,T> root_info;
+    root_info.index=root;
+    root_info.node=array+root;
+    int node_index=build_node(&root_info,string,0);
+    root = root_info.index;
+
+    tst_node<S,T>* current_node=array+node_index;
     T data=factory->perform(string,0,current_node->data);
     if(data!=current_node->data) {
         store_data(current_node,data,0);
@@ -472,7 +494,7 @@ template<class S,class T> T tst<S,T>::common_prefix(S* string,filter<S,T>* filte
     return to_perform->result();
 }
 
-template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node,int current_index) {
+template<class S,class T> void tst<S,T>::create_node(node_info<S,T>* current_node_info) {
     int id;
     tst_node<S,T>* new_node;
 
@@ -480,7 +502,6 @@ template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node
         // on utilise le nombre d'or pour l'accroissement du tableau
         size=(int)(1.618*size);
         array=(tst_node<S,T>*)tst_realloc(array,size*sizeof(tst_node<S,T>));
-        *current_node = array+current_index;
     }
 
     if(empty!=UNDEFINED_INDEX) {
@@ -499,78 +520,141 @@ template<class S,class T> int tst<S,T>::create_node(tst_node<S,T>** current_node
     new_node->right=UNDEFINED_INDEX;
     new_node->left=UNDEFINED_INDEX;
     new_node->data=(T)NULL;
+#ifdef SCANNER
     new_node->position=-1;
     new_node->backtrack=UNDEFINED_INDEX;
     new_node->backtrack_match_index=UNDEFINED_INDEX;
+#endif
     store_data(new_node,default_value,0);
 
-    return id;
+    current_node_info->index = id;
+    current_node_info->node = new_node;
+    current_node_info->height = 0;
+    current_node_info->balance = 0;
+    current_node_info->left_balance = 0;
+    current_node_info->right_balance =0;
 }
 
-template<class S,class T> int tst<S,T>::build_node(tst_node<S,T>** current_node,int* current_index,S* current_char,int current_key_length) {
-    int diff,result,next_index;
+template<class S,class T> int tst<S,T>::build_node(node_info<S,T>* current_node_info,S* current_char,int current_key_length) {
+    int diff,result;
 
-    if((*current_node)->c==0) {
-        (*current_node)->c=(*current_char);
-        (*current_node)->position=current_key_length;
+    if(current_node_info->node->c==0) {
+        current_node_info->node->c=(*current_char);
+#ifdef SCANNER
+        current_node_info->node->position=current_key_length;
+#endif
         diff=0;
     }
     else {
-        diff=(*current_char)-((*current_node)->c);
+        diff=(*current_char)-(current_node_info->node->c);
     }
 
-    node_info current_node_info;
-    current_node_info.height=-1;
+    current_node_info->height=-1;
 
     if(diff==0) {
         current_char++;
         current_key_length++;
+
+        compute_height_and_balance(current_node_info);
+
         if(*current_char) {
             if(current_key_length>maximum_key_length) {
                 maximum_key_length=current_key_length;
             }
-            next_index = (*current_node)->next;
-            if(next_index==UNDEFINED_INDEX) {
-                /* attention cela doit FORCEMENT se faire en deux ligne
+            
+            node_info<S,T> next_node_info;
+            next_node_info.index = current_node_info->node->next;
+            if(next_node_info.index==UNDEFINED_INDEX) {
+                /* attention cela doit FORCEMENT se faire en deux lignes
                 car current_node peut être modifié par tst_create_node. */
-                next_index=create_node(current_node,*current_index);
-                (*current_node)->next=next_index;
+                create_node(&next_node_info);
+                current_node_info->node = array + current_node_info->index;
+                current_node_info->node->next=next_node_info.index;
             }
-            *current_node = array + next_index;
-            result=build_node(current_node,&next_index,current_char,current_key_length);
-            *current_node = array + *current_index;
-            (*current_node)->next=next_index;
-            balance_node(current_node,current_index,current_node_info); // XXX est-ce vraiment utile ?
+            next_node_info.node = array + next_node_info.index;
+            result=build_node(&next_node_info,current_char,current_key_length);
+            current_node_info->node = array + current_node_info->index;
+            current_node_info->node->next = next_node_info.index;
             return result;
         }
         else {
-            return *current_index;
+            return current_node_info->index;
         }
     }
     else if(diff>0) {
-        next_index = (*current_node)->right;
-        if(next_index==UNDEFINED_INDEX) {
-            next_index=create_node(current_node,*current_index);
-            (*current_node)->right=next_index;
+        node_info<S,T> next_node_info;
+        next_node_info.index = current_node_info->node->right;
+        if(next_node_info.index==UNDEFINED_INDEX) {
+            create_node(&next_node_info);
+            current_node_info->node = array + current_node_info->index;
+            current_node_info->node->right=next_node_info.index;
         }
-        *current_node = array + next_index;
-        result=build_node(current_node,&next_index,current_char,current_key_length);
-        *current_node = array+*current_index;
-        (*current_node)->right=next_index;
-        balance_node(current_node,current_index,current_node_info);
+        next_node_info.node = array + next_node_info.index;
+        result=build_node(&next_node_info,current_char,current_key_length);
+        current_node_info->node = array + current_node_info->index;
+        current_node_info->node->right = next_node_info.index;
+
+        if(current_node_info->node->left==UNDEFINED_INDEX) {
+            current_node_info->height = next_node_info.height + 1;
+            current_node_info->balance = next_node_info.height;
+            current_node_info->left_balance = 0;
+            current_node_info->right_balance = next_node_info.balance;
+        }
+        else {
+            node_info<S,T> other_node_info;
+            other_node_info.index = current_node_info->node->left;    
+            other_node_info.node = array + other_node_info.index;
+            compute_height_and_balance(&other_node_info);
+            if(other_node_info.height>next_node_info.height) {
+                current_node_info->height=other_node_info.height+1;
+            }
+            else {
+                current_node_info->height=next_node_info.height+1;
+            }
+            current_node_info->balance = next_node_info.height-other_node_info.height;
+            current_node_info->left_balance = other_node_info.balance;
+            current_node_info->right_balance = next_node_info.balance;
+        }
+
+        balance_node(current_node_info);
         return result;
     }
     else {
-        next_index = (*current_node)->left;
-        if(next_index==UNDEFINED_INDEX) {
-            next_index=create_node(current_node,*current_index);
-            (*current_node)->left=next_index;
+        node_info<S,T> next_node_info;
+        next_node_info.index = current_node_info->node->left;
+        if(next_node_info.index==UNDEFINED_INDEX) {
+            create_node(&next_node_info);
+            current_node_info->node = array + current_node_info->index;
+            current_node_info->node->left=next_node_info.index;
         }
-        *current_node = array + next_index;
-        result=build_node(current_node,&next_index,current_char,current_key_length);
-        *current_node = array+*current_index;
-        (*current_node)->left=next_index;
-        balance_node(current_node,current_index,current_node_info);
+        next_node_info.node = array + next_node_info.index;
+        result=build_node(&next_node_info,current_char,current_key_length);
+        current_node_info->node = array + current_node_info->index;
+        current_node_info->node->left = next_node_info.index;
+
+        if(current_node_info->node->right==UNDEFINED_INDEX) {
+            current_node_info->height = next_node_info.height + 1;
+            current_node_info->balance = -next_node_info.height;
+            current_node_info->right_balance = 0;
+            current_node_info->left_balance = next_node_info.balance;
+        }
+        else {
+            node_info<S,T> other_node_info;
+            other_node_info.index = current_node_info->node->right;    
+            other_node_info.node = array + other_node_info.index;
+            compute_height_and_balance(&other_node_info);
+            if(other_node_info.height>next_node_info.height) {
+                current_node_info->height=other_node_info.height+1;
+            }
+            else {
+                current_node_info->height=next_node_info.height+1;
+            }
+            current_node_info->balance = other_node_info.height-next_node_info.height;
+            current_node_info->right_balance = other_node_info.balance;
+            current_node_info->left_balance = next_node_info.balance;
+        }
+
+        balance_node(current_node_info);
         return result;
     }
 }
@@ -627,9 +711,12 @@ template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* curre
             *current_index=UNDEFINED_INDEX;
         }
     else {
-        node_info current_node_info;
+        node_info<S,T> current_node_info;
+        current_node_info.index=*current_index;
+        current_node_info.node=current_node;
         current_node_info.height=-1;
-        balance_node(&current_node,current_index,current_node_info);
+        balance_node(&current_node_info);
+        *current_index = current_node_info.index;
     }
 }
 
@@ -673,6 +760,7 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
     return NULL;
 }
 
+#ifdef SCANNER
 template<class S,class T> void tst<S,T>::compute_backtrack(tst_node<S,T> *current_node,S *start, S *match,S *current_pos) {
     if(current_node->backtrack==UNDEFINED_INDEX) {
         S temp_char=*match;
@@ -1070,115 +1158,118 @@ template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_cha
 
     return to_perform->result();
 }
+#endif
 
-
-template<class S,class T> void tst<S,T>::balance_node(tst_node<S,T>** current_node,int* current_index,node_info bal) {
-    if(bal.height==-1) {
-        bal = compute_height_and_balance(*current_node);
+template<class S,class T> void tst<S,T>::balance_node(node_info<S,T>* bal) {
+    if(bal->height==-1) {
+        compute_height_and_balance(bal);
     }
-    if(bal.balance>1) {
-        if(bal.right_balance>0) {
-            rr(current_node,current_index);
+    if(bal->balance>1) {
+        if(bal->right_balance>0) {
+            rr(bal);
         }
         else {
-            rl(current_node,current_index);
+            rl(bal);
         }
     }
-    else if(bal.balance<-1) {
-        if(bal.left_balance<0) {
-            ll(current_node,current_index);
+    else if(bal->balance<-1) {
+        if(bal->left_balance<0) {
+            ll(bal);
         }
         else {
-            lr(current_node,current_index);
+            lr(bal);
         }
     }
 }
 
-template<class S,class T> void tst<S,T>::ll(tst_node<S,T>** current_node,int* current_index) {
-    int left_index=(*current_node)->left;
+template<class S,class T> void tst<S,T>::ll(node_info<S,T>* bal) {
+    int left_index=bal->node->left;
     tst_node<S,T>* left_node=array+left_index;
     int left_right_index=left_node->right;
-    (*current_node)->left=left_right_index;
-    left_node->right=*current_index;
-    *current_index=left_index;
-    *current_node=array+left_index;
+    bal->node->left=left_right_index;
+    left_node->right=bal->index;
+    bal->index=left_index;
+    bal->node=array+left_index;
 }
 
-template<class S,class T> void tst<S,T>::rr(tst_node<S,T>** current_node,int* current_index) {
-    int right_index=(*current_node)->right;
+template<class S,class T> void tst<S,T>::rr(node_info<S,T>* bal) {
+    int right_index=bal->node->right;
     tst_node<S,T>* right_node=array+right_index;
     int right_left_index=right_node->left;
-    (*current_node)->right=right_left_index;
-    right_node->left=*current_index;
-    compute_height_and_balance(right_node);
-    *current_index=right_index;
-    *current_node=array+right_index;
+    bal->node->right=right_left_index;
+    right_node->left=bal->index;
+    bal->index=right_index;
+    bal->node=array+right_index;
 }
 
-template<class S,class T> void tst<S,T>::lr(tst_node<S,T>** current_node,int* current_index) {
-    int* left_index=&((*current_node)->left);
-    tst_node<S,T>* left_node=array+*left_index;
-    rr(&left_node,left_index);
-    ll(current_node,current_index);
+template<class S,class T> void tst<S,T>::lr(node_info<S,T>* bal) {
+    node_info<S,T> left;
+    left.index = bal->node->left;
+    left.node = array + left.index;
+    rr(&left);
+    ll(bal);
 }
 
-template<class S,class T> void tst<S,T>::rl(tst_node<S,T>** current_node,int* current_index) {
-    int* right_index=&((*current_node)->right);
-    tst_node<S,T>* right_node=array+*right_index;
-    ll(&right_node,right_index);
-    rr(current_node,current_index);
+template<class S,class T> void tst<S,T>::rl(node_info<S,T>* bal) {
+    node_info<S,T> right;
+    right.index = bal->node->right;
+    right.node = array + right.index;
+    ll(&right);
+    rr(bal);
 }
 
-template<class S,class T> node_info tst<S,T>::compute_height_and_balance(tst_node<S,T>* current_node) {
-    int left = current_node->left;
-    int right = current_node->right;
-    tst_node<S,T>* left_node;
-    tst_node<S,T>* right_node;
-
-    node_info result;
-    result.index=UNDEFINED_INDEX;
+template<class S,class T> void tst<S,T>::compute_height_and_balance(node_info<S,T>* current_node_info) {
+    int left = current_node_info->node->left;
+    int right = current_node_info->node->right;
 
     if(right!=UNDEFINED_INDEX) {
-        right_node=array+right;
-        node_info right_balance = compute_height_and_balance(right_node);
+        node_info<S,T> right_balance;
+        right_balance.index=right;
+        right_balance.node=array+right;
+        compute_height_and_balance(&right_balance);
+
         if(left!=UNDEFINED_INDEX) {
-            left_node=array+left;
-            node_info left_balance = compute_height_and_balance(left_node);
+            node_info<S,T> left_balance;
+            left_balance.index=left;
+            left_balance.node=array+left;
+            compute_height_and_balance(&left_balance);
+
             if(left_balance.height > right_balance.height) {
-                result.height = left_balance.height+1;
+                current_node_info->height = left_balance.height+1;
             }
             else {
-                result.height = right_balance.height+1;
+                current_node_info->height = right_balance.height+1;
             }
-            result.balance = right_balance.height-left_balance.height;
-            result.right_balance = right_balance.balance;
-            result.left_balance = left_balance.balance;
+            current_node_info->balance = right_balance.height-left_balance.height;
+            current_node_info->right_balance = right_balance.balance;
+            current_node_info->left_balance = left_balance.balance;
         }
         else {
-            result.height = right_balance.height + 1;
-            result.balance = right_balance.height;
-            result.right_balance = right_balance.balance;
-            result.left_balance = 0;
+            current_node_info->height = right_balance.height + 1;
+            current_node_info->balance = right_balance.height;
+            current_node_info->right_balance = right_balance.balance;
+            current_node_info->left_balance = 0;
         }
     }
     else {
         if(left!=UNDEFINED_INDEX) {
-            left_node=array+left;
-            node_info left_balance = compute_height_and_balance(left_node);
-            result.height = left_balance.height + 1;
-            result.balance = -left_balance.height;
-            result.right_balance = 0;
-            result.left_balance = left_balance.balance;
+            node_info<S,T> left_balance;
+            left_balance.index=left;
+            left_balance.node=array+left;
+            compute_height_and_balance(&left_balance);
+
+            current_node_info->height = left_balance.height + 1;
+            current_node_info->balance = -left_balance.height;
+            current_node_info->right_balance = 0;
+            current_node_info->left_balance = left_balance.balance;
         }
         else {
-            result.height = 0;
-            result.balance = 0;
-            result.right_balance = 0;
-            result.left_balance = 0;
+            current_node_info->height = 0;
+            current_node_info->balance = 0;
+            current_node_info->right_balance = 0;
+            current_node_info->left_balance = 0;
         }
     }
-
-    return result;
 }
 
 template<class S,class T> size_t tst<S,T>::bytes_allocated() {

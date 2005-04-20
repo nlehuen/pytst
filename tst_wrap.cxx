@@ -1371,7 +1371,7 @@ static swig_type_info *swig_types[19];
 #include "TST.cxx"
 
 
-  /*@E:\\SWIG-1.3.24\\Lib\\python\\pymacros.swg,66,SWIG_define@*/
+  /*@C:\\SWIG-1.3.24\\Lib\\python\\pymacros.swg,66,SWIG_define@*/
 #define SWIG_From_int PyInt_FromLong
 /*@@*/
 
@@ -3623,7 +3623,7 @@ _swigt__p_ObjectSerializer,
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (END) -------- */
 
 static swig_const_info swig_const_table[] = {
-{ SWIG_PY_POINTER, (char*)"TST_VERSION", 0, 0, (void *)"0.51", &SWIGTYPE_p_char},
+{ SWIG_PY_POINTER, (char*)"TST_VERSION", 0, 0, (void *)"0.6", &SWIGTYPE_p_char},
 {0, 0, 0, 0.0, 0, 0}};
 
 #ifdef __cplusplus
@@ -3970,6 +3970,6 @@ SWIGEXPORT(void) SWIG_init(void) {
     {
         PyDict_SetItemString(d,"UNDEFINED_INDEX", SWIG_From_int((int)(-1))); 
     }
-    PyDict_SetItemString(d,"TST_VERSION", SWIG_FromCharPtr("0.51"));
+    PyDict_SetItemString(d,"TST_VERSION", SWIG_FromCharPtr("0.6"));
 }
 

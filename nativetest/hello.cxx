@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "tst.h"
-
+#include <time.h>
 
 class stringserializer : public serializer<char,char*> {
     virtual void write(FILE* file,char* data) {
@@ -61,7 +61,7 @@ class printer : public donothing {
 
 class stringtst : public tst<char,char*> {
     public:
-        stringtst() : tst<char,char*>(16,NULL) {
+        stringtst() : tst<char,char*>(1600,NULL) {
         }
 
         virtual ~stringtst() {
@@ -78,24 +78,6 @@ class stringtst : public tst<char,char*> {
        virtual void store_data(tst_node<char,char*>* node,char* data);
 };
 
-class tester : public donothing {
-    public:
-        tester(tst<char,char*>* mytst) : donothing() {
-            this->mytst=mytst;
-        }
-
-        virtual void perform(char* key,int remaining_distance,char* data) {
-            donothing* dn = new donothing();
-            mytst->almost(key,strlen(key),3,NULL,dn);
-            mytst->common_prefix(key,NULL,dn);
-            delete dn;
-        }
-
-    private:
-        tst<char,char*>* mytst;
-};
-
-
 void stringtst::store_data(tst_node<char,char*>* node,char* data) {
             // printf("sd %x %x %x %s\n",(int)node,(int)node->data,node->c,data);
             if(node->data) {
@@ -105,165 +87,51 @@ void stringtst::store_data(tst_node<char,char*>* node,char* data) {
             node->data=data;
         }
 
+class tester : public donothing {
+    public:
+        tester(tst<char,char*>* mytst) : donothing() {
+            this->mytst=mytst;
+        }
+
+        virtual void perform(char* key,int remaining_distance,char* data) {
+            donothing* dn = new donothing();
+            mytst->almost(key,(int)strlen(key),3,NULL,dn);
+            mytst->common_prefix(key,NULL,dn);
+            delete dn;
+        }
+
+    private:
+        tst<char,char*>* mytst;
+};
+
 int main(int argc,char** argv) {
-    printf("Taille d'un noeud char* : %i\n",sizeof(tst_node<char,char*>));
-    printf("Taille d'un noeud size_t : %i\n",sizeof(tst_node<char,int>));
+    tst<char,char*>* linetst=new stringtst();
 
-    tst<char,char*>* linetst=new tst<char,char*>(64,"<nothing>");
-    linetst->put("abc","abc");
-    linetst->put("abcdef","abcdef");
-    linetst->put("abcdefgh","abcdefgh");
-    linetst->put("01","01");
-    // linetst->put("02","02");
-    printf("%s\n",linetst->get("abc"));
-    printf("%s\n",linetst->get("01"));
-    printf("%s\n",linetst->get("foobar"));
+    clock_t start, end;
+    double elapsed;
 
-    printer p=printer();
-    linetst->walk(NULL,&p);
+    start = clock();
+    for(int i=0;i<1000000;i++) {
+        char line[256];
+        sprintf(line,"%d",i);
+        linetst->put(line,line);
+    }
+    end = clock();
+    elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Write : %f\n",elapsed);
 
-    printf("-----------------------\n");
-    linetst->scan("abc",&p);
-    printf("-----------------------\n");
-    linetst->scan("01",&p);
-    printf("-----------------------\n");
-    linetst->scan("abc01",&p);
-    printf("-----------------------\n");
-    linetst->scan("abc---01",&p);
-    printf("-----------------------\n");
-    linetst->scan("abcdef---abc--01--abcdef--abc",&p);
-    printf("-----------------------\n");
-    linetst->scan("--abcdef---abc--01--abcdef--abc01",&p);
-    printf("-----------------------\n");
-    linetst->scan("--abcdef---abc--01--abcdef--abc01--",&p);
-
-    printf("Plein: ");
+    linetst->pack();
     linetst->debug_print_root();
-    for(int hhk=0;hhk<1000;hhk++) {
-        printf("1\n");
-        linetst->remove("abcdefgh");
-        printf("2\n");
-        linetst->remove("01");
-        printf("0\n");
-        linetst->remove("abc");
-        printf("1\n");
-        linetst->remove("abcdef");
-        printf("Vide: ");
-        linetst->debug_print_root();
-        char* buffer=(char*)malloc(256*sizeof(char));
-        sprintf(buffer,"new abcdef %i",hhk);
-        linetst->put("abcdef","new abcdef");
-        linetst->put("abcdefgh","new abcdefgh");
-        linetst->put("abc","new abc");
-        linetst->put("01","new 01");
-        printf("Plein: ");
-        linetst->debug_print_root();
+
+    start = clock();
+    for(int i=0;i<1000000;i++) {
+        char line[256];
+        sprintf(line,"%d",i);
+        linetst->get(line);
     }
-    delete linetst;
-
-    getchar();
-
-    return 0;
-}
-
-int main3(int argc,char** argv) {
-    printf("Taille d'un noeud char* : %i\n",sizeof(tst_node<char,char*>));
-    printf("Taille d'un noeud size_t : %i\n",sizeof(tst_node<char,int>));
-
-    for(int i=0;i<10;i++) {
-        tst<char,char*>* linetst=new stringtst();
-        tst<char,size_t>* lengthtst=new tst<char,size_t>(16,0);
-        char* line;
-        FILE* input;
-
-        input = fopen("..\\prenoms.txt","r");
-
-        if(input==NULL) {
-            printf("Impossible d'ouvrir le fichier prenoms.txt\n");
-            getchar();
-            return 1;
-        }
-
-        line = (char*)tst_malloc(256);
-        while(fgets(line,256,input)!=NULL) {
-            linetst->put(line,line);
-            lengthtst->put(line,strlen(line));
-            line = (char*)tst_malloc(256);
-        }
-        fclose(input);
-        tst_free(line);
-
-        input = fopen("..\\prenoms.txt","r");
-
-        if(input==NULL) {
-            printf("Impossible d'ouvrir le fichier prenoms.txt\n");
-            getchar();
-            return 1;
-        }
-
-        line = (char*)tst_malloc(256);
-        while(fgets(line,256,input)!=NULL) {
-            linetst->remove(line);
-            lengthtst->remove(line);
-            line = (char*)tst_malloc(256);
-        }
-        fclose(input);
-        tst_free(line);
-
-        printf("linetst : ");
-        linetst->debug_print_root();
-
-        tester* t=new tester(linetst);
-        linetst->walk(NULL,t);
-        delete t;
-
-        linetst->pack();
-        lengthtst->pack();
-        printf("Taille totale line : %i\n",linetst->bytes_allocated());
-        printf("Taille totale length : %i\n",lengthtst->bytes_allocated());
-
-        FILE* output=fopen("test.tst","wb");
-        if(output==NULL) {
-            printf("Impossible d'ouvrir le fichier en écriture\n");
-        }
-        else {
-            stringserializer* sser=new stringserializer();
-            linetst->write(output,sser);
-            delete sser;
-            fclose(output);
-        }
-
-        printf("%s",linetst->get("Nicolas;H\n"));
-
-        printf("On delete...\n");
-
-        delete linetst;
-
-        printf("OK pour linetst\n");
-
-        delete lengthtst;
-
-        printf("OK pour lengthtst\n");
-
-        FILE* finput=fopen("test.tst","rb");
-        if(finput==NULL) {
-            printf("Impossible d'ouvrir le fichier en lecture\n");
-        }
-        else {
-            linetst=new stringtst(finput);
-
-            printf("linetst read from disk\n");
-
-            action<char,char*>* myaction=new donothing();
-            linetst->walk(NULL,myaction);
-            linetst->common_prefix("Yohan",NULL,myaction);
-            linetst->almost("Yohan",5,4,NULL,myaction);
-            delete myaction;
-
-            delete linetst;
-            fclose(finput);
-        }
-    }
+    end = clock();
+    elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Read : %f\n",elapsed);
 
     return 0;
 }
