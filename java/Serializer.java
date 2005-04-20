@@ -36,11 +36,11 @@ public class Serializer {
     swigCPtr = 0;
   }
 
-  public void write(SWIGTYPE_p_FILE file, String data) {
+  public void write(SWIGTYPE_p_FILE file, Object data) {
     tstJNI.Serializer_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), data);
   }
 
-  public String read(SWIGTYPE_p_FILE file) {
+  public Object read(SWIGTYPE_p_FILE file) {
     return tstJNI.Serializer_read(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file));
   }
 

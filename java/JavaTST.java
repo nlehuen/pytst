@@ -40,7 +40,7 @@ public class JavaTST {
     this(tstJNI.new_JavaTST__SWIG_0(SWIGTYPE_p_FILE.getCPtr(file), Serializer.getCPtr(reader)), true);
   }
 
-  public JavaTST(int initial_size, String default_value) {
+  public JavaTST(int initial_size, Object default_value) {
     this(tstJNI.new_JavaTST__SWIG_1(initial_size, default_value), true);
   }
 
@@ -48,35 +48,35 @@ public class JavaTST {
     tstJNI.JavaTST_pack(swigCPtr);
   }
 
-  public String walk(Filter filter, Action to_perform) {
+  public Object walk(Filter filter, Action to_perform) {
     return tstJNI.JavaTST_walk(swigCPtr, Filter.getCPtr(filter), Action.getCPtr(to_perform));
   }
 
-  public String almost(String string, int string_length, int maximum_distance, Filter filter, Action to_perform) {
+  public Object almost(String string, int string_length, int maximum_distance, Filter filter, Action to_perform) {
     return tstJNI.JavaTST_almost(swigCPtr, string, string_length, maximum_distance, Filter.getCPtr(filter), Action.getCPtr(to_perform));
   }
 
-  public String common_prefix(String string, Filter filter, Action to_perform) {
+  public Object common_prefix(String string, Filter filter, Action to_perform) {
     return tstJNI.JavaTST_common_prefix(swigCPtr, string, Filter.getCPtr(filter), Action.getCPtr(to_perform));
   }
 
-  public String scan(String string, Action to_perform) {
+  public Object scan(String string, Action to_perform) {
     return tstJNI.JavaTST_scan(swigCPtr, string, Action.getCPtr(to_perform));
   }
 
-  public String scan_with_stop_chars(String string, String stop_chars, Action to_perform) {
+  public Object scan_with_stop_chars(String string, String stop_chars, Action to_perform) {
     return tstJNI.JavaTST_scan_with_stop_chars(swigCPtr, string, stop_chars, Action.getCPtr(to_perform));
   }
 
-  public String get(String string) {
+  public Object get(String string) {
     return tstJNI.JavaTST_get(swigCPtr, string);
   }
 
-  public String get_or_build(String string, Filter factory) {
+  public Object get_or_build(String string, Filter factory) {
     return tstJNI.JavaTST_get_or_build(swigCPtr, string, Filter.getCPtr(factory));
   }
 
-  public String put(String string, String data) {
+  public Object put(String string, Object data) {
     return tstJNI.JavaTST_put(swigCPtr, string, data);
   }
 

@@ -36,11 +36,11 @@ public class Action {
     swigCPtr = 0;
   }
 
-  public void perform(String key, int remaining_distance, String data) {
+  public void perform(String key, int remaining_distance, Object data) {
     tstJNI.Action_perform(swigCPtr, key, remaining_distance, data);
   }
 
-  public String result() {
+  public Object result() {
     return tstJNI.Action_result(swigCPtr);
   }
 

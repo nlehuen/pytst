@@ -25,8 +25,8 @@
 
 %include "tst.h"
 
-%template(JavaTST)     tst<char,char*>;
-%template(Action)      action<char,char*>;
-%template(Filter)      filter<char,char*>;
-%template(Serializer)  serializer<char,char*>;
+%template(JavaTST)     tst<char,jobject>;
+%template(Action)      action<char,jobject>;
+%template(Filter)      filter<char,jobject>;
+%template(Serializer)  serializer<char,jobject>;
 

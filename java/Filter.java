@@ -36,7 +36,7 @@ public class Filter {
     swigCPtr = 0;
   }
 
-  public String perform(String key, int remaining_distance, String data) {
+  public Object perform(String key, int remaining_distance, Object data) {
     return tstJNI.Filter_perform(swigCPtr, key, remaining_distance, data);
   }
 
