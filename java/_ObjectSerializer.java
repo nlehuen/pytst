@@ -7,19 +7,20 @@
  * ----------------------------------------------------------------------------- */
 
 
-public class JavaTST extends _JavaTST {
+public class _ObjectSerializer {
   private long swigCPtr;
+  protected boolean swigCMemOwn;
 
-  protected JavaTST(long cPtr, boolean cMemoryOwn) {
-    super(tstJNI.SWIGJavaTSTUpcast(cPtr), cMemoryOwn);
+  protected _ObjectSerializer(long cPtr, boolean cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(JavaTST obj) {
+  protected static long getCPtr(_ObjectSerializer obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
-  protected JavaTST() {
+  protected _ObjectSerializer() {
     this(0, false);
   }
 
@@ -30,14 +31,17 @@ public class JavaTST extends _JavaTST {
   public void delete() {
     if(swigCPtr != 0 && swigCMemOwn) {
       swigCMemOwn = false;
-      tstJNI.delete_JavaTST(swigCPtr);
+      tstJNI.delete__ObjectSerializer(swigCPtr);
     }
     swigCPtr = 0;
-    super.delete();
   }
 
-  public JavaTST(Object data) {
-    this(tstJNI.new_JavaTST(data), true);
+  public void write(SWIGTYPE_p_FILE file, Object data) {
+    tstJNI._ObjectSerializer_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), data);
+  }
+
+  public Object read(SWIGTYPE_p_FILE file) {
+    return tstJNI._ObjectSerializer_read(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file));
   }
 
 }

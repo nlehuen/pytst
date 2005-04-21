@@ -7,20 +7,20 @@
  * ----------------------------------------------------------------------------- */
 
 
-public class _Action {
+public class _ObjectAction {
   private long swigCPtr;
   protected boolean swigCMemOwn;
 
-  protected _Action(long cPtr, boolean cMemoryOwn) {
+  protected _ObjectAction(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(_Action obj) {
+  protected static long getCPtr(_ObjectAction obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
-  protected _Action() {
+  protected _ObjectAction() {
     this(0, false);
   }
 
@@ -31,17 +31,17 @@ public class _Action {
   public void delete() {
     if(swigCPtr != 0 && swigCMemOwn) {
       swigCMemOwn = false;
-      tstJNI.delete__Action(swigCPtr);
+      tstJNI.delete__ObjectAction(swigCPtr);
     }
     swigCPtr = 0;
   }
 
   public void perform(String key, int remaining_distance, Object data) {
-    tstJNI._Action_perform(swigCPtr, key, remaining_distance, data);
+    tstJNI._ObjectAction_perform(swigCPtr, key, remaining_distance, data);
   }
 
   public Object result() {
-    return tstJNI._Action_result(swigCPtr);
+    return tstJNI._ObjectAction_result(swigCPtr);
   }
 
 }

@@ -7,19 +7,19 @@
  * ----------------------------------------------------------------------------- */
 
 
-public class Action extends _Action {
+public class ObjectAction extends _ObjectAction {
   private long swigCPtr;
 
-  protected Action(long cPtr, boolean cMemoryOwn) {
-    super(tstJNI.SWIGActionUpcast(cPtr), cMemoryOwn);
+  protected ObjectAction(long cPtr, boolean cMemoryOwn) {
+    super(tstJNI.SWIGObjectActionUpcast(cPtr), cMemoryOwn);
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(Action obj) {
+  protected static long getCPtr(ObjectAction obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
-  protected Action() {
+  protected ObjectAction() {
     this(0, false);
   }
 
@@ -30,22 +30,22 @@ public class Action extends _Action {
   public void delete() {
     if(swigCPtr != 0 && swigCMemOwn) {
       swigCMemOwn = false;
-      tstJNI.delete_Action(swigCPtr);
+      tstJNI.delete_ObjectAction(swigCPtr);
     }
     swigCPtr = 0;
     super.delete();
   }
 
-  public Action(Object target, String perform, String result) {
-    this(tstJNI.new_Action(target, perform, result), true);
+  public ObjectAction(Object target, String perform, String result) {
+    this(tstJNI.new_ObjectAction(target, perform, result), true);
   }
 
   public void perform(String key, int remaining_distance, Object data) {
-    tstJNI.Action_perform(swigCPtr, key, remaining_distance, data);
+    tstJNI.ObjectAction_perform(swigCPtr, key, remaining_distance, data);
   }
 
   public Object result() {
-    return tstJNI.Action_result(swigCPtr);
+    return tstJNI.ObjectAction_result(swigCPtr);
   }
 
 }

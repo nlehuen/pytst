@@ -118,28 +118,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\_JavaTST.java">
-			</File>
-			<File
-				RelativePath=".\Action.java">
-			</File>
-			<File
-				RelativePath=".\Filter.java">
-			</File>
-			<File
-				RelativePath=".\JavaTST.java">
-			</File>
-			<File
-				RelativePath=".\Serializer.java">
-			</File>
-			<File
-				RelativePath=".\SWIGTYPE_p_FILE.java">
-			</File>
-			<File
 				RelativePath=".\TestTST.java">
-			</File>
-			<File
-				RelativePath=".\tstConstants.java">
 			</File>
 			<File
 				RelativePath=".\tstjava.i">
@@ -164,9 +143,6 @@
 			</File>
 			<File
 				RelativePath=".\tstjava_wrap.cxx">
-			</File>
-			<File
-				RelativePath=".\tstJNI.java">
 			</File>
 		</Filter>
 		<Filter

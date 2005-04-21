@@ -1,16 +1,16 @@
 #include "tst.h"
 #include "jni.h"
 
-class JavaTST : public tst<char,jobject> {
+class ObjectTST : public tst<char,jobject> {
 public:
-    JavaTST(jobject data,JNIEnv* jenv2) : tst<char,jobject>(256,data) {
+    ObjectTST(jobject data,JNIEnv* jenv2) : tst<char,jobject>(256,data) {
         jenv = jenv2;
         if(data) {
             jenv->NewGlobalRef(data);
         }
     }
 
-    ~JavaTST() {
+    ~ObjectTST() {
         if(default_value) {
             jenv->DeleteGlobalRef(default_value);
         }
@@ -34,9 +34,9 @@ private:
     JNIEnv* jenv;
 };
 
-class Action : public action<char,jobject> {
+class ObjectAction : public action<char,jobject> {
 public:
-    Action(jobject target,char *perform,char* result,JNIEnv* jenv) : action<char,jobject>() {
+    ObjectAction(jobject target,char *perform,char* result,JNIEnv* jenv) : action<char,jobject>() {
         this->jenv=jenv;
         this->target=jenv->NewGlobalRef(target);
         jclass clazz = jenv->GetObjectClass(this->target);
@@ -58,7 +58,7 @@ public:
         }
     }
 
-    ~Action() {
+    ~ObjectAction() {
         jenv->DeleteGlobalRef(target);
     }
 
@@ -91,14 +91,14 @@ private:
     jmethodID performID,resultID;
 };
 
-class Filter : public filter<char,jobject> {
+class ObjectFilter : public filter<char,jobject> {
 public:
     virtual jobject perform(char* key,int remaining_distance,jobject data) {
         return NULL;
     }
 };
 
-class Serializer : public serializer<char,jobject> {
+class ObjectSerializer : public serializer<char,jobject> {
 public:
     virtual void write(FILE* file,jobject data) {
     }

@@ -42,9 +42,9 @@
 	if ($1) jenv->ReleaseStringUTFChars($input, $1); 
 }
 
-%template(_JavaTST) tst<char,jobject>;
-%template(_Action) action<char,jobject>;
-%template(_Filter) filter<char,jobject>;
-%template(_Serializer) serializer<char,jobject>;
+%template(_ObjectTST) tst<char,jobject>;
+%template(_ObjectAction) action<char,jobject>;
+%template(_ObjectFilter) filter<char,jobject>;
+%template(_ObjectSerializer) serializer<char,jobject>;
 
 %include "javaTST.h"

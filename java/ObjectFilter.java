@@ -7,15 +7,15 @@
  * ----------------------------------------------------------------------------- */
 
 
-public class Serializer extends _Serializer {
+public class ObjectFilter extends _ObjectFilter {
   private long swigCPtr;
 
-  protected Serializer(long cPtr, boolean cMemoryOwn) {
-    super(tstJNI.SWIGSerializerUpcast(cPtr), cMemoryOwn);
+  protected ObjectFilter(long cPtr, boolean cMemoryOwn) {
+    super(tstJNI.SWIGObjectFilterUpcast(cPtr), cMemoryOwn);
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(Serializer obj) {
+  protected static long getCPtr(ObjectFilter obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
@@ -26,22 +26,18 @@ public class Serializer extends _Serializer {
   public void delete() {
     if(swigCPtr != 0 && swigCMemOwn) {
       swigCMemOwn = false;
-      tstJNI.delete_Serializer(swigCPtr);
+      tstJNI.delete_ObjectFilter(swigCPtr);
     }
     swigCPtr = 0;
     super.delete();
   }
 
-  public void write(SWIGTYPE_p_FILE file, Object data) {
-    tstJNI.Serializer_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), data);
+  public Object perform(String key, int remaining_distance, Object data) {
+    return tstJNI.ObjectFilter_perform(swigCPtr, key, remaining_distance, data);
   }
 
-  public Object read(SWIGTYPE_p_FILE file) {
-    return tstJNI.Serializer_read(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file));
-  }
-
-  public Serializer() {
-    this(tstJNI.new_Serializer(), true);
+  public ObjectFilter() {
+    this(tstJNI.new_ObjectFilter(), true);
   }
 
 }
