@@ -6,21 +6,22 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
+package com.lehuen.tst;
 
-public class _LongSerializer {
+public class _ObjectAction {
   private long swigCPtr;
   protected boolean swigCMemOwn;
 
-  protected _LongSerializer(long cPtr, boolean cMemoryOwn) {
+  protected _ObjectAction(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(_LongSerializer obj) {
+  protected static long getCPtr(_ObjectAction obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
-  protected _LongSerializer() {
+  protected _ObjectAction() {
     this(0, false);
   }
 
@@ -31,17 +32,17 @@ public class _LongSerializer {
   public void delete() {
     if(swigCPtr != 0 && swigCMemOwn) {
       swigCMemOwn = false;
-      tstJNI.delete__LongSerializer(swigCPtr);
+      tstJNI.delete__ObjectAction(swigCPtr);
     }
     swigCPtr = 0;
   }
 
-  public void write(SWIGTYPE_p_FILE file, long data) {
-    tstJNI._LongSerializer_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), data);
+  public void perform(String key, int remaining_distance, Object data) {
+    tstJNI._ObjectAction_perform(swigCPtr, key, remaining_distance, data);
   }
 
-  public long read(SWIGTYPE_p_FILE file) {
-    return tstJNI._LongSerializer_read(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file));
+  public Object result() {
+    return tstJNI._ObjectAction_result(swigCPtr);
   }
 
 }

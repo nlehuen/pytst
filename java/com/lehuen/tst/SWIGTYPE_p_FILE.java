@@ -6,6 +6,7 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
+package com.lehuen.tst;
 
 public class SWIGTYPE_p_FILE {
   private long swigCPtr;

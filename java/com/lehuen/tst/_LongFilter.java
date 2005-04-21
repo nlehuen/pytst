@@ -6,20 +6,22 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
+package com.lehuen.tst;
 
-public class ObjectTST extends _ObjectTST {
+public class _LongFilter {
   private long swigCPtr;
+  protected boolean swigCMemOwn;
 
-  protected ObjectTST(long cPtr, boolean cMemoryOwn) {
-    super(tstJNI.SWIGObjectTSTUpcast(cPtr), cMemoryOwn);
+  protected _LongFilter(long cPtr, boolean cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(ObjectTST obj) {
+  protected static long getCPtr(_LongFilter obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
-  protected ObjectTST() {
+  protected _LongFilter() {
     this(0, false);
   }
 
@@ -30,14 +32,13 @@ public class ObjectTST extends _ObjectTST {
   public void delete() {
     if(swigCPtr != 0 && swigCMemOwn) {
       swigCMemOwn = false;
-      tstJNI.delete_ObjectTST(swigCPtr);
+      tstJNI.delete__LongFilter(swigCPtr);
     }
     swigCPtr = 0;
-    super.delete();
   }
 
-  public ObjectTST(int initial_size, Object data) {
-    this(tstJNI.new_ObjectTST(initial_size, data), true);
+  public long perform(String key, int remaining_distance, long data) {
+    return tstJNI._LongFilter_perform(swigCPtr, key, remaining_distance, data);
   }
 
 }

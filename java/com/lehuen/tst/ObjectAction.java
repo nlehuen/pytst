@@ -6,21 +6,21 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
+package com.lehuen.tst;
 
-public class _ObjectAction {
+public class ObjectAction extends _ObjectAction {
   private long swigCPtr;
-  protected boolean swigCMemOwn;
 
-  protected _ObjectAction(long cPtr, boolean cMemoryOwn) {
-    swigCMemOwn = cMemoryOwn;
+  protected ObjectAction(long cPtr, boolean cMemoryOwn) {
+    super(tstJNI.SWIGObjectActionUpcast(cPtr), cMemoryOwn);
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(_ObjectAction obj) {
+  protected static long getCPtr(ObjectAction obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
-  protected _ObjectAction() {
+  protected ObjectAction() {
     this(0, false);
   }
 
@@ -31,17 +31,22 @@ public class _ObjectAction {
   public void delete() {
     if(swigCPtr != 0 && swigCMemOwn) {
       swigCMemOwn = false;
-      tstJNI.delete__ObjectAction(swigCPtr);
+      tstJNI.delete_ObjectAction(swigCPtr);
     }
     swigCPtr = 0;
+    super.delete();
+  }
+
+  public ObjectAction(Object target, String perform, String result) {
+    this(tstJNI.new_ObjectAction(target, perform, result), true);
   }
 
   public void perform(String key, int remaining_distance, Object data) {
-    tstJNI._ObjectAction_perform(swigCPtr, key, remaining_distance, data);
+    tstJNI.ObjectAction_perform(swigCPtr, key, remaining_distance, data);
   }
 
   public Object result() {
-    return tstJNI._ObjectAction_result(swigCPtr);
+    return tstJNI.ObjectAction_result(swigCPtr);
   }
 
 }

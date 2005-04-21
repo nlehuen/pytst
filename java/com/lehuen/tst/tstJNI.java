@@ -6,6 +6,7 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
+package com.lehuen.tst;
 
 class tstJNI {
   public final static native int get_UNDEFINED_INDEX();

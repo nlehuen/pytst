@@ -6,20 +6,21 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
+package com.lehuen.tst;
 
-public class LongFilter extends _LongFilter {
+public class LongAction extends _LongAction {
   private long swigCPtr;
 
-  protected LongFilter(long cPtr, boolean cMemoryOwn) {
-    super(tstJNI.SWIGLongFilterUpcast(cPtr), cMemoryOwn);
+  protected LongAction(long cPtr, boolean cMemoryOwn) {
+    super(tstJNI.SWIGLongActionUpcast(cPtr), cMemoryOwn);
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(LongFilter obj) {
+  protected static long getCPtr(LongAction obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
-  protected LongFilter() {
+  protected LongAction() {
     this(0, false);
   }
 
@@ -30,18 +31,22 @@ public class LongFilter extends _LongFilter {
   public void delete() {
     if(swigCPtr != 0 && swigCMemOwn) {
       swigCMemOwn = false;
-      tstJNI.delete_LongFilter(swigCPtr);
+      tstJNI.delete_LongAction(swigCPtr);
     }
     swigCPtr = 0;
     super.delete();
   }
 
-  public LongFilter(Object target, String perform) {
-    this(tstJNI.new_LongFilter(target, perform), true);
+  public LongAction(Object target, String perform, String result) {
+    this(tstJNI.new_LongAction(target, perform, result), true);
   }
 
-  public long perform(String key, int remaining_distance, long data) {
-    return tstJNI.LongFilter_perform(swigCPtr, key, remaining_distance, data);
+  public void perform(String key, int remaining_distance, long data) {
+    tstJNI.LongAction_perform(swigCPtr, key, remaining_distance, data);
+  }
+
+  public long result() {
+    return tstJNI.LongAction_result(swigCPtr);
   }
 
 }

@@ -1,4 +1,5 @@
 import java.util.*;
+import com.lehuen.tst.*;
 
 public class TestTST {
 	public native Object test(String key, int oto,Object data);
