@@ -63,8 +63,6 @@ public:
     }
 
     virtual void perform(char* key,int remaining_distance,jobject data) {
-        printf("perform jenv=%d target=%d methodID=%d key=\"%s\" remaining_distance=%d data=%d\n",jenv,target,performID,key,remaining_distance,data);
-        
         if(performID) {
             jstring key_string = jenv->NewStringUTF(key);
             if(key_string) {
@@ -74,8 +72,6 @@ public:
     }
 
     virtual jobject result() {
-        printf("result jenv=%d target=%d methodID=%d\n",jenv,target,resultID);
-
         if(resultID) {
             jobject result = jenv->CallObjectMethod(target,resultID);
             return result;
