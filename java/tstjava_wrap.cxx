@@ -351,9 +351,7 @@ JNIEXPORT jobject JNICALL Java_tstJNI__1JavaTST_1get(JNIEnv *jenv, jclass jcls, 
     }
     result = (arg1)->get(arg2);
     
-        printf("--> %d\n",result);
-    
-jresult = result; 
+    jresult = result; 
     {
         if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
     }

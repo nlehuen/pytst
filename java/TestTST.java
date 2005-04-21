@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class TestTST {
 	static class PrintAction extends Action {
 		public void perform(String key, int remaining_distance, Object data) {
@@ -17,6 +19,7 @@ public class TestTST {
         JavaTST tP=new JavaTST("DEFAUT");
         long startP,endP;
         
+
         startP=System.currentTimeMillis();
         for(int iP=0;iP<4000000;iP++) {
             String keyP=Integer.toString(iP);
@@ -24,11 +27,11 @@ public class TestTST {
         endP=System.currentTimeMillis();
         System.out.println("Build : "+(1.0*(endP-startP)/1000));
 
-        startP=System.currentTimeMillis();
+		startP=System.currentTimeMillis();
         for(int iP=0;iP<4000000;iP++) {
             String keyP=Integer.toString(iP);
-            tP.put(keyP,"coucou "+keyP);
-			System.out.println(tP.get(keyP));
+			Object oP="coucou "+keyP;
+            tP.put(keyP,oP);
         }
         endP=System.currentTimeMillis();
         System.out.println("Write : "+(1.0*(endP-startP)/1000));

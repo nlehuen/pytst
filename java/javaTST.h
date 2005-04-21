@@ -4,20 +4,30 @@
 class JavaTST : public tst<char,jobject> {
 public:
     JavaTST(jobject data,JNIEnv* jenv2) : tst<char,jobject>(256,data) {
-        this->jenv = jenv;
+        jenv = jenv2;
+        if(data) {
+            jenv->NewGlobalRef(data);
+        }
+    }
+
+    ~JavaTST() {
+        if(default_value) {
+            jenv->DeleteGlobalRef(default_value);
+        }
     }
 protected:
     virtual jobject store_data(tst_node<char,jobject>* node,jobject data,int want_old_value) {
-        printf("Store %d\n",data);
         jobject old_data = node->data;
-        if(old_data!=default_value && want_old_value==0) {
-            printf("delete %d...",old_data);
+        if(old_data!=default_value) {
             jenv->DeleteGlobalRef(old_data);
-            printf("OK\n");
         }
-        printf("New %d...",data);
-        node->data = jenv->NewGlobalRef(data);
-        printf("OK\n");
+        if(data!=default_value) {
+            data = jenv->NewGlobalRef(data);
+            node->data = data;
+        }
+        else {
+            data=default_value;
+        }
         return old_data;
     }
 private:
