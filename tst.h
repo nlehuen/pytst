@@ -39,7 +39,7 @@
 
 #define UNDEFINED_INDEX -1
 
-#define TST_VERSION "0.61"
+#define TST_VERSION "0.62"
 
 // Pour ajouter/supprimer les fonctions de scanning.
 #define SCANNER
@@ -1171,7 +1171,6 @@ template<class S,class T> void tst<S,T>::balance_node(node_info<S,T>* bal) {
         else {
             rl(bal);
         }
-        compute_height_and_balance(bal); // TODO : optimiser
     }
     else if(bal->balance<-1) {
         if(bal->left_balance<0) {
@@ -1180,8 +1179,11 @@ template<class S,class T> void tst<S,T>::balance_node(node_info<S,T>* bal) {
         else {
             lr(bal);
         }
-        compute_height_and_balance(bal); // TODO : optimiser
     }
+    
+    assert(abs(bal->balance)<2);
+    assert(abs(bal->right_balance)<2);
+    assert(abs(bal->left_balance)<2);
 }
 
 template<class S,class T> void tst<S,T>::ll(node_info<S,T>* bal) {
@@ -1193,6 +1195,9 @@ template<class S,class T> void tst<S,T>::ll(node_info<S,T>* bal) {
     
     bal->index=left_index;
     bal->node=array+left_index;
+    bal->height=bal->height-1;
+    bal->balance=0;
+    bal->right_balance=0;
 }
 
 template<class S,class T> void tst<S,T>::rr(node_info<S,T>* bal) {
@@ -1204,6 +1209,9 @@ template<class S,class T> void tst<S,T>::rr(node_info<S,T>* bal) {
     
     bal->index=right_index;
     bal->node=array+right_index;
+    bal->height=bal->height-1;
+    bal->balance=0;
+    bal->left_balance=0;
 }
 
 template<class S,class T> void tst<S,T>::lr(node_info<S,T>* bal) {
@@ -1211,6 +1219,7 @@ template<class S,class T> void tst<S,T>::lr(node_info<S,T>* bal) {
     left.index = bal->node->left;
     left.node = array + left.index;
     rr(&left);
+    bal->node->left=left.index;
     ll(bal);
 }
 
@@ -1219,6 +1228,7 @@ template<class S,class T> void tst<S,T>::rl(node_info<S,T>* bal) {
     right.index = bal->node->right;
     right.node = array + right.index;
     ll(&right);
+    bal->node->right=right.index;
     rr(bal);
 }
 

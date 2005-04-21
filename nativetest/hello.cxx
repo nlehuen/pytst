@@ -104,7 +104,7 @@ class tester : public donothing {
         tst<char,char*>* mytst;
 };
 
-#define ITERATIONS 1000
+#define ITERATIONS 4000000
 
 int main(int argc,char** argv) {
     tst<char,char*>* linetst=new stringtst();
@@ -114,8 +114,8 @@ int main(int argc,char** argv) {
 
     start = clock();
     for(int i=0;i<ITERATIONS;i++) {
-        char* line=(char*)malloc(256);
-        sprintf(line,"%d%d\0",i,i);
+        char* line=(char*)malloc(10);
+        sprintf(line,"%d\0",i);
         free(line);
     }
     end = clock();
@@ -125,8 +125,8 @@ int main(int argc,char** argv) {
     start = clock();
     for(int i=0;i<ITERATIONS;i++) {
 //    for(int i=ITERATIONS-1;i>=0;i--) {
-        char* line=(char*)malloc(256);
-        sprintf(line,"%d%d\0",i,i);
+        char* line=(char*)malloc(10);
+        sprintf(line,"%d\0",i);
         linetst->put(line,line);
     }
     end = clock();
@@ -136,12 +136,18 @@ int main(int argc,char** argv) {
     linetst->pack();
     linetst->debug_print_root();
 
+    /*printer p;
+    linetst->walk(NULL,&p);
+    char line[256];    
+    printf("OK...");
+    getchar();*/
+
     start = clock();
     for(int i=ITERATIONS-1;i>=0;i--) {
 //    for(int i=0;i<ITERATIONS;i++) {
         char line[256];
-        sprintf(line,"%d%d\0",i,i);
-        printf("%s\n",line);
+        sprintf(line,"%d\0",i);
+        // printf("%s\n",line);
         char *result=linetst->get(line);
         assert(result);
         assert(strcmp(line,result)==0);
@@ -150,9 +156,6 @@ int main(int argc,char** argv) {
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Read : %f\n",elapsed);
 
-    /*char line[256];    
-    printf("OK...");
-    scanf("%s\n",line);*/
 
     return 0;
 }
