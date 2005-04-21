@@ -2,7 +2,7 @@ import java.util.*;
 import com.lehuen.tst.*;
 
 public class TestTST {
-	public native Object test(String key, int oto,Object data);
+	public static final int ITERATIONS=1000;
 
     public static void main(String[] args) throws Exception {
         System.loadLibrary("jtst");
@@ -16,7 +16,7 @@ public class TestTST {
         
 
         startP=System.currentTimeMillis();
-        for(int iP=0;iP<4000000;iP++) {
+        for(int iP=0;iP<ITERATIONS;iP++) {
             String keyP=Integer.toString(iP);
         }
         endP=System.currentTimeMillis();
@@ -28,7 +28,7 @@ public class TestTST {
 
 		HashMap mP=new HashMap();
         startP=System.currentTimeMillis();
-        for(int iP=0;iP<4000000;iP++) {
+        for(int iP=0;iP<ITERATIONS;iP++) {
             String keyP=Integer.toString(iP);
             mP.put(keyP,keyP);
         }
@@ -36,7 +36,7 @@ public class TestTST {
         System.out.println("HashMap Write : "+(1.0*(endP-startP)/1000));
 
         startP=System.currentTimeMillis();
-        for(int iP=0;iP<4000000;iP++) {
+        for(int iP=0;iP<ITERATIONS;iP++) {
             String keyP=Integer.toString(iP);
             mP.get(keyP);
         }
@@ -55,7 +55,7 @@ public class TestTST {
         System.in.read();
 
 		startP=System.currentTimeMillis();
-        for(int iP=0;iP<4000000;iP++) {
+        for(int iP=0;iP<ITERATIONS;iP++) {
             String keyP=Integer.toString(iP);
             tP.put(keyP,keyP);
         }
@@ -69,15 +69,15 @@ public class TestTST {
         System.gc();
         
         startP=System.currentTimeMillis();
-        for(int iP=0;iP<4000000;iP++) {
+        for(int iP=ITERATIONS-1;iP>=0;iP--) {
             String keyP=Integer.toString(iP);
-            tP.get(keyP);
+            if(!keyP.equals(tP.get(keyP))) {
+				throw new RuntimeException("Probleme : "+keyP+" ==> "+tP.get(keyP));
+            }
         }
         endP=System.currentTimeMillis();
         System.out.println("Read : "+(1.0*(endP-startP)/1000));
                 
-        // tP.scan("35465432132123431.2131324135431321",new ObjectAction(new TestTST(),"perform",null));
-        
         System.gc();
         System.gc();
         System.gc();

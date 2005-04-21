@@ -2,7 +2,7 @@ import java.util.*;
 import com.lehuen.tst.*;
 
 public class TestTST2 {
-	public native Object test(String key, int oto,Object data);
+	public static final int ITERATIONS = 4000000;
 
     public static void main(String[] args) throws Exception {
         System.loadLibrary("jtst");
@@ -18,7 +18,7 @@ public class TestTST2 {
         long startP,endP;
         
         startP=System.currentTimeMillis();
-        for(int iP=0;iP<4000000;iP++) {
+        for(int iP=0;iP<ITERATIONS;iP++) {
             String keyP=Integer.toString(iP);
         }
         endP=System.currentTimeMillis();
@@ -30,7 +30,7 @@ public class TestTST2 {
 
 		/*HashMap mP=new HashMap();
         startP=System.currentTimeMillis();
-        for(int iP=0;iP<4000000;iP++) {
+        for(int iP=0;iP<ITERATIONS;iP++) {
             String keyP=Integer.toString(iP);
             mP.put(keyP,new Long(iP));
         }
@@ -38,7 +38,7 @@ public class TestTST2 {
         System.out.println("HashMap Write : "+(1.0*(endP-startP)/1000));
 
         startP=System.currentTimeMillis();
-        for(int iP=0;iP<4000000;iP++) {
+        for(int iP=0;iP<ITERATIONS;iP++) {
             String keyP=Integer.toString(iP);
             mP.get(keyP);
         }
@@ -57,7 +57,7 @@ public class TestTST2 {
         System.in.read();*/
 
 		startP=System.currentTimeMillis();
-        for(int iP=0;iP<4000000;iP++) {
+        for(int iP=0;iP<ITERATIONS;iP++) {
             String keyP=Integer.toString(iP);
             tP.put(keyP,iP);
         }
@@ -71,9 +71,11 @@ public class TestTST2 {
         System.gc();
         
         startP=System.currentTimeMillis();
-        for(int iP=0;iP<4000000;iP++) {
+        for(int iP=ITERATIONS-1;iP>=0;iP--) {
             String keyP=Integer.toString(iP);
-            tP.get(keyP);
+            if(iP!=tP.get(keyP)) {
+				throw new RuntimeException("Probleme : "+iP+"!="+tP.get(keyP));
+			}
         }
         endP=System.currentTimeMillis();
         System.out.println("Read : "+(1.0*(endP-startP)/1000));

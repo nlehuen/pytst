@@ -136,15 +136,17 @@ int main(int argc,char** argv) {
     for(int i=0;i<4000000;i++) {
         char line[256];
         sprintf(line,"%d",i);
-        linetst->get(line);
+        if(strcmp(line,linetst->get(line))!=0) {
+            printf("%s != %s\n",line,linetst->get(line));
+        }
     }
     end = clock();
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Read : %f\n",elapsed);
 
-    char line[256];    
+    /*char line[256];    
     printf("OK...");
-    scanf("%s\n",line);
+    scanf("%s\n",line);*/
 
     return 0;
 }
