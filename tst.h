@@ -174,7 +174,14 @@ template<class S,class T> T tst<S,T>::store_data(tst_node<S,T>* node,T data,int 
 template<class S,class T> tst<S,T>::tst(int size,T default_value) {
     this->size=size;
     this->default_value=default_value;
+
     array=(tst_node<S,T>*)tst_malloc(size*sizeof(tst_node<S,T>));
+    assert(array);
+    if(array==NULL) {
+        printf("Out of memory trying to allocate %d nodes of %d bytes, totalling %d Mb\n",size,sizeof(tst_node<S,T>),(size*sizeof(tst_node<S,T>))>>20);
+        exit(1);
+    }
+
     next=0;
     empty=UNDEFINED_INDEX;
     node_info<S,T> root_info;
@@ -499,9 +506,24 @@ template<class S,class T> void tst<S,T>::create_node(node_info<S,T>* current_nod
     tst_node<S,T>* new_node;
 
     if(next==size) {
+        int original_size = size;
+        tst_node<S,T>* original_array = array;
+        array = NULL;
+        size=(int)(1.618*size)+1;
+        
         // on utilise le nombre d'or pour l'accroissement du tableau
-        size=(int)(1.618*size);
-        array=(tst_node<S,T>*)tst_realloc(array,size*sizeof(tst_node<S,T>));
+        while(array==NULL && size>original_size) {
+            array=(tst_node<S,T>*)tst_realloc(original_array,size*sizeof(tst_node<S,T>));
+            if(array==NULL) {
+                printf("Out of memory trying to allocate %d nodes of %d bytes, totalling %d Mb",size,sizeof(tst_node<S,T>),(size*sizeof(tst_node<S,T>))>>20);
+                size = (int)(size*0.9)-1;
+                printf(" ...trying to allocate %d nodes, totalling %d Mb, instead\n",size,(size*sizeof(tst_node<S,T>))>>20);
+            }
+        }
+        if(array==NULL) {
+            printf("Out of memory trying to allocate %d nodes of %d bytes, totalling %d Mb\n",size,sizeof(tst_node<S,T>),(size*sizeof(tst_node<S,T>))>>20);
+            exit(1);
+        }
     }
 
     if(empty!=UNDEFINED_INDEX) {

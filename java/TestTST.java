@@ -2,14 +2,16 @@ import java.util.*;
 import com.lehuen.tst.*;
 
 public class TestTST {
-	public static final int ITERATIONS=1000;
+	public static final int ITERATIONS=100000;
 
     public static void main(String[] args) throws Exception {
         System.loadLibrary("jtst");
-        
+
         ObjectAction aP=new ObjectAction(new TestTST(),"perform","result");
 		aP.perform("Coucou",0,"Coucou");
 		System.out.println(aP.result());
+
+		ObjectFilter fP=new ObjectFilter(new TestTST(),"filter");
 
         ObjectTST tP=new ObjectTST(256,"DEFAUT");
         long startP,endP;
@@ -84,13 +86,21 @@ public class TestTST {
         
         System.out.println("OK 3");
         System.in.read();
-    }
+
+		System.out.println("Walk !");
+		tP.walk(fP,aP);
+	}
 
 	public void perform(String key,int remaining_distance,Object data) {
-		System.out.println("From java : "+key+" "+remaining_distance+" "+data);
+		System.out.println("Perform java : "+key+" "+remaining_distance+" "+data);
 	}
 
 	public Object result() {
 		return "Bonjour";
+	}
+
+	public Object filter(String key,int remaining_distance,Object data) {
+		System.out.println("Filter java : "+key+" "+remaining_distance+" "+data);
+		return data;
 	}
 }

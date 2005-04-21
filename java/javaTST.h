@@ -17,6 +17,7 @@ public:
     }
 protected:
     virtual jobject store_data(tst_node<char,jobject>* node,jobject data,int want_old_value) {
+        printf("store %d\n",data);
         jobject old_data = node->data;
         if(old_data!=default_value) {
             jenv->DeleteGlobalRef(old_data);
