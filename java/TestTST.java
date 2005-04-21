@@ -10,7 +10,7 @@ public class TestTST {
 		aP.perform("Coucou",0,"Coucou");
 		System.out.println(aP.result());
 
-        ObjectTST tP=new ObjectTST("DEFAUT");
+        ObjectTST tP=new ObjectTST(256,"DEFAUT");
         long startP,endP;
         
 

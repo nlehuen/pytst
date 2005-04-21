@@ -1131,19 +1131,21 @@ JNIEXPORT jlong JNICALL Java_tstJNI__1LongSerializer_1read(JNIEnv *jenv, jclass 
 }
 
 
-JNIEXPORT jlong JNICALL Java_tstJNI_new_1ObjectTST(JNIEnv *jenv, jclass jcls, jobject jarg1) {
+JNIEXPORT jlong JNICALL Java_tstJNI_new_1ObjectTST(JNIEnv *jenv, jclass jcls, jint jarg1, jobject jarg2) {
     jlong jresult = 0 ;
-    jobject arg1 ;
-    JNIEnv *arg2 = (JNIEnv *) 0 ;
+    int arg1 ;
+    jobject arg2 ;
+    JNIEnv *arg3 = (JNIEnv *) 0 ;
     ObjectTST *result;
     
     (void)jenv;
     (void)jcls;
+    arg1 = (int)jarg1; 
     {
-        arg1 = (jobject)jarg1;
-        arg2 = jenv;
+        arg2 = (jobject)jarg2;
+        arg3 = jenv;
     }
-    result = (ObjectTST *)new ObjectTST(arg1,arg2);
+    result = (ObjectTST *)new ObjectTST(arg1,arg2,arg3);
     
     *(ObjectTST **)&jresult = result; 
     return jresult;

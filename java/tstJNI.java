@@ -60,7 +60,7 @@ class tstJNI {
   public final static native void delete__LongSerializer(long jarg1);
   public final static native void _LongSerializer_write(long jarg1, long jarg2, long jarg3);
   public final static native long _LongSerializer_read(long jarg1, long jarg2);
-  public final static native long new_ObjectTST(Object jarg1);
+  public final static native long new_ObjectTST(int jarg1, Object jarg2);
   public final static native void delete_ObjectTST(long jarg1);
   public final static native long new_ObjectAction(Object jarg1, String jarg2, String jarg3);
   public final static native void delete_ObjectAction(long jarg1);

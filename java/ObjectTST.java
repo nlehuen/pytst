@@ -36,8 +36,8 @@ public class ObjectTST extends _ObjectTST {
     super.delete();
   }
 
-  public ObjectTST(Object data) {
-    this(tstJNI.new_ObjectTST(data), true);
+  public ObjectTST(int initial_size, Object data) {
+    this(tstJNI.new_ObjectTST(initial_size, data), true);
   }
 
 }

@@ -3,7 +3,7 @@
 
 class ObjectTST : public tst<char,jobject> {
 public:
-    ObjectTST(jobject data,JNIEnv* jenv2) : tst<char,jobject>(256,data) {
+    ObjectTST(int initial_size,jobject data,JNIEnv* jenv2) : tst<char,jobject>(initial_size,data) {
         jenv = jenv2;
         if(data) {
             jenv->NewGlobalRef(data);
