@@ -124,6 +124,9 @@
 				RelativePath=".\TestTST.java">
 			</File>
 			<File
+				RelativePath=".\TestTST2.java">
+			</File>
+			<File
 				RelativePath=".\tstjava.i">
 				<FileConfiguration
 					Name="Debug|Win32">

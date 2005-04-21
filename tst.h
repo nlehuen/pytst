@@ -39,7 +39,7 @@
 
 #define UNDEFINED_INDEX -1
 
-#define TST_VERSION "0.6"
+#define TST_VERSION "0.61"
 
 // Pour ajouter/supprimer les fonctions de scanning.
 #define SCANNER
@@ -93,7 +93,7 @@ template<class S,class T> class tst {
 public:
     tst(FILE* file,serializer<S,T>* reader);
     tst(int initial_size,T default_value);
-    virtual ~tst() {
+    ~tst() {
         clear_nodes();
     };
 
@@ -107,9 +107,9 @@ public:
     T scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform);
 #endif
     T get(S* string);
-    virtual T get_or_build(S* string,filter<S,T>* factory);
-    virtual T put(S* string,T data);
-    virtual void remove(S* string);
+    T get_or_build(S* string,filter<S,T>* factory);
+    T put(S* string,T data);
+    void remove(S* string);
     int get_maximum_key_length();
     size_t bytes_allocated();
     void write(FILE* file,serializer<S,T>* writer);
@@ -121,15 +121,15 @@ protected:
     int root,next,size,empty,maximum_key_length;
 
     tst();
-    virtual void read(FILE* file,serializer<S,T>* serializer);
+    void read(FILE* file,serializer<S,T>* serializer);
 
     void walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform);
     void almost_recurse(tst_node<S,T>* current_node,S* current_key, int current_key_length, S* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,int current_key_limit);
 
-    virtual void create_node(node_info<S,T>* current_node_info);
+    void create_node(node_info<S,T>* current_node_info);
 
-    virtual int build_node(node_info<S,T>* current_node,S* current_char,int current_key_length);
-    virtual void remove_node(int* current_index,S* current_char,int current_key_length);
+    int build_node(node_info<S,T>* current_node,S* current_char,int current_key_length);
+    void remove_node(int* current_index,S* current_char,int current_key_length);
     tst_node<S,T>* find_node(int* current_index,int* best_node, S* current_char);
 
 #ifdef SCANNER
@@ -142,8 +142,8 @@ protected:
     void lr(node_info<S,T>* bal);
     void rl(node_info<S,T>* bal);
     void compute_height_and_balance(node_info<S,T>* current_node_info);
-    virtual T store_data(tst_node<S,T>* node,T data,int want_old_value);
-    virtual void clear_nodes();
+    T store_data(tst_node<S,T>* node,T data,int want_old_value);
+    void clear_nodes();
 };
 
 template<class S,class T> void tst<S,T>::debug_print_root() {

@@ -28,7 +28,7 @@ public class TestTST2 {
         System.gc();
         System.gc();
 
-		HashMap mP=new HashMap();
+		/*HashMap mP=new HashMap();
         startP=System.currentTimeMillis();
         for(int iP=0;iP<4000000;iP++) {
             String keyP=Integer.toString(iP);
@@ -54,7 +54,7 @@ public class TestTST2 {
         System.gc();
 
         System.out.println("OK 2");
-        System.in.read();
+        System.in.read();*/
 
 		startP=System.currentTimeMillis();
         for(int iP=0;iP<4000000;iP++) {
