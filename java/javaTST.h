@@ -89,9 +89,35 @@ private:
 
 class ObjectFilter : public filter<char,jobject> {
 public:
+    ObjectFilter(jobject target,char *perform,JNIEnv* jenv) : filter<char,jobject>() {
+        this->jenv=jenv;
+        this->target=jenv->NewGlobalRef(target);
+        jclass clazz = jenv->GetObjectClass(this->target);
+        if(clazz) {
+            if(perform) {
+                this->performID = jenv->GetMethodID(clazz,perform,"(Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/Object;");
+                if(!this->performID) return;
+            }
+            else {
+                this->performID=0;
+            }
+        }
+    }
+
     virtual jobject perform(char* key,int remaining_distance,jobject data) {
+        if(performID) {
+            jstring key_string = jenv->NewStringUTF(key);
+            if(key_string) {
+                return jenv->CallObjectMethod(target,performID,key_string,(jint)remaining_distance,data);
+            }
+        }
         return NULL;
     }
+
+private:
+    JNIEnv* jenv;
+    jobject target;
+    jmethodID performID;
 };
 
 class ObjectSerializer : public serializer<char,jobject> {

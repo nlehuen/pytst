@@ -24,7 +24,7 @@
 
 %include "tst.h"
 
-%typemap(in) (char* result,JNIEnv* jenv) {
+%typemap(in) (char* result,JNIEnv* jenv),(char* perform,JNIEnv* jenv) {
     $1 = 0;
     if ($input) {
         $1 = (char *)jenv->GetStringUTFChars($input, 0);
@@ -38,7 +38,7 @@
 	$2 = jenv;
 }
 
-%typemap(freearg) (char* result,JNIEnv* jenv) {
+%typemap(freearg) (char* result,JNIEnv* jenv),(char* perform,JNIEnv* jenv) {
 	if ($1) jenv->ReleaseStringUTFChars($input, $1); 
 }
 
@@ -46,5 +46,10 @@
 %template(_ObjectAction) action<char,jobject>;
 %template(_ObjectFilter) filter<char,jobject>;
 %template(_ObjectSerializer) serializer<char,jobject>;
+
+%template(LongTST) tst<char,long long>;
+%template(LongAction) action<char,long long>;
+%template(LongFilter) filter<char,long long>;
+%template(LongSerializer) serializer<char,long long>;
 
 %include "javaTST.h"
