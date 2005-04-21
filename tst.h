@@ -1171,6 +1171,7 @@ template<class S,class T> void tst<S,T>::balance_node(node_info<S,T>* bal) {
         else {
             rl(bal);
         }
+        compute_height_and_balance(bal); // TODO : optimiser
     }
     else if(bal->balance<-1) {
         if(bal->left_balance<0) {
@@ -1179,6 +1180,7 @@ template<class S,class T> void tst<S,T>::balance_node(node_info<S,T>* bal) {
         else {
             lr(bal);
         }
+        compute_height_and_balance(bal); // TODO : optimiser
     }
 }
 
@@ -1188,6 +1190,7 @@ template<class S,class T> void tst<S,T>::ll(node_info<S,T>* bal) {
     int left_right_index=left_node->right;
     bal->node->left=left_right_index;
     left_node->right=bal->index;
+    
     bal->index=left_index;
     bal->node=array+left_index;
 }
@@ -1198,6 +1201,7 @@ template<class S,class T> void tst<S,T>::rr(node_info<S,T>* bal) {
     int right_left_index=right_node->left;
     bal->node->right=right_left_index;
     right_node->left=bal->index;
+    
     bal->index=right_index;
     bal->node=array+right_index;
 }
