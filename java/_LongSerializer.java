@@ -7,16 +7,21 @@
  * ----------------------------------------------------------------------------- */
 
 
-public class LongSerializer extends _LongSerializer {
+public class _LongSerializer {
   private long swigCPtr;
+  protected boolean swigCMemOwn;
 
-  protected LongSerializer(long cPtr, boolean cMemoryOwn) {
-    super(tstJNI.SWIGLongSerializerUpcast(cPtr), cMemoryOwn);
+  protected _LongSerializer(long cPtr, boolean cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  protected static long getCPtr(LongSerializer obj) {
+  protected static long getCPtr(_LongSerializer obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
+  }
+
+  protected _LongSerializer() {
+    this(0, false);
   }
 
   protected void finalize() {
@@ -26,22 +31,17 @@ public class LongSerializer extends _LongSerializer {
   public void delete() {
     if(swigCPtr != 0 && swigCMemOwn) {
       swigCMemOwn = false;
-      tstJNI.delete_LongSerializer(swigCPtr);
+      tstJNI.delete__LongSerializer(swigCPtr);
     }
     swigCPtr = 0;
-    super.delete();
   }
 
   public void write(SWIGTYPE_p_FILE file, long data) {
-    tstJNI.LongSerializer_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), data);
+    tstJNI._LongSerializer_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), data);
   }
 
   public long read(SWIGTYPE_p_FILE file) {
-    return tstJNI.LongSerializer_read(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file));
-  }
-
-  public LongSerializer() {
-    this(tstJNI.new_LongSerializer(), true);
+    return tstJNI._LongSerializer_read(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file));
   }
 
 }

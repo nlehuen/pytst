@@ -48,8 +48,8 @@
 %template(_ObjectSerializer) serializer<char,jobject>;
 
 %template(LongTST) tst<char,long long>;
-%template(LongAction) action<char,long long>;
-%template(LongFilter) filter<char,long long>;
-%template(LongSerializer) serializer<char,long long>;
+%template(_LongAction) action<char,long long>;
+%template(_LongFilter) filter<char,long long>;
+%template(_LongSerializer) serializer<char,long long>;
 
 %include "javaTST.h"

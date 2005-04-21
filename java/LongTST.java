@@ -36,8 +36,8 @@ public class LongTST {
     swigCPtr = 0;
   }
 
-  public LongTST(SWIGTYPE_p_FILE file, LongSerializer reader) {
-    this(tstJNI.new_LongTST__SWIG_0(SWIGTYPE_p_FILE.getCPtr(file), LongSerializer.getCPtr(reader)), true);
+  public LongTST(SWIGTYPE_p_FILE file, _LongSerializer reader) {
+    this(tstJNI.new_LongTST__SWIG_0(SWIGTYPE_p_FILE.getCPtr(file), _LongSerializer.getCPtr(reader)), true);
   }
 
   public LongTST(int initial_size, long default_value) {
@@ -48,32 +48,32 @@ public class LongTST {
     tstJNI.LongTST_pack(swigCPtr);
   }
 
-  public long walk(LongFilter filter, LongAction to_perform) {
-    return tstJNI.LongTST_walk(swigCPtr, LongFilter.getCPtr(filter), LongAction.getCPtr(to_perform));
+  public long walk(_LongFilter filter, _LongAction to_perform) {
+    return tstJNI.LongTST_walk(swigCPtr, _LongFilter.getCPtr(filter), _LongAction.getCPtr(to_perform));
   }
 
-  public long almost(String string, int string_length, int maximum_distance, LongFilter filter, LongAction to_perform) {
-    return tstJNI.LongTST_almost(swigCPtr, string, string_length, maximum_distance, LongFilter.getCPtr(filter), LongAction.getCPtr(to_perform));
+  public long almost(String string, int string_length, int maximum_distance, _LongFilter filter, _LongAction to_perform) {
+    return tstJNI.LongTST_almost(swigCPtr, string, string_length, maximum_distance, _LongFilter.getCPtr(filter), _LongAction.getCPtr(to_perform));
   }
 
-  public long common_prefix(String string, LongFilter filter, LongAction to_perform) {
-    return tstJNI.LongTST_common_prefix(swigCPtr, string, LongFilter.getCPtr(filter), LongAction.getCPtr(to_perform));
+  public long common_prefix(String string, _LongFilter filter, _LongAction to_perform) {
+    return tstJNI.LongTST_common_prefix(swigCPtr, string, _LongFilter.getCPtr(filter), _LongAction.getCPtr(to_perform));
   }
 
-  public long scan(String string, LongAction to_perform) {
-    return tstJNI.LongTST_scan(swigCPtr, string, LongAction.getCPtr(to_perform));
+  public long scan(String string, _LongAction to_perform) {
+    return tstJNI.LongTST_scan(swigCPtr, string, _LongAction.getCPtr(to_perform));
   }
 
-  public long scan_with_stop_chars(String string, String stop_chars, LongAction to_perform) {
-    return tstJNI.LongTST_scan_with_stop_chars(swigCPtr, string, stop_chars, LongAction.getCPtr(to_perform));
+  public long scan_with_stop_chars(String string, String stop_chars, _LongAction to_perform) {
+    return tstJNI.LongTST_scan_with_stop_chars(swigCPtr, string, stop_chars, _LongAction.getCPtr(to_perform));
   }
 
   public long get(String string) {
     return tstJNI.LongTST_get(swigCPtr, string);
   }
 
-  public long get_or_build(String string, LongFilter factory) {
-    return tstJNI.LongTST_get_or_build(swigCPtr, string, LongFilter.getCPtr(factory));
+  public long get_or_build(String string, _LongFilter factory) {
+    return tstJNI.LongTST_get_or_build(swigCPtr, string, _LongFilter.getCPtr(factory));
   }
 
   public long put(String string, long data) {
@@ -92,8 +92,8 @@ public class LongTST {
     return tstJNI.LongTST_bytes_allocated(swigCPtr);
   }
 
-  public void write(SWIGTYPE_p_FILE file, LongSerializer writer) {
-    tstJNI.LongTST_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), LongSerializer.getCPtr(writer));
+  public void write(SWIGTYPE_p_FILE file, _LongSerializer writer) {
+    tstJNI.LongTST_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), _LongSerializer.getCPtr(writer));
   }
 
   public void debug_print_root() {

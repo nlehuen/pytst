@@ -7,12 +7,11 @@
  * ----------------------------------------------------------------------------- */
 
 
-public class LongFilter {
+public class LongFilter extends _LongFilter {
   private long swigCPtr;
-  protected boolean swigCMemOwn;
 
   protected LongFilter(long cPtr, boolean cMemoryOwn) {
-    swigCMemOwn = cMemoryOwn;
+    super(tstJNI.SWIGLongFilterUpcast(cPtr), cMemoryOwn);
     swigCPtr = cPtr;
   }
 
@@ -34,6 +33,11 @@ public class LongFilter {
       tstJNI.delete_LongFilter(swigCPtr);
     }
     swigCPtr = 0;
+    super.delete();
+  }
+
+  public LongFilter(Object target, String perform) {
+    this(tstJNI.new_LongFilter(target, perform), true);
   }
 
   public long perform(String key, int remaining_distance, long data) {

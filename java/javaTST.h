@@ -104,6 +104,10 @@ public:
         }
     }
 
+    ~ObjectFilter() {
+        jenv->DeleteGlobalRef(target);
+    }
+
     virtual jobject perform(char* key,int remaining_distance,jobject data) {
         if(performID) {
             jstring key_string = jenv->NewStringUTF(key);
@@ -127,5 +131,108 @@ public:
 
     virtual jobject read(FILE* file) {
         return NULL;
+    }
+};
+
+class LongAction : public action<char,long long> {
+public:
+    LongAction(jobject target,char *perform,char* result,JNIEnv* jenv) : action<char,long long>() {
+        this->jenv=jenv;
+        this->target=jenv->NewGlobalRef(target);
+        jclass clazz = jenv->GetObjectClass(this->target);
+        if(clazz) {
+            if(perform) {
+                this->performID = jenv->GetMethodID(clazz,perform,"(Ljava/lang/String;IJ)V");
+                if(!this->performID) return;
+            }
+            else {
+                this->performID=0;
+            }
+            if(result) {
+                this->resultID = jenv->GetMethodID(clazz,result,"()J");
+                if(!this->resultID) return;
+            }
+            else {
+                this->resultID=0;
+            }
+        }
+    }
+
+    ~LongAction() {
+        jenv->DeleteGlobalRef(target);
+    }
+
+    virtual void perform(char* key,int remaining_distance,long long data) {
+        if(performID) {
+            jstring key_string = jenv->NewStringUTF(key);
+            if(key_string) {
+                jenv->CallVoidMethod(target,performID,key_string,(jint)remaining_distance,data);
+            }
+        }
+    }
+
+    virtual long long result() {
+        if(resultID) {
+            long long result = (long long)jenv->CallLongMethod(target,resultID);
+            return result;
+        }
+        else {
+            return NULL;
+        }
+    }
+
+private:
+    JNIEnv* jenv;
+    jobject target;
+    jmethodID performID,resultID;
+};
+
+class LongFilter : public filter<char,long long> {
+public:
+    LongFilter(jobject target,char *perform,JNIEnv* jenv) : filter<char,long long>() {
+        this->jenv=jenv;
+        this->target=jenv->NewGlobalRef(target);
+        jclass clazz = jenv->GetObjectClass(this->target);
+        if(clazz) {
+            if(perform) {
+                this->performID = jenv->GetMethodID(clazz,perform,"(Ljava/lang/String;IJ)J");
+                if(!this->performID) return;
+            }
+            else {
+                this->performID=0;
+            }
+        }
+    }
+
+    ~LongFilter() {
+        jenv->DeleteGlobalRef(target);
+    }
+
+    virtual long long perform(char* key,int remaining_distance,long long data) {
+        if(performID) {
+            jstring key_string = jenv->NewStringUTF(key);
+            if(key_string) {
+                return (long long)jenv->CallLongMethod(target,performID,key_string,(jint)remaining_distance,data);
+            }
+        }
+        return NULL;
+    }
+
+private:
+    JNIEnv* jenv;
+    jobject target;
+    jmethodID performID;
+};
+
+class LongSerializer : public serializer<char,long long> {
+public:
+    virtual void write(FILE* file,long long data) {
+        fwrite(&data,sizeof(data),1,file);
+    }
+
+    virtual long long read(FILE* file) {
+        long long data;
+        fread(&data,sizeof(data),1,file);
+        return data;
     }
 };
