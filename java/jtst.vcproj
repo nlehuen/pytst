@@ -132,8 +132,7 @@
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="E:\SWIG-1.3.24\swig -c++ -java -I.. -o $(InputName)_wrap.cxx $(InputPath)
-"
+						CommandLine="E:\SWIG-1.3.24\swig -c++ -java -package com.lehuen.tst -outdir com\lehuen\tst -I.. -o $(InputName)_wrap.cxx $(InputPath)"
 						AdditionalDependencies="..\tst.h"
 						Outputs="$(InputName)_wrap.cxx"/>
 				</FileConfiguration>

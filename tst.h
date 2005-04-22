@@ -39,10 +39,10 @@
 
 #define UNDEFINED_INDEX -1
 
-#define TST_VERSION "0.62"
+#define TST_VERSION "0.63"
 
 // Pour ajouter/supprimer les fonctions de scanning.
-#define SCANNER
+// #define SCANNER
 
 template<class S,class T> class tst_node {
 public:
@@ -67,6 +67,7 @@ public:
     int balance;
     int right_balance;
     int left_balance;
+    int balance_performed;
 };
 
 template<class S,class T> class action {
@@ -572,6 +573,7 @@ template<class S,class T> int tst<S,T>::build_node(node_info<S,T>* current_node_
     }
 
     current_node_info->height=-1;
+    current_node_info->balance_performed=0;
 
     if(diff==0) {
         current_char++;
@@ -616,29 +618,34 @@ template<class S,class T> int tst<S,T>::build_node(node_info<S,T>* current_node_
         current_node_info->node = array + current_node_info->index;
         current_node_info->node->right = next_node_info.index;
 
-        if(current_node_info->node->left==UNDEFINED_INDEX) {
-            current_node_info->height = next_node_info.height + 1;
-            current_node_info->balance = next_node_info.height;
-            current_node_info->left_balance = 0;
-            current_node_info->right_balance = next_node_info.balance;
+        if(next_node_info.balance_performed) {
+            current_node_info->balance_performed=1;
         }
         else {
-            node_info<S,T> other_node_info;
-            other_node_info.index = current_node_info->node->left;    
-            other_node_info.node = array + other_node_info.index;
-            compute_height_and_balance(&other_node_info);
-            if(other_node_info.height>next_node_info.height) {
-                current_node_info->height=other_node_info.height+1;
+            if(current_node_info->node->left==UNDEFINED_INDEX) {
+                current_node_info->height = next_node_info.height + 1;
+                current_node_info->balance = next_node_info.height;
+                current_node_info->left_balance = 0;
+                current_node_info->right_balance = next_node_info.balance;
             }
             else {
-                current_node_info->height=next_node_info.height+1;
+                node_info<S,T> other_node_info;
+                other_node_info.index = current_node_info->node->left;    
+                other_node_info.node = array + other_node_info.index;
+                compute_height_and_balance(&other_node_info);
+                if(other_node_info.height>next_node_info.height) {
+                    current_node_info->height=other_node_info.height+1;
+                }
+                else {
+                    current_node_info->height=next_node_info.height+1;
+                }
+                current_node_info->balance = next_node_info.height-other_node_info.height;
+                current_node_info->left_balance = other_node_info.balance;
+                current_node_info->right_balance = next_node_info.balance;
             }
-            current_node_info->balance = next_node_info.height-other_node_info.height;
-            current_node_info->left_balance = other_node_info.balance;
-            current_node_info->right_balance = next_node_info.balance;
+            balance_node(current_node_info);
         }
 
-        balance_node(current_node_info);
         return result;
     }
     else {
@@ -654,29 +661,35 @@ template<class S,class T> int tst<S,T>::build_node(node_info<S,T>* current_node_
         current_node_info->node = array + current_node_info->index;
         current_node_info->node->left = next_node_info.index;
 
-        if(current_node_info->node->right==UNDEFINED_INDEX) {
-            current_node_info->height = next_node_info.height + 1;
-            current_node_info->balance = -next_node_info.height;
-            current_node_info->right_balance = 0;
-            current_node_info->left_balance = next_node_info.balance;
+        if(next_node_info.balance_performed) {
+            current_node_info->balance_performed=1;
         }
         else {
-            node_info<S,T> other_node_info;
-            other_node_info.index = current_node_info->node->right;    
-            other_node_info.node = array + other_node_info.index;
-            compute_height_and_balance(&other_node_info);
-            if(other_node_info.height>next_node_info.height) {
-                current_node_info->height=other_node_info.height+1;
+            if(current_node_info->node->right==UNDEFINED_INDEX) {
+                current_node_info->height = next_node_info.height + 1;
+                current_node_info->balance = -next_node_info.height;
+                current_node_info->right_balance = 0;
+                current_node_info->left_balance = next_node_info.balance;
             }
             else {
-                current_node_info->height=next_node_info.height+1;
+                node_info<S,T> other_node_info;
+                other_node_info.index = current_node_info->node->right;    
+                other_node_info.node = array + other_node_info.index;
+                compute_height_and_balance(&other_node_info);
+                if(other_node_info.height>next_node_info.height) {
+                    current_node_info->height=other_node_info.height+1;
+                }
+                else {
+                    current_node_info->height=next_node_info.height+1;
+                }
+                current_node_info->balance = other_node_info.height-next_node_info.height;
+                current_node_info->right_balance = other_node_info.balance;
+                current_node_info->left_balance = next_node_info.balance;
             }
-            current_node_info->balance = other_node_info.height-next_node_info.height;
-            current_node_info->right_balance = other_node_info.balance;
-            current_node_info->left_balance = next_node_info.balance;
+
+            balance_node(current_node_info);
         }
 
-        balance_node(current_node_info);
         return result;
     }
 }
@@ -1186,6 +1199,7 @@ template<class S,class T> void tst<S,T>::balance_node(node_info<S,T>* bal) {
     if(bal->height==-1) {
         compute_height_and_balance(bal);
     }
+    bal->balance_performed=0;
     if(bal->balance>1) {
         if(bal->right_balance>0) {
             rr(bal);
@@ -1193,6 +1207,7 @@ template<class S,class T> void tst<S,T>::balance_node(node_info<S,T>* bal) {
         else {
             rl(bal);
         }
+        bal->balance_performed=1;
     }
     else if(bal->balance<-1) {
         if(bal->left_balance<0) {
@@ -1201,6 +1216,7 @@ template<class S,class T> void tst<S,T>::balance_node(node_info<S,T>* bal) {
         else {
             lr(bal);
         }
+        bal->balance_performed=1;
     }
     
     assert(abs(bal->balance)<2);

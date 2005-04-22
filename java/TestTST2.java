@@ -2,7 +2,7 @@ import java.util.*;
 import com.lehuen.tst.*;
 
 public class TestTST2 {
-	public static final int ITERATIONS = 2500000;
+	public static final int ITERATIONS = 4000000;
 
     public static void main(String[] args) throws Exception {
         System.loadLibrary("jtst");
@@ -59,7 +59,7 @@ public class TestTST2 {
 		startP=System.currentTimeMillis();
         for(int iP=0;iP<ITERATIONS;iP++) {
             String keyP=Integer.toString(iP);
-			keyP = keyP+keyP;
+			// keyP = keyP+keyP;
             tP.put(keyP,iP);
         }
         endP=System.currentTimeMillis();
@@ -74,7 +74,7 @@ public class TestTST2 {
         startP=System.currentTimeMillis();
         for(int iP=ITERATIONS-1;iP>=0;iP--) {
             String keyP=Integer.toString(iP);
-			keyP = keyP+keyP;
+			// keyP = keyP+keyP;
 			if(iP!=tP.get(keyP)) {
 				throw new RuntimeException("Probleme : "+iP+"!="+tP.get(keyP));
 			}
