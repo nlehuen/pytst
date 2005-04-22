@@ -27,7 +27,7 @@ if sys.version < '2.2.3':
 
 setup(
     name = "pytst",
-    version = "0.63",
+    version = "0.64",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
     url = "http://nicolas.lehuen.com/",

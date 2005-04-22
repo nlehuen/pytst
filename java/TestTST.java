@@ -8,10 +8,11 @@ public class TestTST {
         System.loadLibrary("jtst");
 
         ObjectAction aP=new ObjectAction(new TestTST(),"perform","result");
-		aP.perform("Coucou",0,"Coucou");
+		aP.perform("Perform test",0,"is it working ?");
 		System.out.println(aP.result());
 
 		ObjectFilter fP=new ObjectFilter(new TestTST(),"filter");
+		System.out.println(fP.perform("Filter test",0,"it works !"));
 
         ObjectTST tP=new ObjectTST(256,"DEFAUT");
         long startP,endP;
@@ -92,15 +93,15 @@ public class TestTST {
 	}
 
 	public void perform(String key,int remaining_distance,Object data) {
-		System.out.println("Perform java : "+key+" "+remaining_distance+" "+data);
+		System.out.println("Perform java : \""+key+"\" "+remaining_distance+" "+data);
 	}
 
 	public Object result() {
-		return "Bonjour";
+		return "Yes it works !";
 	}
 
 	public Object filter(String key,int remaining_distance,Object data) {
-		System.out.println("Filter java : "+key+" "+remaining_distance+" "+data);
+		System.out.println("Filter java : \""+key+"\" "+remaining_distance+" "+data);
 		return data;
 	}
 }

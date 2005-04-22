@@ -39,7 +39,7 @@
 
 #define UNDEFINED_INDEX -1
 
-#define TST_VERSION "0.63"
+#define TST_VERSION "0.64"
 
 // Pour ajouter/supprimer les fonctions de scanning.
 #define SCANNER
@@ -343,28 +343,27 @@ template<class S,class T> void tst<S,T>::walk_recurse(tst_node<S,T>* current_nod
         walk_recurse(array+other_index,current_key,current_key_length,current_key_limit,filter,to_perform);
     }
 
+    assert(current_key[current_key_length]=='\0');
+    assert(current_key_length < current_key_limit);
+    current_key[current_key_length]=current_node->c;
+    current_key[current_key_length+1]='\0';
+
     T data = current_node->data;
-    if(data!=default_value && filter) {
-        data = filter->perform(current_key,0,data);
-    }
-    if(data!=default_value && to_perform) {
-        assert(current_key[current_key_length]=='\0');
-        assert(current_key_length < current_key_limit);
-        current_key[current_key_length]=current_node->c;
-        current_key[current_key_length+1]='\0';
-        to_perform->perform(current_key,0,data);
-        current_key[current_key_length]='\0';
+    if(data!=default_value) {
+        if(filter) {
+            data = filter->perform(current_key,0,data);
+        }
+        if(to_perform) {
+            to_perform->perform(current_key,0,data);
+        }
     }
 
     other_index=current_node->next;
     if(other_index!=UNDEFINED_INDEX) {
-        assert(current_key[current_key_length]=='\0');
-        assert(current_key_length < current_key_limit);
-        current_key[current_key_length]=current_node->c;
-        current_key[current_key_length+1]='\0';
         walk_recurse(array+other_index,current_key,current_key_length+1,current_key_limit,filter,to_perform);
-        current_key[current_key_length]='\0';
     }
+
+    current_key[current_key_length]='\0';
 
     other_index=current_node->right;
     if(other_index!=UNDEFINED_INDEX) {
