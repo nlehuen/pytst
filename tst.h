@@ -42,7 +42,7 @@
 #define TST_VERSION "0.63"
 
 // Pour ajouter/supprimer les fonctions de scanning.
-// #define SCANNER
+#define SCANNER
 
 template<class S,class T> class tst_node {
 public:
@@ -94,7 +94,7 @@ template<class S,class T> class tst {
 public:
     tst(FILE* file,serializer<S,T>* reader);
     tst(int initial_size,T default_value);
-    ~tst() {
+    virtual ~tst() {
         clear_nodes();
     };
 
@@ -128,7 +128,6 @@ protected:
     void almost_recurse(tst_node<S,T>* current_node,S* current_key, int current_key_length, S* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,int current_key_limit);
 
     void create_node(node_info<S,T>* current_node_info);
-
     int build_node(node_info<S,T>* current_node,S* current_char,int current_key_length);
     void remove_node(int* current_index,S* current_char,int current_key_length);
     tst_node<S,T>* find_node(int* current_index,int* best_node, S* current_char);
@@ -143,8 +142,9 @@ protected:
     void lr(node_info<S,T>* bal);
     void rl(node_info<S,T>* bal);
     void compute_height_and_balance(node_info<S,T>* current_node_info);
-    T store_data(tst_node<S,T>* node,T data,int want_old_value);
     void clear_nodes();
+
+    virtual T store_data(tst_node<S,T>* node,T data,int want_old_value);
 };
 
 template<class S,class T> void tst<S,T>::debug_print_root() {

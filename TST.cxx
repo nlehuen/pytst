@@ -313,7 +313,7 @@ TST::TST(int initial_size,PyObject* default_value) : tst<char,PyObject*>(initial
 TST::~TST() {
     clear_nodes();
     // TODO : pourquoi ce DECREF est en trop ?
-    // Py_DECREF(default_value);
+    Py_DECREF(default_value);
 }
 
 PyObject* TST::store_data(tst_node<char,PyObject*>* node,PyObject* data,int want_old_value) {
