@@ -1,7 +1,7 @@
 include tst_wrap.cxx
 include TST.cxx
-include tst.h
-include debug.h
-include LICENSE
+include ../tst.h
+include ../debug.h
+include ../LICENSE
 include MANIFEST.in
 include README.html

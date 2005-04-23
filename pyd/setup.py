@@ -37,6 +37,7 @@ setup(
         Extension(
             "_tst",
             ["tst_wrap.cxx"],
+            include_dirs=['..','include']
         ),
     ],
     download_url = "http://nicolas.lehuen.com/download/",
