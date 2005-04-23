@@ -2095,6 +2095,85 @@ static PyObject *_wrap__TST_debug_print_root(PyObject *, PyObject *args) {
 }
 
 
+static PyObject *_wrap__TST_scan(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    action<char,PyObject * > *arg4 = (action<char,PyObject * > *) 0 ;
+    PyObject *result;
+    char *buf2 ;
+    size_t size2 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    PyObject * obj2 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OOO:_TST_scan",&obj0,&obj1,&obj2)) goto fail;
+    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(1)) SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
+    }
+    SWIG_Python_ConvertPtr(obj2, (void **)&arg4, SWIGTYPE_p_actionTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(4)) SWIG_fail;
+    {
+        try {
+            result = (PyObject *)(arg1)->scan(arg2,arg3,arg4);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = result;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
+    char *arg2 = (char *) 0 ;
+    char *arg3 = (char *) 0 ;
+    action<char,PyObject * > *arg4 = (action<char,PyObject * > *) 0 ;
+    PyObject *result;
+    PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    PyObject * obj2 = 0 ;
+    PyObject * obj3 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OOOO:_TST_scan_with_stop_chars",&obj0,&obj1,&obj2,&obj3)) goto fail;
+    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(1)) SWIG_fail;
+    if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
+        SWIG_arg_fail(2);SWIG_fail;
+    }
+    if (!SWIG_AsCharPtr(obj2, (char**)&arg3)) {
+        SWIG_arg_fail(3);SWIG_fail;
+    }
+    SWIG_Python_ConvertPtr(obj3, (void **)&arg4, SWIGTYPE_p_actionTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(4)) SWIG_fail;
+    {
+        try {
+            result = (PyObject *)(arg1)->scan_with_stop_chars(arg2,arg3,arg4);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = result;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject * _TST_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
     if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
@@ -3566,6 +3645,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_TST_bytes_allocated", _wrap__TST_bytes_allocated, METH_VARARGS, NULL},
 	 { (char *)"_TST_write", _wrap__TST_write, METH_VARARGS, NULL},
 	 { (char *)"_TST_debug_print_root", _wrap__TST_debug_print_root, METH_VARARGS, NULL},
+	 { (char *)"_TST_scan", _wrap__TST_scan, METH_VARARGS, NULL},
+	 { (char *)"_TST_scan_with_stop_chars", _wrap__TST_scan_with_stop_chars, METH_VARARGS, NULL},
 	 { (char *)"_TST_swigregister", _TST_swigregister, METH_VARARGS, NULL},
 	 { (char *)"delete__Action", _wrap_delete__Action, METH_VARARGS, NULL},
 	 { (char *)"_Action_perform", _wrap__Action_perform, METH_VARARGS, NULL},

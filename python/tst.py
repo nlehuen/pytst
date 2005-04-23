@@ -65,6 +65,8 @@ class _TST(_object):
     def bytes_allocated(*args): return _tst._TST_bytes_allocated(*args)
     def write(*args): return _tst._TST_write(*args)
     def debug_print_root(*args): return _tst._TST_debug_print_root(*args)
+    def scan(*args): return _tst._TST_scan(*args)
+    def scan_with_stop_chars(*args): return _tst._TST_scan_with_stop_chars(*args)
 
 class _TSTPtr(_TST):
     def __init__(self, this):
