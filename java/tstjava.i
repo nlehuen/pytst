@@ -1,5 +1,5 @@
 /* 
- # $Id: tst.i 1151 2005-03-31 20:28:27Z nlehuen $
+ # $Id$
  # Copyright (C) 2004-2005 Nicolas Lehuen <nicolas@lehuen.com>
  #
  # This library is free software; you can redistribute it and/or
