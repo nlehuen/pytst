@@ -93,12 +93,4 @@ public class LongTST {
     tstJNI.LongTST_debug_print_root(swigCPtr);
   }
 
-  public long scan(String string, _LongAction to_perform) {
-    return tstJNI.LongTST_scan(swigCPtr, string, _LongAction.getCPtr(to_perform));
-  }
-
-  public long scan_with_stop_chars(String string, String stop_chars, _LongAction to_perform) {
-    return tstJNI.LongTST_scan_with_stop_chars(swigCPtr, string, stop_chars, _LongAction.getCPtr(to_perform));
-  }
-
 }

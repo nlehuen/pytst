@@ -19,9 +19,9 @@
 #include "tst.h"
 #include "jni.h"
 
-class ObjectTST : public tst<char,jobject> {
+class ObjectTST : public tst<jchar,jobject> {
 public:
-    ObjectTST(int initial_size,jobject data,JNIEnv* jenv2) : tst<char,jobject>(initial_size,data) {
+    ObjectTST(int initial_size,jobject data,JNIEnv* jenv2) : tst<jchar,jobject>(initial_size,data) {
         jenv = jenv2;
         if(data) {
             jenv->NewGlobalRef(data);
@@ -34,7 +34,7 @@ public:
         }
     }
 protected:
-    virtual jobject store_data(tst_node<char,jobject>* node,jobject data,int want_old_value) {
+    virtual jobject store_data(tst_node<jchar,jobject>* node,jobject data,int want_old_value) {
         jobject old_data = node->data;
         if(old_data!=default_value) {
             jenv->DeleteGlobalRef(old_data);
@@ -52,9 +52,9 @@ private:
     JNIEnv* jenv;
 };
 
-class ObjectAction : public action<char,jobject> {
+class ObjectAction : public action<jchar,jobject> {
 public:
-    ObjectAction(jobject target,char *perform,char* result,JNIEnv* jenv) : action<char,jobject>() {
+    ObjectAction(jobject target,char *perform,char* result,JNIEnv* jenv) : action<jchar,jobject>() {
         this->jenv=jenv;
         this->target=jenv->NewGlobalRef(target);
         jclass clazz = jenv->GetObjectClass(this->target);
@@ -80,17 +80,12 @@ public:
         jenv->DeleteGlobalRef(target);
     }
 
-    virtual void perform(char* string,int string_length,int remaining_distance,jobject data) {
+    virtual void perform(jchar* string,int string_length,int remaining_distance,jobject data) {
         if(performID) {
-            char temp = string[string_length];
-            string[string_length] = '\0';
-
-            jstring key_string = jenv->NewStringUTF(string);
+            jstring key_string = jenv->NewString(string,string_length);
             if(key_string) {
                 jenv->CallVoidMethod(target,performID,key_string,(jint)remaining_distance,data);
             }
-
-            string[string_length] = temp;
         }
     }
 
@@ -110,9 +105,9 @@ private:
     jmethodID performID,resultID;
 };
 
-class ObjectFilter : public filter<char,jobject> {
+class ObjectFilter : public filter<jchar,jobject> {
 public:
-    ObjectFilter(jobject target,char *perform,JNIEnv* jenv) : filter<char,jobject>() {
+    ObjectFilter(jobject target,char *perform,JNIEnv* jenv) : filter<jchar,jobject>() {
         this->jenv=jenv;
         this->target=jenv->NewGlobalRef(target);
         jclass clazz = jenv->GetObjectClass(this->target);
@@ -131,19 +126,14 @@ public:
         jenv->DeleteGlobalRef(target);
     }
 
-    virtual jobject perform(char* string,int string_length,int remaining_distance,jobject data) {
+    virtual jobject perform(jchar* string,int string_length,int remaining_distance,jobject data) {
         jobject result=NULL;
 
         if(performID) {
-            char temp = string[string_length];
-            string[string_length] = '\0';
-
-            jstring key_string = jenv->NewStringUTF(string);
+            jstring key_string = jenv->NewString(string,string_length);
             if(key_string) {
                 result = jenv->CallObjectMethod(target,performID,key_string,(jint)remaining_distance,data);
             }
-
-            string[string_length] = temp;
         }
 
         return result;
@@ -155,7 +145,7 @@ private:
     jmethodID performID;
 };
 
-class ObjectSerializer : public serializer<char,jobject> {
+class ObjectSerializer : public serializer<jchar,jobject> {
 public:
     virtual void write(FILE* file,jobject data) {
     }
@@ -165,9 +155,9 @@ public:
     }
 };
 
-class LongAction : public action<char,long long> {
+class LongAction : public action<jchar,long long> {
 public:
-    LongAction(jobject target,char *perform,char* result,JNIEnv* jenv) : action<char,long long>() {
+    LongAction(jobject target,char *perform,char* result,JNIEnv* jenv) : action<jchar,long long>() {
         this->jenv=jenv;
         this->target=jenv->NewGlobalRef(target);
         jclass clazz = jenv->GetObjectClass(this->target);
@@ -193,17 +183,12 @@ public:
         jenv->DeleteGlobalRef(target);
     }
 
-    virtual void perform(char* string,int string_length,int remaining_distance,long long data) {
+    virtual void perform(jchar* string,int string_length,int remaining_distance,long long data) {
         if(performID) {
-            char temp = string[string_length];
-            string[string_length] = '\0';
-            
-            jstring key_string = jenv->NewStringUTF(string);
+            jstring key_string = jenv->NewString(string,string_length);
             if(key_string) {
                 jenv->CallVoidMethod(target,performID,key_string,(jint)remaining_distance,data);
             }
-
-            string[string_length]=temp;
         }
     }
 
@@ -223,9 +208,9 @@ private:
     jmethodID performID,resultID;
 };
 
-class LongFilter : public filter<char,long long> {
+class LongFilter : public filter<jchar,long long> {
 public:
-    LongFilter(jobject target,char *perform,JNIEnv* jenv) : filter<char,long long>() {
+    LongFilter(jobject target,char *perform,JNIEnv* jenv) : filter<jchar,long long>() {
         this->jenv=jenv;
         this->target=jenv->NewGlobalRef(target);
         jclass clazz = jenv->GetObjectClass(this->target);
@@ -244,19 +229,14 @@ public:
         jenv->DeleteGlobalRef(target);
     }
 
-    virtual long long perform(char* string,int string_length,int remaining_distance,long long data) {
+    virtual long long perform(jchar* string,int string_length,int remaining_distance,long long data) {
         long long result = NULL;
 
         if(performID) {
-            char temp = string[string_length];
-            string[string_length] = '\0';
-
-            jstring key_string = jenv->NewStringUTF(string);
+            jstring key_string = jenv->NewString(string,string_length);
             if(key_string) {
                 result = (long long)jenv->CallLongMethod(target,performID,key_string,(jint)remaining_distance,data);
             }
-
-            string[string_length] = temp;
         }
 
         return result;
@@ -268,7 +248,7 @@ private:
     jmethodID performID;
 };
 
-class LongSerializer : public serializer<char,long long> {
+class LongSerializer : public serializer<jchar,long long> {
 public:
     virtual void write(FILE* file,long long data) {
         fwrite(&data,sizeof(data),1,file);

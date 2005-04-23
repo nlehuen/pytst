@@ -18,6 +18,11 @@
  */
 %module tst
 
+%typemap(jni) jchar *, jchar[ANY], jchar[]               "jstring"
+%typemap(jtype) jchar *, jchar[ANY], jchar[]               "String"
+%typemap(jstype) jchar *, jchar[ANY], jchar[]               "String"
+%typemap(javain) jchar *, jchar[ANY], jchar[] "$javainput"
+
 %{
 #include "javaTST.h"
 %}
@@ -33,12 +38,12 @@
 	$2 = jenv;
 }
 
-%typemap(in) (char* string,int string_length),(char* stop_chars,int stop_chars_length) {
+%typemap(in) (jchar* string,int string_length),(jchar* stop_chars,int stop_chars_length) {
     $1 = 0;
     if ($input) {
-        $1 = (char *)jenv->GetStringUTFChars($input, 0);
+        $1 = (jchar*)jenv->GetStringChars((jstring)$input, 0);
         if (!$1) return $null;
-        $2 = strlen($1);
+        $2 = jenv->GetStringLength((jstring)$input);
     }
 }
 
@@ -51,18 +56,18 @@
 	if ($1) jenv->ReleaseStringUTFChars($input, $1); 
 }
 
-%typemap(freearg) (char* string,int string_length),(char* stop_chars,int stop_chars_length) {
-	if ($1) jenv->ReleaseStringUTFChars($input, $1); 
+%typemap(freearg) (jchar* string,int string_length),(jchar* stop_chars,int stop_chars_length) {
+	if ($1) jenv->ReleaseStringChars((jstring)$input, $1);
 }
 
-%template(_ObjectTST) tst<char,jobject>;
-%template(_ObjectAction) action<char,jobject>;
-%template(_ObjectFilter) filter<char,jobject>;
-%template(_ObjectSerializer) serializer<char,jobject>;
+%template(_ObjectTST) tst<jchar,jobject>;
+%template(_ObjectAction) action<jchar,jobject>;
+%template(_ObjectFilter) filter<jchar,jobject>;
+%template(_ObjectSerializer) serializer<jchar,jobject>;
 
-%template(LongTST) tst<char,long long>;
-%template(_LongAction) action<char,long long>;
-%template(_LongFilter) filter<char,long long>;
-%template(_LongSerializer) serializer<char,long long>;
+%template(LongTST) tst<jchar,long long>;
+%template(_LongAction) action<jchar,long long>;
+%template(_LongFilter) filter<jchar,long long>;
+%template(_LongSerializer) serializer<jchar,long long>;
 
 %include "javaTST.h"

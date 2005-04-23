@@ -66,12 +66,17 @@
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			CharacterSet="2">
+			CharacterSet="2"
+			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="3"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="C:\j2sdk1.4.2_05\include\win32;C:\j2sdk1.4.2_05\include;D:\projets\tst;&quot;E:\Program Files\Java\jdk1.5.0_01\include&quot;;&quot;E:\Program Files\Java\jdk1.5.0_01\include\win32&quot;;C:\projets\development\tst"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;JTST_EXPORTS"
 				RuntimeLibrary="0"
+				StructMemberAlignment="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"

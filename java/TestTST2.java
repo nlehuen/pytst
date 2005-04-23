@@ -17,7 +17,10 @@ public class TestTST2 {
         LongTST tP=new LongTST(256,-987987L);
         long startP,endP;
         
-        startP=System.currentTimeMillis();
+		tP.debug_print_root();
+		System.in.read();
+		
+		startP=System.currentTimeMillis();
         for(int iP=0;iP<ITERATIONS;iP++) {
             String keyP=Integer.toString(iP);
         }
