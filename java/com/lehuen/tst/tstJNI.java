@@ -26,6 +26,8 @@ class tstJNI {
   public final static native long _ObjectTST_bytes_allocated(long jarg1);
   public final static native void _ObjectTST_write(long jarg1, long jarg2, long jarg3);
   public final static native void _ObjectTST_debug_print_root(long jarg1);
+  public final static native Object _ObjectTST_scan(long jarg1, String jarg2, long jarg4);
+  public final static native Object _ObjectTST_scan_with_stop_chars(long jarg1, String jarg2, String jarg4, long jarg6);
   public final static native void delete__ObjectAction(long jarg1);
   public final static native void _ObjectAction_perform(long jarg1, String jarg2, int jarg4, Object jarg5);
   public final static native Object _ObjectAction_result(long jarg1);
@@ -49,6 +51,8 @@ class tstJNI {
   public final static native long LongTST_bytes_allocated(long jarg1);
   public final static native void LongTST_write(long jarg1, long jarg2, long jarg3);
   public final static native void LongTST_debug_print_root(long jarg1);
+  public final static native long LongTST_scan(long jarg1, String jarg2, long jarg4);
+  public final static native long LongTST_scan_with_stop_chars(long jarg1, String jarg2, String jarg4, long jarg6);
   public final static native void delete__LongAction(long jarg1);
   public final static native void _LongAction_perform(long jarg1, String jarg2, int jarg4, long jarg5);
   public final static native long _LongAction_result(long jarg1);

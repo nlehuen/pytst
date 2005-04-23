@@ -120,7 +120,7 @@ public:
 
 #ifdef SCANNER
     T scan(S* string,int string_length,action<S,T>* to_perform);
-    T scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform);
+    T scan_with_stop_chars(S* string,int string_length,S* stop_chars,int stop_chars_length,action<S,T>* to_perform);
 #endif
 
 protected:
@@ -853,6 +853,7 @@ template<class S,class T> T tst<S,T>::scan(S* string,int string_length,action<S,
                     // on le fait
                     si_match_start=si_current;
                 }
+                
                 if(n_current->data!=default_value) {
                     // Si le noeud en cours contient une valeur
                     // on l'enregistre
@@ -922,7 +923,6 @@ template<class S,class T> T tst<S,T>::scan(S* string,int string_length,action<S,
             else if(si_match_start!=UNDEFINED_INDEX) {
                 // Si le caractère courant n'est pas accepté, qu'on avait commencé
                 // un match mais que celui-ci n'avait pas réussi, on va backtracker.
-                // TODO : repréciser le pourquoi des paramètres
                 compute_backtrack(n_current,string,si_match_start+1,si_current);
                 ni_current = n_current->backtrack;
                 ni_best_match=n_current->backtrack_match_index;
@@ -968,134 +968,153 @@ template<class S,class T> T tst<S,T>::scan(S* string,int string_length,action<S,
     return to_perform->result();
 }
 
-template<class S> int is_in(S c,S* stop_chars) {
-    do {
+template<class S> inline int is_in(S c,S* stop_chars,int stop_chars_length) {
+    for(int i=0;i<stop_chars_length;i++,stop_chars++) {
         if(c==*stop_chars) {
             return 1;
         }
-    } while(*(stop_chars++));
+    }
     return 0;
 }
 
-template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform) {
-/*    tst_node<S,T> *current_node=NULL;
+template<class S,class T> T tst<S,T>::scan_with_stop_chars(S* string,int string_length,S* stop_chars,int stop_chars_length,action<S,T>* to_perform) {
+    // Le premier caractère de la chaine ne correspondant pas à un match
+    int si_non_match_start=0;
+    // Le noeud pour lequel on a enregistré un match (noeud avec un objet associé)
+    int ni_best_match=UNDEFINED_INDEX;
+    // Le premier caractère de la chaine correspondant à un match
+    int si_match_start=UNDEFINED_INDEX;
+    // La position actuelle dans la chaîne (index)
+    int si_current=0;
+    // Le numéro du noeud actuel de l'arbre
+    int ni_current=root;
+    // Le noeud actuel de l'arbre
+    tst_node<S,T> *n_current;
+    // Boucle principale
 
-    S current_char;
-    S temp_char;
-
-    S *current_pos=string;
-    int current_index=root;
-    S *non_match_start=string;
-
-    int current_match_index=UNDEFINED_INDEX;
-    S *current_match_start=NULL;
-
-    current_char=*current_pos;
-    current_node=array+current_index;
     while(1) {
-        current_node=array+current_index;
-        if(current_char) {
-            int diff=current_char-current_node->c;
+        n_current=array+ni_current;
+
+        // On avance dans l'arbre d'un cran
+        if(si_current<string_length) {
+            int diff = string[si_current]-n_current->c;
             if(diff>0) {
-                current_index=current_node->right;
+                ni_current = n_current->right;
             }
             else if(diff<0) {
-                current_index=current_node->left;
+                ni_current = n_current->left;
             }
             else {
                 // ok, le caractère courant est accepté
-                if(current_match_start==NULL) {
-                    if(current_pos==string || is_in(*(current_pos-1),stop_chars)) {
-                        current_match_start=current_pos;
+                if(si_match_start==UNDEFINED_INDEX) {
+                    // On teste si le début de match est le début de chaine ou après un stop_char
+                    if(si_current==0 || is_in(string[si_current-1],stop_chars,stop_chars_length)) {
+                        // oui, on enregistre le début
+                        si_match_start=si_current;
                     }
                     else {
-                        current_match_start=NULL;
-                        current_pos++;
+                        // non, on passe à la suite
+                        si_current++;
                     }
                 }
-                if(current_match_start) {
-                    if(current_node->data!=default_value && (*(current_pos+1)==0 || is_in(*(current_pos+1),stop_chars))) {
-                        // définition du match
-                        current_match_index=current_index;
+                
+                if(si_match_start!=UNDEFINED_INDEX) {
+                    // si le démarrage a bien pris
+
+                    if(n_current->data!=default_value && (si_current==(string_length-1) || is_in(string[si_current+1],stop_chars,stop_chars_length))) {
+                        // on a une donnée dans le noeud courant
+                        // et on est en fin de chaîne ou le caractère précédent est un stop_char
+                        ni_best_match = ni_current;
                     }
-                    current_pos++;
-                    if(*current_pos) {
-                        current_index=current_node->next;
+
+                    si_current++;
+                    if(si_current<string_length) {
+                        // Si on peut avancer, on avance
+                        ni_current = n_current->next;
                     }
                     else {
-                        current_index=UNDEFINED_INDEX;
+                        // Fin de chaine ==> pas de match possible
+                        ni_current = UNDEFINED_INDEX;
                     }
                 }
             }
         }
         else {
-            current_index=UNDEFINED_INDEX;
+            // On est toujours en fin de chaine ==> pas de match possible
+            ni_current = UNDEFINED_INDEX;
         }
 
-        if(current_index==UNDEFINED_INDEX) {
+        if(ni_current==UNDEFINED_INDEX) {
             // Le caractère courant n'est pas accepté
-            if(current_match_index!=UNDEFINED_INDEX) {
-                tst_node<S,T> *match_node;
-                S* current_match_end;
+            if(ni_best_match!=UNDEFINED_INDEX) {
+                // Si on a un match réussi en cours
 
-                // envoi de ce qui précède le match
-                if(current_match_start>non_match_start) {
-                    temp_char=*current_match_start;
-                    *current_match_start=0;
-                    to_perform->perform(non_match_start,(int)(non_match_start-current_match_start),default_value);
-                    *current_match_start=temp_char;
+                // Si le match en cours démarre après la zone de non-match
+                // C'est qu'on a bien une zone de non-match
+                int non_match_length = si_match_start-si_non_match_start;
+                if(non_match_length>0) {
+                    // On l'envoie.
+                    to_perform->perform(string+si_non_match_start,non_match_length,-non_match_length,default_value);
                 }
 
-                // envoi du match
-                match_node=array+current_match_index;
-                current_match_end=current_match_start+match_node->position+1;
-                temp_char=*current_match_end;
-                *current_match_end=0;
-                to_perform->perform(current_match_start,match_node->position+1,match_node->data);
-                *current_match_end=temp_char;
-                non_match_start=current_match_end;
+                // On envoie maintenant le match
+                // On connait sa longueur grâce à la position dans l'arbre
+                // TODO: voir si on ne pourrait pas de passer de ça
+                tst_node<S,T> *match_node=array+ni_best_match;
+                int match_length = match_node->position+1;
+                // On envoie le match
+                to_perform->perform(string+si_match_start,match_length,match_length,match_node->data);
+                // On repositionne la zone de non-match juste après la fin du match
+                si_non_match_start=si_match_start+match_length;
 
-                // annulation du match
-                current_match_index=UNDEFINED_INDEX;
+                // Annulation du match
+                ni_best_match=UNDEFINED_INDEX;
 
+                // On backtracke
                 // backtrack de naze parce qu'on ne peut pas utiliser
                 // les infos de backtrack à cause des séparateurs.
-                current_pos=non_match_start;
-                current_index = root;
-                current_match_index=UNDEFINED_INDEX;
-                current_match_start=NULL;
+                si_current = si_non_match_start;
+                ni_current = root;
+                ni_best_match=UNDEFINED_INDEX;
+                si_match_start=UNDEFINED_INDEX;
             }
-            else if(current_match_start!=NULL) {
+            else if(si_match_start!=UNDEFINED_INDEX) {
+                // Si le caractère courant n'est pas accepté, qu'on avait commencé
+                // un match mais que celui-ci n'avait pas réussi, on va backtracker.
                 // backtrack de naze parce qu'on ne peut pas utiliser
                 // les infos de backtrack à cause des séparateurs.
-                current_pos=current_match_start+1;
-                current_index = root;
-                current_match_index=UNDEFINED_INDEX;
-                current_match_start=NULL;
+                si_current=si_match_start+1;
+                ni_current = root;
+                ni_best_match=UNDEFINED_INDEX;
+                si_match_start=UNDEFINED_INDEX;
             }
             else {
-                if(current_char) {
-                    current_pos++;
-                    current_index = root;
-                    // On annule le match
-                    current_match_start=NULL;
+                // le caractère courant n'est pas accepté et on n'avait pas de match en cours
+                if(si_current<string_length) {
+                    // si on peut avancer d'un caractère on le fait
+                    si_current++;
+                    // on revient à la racine
+                    ni_current = root;
                 }
                 else {
+                    // si on est à la fin de la chaîne on sort de la boucle pour la fin.
                     break;
                 }
             }
         }
-
-        current_char=*current_pos;
+        else {
+            // on avance tranquillement dans l'arbre...
+        }
     }
 
-    if(current_pos>non_match_start) {
-        temp_char=*current_pos;
-        *current_pos=0;
-        to_perform->perform(non_match_start,(int)(non_match_start-current_pos),default_value);
-        *current_pos=temp_char;
+    // on n'arrive ici que si on est arrivé à la fin de la chaine en entrée
+    string_length = si_current - si_non_match_start;
+    if(string_length>0) {
+        // s'il y avait un non-match en cours
+        // on l'envoie
+        to_perform->perform(string+si_non_match_start,string_length,-string_length,default_value);
     }
-*/
+
     return to_perform->result();
 }
 #endif

@@ -19,6 +19,7 @@
 %module tst
 
 %apply (char *STRING, int LENGTH) { (char *string, int string_length) };
+%apply (char *STRING, int LENGTH) { (char *stop_chars, int stop_chars_length) };
 
 %{
 #include "pythonTST.h"

@@ -2140,9 +2140,15 @@ static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
     PyObject *resultobj;
     tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
     char *arg2 = (char *) 0 ;
-    char *arg3 = (char *) 0 ;
-    action<char,PyObject * > *arg4 = (action<char,PyObject * > *) 0 ;
+    int arg3 ;
+    char *arg4 = (char *) 0 ;
+    int arg5 ;
+    action<char,PyObject * > *arg6 = (action<char,PyObject * > *) 0 ;
     PyObject *result;
+    char *buf2 ;
+    size_t size2 ;
+    char *buf4 ;
+    size_t size4 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
@@ -2151,17 +2157,27 @@ static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
     if(!PyArg_ParseTuple(args,(char *)"OOOO:_TST_scan_with_stop_chars",&obj0,&obj1,&obj2,&obj3)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
-        SWIG_arg_fail(2);SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
     }
-    if (!SWIG_AsCharPtr(obj2, (char**)&arg3)) {
-        SWIG_arg_fail(3);SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj2, &buf4, &size4);
+        if (!res) {
+            SWIG_arg_fail(4);SWIG_fail;
+        }
+        arg4 = (char *) buf4;
+        arg5 = (int) size4 - 1;
     }
-    SWIG_Python_ConvertPtr(obj3, (void **)&arg4, SWIGTYPE_p_actionTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
-    if (SWIG_arg_fail(4)) SWIG_fail;
+    SWIG_Python_ConvertPtr(obj3, (void **)&arg6, SWIGTYPE_p_actionTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(6)) SWIG_fail;
     {
         try {
-            result = (PyObject *)(arg1)->scan_with_stop_chars(arg2,arg3,arg4);
+            result = (PyObject *)(arg1)->scan_with_stop_chars(arg2,arg3,arg4,arg5,arg6);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;

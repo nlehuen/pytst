@@ -33,7 +33,7 @@
 	$2 = jenv;
 }
 
-%typemap(in) (char* string,int string_length) {
+%typemap(in) (char* string,int string_length),(char* stop_chars,int stop_chars_length) {
     $1 = 0;
     if ($input) {
         $1 = (char *)jenv->GetStringUTFChars($input, 0);
@@ -51,7 +51,7 @@
 	if ($1) jenv->ReleaseStringUTFChars($input, $1); 
 }
 
-%typemap(freearg) (char* string,int string_length) {
+%typemap(freearg) (char* string,int string_length),(char* stop_chars,int stop_chars_length) {
 	if ($1) jenv->ReleaseStringUTFChars($input, $1); 
 }
 

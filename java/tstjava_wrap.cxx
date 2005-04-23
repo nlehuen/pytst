@@ -436,6 +436,79 @@ JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1debug_1print_1roo
 }
 
 
+JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1scan(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4) {
+    jobject jresult = 0 ;
+    tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    action<char,jobject > *arg4 = (action<char,jobject > *) 0 ;
+    jobject result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(tst<char,jobject > **)&jarg1; 
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
+            if (!arg2) return 0;
+            arg3 = strlen(arg2);
+        }
+    }
+    arg4 = *(action<char,jobject > **)&jarg4; 
+    result = (arg1)->scan(arg2,arg3,arg4);
+    
+    jresult = result; 
+    {
+        if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
+    }
+    return jresult;
+}
+
+
+JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1scan_1with_1stop_1chars(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg4, jlong jarg6) {
+    jobject jresult = 0 ;
+    tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    char *arg4 = (char *) 0 ;
+    int arg5 ;
+    action<char,jobject > *arg6 = (action<char,jobject > *) 0 ;
+    jobject result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(tst<char,jobject > **)&jarg1; 
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
+            if (!arg2) return 0;
+            arg3 = strlen(arg2);
+        }
+    }
+    {
+        arg4 = 0;
+        if (jarg4) {
+            arg4 = (char *)jenv->GetStringUTFChars(jarg4, 0);
+            if (!arg4) return 0;
+            arg5 = strlen(arg4);
+        }
+    }
+    arg6 = *(action<char,jobject > **)&jarg6; 
+    result = (arg1)->scan_with_stop_chars(arg2,arg3,arg4,arg5,arg6);
+    
+    jresult = result; 
+    {
+        if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
+    }
+    {
+        if (arg4) jenv->ReleaseStringUTFChars(jarg4, arg4); 
+    }
+    return jresult;
+}
+
+
 JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_delete_1_1ObjectAction(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     action<char,jobject > *arg1 = (action<char,jobject > *) 0 ;
     
@@ -882,6 +955,79 @@ JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1debug_1print_1root(JN
     arg1 = *(tst<char,long long > **)&jarg1; 
     (arg1)->debug_print_root();
     
+}
+
+
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1scan(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4) {
+    jlong jresult = 0 ;
+    tst<char,long long > *arg1 = (tst<char,long long > *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    action<char,long long > *arg4 = (action<char,long long > *) 0 ;
+    long long result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(tst<char,long long > **)&jarg1; 
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
+            if (!arg2) return 0;
+            arg3 = strlen(arg2);
+        }
+    }
+    arg4 = *(action<char,long long > **)&jarg4; 
+    result = (long long)(arg1)->scan(arg2,arg3,arg4);
+    
+    jresult = (jlong)result; 
+    {
+        if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
+    }
+    return jresult;
+}
+
+
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1scan_1with_1stop_1chars(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg4, jlong jarg6) {
+    jlong jresult = 0 ;
+    tst<char,long long > *arg1 = (tst<char,long long > *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    char *arg4 = (char *) 0 ;
+    int arg5 ;
+    action<char,long long > *arg6 = (action<char,long long > *) 0 ;
+    long long result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(tst<char,long long > **)&jarg1; 
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
+            if (!arg2) return 0;
+            arg3 = strlen(arg2);
+        }
+    }
+    {
+        arg4 = 0;
+        if (jarg4) {
+            arg4 = (char *)jenv->GetStringUTFChars(jarg4, 0);
+            if (!arg4) return 0;
+            arg5 = strlen(arg4);
+        }
+    }
+    arg6 = *(action<char,long long > **)&jarg6; 
+    result = (long long)(arg1)->scan_with_stop_chars(arg2,arg3,arg4,arg5,arg6);
+    
+    jresult = (jlong)result; 
+    {
+        if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
+    }
+    {
+        if (arg4) jenv->ReleaseStringUTFChars(jarg4, arg4); 
+    }
+    return jresult;
 }
 
 
