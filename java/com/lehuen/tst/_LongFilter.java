@@ -37,8 +37,8 @@ public class _LongFilter {
     swigCPtr = 0;
   }
 
-  public long perform(String key, int remaining_distance, long data) {
-    return tstJNI._LongFilter_perform(swigCPtr, key, remaining_distance, data);
+  public long perform(String string, int remaining_distance, long data) {
+    return tstJNI._LongFilter_perform(swigCPtr, string, remaining_distance, data);
   }
 
 }

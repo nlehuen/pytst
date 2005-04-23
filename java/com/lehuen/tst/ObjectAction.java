@@ -41,8 +41,8 @@ public class ObjectAction extends _ObjectAction {
     this(tstJNI.new_ObjectAction(target, perform, result), true);
   }
 
-  public void perform(String key, int remaining_distance, Object data) {
-    tstJNI.ObjectAction_perform(swigCPtr, key, remaining_distance, data);
+  public void perform(String string, int remaining_distance, Object data) {
+    tstJNI.ObjectAction_perform(swigCPtr, string, remaining_distance, data);
   }
 
   public Object result() {

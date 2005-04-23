@@ -41,8 +41,8 @@ public class ObjectFilter extends _ObjectFilter {
     this(tstJNI.new_ObjectFilter(target, perform), true);
   }
 
-  public Object perform(String key, int remaining_distance, Object data) {
-    return tstJNI.ObjectFilter_perform(swigCPtr, key, remaining_distance, data);
+  public Object perform(String string, int remaining_distance, Object data) {
+    return tstJNI.ObjectFilter_perform(swigCPtr, string, remaining_distance, data);
   }
 
 }

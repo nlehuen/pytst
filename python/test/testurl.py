@@ -2,13 +2,17 @@ from tst import *
 from itertools import *
 from time import clock
 
-# t = TST()
-t = dict()
+f = CallableFilter(lambda k,d,o: o)
+
+print f.perform("test",0,"It works !");
+
+t = TST()
+# t = dict()
 
 total_lines = 0
 total_size = 0
 
-SLICE = 2412000
+SLICE = 100000
 
 start = clock()
 for line_number, line in enumerate(islice(open('url-list.txt','rb'),SLICE)):

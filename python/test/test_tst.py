@@ -4,6 +4,8 @@ from tcc.util import levenshtein
 
 import time, sys
 
+filt = tst.CallableFilter(lambda k,d,o: o)
+
 t = tst.TST(8,None)
 u = tst.TST(8,0)
 
@@ -41,7 +43,7 @@ for s in ('Nicolas;H','Yohan;H'):
     print '------------',s
     for i in range(7):
         # print "almost(%i)"%i
-        print len(t.almost(s,i,None,tst.DictAction()))
+        print len(t.almost(s,i,filt,tst.DictAction()))
 
 print 'maximum key length :', t.get_maximum_key_length()
 
@@ -69,24 +71,24 @@ print 'la en C++ : ',time.time()-start
 start = time.time()
 for i in range(500):
     la = tst.DictAction();
-    t.walk(None,la)
+    t.walk(filt,la)
 print 'la en C++ sans filter : ',time.time()-start
 
 start = time.time()
 for i in range(500):
     la = tst.ListAction()
-    t.walk(None,la)
+    t.walk(filt,la)
 print 'listaction en C++ sans filter: ',time.time()-start
 
 start = time.time()
 for line in file('prenoms.txt','r').readlines():
     line = line.strip()
     t[line]=line+str(i)
-    for k,v in t.almost(line,4,None,tst.DictAction()).items():
+    for k,v in t.almost(line,4,filt,tst.DictAction()).items():
         ld = levenshtein(line,k)
         if ld!=(4-v[0]):
             print line, k, ld, 4-v[0]
-    t.common_prefix(line,None,tst.ListAction())
-    t.almost(line+line,4,None,tst.DictAction())
-    t.common_prefix(line+line,None,tst.ListAction())
+    t.common_prefix(line,filt,tst.ListAction())
+    t.almost(line+line,4,filt,tst.DictAction())
+    t.common_prefix(line+line,filt,tst.ListAction())
 print time.time()-start

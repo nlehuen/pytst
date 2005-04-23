@@ -37,8 +37,8 @@ public class _LongAction {
     swigCPtr = 0;
   }
 
-  public void perform(String key, int remaining_distance, long data) {
-    tstJNI._LongAction_perform(swigCPtr, key, remaining_distance, data);
+  public void perform(String string, int remaining_distance, long data) {
+    tstJNI._LongAction_perform(swigCPtr, string, remaining_distance, data);
   }
 
   public long result() {

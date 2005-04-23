@@ -41,16 +41,9 @@ class stringserializer : public serializer<char,char*> {
 
 class donothing : public action<char,char*> {
     public:
-        virtual void perform(char* key,int remaining_distance,char* data);
-        virtual char* result();
+        virtual void perform(char* string,int string_length,int remaining_distance,char* data) {}
+        virtual char* result() { return NULL; }
 };
-
-void donothing::perform(char* key,int remaining_distance,char* data) {
-}
-
-char* donothing::result() {
-    return NULL;
-}
 
 class printer : public donothing {
     public:
@@ -93,10 +86,10 @@ class tester : public donothing {
             this->mytst=mytst;
         }
 
-        virtual void perform(char* key,int remaining_distance,char* data) {
+        virtual void perform(char* string,int string_length,int remaining_distance,char* data) {
             donothing* dn = new donothing();
-            mytst->almost(key,(int)strlen(key),3,NULL,dn);
-            mytst->common_prefix(key,NULL,dn);
+            mytst->almost(string,string_length,3,NULL,dn);
+            mytst->common_prefix(string,string_length,NULL,dn);
             delete dn;
         }
 

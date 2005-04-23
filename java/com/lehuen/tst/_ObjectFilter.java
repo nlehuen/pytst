@@ -37,8 +37,8 @@ public class _ObjectFilter {
     swigCPtr = 0;
   }
 
-  public Object perform(String key, int remaining_distance, Object data) {
-    return tstJNI._ObjectFilter_perform(swigCPtr, key, remaining_distance, data);
+  public Object perform(String string, int remaining_distance, Object data) {
+    return tstJNI._ObjectFilter_perform(swigCPtr, string, remaining_distance, data);
   }
 
 }

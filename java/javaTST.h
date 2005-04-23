@@ -80,12 +80,17 @@ public:
         jenv->DeleteGlobalRef(target);
     }
 
-    virtual void perform(char* key,int remaining_distance,jobject data) {
+    virtual void perform(char* string,int string_length,int remaining_distance,jobject data) {
         if(performID) {
-            jstring key_string = jenv->NewStringUTF(key);
+            char temp = string[string_length];
+            string[string_length] = '\0';
+
+            jstring key_string = jenv->NewStringUTF(string);
             if(key_string) {
                 jenv->CallVoidMethod(target,performID,key_string,(jint)remaining_distance,data);
             }
+
+            string[string_length] = temp;
         }
     }
 
@@ -126,14 +131,22 @@ public:
         jenv->DeleteGlobalRef(target);
     }
 
-    virtual jobject perform(char* key,int remaining_distance,jobject data) {
+    virtual jobject perform(char* string,int string_length,int remaining_distance,jobject data) {
+        jobject result=NULL;
+
         if(performID) {
-            jstring key_string = jenv->NewStringUTF(key);
+            char temp = string[string_length];
+            string[string_length] = '\0';
+
+            jstring key_string = jenv->NewStringUTF(string);
             if(key_string) {
-                return jenv->CallObjectMethod(target,performID,key_string,(jint)remaining_distance,data);
+                result = jenv->CallObjectMethod(target,performID,key_string,(jint)remaining_distance,data);
             }
+
+            string[string_length] = temp;
         }
-        return NULL;
+
+        return result;
     }
 
 private:
@@ -180,12 +193,17 @@ public:
         jenv->DeleteGlobalRef(target);
     }
 
-    virtual void perform(char* key,int remaining_distance,long long data) {
+    virtual void perform(char* string,int string_length,int remaining_distance,long long data) {
         if(performID) {
-            jstring key_string = jenv->NewStringUTF(key);
+            char temp = string[string_length];
+            string[string_length] = '\0';
+            
+            jstring key_string = jenv->NewStringUTF(string);
             if(key_string) {
                 jenv->CallVoidMethod(target,performID,key_string,(jint)remaining_distance,data);
             }
+
+            string[string_length]=temp;
         }
     }
 
@@ -226,14 +244,22 @@ public:
         jenv->DeleteGlobalRef(target);
     }
 
-    virtual long long perform(char* key,int remaining_distance,long long data) {
+    virtual long long perform(char* string,int string_length,int remaining_distance,long long data) {
+        long long result = NULL;
+
         if(performID) {
-            jstring key_string = jenv->NewStringUTF(key);
+            char temp = string[string_length];
+            string[string_length] = '\0';
+
+            jstring key_string = jenv->NewStringUTF(string);
             if(key_string) {
-                return (long long)jenv->CallLongMethod(target,performID,key_string,(jint)remaining_distance,data);
+                result = (long long)jenv->CallLongMethod(target,performID,key_string,(jint)remaining_distance,data);
             }
+
+            string[string_length] = temp;
         }
-        return NULL;
+
+        return result;
     }
 
 private:

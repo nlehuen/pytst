@@ -37,8 +37,8 @@ public class _ObjectAction {
     swigCPtr = 0;
   }
 
-  public void perform(String key, int remaining_distance, Object data) {
-    tstJNI._ObjectAction_perform(swigCPtr, key, remaining_distance, data);
+  public void perform(String string, int remaining_distance, Object data) {
+    tstJNI._ObjectAction_perform(swigCPtr, string, remaining_distance, data);
   }
 
   public Object result() {

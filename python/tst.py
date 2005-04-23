@@ -57,8 +57,6 @@ class _TST(_object):
     def walk(*args): return _tst._TST_walk(*args)
     def almost(*args): return _tst._TST_almost(*args)
     def common_prefix(*args): return _tst._TST_common_prefix(*args)
-    def scan(*args): return _tst._TST_scan(*args)
-    def scan_with_stop_chars(*args): return _tst._TST_scan_with_stop_chars(*args)
     def get(*args): return _tst._TST_get(*args)
     def get_or_build(*args): return _tst._TST_get_or_build(*args)
     def put(*args): return _tst._TST_put(*args)

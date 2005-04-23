@@ -45,7 +45,7 @@ public:
         Py_DECREF(_result);
     }
 
-    virtual void perform(char* key,int remaining_distance,PyObject* data) {
+    virtual void perform(char* string,int string_length,int remaining_distance,PyObject* data) {
         if(_perform==Py_None) {
             return;
         }
@@ -53,7 +53,7 @@ public:
             data=Py_None;
         }
 
-        PyObject* tuple=Py_BuildValue("siO",key,remaining_distance,data);
+        PyObject* tuple=Py_BuildValue("s#iO",string,string_length,remaining_distance,data);
         Py_DECREF(PyObject_CallObject(_perform,tuple));
         Py_DECREF(tuple);
     }
@@ -82,16 +82,12 @@ public:
         Py_DECREF(callable);
     }
 
-    virtual PyObject* perform(char* key,int remaining_distance,PyObject* data) {
+    virtual PyObject* perform(char* string,int string_length,int remaining_distance,PyObject* data) {
         if(!data) {
             data=Py_None;
         }
-
-        PyObject* tuple=Py_BuildValue("siO",key,remaining_distance,data);
+        PyObject* tuple=Py_BuildValue("s#iO",string,string_length,remaining_distance,data);
         PyObject* result=PyObject_CallObject(callable,tuple);
-        if(result==NULL) {
-            PyErr_Print();
-        }
         Py_DECREF(tuple);
         return result;
     }
@@ -113,15 +109,18 @@ public:
         Py_DECREF(dict);
     }
 
-    virtual void perform(char* key,int remaining_distance,PyObject* data) {
+    virtual void perform(char* string,int string_length,int remaining_distance,PyObject* data) {
         if(!data) {
             data=Py_None;
         }
 
-        PyObject* old_tuple=PyDict_GetItemString(dict,key);
+        PyObject* key = Py_BuildValue("s#",string,string_length);
+        
+        PyObject* old_tuple=PyDict_GetItem(dict,key);
         if(old_tuple!=NULL) {
             long value=PyInt_AsLong(PyTuple_GetItem(old_tuple,0));
             if(value>=remaining_distance) {
+                Py_DECREF(key);
                 return;
             }
         }
@@ -130,8 +129,9 @@ public:
         PyTuple_SetItem(tuple,0,PyInt_FromLong(remaining_distance));
         Py_INCREF(data);
         PyTuple_SetItem(tuple,1,data);
-        PyDict_SetItemString(dict,key,tuple);
+        PyDict_SetItem(dict,key,tuple);
         Py_DECREF(tuple);
+        Py_DECREF(key);
     };
 
     virtual PyObject* result() {
@@ -156,7 +156,7 @@ public:
         Py_DECREF(list);
     }
 
-    virtual void perform(char* key,int remaining_distance,PyObject* data) {
+    virtual void perform(char* string,int string_length,int remaining_distance,PyObject* data) {
         if(!data) {
             data=Py_None;
         }
@@ -185,11 +185,11 @@ public:
         Py_DECREF(list);
     }
 
-    virtual void perform(char* key,int remaining_distance,PyObject* data) {
+    virtual void perform(char* string,int string_length,int remaining_distance,PyObject* data) {
         if(!data) {
             data=Py_None;
         }
-        PyObject* tuple=Py_BuildValue("siO",key,remaining_distance,data);
+        PyObject* tuple=Py_BuildValue("s#iO",string,string_length,remaining_distance,data);
         PyList_Append(list,tuple);
         Py_DECREF(tuple);
     }
