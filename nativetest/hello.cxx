@@ -106,17 +106,23 @@ class tester : public donothing {
 
 #define ITERATIONS 4000000
 
-int main(int argc,char** argv) {
+int main2(int argc,char** argv) {
     tst<char,char*>* linetst=new stringtst();
 
     clock_t start, end;
     double elapsed;
+
+
 
     start = clock();
     for(int i=0;i<ITERATIONS;i++) {
         char* line=(char*)malloc(10);
         sprintf(line,"%d\0",i);
         free(line);
+
+
+
+
     }
     end = clock();
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -129,6 +135,7 @@ int main(int argc,char** argv) {
         sprintf(line,"%d\0",i);
         linetst->put(line,line);
     }
+
     end = clock();
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Write : %f\n",elapsed);
@@ -152,10 +159,53 @@ int main(int argc,char** argv) {
         assert(result);
         assert(strcmp(line,result)==0);
     }
+
+
     end = clock();
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Read : %f\n",elapsed);
 
+
+    return 0;
+}
+
+int main(int argc,char **argv) {
+    tst<char,int> md5tst(256,0L);
+    clock_t start, end;
+    double elapsed;
+    FILE* input;
+    int lines;
+
+    start = clock();
+    lines = 0;
+    input = fopen("url-list.txt","r");
+    while(true) {
+        char line[256];
+        fscanf(input,"%s\n",line);
+        md5tst.put(line,1L);
+        if(lines++%1000==0) {
+            printf("%d ==> %d\n",lines,md5tst.bytes_allocated());
+        }
+    }
+    fclose(input);
+    end=clock();
+    elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Load : %f\n",elapsed);
+
+    start = clock();
+    input = fopen("url-list.txt","r");
+    while(true) {
+        char line[256];
+        fscanf(input,"%s\n",line);
+        if(md5tst.get(line)!=1L) {
+            printf("Bummer !");
+            return 1;
+        }
+    }
+    fclose(input);
+    end=clock();
+    elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Read : %f\n",elapsed);
 
     return 0;
 }
