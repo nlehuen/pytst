@@ -282,10 +282,10 @@ public:
     TST(int initial_size,PyObject* default_value);
     virtual ~TST();
     PyObject* write(PyObject* file);
-    virtual PyObject* get(char* string);
+    virtual PyObject* get(char* string,int string_length);
     virtual PyObject* get_or_build(char* string,filter<char,PyObject*>* factory);
     virtual PyObject* put(char* string,PyObject* data);
-    PyObject* __getitem__(char* string);
+    PyObject* __getitem__(char* string,int string_length);
     PyObject* __setitem__(char* string,PyObject* data);
     void __delitem__(char* string);
 
@@ -336,8 +336,8 @@ PyObject* TST::write(PyObject* file) {
     return Py_None;
 }
 
-PyObject* TST::get(char* string) {
-    PyObject* result=tst<char,PyObject*>::get(string);
+PyObject* TST::get(char* string,int string_length) {
+    PyObject* result=tst<char,PyObject*>::get(string,string_length);
     Py_INCREF(result);
     return result;
 }
@@ -354,8 +354,8 @@ PyObject* TST::put(char* string,PyObject* data) {
     return result;
 }
 
-PyObject* TST::__getitem__(char* string) {
-    return get(string);
+PyObject* TST::__getitem__(char* string,int string_length) {
+    return get(string,string_length);
 }
 
 PyObject* TST::__setitem__(char* string,PyObject* data) {

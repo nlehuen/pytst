@@ -53,8 +53,8 @@ public class _ObjectTST {
     return tstJNI._ObjectTST_walk(swigCPtr, _ObjectFilter.getCPtr(filter), _ObjectAction.getCPtr(to_perform));
   }
 
-  public Object almost(String string, int string_length, int maximum_distance, _ObjectFilter filter, _ObjectAction to_perform) {
-    return tstJNI._ObjectTST_almost(swigCPtr, string, string_length, maximum_distance, _ObjectFilter.getCPtr(filter), _ObjectAction.getCPtr(to_perform));
+  public Object almost(String string, int maximum_distance, _ObjectFilter filter, _ObjectAction to_perform) {
+    return tstJNI._ObjectTST_almost(swigCPtr, string, maximum_distance, _ObjectFilter.getCPtr(filter), _ObjectAction.getCPtr(to_perform));
   }
 
   public Object common_prefix(String string, _ObjectFilter filter, _ObjectAction to_perform) {

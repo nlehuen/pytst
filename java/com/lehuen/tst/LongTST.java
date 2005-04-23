@@ -53,8 +53,8 @@ public class LongTST {
     return tstJNI.LongTST_walk(swigCPtr, _LongFilter.getCPtr(filter), _LongAction.getCPtr(to_perform));
   }
 
-  public long almost(String string, int string_length, int maximum_distance, _LongFilter filter, _LongAction to_perform) {
-    return tstJNI.LongTST_almost(swigCPtr, string, string_length, maximum_distance, _LongFilter.getCPtr(filter), _LongAction.getCPtr(to_perform));
+  public long almost(String string, int maximum_distance, _LongFilter filter, _LongAction to_perform) {
+    return tstJNI.LongTST_almost(swigCPtr, string, maximum_distance, _LongFilter.getCPtr(filter), _LongAction.getCPtr(to_perform));
   }
 
   public long common_prefix(String string, _LongFilter filter, _LongAction to_perform) {

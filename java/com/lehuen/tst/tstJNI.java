@@ -16,7 +16,7 @@ class tstJNI {
   public final static native void delete__ObjectTST(long jarg1);
   public final static native void _ObjectTST_pack(long jarg1);
   public final static native Object _ObjectTST_walk(long jarg1, long jarg2, long jarg3);
-  public final static native Object _ObjectTST_almost(long jarg1, String jarg2, int jarg3, int jarg4, long jarg5, long jarg6);
+  public final static native Object _ObjectTST_almost(long jarg1, String jarg2, int jarg4, long jarg5, long jarg6);
   public final static native Object _ObjectTST_common_prefix(long jarg1, String jarg2, long jarg3, long jarg4);
   public final static native Object _ObjectTST_scan(long jarg1, String jarg2, long jarg3);
   public final static native Object _ObjectTST_scan_with_stop_chars(long jarg1, String jarg2, String jarg3, long jarg4);
@@ -41,7 +41,7 @@ class tstJNI {
   public final static native void delete_LongTST(long jarg1);
   public final static native void LongTST_pack(long jarg1);
   public final static native long LongTST_walk(long jarg1, long jarg2, long jarg3);
-  public final static native long LongTST_almost(long jarg1, String jarg2, int jarg3, int jarg4, long jarg5, long jarg6);
+  public final static native long LongTST_almost(long jarg1, String jarg2, int jarg4, long jarg5, long jarg6);
   public final static native long LongTST_common_prefix(long jarg1, String jarg2, long jarg3, long jarg4);
   public final static native long LongTST_scan(long jarg1, String jarg2, long jarg3);
   public final static native long LongTST_scan_with_stop_chars(long jarg1, String jarg2, String jarg3, long jarg4);

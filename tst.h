@@ -107,7 +107,7 @@ public:
     T scan(S* string,action<S,T>* to_perform);
     T scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform);
 #endif
-    T get(S* string);
+    T get(S* string,int string_length);
     T get_or_build(S* string,filter<S,T>* factory);
     T put(S* string,T data);
     void remove(S* string);
@@ -128,13 +128,9 @@ protected:
     void almost_recurse(tst_node<S,T>* current_node,S* current_key, int current_key_length, S* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,int current_key_limit);
 
     void create_node(node_info<S,T>* current_node_info);
-    int build_node(node_info<S,T>* current_node,S* current_char,int current_key_length);
+    int build_node(node_info<S,T>* current_node,S* string,int current_key_length);
     void remove_node(int* current_index,S* current_char,int current_key_length);
-    tst_node<S,T>* find_node(int* current_index,int* best_node, S* current_char);
-
-#ifdef SCANNER
-    void compute_backtrack(tst_node<S,T> *current_node,S *start,S *match,S *current_pos);
-#endif
+    tst_node<S,T>* find_node(int* current_index,int* best_node, S* string, int string_length);
 
     void balance_node(node_info<S,T>* bal);
     void ll(node_info<S,T>* bal);
@@ -145,6 +141,10 @@ protected:
     void clear_nodes();
 
     virtual T store_data(tst_node<S,T>* node,T data,int want_old_value);
+
+#ifdef SCANNER
+    void compute_backtrack(tst_node<S,T> *current_node,S *start,S *match,S *current_pos);
+#endif
 };
 
 template<class S,class T> void tst<S,T>::debug_print_root() {
@@ -275,9 +275,9 @@ template<class S,class T> void tst<S,T>::pack() {
     }
 }
 
-template<class S,class T> T tst<S,T>::get(S* string) {
+template<class S,class T> T tst<S,T>::get(S* string,int string_length) {
     int current_index=root,best_node=UNDEFINED_INDEX;
-    tst_node<S,T>* current_node=find_node(&current_index,&best_node,string);
+    tst_node<S,T>* current_node=find_node(&current_index,&best_node,string,string_length);
     if(current_node) {
         return current_node->data;
     }
@@ -754,7 +754,7 @@ template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* curre
     }
 }
 
-template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,int* best_node,S* current_char) {
+template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,int* best_node,S* string,int string_length) {
     tst_node<S,T>* _array=array;
     tst_node<S,T>* current_node;
     int diff;
@@ -767,7 +767,7 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
             return NULL;
         }
         else {
-            diff=(*current_char)-(current_node->c);
+            diff=(*string)-(current_node->c);
         }
 
         if(diff==0) {
@@ -775,8 +775,9 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
                 *best_node=*current_index;
             }
 
-            current_char++;
-            if(*current_char) {
+            string++;
+            string_length--;
+            if(string_length>0) {
                 *current_index = current_node->next;
             }
             else {
@@ -797,52 +798,23 @@ template<class S,class T> tst_node<S,T>* tst<S,T>::find_node(int* current_index,
 #ifdef SCANNER
 template<class S,class T> void tst<S,T>::compute_backtrack(tst_node<S,T> *current_node,S *start, S *match,S *current_pos) {
     if(current_node->backtrack==UNDEFINED_INDEX) {
-        S temp_char=*match;
-        *match=0;
-/*
-        printf("find backtrack for \"%s|",start);
-*/
-        *match=temp_char;
-        temp_char=*current_pos;
-        *current_pos=0;
-/*
-        printf("%s\"",match);        
-*/
         S* forward_pos=match;
         while(forward_pos<current_pos) {
             current_node->backtrack=root;
             current_node->backtrack_match_index=UNDEFINED_INDEX;
-            find_node(&(current_node->backtrack),&(current_node->backtrack_match_index),forward_pos);
+            find_node(&(current_node->backtrack),&(current_node->backtrack_match_index),forward_pos,current_pos-forward_pos);
             if(current_node->backtrack==UNDEFINED_INDEX) {
                 forward_pos++;
             }
             else {
                 current_node->backtrack=(array+current_node->backtrack)->next;
-
-/*              
-                printf(" => \"%s\"(%i)",forward_pos,current_node->backtrack);
-                if(current_node->backtrack_match_index!=UNDEFINED_INDEX) {
-                    S* best_match_end=forward_pos+(array+current_node->backtrack_match_index)->position+1;
-                    S temp_char2=*best_match_end;
-                    *best_match_end=0;
-                    printf(" with best match \"%s\"\n",forward_pos);
-                    *best_match_end=temp_char2;
-                }
-                else {
-                    printf(" with no best match\n");
-                }
-*/
                 break;
             }
         }
         if(current_node->backtrack==UNDEFINED_INDEX) {
-/*
-            printf(" => nothing !\n");
-*/
             current_node->backtrack=root;
             current_node->backtrack_match_index=UNDEFINED_INDEX;
         }
-        *current_pos=temp_char;
     }
 }
 

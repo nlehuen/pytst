@@ -202,7 +202,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1walk(JNIEnv *j
 }
 
 
-JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1almost(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg3, jint jarg4, jlong jarg5, jlong jarg6) {
+JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1almost(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg4, jlong jarg5, jlong jarg6) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -220,9 +220,9 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1almost(JNIEnv 
         if (jarg2) {
             arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
             if (!arg2) return 0;
+            arg3 = strlen(arg2);
         }
     }
-    arg3 = (int)jarg3; 
     arg4 = (int)jarg4; 
     arg5 = *(filter<char,jobject > **)&jarg5; 
     arg6 = *(action<char,jobject > **)&jarg6; 
@@ -337,6 +337,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get(JNIEnv *je
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
+    int arg3 ;
     jobject result;
     
     (void)jenv;
@@ -347,9 +348,10 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get(JNIEnv *je
         if (jarg2) {
             arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
             if (!arg2) return 0;
+            arg3 = strlen(arg2);
         }
     }
-    result = (arg1)->get(arg2);
+    result = (arg1)->get(arg2,arg3);
     
     jresult = result; 
     {
@@ -704,7 +706,7 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1walk(JNIEnv *jenv, j
 }
 
 
-JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1almost(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg3, jint jarg4, jlong jarg5, jlong jarg6) {
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1almost(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg4, jlong jarg5, jlong jarg6) {
     jlong jresult = 0 ;
     tst<char,long long > *arg1 = (tst<char,long long > *) 0 ;
     char *arg2 = (char *) 0 ;
@@ -722,9 +724,9 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1almost(JNIEnv *jenv,
         if (jarg2) {
             arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
             if (!arg2) return 0;
+            arg3 = strlen(arg2);
         }
     }
-    arg3 = (int)jarg3; 
     arg4 = (int)jarg4; 
     arg5 = *(filter<char,long long > **)&jarg5; 
     arg6 = *(action<char,long long > **)&jarg6; 
@@ -839,6 +841,7 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1get(JNIEnv *jenv, jc
     jlong jresult = 0 ;
     tst<char,long long > *arg1 = (tst<char,long long > *) 0 ;
     char *arg2 = (char *) 0 ;
+    int arg3 ;
     long long result;
     
     (void)jenv;
@@ -849,9 +852,10 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1get(JNIEnv *jenv, jc
         if (jarg2) {
             arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
             if (!arg2) return 0;
+            arg3 = strlen(arg2);
         }
     }
-    result = (long long)(arg1)->get(arg2);
+    result = (long long)(arg1)->get(arg2,arg3);
     
     jresult = (jlong)result; 
     {

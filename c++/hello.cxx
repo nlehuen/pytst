@@ -155,7 +155,7 @@ int main2(int argc,char** argv) {
         char line[256];
         sprintf(line,"%d\0",i);
         // printf("%s\n",line);
-        char *result=linetst->get(line);
+        char *result=linetst->get(line,strlen(line));
         assert(result);
         assert(strcmp(line,result)==0);
     }
@@ -197,7 +197,7 @@ int main(int argc,char **argv) {
     while(true) {
         char line[256];
         fscanf(input,"%s\n",line);
-        if(md5tst.get(line)!=1L) {
+        if(md5tst.get(line,strlen(line))!=1L) {
             printf("Bummer !");
             return 1;
         }
