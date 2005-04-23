@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="pyd"
+	Name="pythonTST"
 	ProjectGUID="{A5208316-015E-4611-B812-6E2F7CCD33A2}"
 	Keyword="Win32Proj">
 	<Platforms>
