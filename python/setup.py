@@ -25,6 +25,11 @@ if sys.version < '2.2.3':
     DistributionMetadata.classifiers = None
     DistributionMetadata.download_url = None
 
+if sys.platform=="win32":
+	extra_compile_args = '/Zp1 /Og /Ob2 /Oi /Ot /GS'.split()
+else:
+	extra_compile_args = []
+
 setup(
     name = "pytst",
     version = "0.70",
@@ -37,7 +42,8 @@ setup(
         Extension(
             "_tst",
             ["tst_wrap.cxx"],
-            include_dirs=['..','include']
+            include_dirs=['..','include'],
+            extra_compile_args = extra_compile_args,
         ),
     ],
     download_url = "http://nicolas.lehuen.com/download/",

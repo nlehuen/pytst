@@ -12,12 +12,12 @@ t = TST()
 total_lines = 0
 total_size = 0
 
-SLICE = 100000
+SLICE = 1000000
 
 start = clock()
 for line_number, line in enumerate(islice(open('url-list.txt','rb'),SLICE)):
     line = line.strip()
-    t[line]=line_number
+    t[line]=1
     total_size += len(line)
     if line_number%1000==0:
         print line_number, total_size, line
@@ -29,5 +29,5 @@ raw_input('Check memory')
 start = clock()
 for line_number, line in enumerate(islice(open('url-list.txt','rb'),SLICE)):
     line = line.strip()
-    assert t[line]==line_number
+    assert t[line]==1
 print 'Read : %f'%(clock()-start)

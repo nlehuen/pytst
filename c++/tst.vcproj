@@ -65,12 +65,19 @@
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
-			CharacterSet="2">
+			CharacterSet="2"
+			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="3"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="TRUE"
+				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="4"
+				StructMemberAlignment="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"

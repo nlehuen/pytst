@@ -179,6 +179,9 @@ int main(int argc,char **argv) {
         if(lines++%1000==0) {
             printf("%d ==> %d\n",lines,md5tst.bytes_allocated());
         }
+        if(lines==1000000) {
+            break;
+        }
     }
     fclose(input);
     end=clock();
@@ -187,12 +190,16 @@ int main(int argc,char **argv) {
 
     start = clock();
     input = fopen("url-list.txt","r");
+    lines=0;
     while(true) {
         char line[256];
         fscanf(input,"%s\n",line);
         if(md5tst.get(line,strlen(line))!=1L) {
-            printf("Bummer !");
+            printf("Bummer ! %d %s\n",lines++,line);
             return 1;
+        }
+        if(lines==1000000) {
+            break;
         }
     }
     fclose(input);
