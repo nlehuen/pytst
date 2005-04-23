@@ -118,7 +118,7 @@ JNIEXPORT jstring JNICALL Java_com_lehuen_tst_tstJNI_get_1TST_1VERSION(JNIEnv *j
     
     (void)jenv;
     (void)jcls;
-    result = (char *) "0.64";
+    result = (char *) "0.70";
     
     {
         if(result) jresult = jenv->NewStringUTF(result); 
