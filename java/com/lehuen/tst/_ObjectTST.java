@@ -61,6 +61,14 @@ public class _ObjectTST {
     return tstJNI._ObjectTST_common_prefix(swigCPtr, string, _ObjectFilter.getCPtr(filter), _ObjectAction.getCPtr(to_perform));
   }
 
+  public Object scan(String string, _ObjectAction to_perform) {
+    return tstJNI._ObjectTST_scan(swigCPtr, string, _ObjectAction.getCPtr(to_perform));
+  }
+
+  public Object scan_with_stop_chars(String string, String stop_chars, _ObjectAction to_perform) {
+    return tstJNI._ObjectTST_scan_with_stop_chars(swigCPtr, string, stop_chars, _ObjectAction.getCPtr(to_perform));
+  }
+
   public Object get(String string) {
     return tstJNI._ObjectTST_get(swigCPtr, string);
   }

@@ -15,28 +15,26 @@
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
+			UseOfMFC="0"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..;e:\python23msvc7\include"
+				AdditionalIncludeDirectories="E:\Python24\include;.."
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				UsePrecompiledHeader="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/_tst_d.pyd"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="e:\python23msvc7\libs"
+				AdditionalLibraryDirectories="E:\Python24\libs"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/pyd.pdb"
 				SubSystem="2"
@@ -68,10 +66,11 @@
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
-			CharacterSet="2">
+			CharacterSet="2"
+			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="e:\python23\include"
+				AdditionalIncludeDirectories="E:\Python24\include;.."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -84,7 +83,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/_tst.pyd"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="e:\python23\libs"
+				AdditionalLibraryDirectories="E:\Python24\libs"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -121,13 +120,37 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\tst_wrap.cxx">
+				RelativePath=".\tst.i">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="E:\SWIG-1.3.24\swig -c++ -python -I.. -o $(InputName)_wrap.cxx $(InputPath)
+"
+						AdditionalDependencies="tst.i;..\tst.h;TST.cxx"
+						Outputs="tst_wrap.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="E:\SWIG-1.3.24\swig -c++ -python -I.. -o $(InputName)_wrap.cxx $(InputPath)
+"
+						AdditionalDependencies="tst.i;..\tst.h;TST.cxx"
+						Outputs="tst_wrap.cxx"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\tst_wrap.cxx">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath="..\debug.h">
+			</File>
 			<File
 				RelativePath="..\tst.h">
 			</File>

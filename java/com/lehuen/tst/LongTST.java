@@ -61,6 +61,14 @@ public class LongTST {
     return tstJNI.LongTST_common_prefix(swigCPtr, string, _LongFilter.getCPtr(filter), _LongAction.getCPtr(to_perform));
   }
 
+  public long scan(String string, _LongAction to_perform) {
+    return tstJNI.LongTST_scan(swigCPtr, string, _LongAction.getCPtr(to_perform));
+  }
+
+  public long scan_with_stop_chars(String string, String stop_chars, _LongAction to_perform) {
+    return tstJNI.LongTST_scan_with_stop_chars(swigCPtr, string, stop_chars, _LongAction.getCPtr(to_perform));
+  }
+
   public long get(String string) {
     return tstJNI.LongTST_get(swigCPtr, string);
   }
