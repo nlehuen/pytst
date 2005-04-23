@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="jtst"
+	Name="javaTST"
 	ProjectGUID="{4FDA24E5-A0D9-4730-9E8A-9AA78A1F64C6}"
 	RootNamespace="jtst"
 	Keyword="Win32Proj">
