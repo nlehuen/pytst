@@ -1939,8 +1939,11 @@ static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
     PyObject *resultobj;
     tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
     char *arg2 = (char *) 0 ;
-    filter<char,PyObject * > *arg3 = (filter<char,PyObject * > *) 0 ;
+    int arg3 ;
+    filter<char,PyObject * > *arg4 = (filter<char,PyObject * > *) 0 ;
     PyObject *result;
+    char *buf2 ;
+    size_t size2 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
@@ -1948,14 +1951,19 @@ static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
     if(!PyArg_ParseTuple(args,(char *)"OOO:_TST_get_or_build",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
-        SWIG_arg_fail(2);SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
     }
-    SWIG_Python_ConvertPtr(obj2, (void **)&arg3, SWIGTYPE_p_filterTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
-    if (SWIG_arg_fail(3)) SWIG_fail;
+    SWIG_Python_ConvertPtr(obj2, (void **)&arg4, SWIGTYPE_p_filterTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(4)) SWIG_fail;
     {
         try {
-            result = (PyObject *)(arg1)->get_or_build(arg2,arg3);
+            result = (PyObject *)(arg1)->get_or_build(arg2,arg3,arg4);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -1972,8 +1980,11 @@ static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
     PyObject *resultobj;
     tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
     char *arg2 = (char *) 0 ;
-    PyObject *arg3 = (PyObject *) 0 ;
+    int arg3 ;
+    PyObject *arg4 = (PyObject *) 0 ;
     PyObject *result;
+    char *buf2 ;
+    size_t size2 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
@@ -1981,13 +1992,18 @@ static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
     if(!PyArg_ParseTuple(args,(char *)"OOO:_TST_put",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
-        SWIG_arg_fail(2);SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
     }
-    arg3 = obj2;
+    arg4 = obj2;
     {
         try {
-            result = (PyObject *)(arg1)->put(arg2,arg3);
+            result = (PyObject *)(arg1)->put(arg2,arg3,arg4);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2004,18 +2020,26 @@ static PyObject *_wrap__TST_remove(PyObject *, PyObject *args) {
     PyObject *resultobj;
     tst<char,PyObject * > *arg1 = (tst<char,PyObject * > *) 0 ;
     char *arg2 = (char *) 0 ;
+    int arg3 ;
+    char *buf2 ;
+    size_t size2 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:_TST_remove",&obj0,&obj1)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
-        SWIG_arg_fail(2);SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
     }
     {
         try {
-            (arg1)->remove(arg2);
+            (arg1)->remove(arg2,arg3);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -3337,8 +3361,11 @@ static PyObject *_wrap_TST_get_or_build(PyObject *, PyObject *args) {
     PyObject *resultobj;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
-    filter<char,PyObject * > *arg3 = (filter<char,PyObject * > *) 0 ;
+    int arg3 ;
+    filter<char,PyObject * > *arg4 = (filter<char,PyObject * > *) 0 ;
     PyObject *result;
+    char *buf2 ;
+    size_t size2 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
@@ -3346,14 +3373,19 @@ static PyObject *_wrap_TST_get_or_build(PyObject *, PyObject *args) {
     if(!PyArg_ParseTuple(args,(char *)"OOO:TST_get_or_build",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TST, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
-        SWIG_arg_fail(2);SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
     }
-    SWIG_Python_ConvertPtr(obj2, (void **)&arg3, SWIGTYPE_p_filterTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
-    if (SWIG_arg_fail(3)) SWIG_fail;
+    SWIG_Python_ConvertPtr(obj2, (void **)&arg4, SWIGTYPE_p_filterTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(4)) SWIG_fail;
     {
         try {
-            result = (PyObject *)(arg1)->get_or_build(arg2,arg3);
+            result = (PyObject *)(arg1)->get_or_build(arg2,arg3,arg4);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -3370,8 +3402,11 @@ static PyObject *_wrap_TST_put(PyObject *, PyObject *args) {
     PyObject *resultobj;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
-    PyObject *arg3 = (PyObject *) 0 ;
+    int arg3 ;
+    PyObject *arg4 = (PyObject *) 0 ;
     PyObject *result;
+    char *buf2 ;
+    size_t size2 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
@@ -3379,13 +3414,18 @@ static PyObject *_wrap_TST_put(PyObject *, PyObject *args) {
     if(!PyArg_ParseTuple(args,(char *)"OOO:TST_put",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TST, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
-        SWIG_arg_fail(2);SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
     }
-    arg3 = obj2;
+    arg4 = obj2;
     {
         try {
-            result = (PyObject *)(arg1)->put(arg2,arg3);
+            result = (PyObject *)(arg1)->put(arg2,arg3,arg4);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -3439,8 +3479,11 @@ static PyObject *_wrap_TST___setitem__(PyObject *, PyObject *args) {
     PyObject *resultobj;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
-    PyObject *arg3 = (PyObject *) 0 ;
+    int arg3 ;
+    PyObject *arg4 = (PyObject *) 0 ;
     PyObject *result;
+    char *buf2 ;
+    size_t size2 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
@@ -3448,13 +3491,18 @@ static PyObject *_wrap_TST___setitem__(PyObject *, PyObject *args) {
     if(!PyArg_ParseTuple(args,(char *)"OOO:TST___setitem__",&obj0,&obj1,&obj2)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TST, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
-        SWIG_arg_fail(2);SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
     }
-    arg3 = obj2;
+    arg4 = obj2;
     {
         try {
-            result = (PyObject *)(arg1)->__setitem__(arg2,arg3);
+            result = (PyObject *)(arg1)->__setitem__(arg2,arg3,arg4);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -3471,18 +3519,26 @@ static PyObject *_wrap_TST___delitem__(PyObject *, PyObject *args) {
     PyObject *resultobj;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
+    int arg3 ;
+    char *buf2 ;
+    size_t size2 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:TST___delitem__",&obj0,&obj1)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TST, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
-        SWIG_arg_fail(2);SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
     }
     {
         try {
-            (arg1)->__delitem__(arg2);
+            (arg1)->__delitem__(arg2,arg3);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;

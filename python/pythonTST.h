@@ -283,11 +283,11 @@ public:
     virtual ~TST();
     PyObject* write(PyObject* file);
     virtual PyObject* get(char* string,int string_length);
-    virtual PyObject* get_or_build(char* string,filter<char,PyObject*>* factory);
-    virtual PyObject* put(char* string,PyObject* data);
+    virtual PyObject* get_or_build(char* string,int string_length,filter<char,PyObject*>* factory);
+    virtual PyObject* put(char* string,int string_length,PyObject* data);
     PyObject* __getitem__(char* string,int string_length);
-    PyObject* __setitem__(char* string,PyObject* data);
-    void __delitem__(char* string);
+    PyObject* __setitem__(char* string,int string_length,PyObject* data);
+    void __delitem__(char* string,int string_length);
 
 protected:
     virtual PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data,int want_old_value);
@@ -342,15 +342,15 @@ PyObject* TST::get(char* string,int string_length) {
     return result;
 }
 
-PyObject* TST::get_or_build(char* string,filter<char,PyObject*>* factory) {
-    PyObject* result=tst<char,PyObject*>::get_or_build(string,factory);
+PyObject* TST::get_or_build(char* string,int string_length,filter<char,PyObject*>* factory) {
+    PyObject* result=tst<char,PyObject*>::get_or_build(string,string_length,factory);
     Py_INCREF(result);
     return result;
 }
 
 
-PyObject* TST::put(char* string,PyObject* data) {
-    PyObject* result=tst<char,PyObject*>::put(string,data);
+PyObject* TST::put(char* string,int string_length,PyObject* data) {
+    PyObject* result=tst<char,PyObject*>::put(string,string_length,data);
     return result;
 }
 
@@ -358,11 +358,11 @@ PyObject* TST::__getitem__(char* string,int string_length) {
     return get(string,string_length);
 }
 
-PyObject* TST::__setitem__(char* string,PyObject* data) {
-    return put(string,data);
+PyObject* TST::__setitem__(char* string,int string_length,PyObject* data) {
+    return put(string,string_length,data);
 }
 
-void TST::__delitem__(char* string) {
-    remove(string);
+void TST::__delitem__(char* string,int string_length) {
+    remove(string,string_length);
 }
 

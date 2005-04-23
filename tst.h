@@ -108,9 +108,9 @@ public:
     T scan_with_stop_chars(S* string,S* stop_chars,action<S,T>* to_perform);
 #endif
     T get(S* string,int string_length);
-    T get_or_build(S* string,filter<S,T>* factory);
-    T put(S* string,T data);
-    void remove(S* string);
+    T get_or_build(S* string,int string_length,filter<S,T>* factory);
+    T put(S* string,int string_length,T data);
+    void remove(S* string,int string_length);
     int get_maximum_key_length();
     size_t bytes_allocated();
     void write(FILE* file,serializer<S,T>* writer);
@@ -128,8 +128,8 @@ protected:
     void almost_recurse(tst_node<S,T>* current_node,S* current_key, int current_key_length, S* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,int current_key_limit);
 
     void create_node(node_info<S,T>* current_node_info);
-    int build_node(node_info<S,T>* current_node,S* string,int current_key_length);
-    void remove_node(int* current_index,S* current_char,int current_key_length);
+    int build_node(node_info<S,T>* current_node,S* string,int string_length,int current_key_length);
+    void remove_node(int* current_index,S* string,int string_length,int current_key_length);
     tst_node<S,T>* find_node(int* current_index,int* best_node, S* string, int string_length);
 
     void balance_node(node_info<S,T>* bal);
@@ -286,17 +286,17 @@ template<class S,class T> T tst<S,T>::get(S* string,int string_length) {
     }
 }
 
-template<class S,class T> T tst<S,T>::put(S* string,T data) {
+template<class S,class T> T tst<S,T>::put(S* string,int string_length,T data) {
     node_info<S,T> root_info;
     root_info.index=root;
     root_info.node=array+root;
-    int node_index=build_node(&root_info,string,0);
+    int node_index=build_node(&root_info,string,string_length,0);
     root = root_info.index;
     return store_data(array+node_index,data,1);
 }
 
-template<class S,class T> void tst<S,T>::remove(S* string) {
-    remove_node(&root,string,0);
+template<class S,class T> void tst<S,T>::remove(S* string,int string_length) {
+    remove_node(&root,string,string_length,0);
     if(root==UNDEFINED_INDEX) {
         node_info<S,T> root_info;
         create_node(&root_info);
@@ -304,11 +304,11 @@ template<class S,class T> void tst<S,T>::remove(S* string) {
     }
 }
 
-template<class S,class T> T tst<S,T>::get_or_build(S* string,filter<S,T>* factory) {
+template<class S,class T> T tst<S,T>::get_or_build(S* string,int string_length,filter<S,T>* factory) {
     node_info<S,T> root_info;
     root_info.index=root;
     root_info.node=array+root;
-    int node_index=build_node(&root_info,string,0);
+    int node_index=build_node(&root_info,string,string_length,0);
     root = root_info.index;
 
     tst_node<S,T>* current_node=array+node_index;
@@ -557,34 +557,30 @@ template<class S,class T> void tst<S,T>::create_node(node_info<S,T>* current_nod
     current_node_info->right_balance =0;
 }
 
-template<class S,class T> int tst<S,T>::build_node(node_info<S,T>* current_node_info,S* current_char,int current_key_length) {
+template<class S,class T> int tst<S,T>::build_node(node_info<S,T>* current_node_info,S* string,int string_length,int current_key_length) {
     int diff,result;
 
     if(current_node_info->node->c==0) {
-        current_node_info->node->c=(*current_char);
+        current_node_info->node->c=(*string);
 #ifdef SCANNER
         current_node_info->node->position=current_key_length;
 #endif
         diff=0;
     }
     else {
-        diff=(*current_char)-(current_node_info->node->c);
+        diff=(*string)-(current_node_info->node->c);
     }
 
     current_node_info->height=-1;
     current_node_info->balance_performed=0;
 
     if(diff==0) {
-        current_char++;
-        current_key_length++;
+        string++;
+        string_length--;
 
-        compute_height_and_balance(current_node_info);
+        compute_height_and_balance(current_node_info); // TODO : est-ce bien necessaire ?
 
-        if(*current_char) {
-            if(current_key_length>maximum_key_length) {
-                maximum_key_length=current_key_length;
-            }
-            
+        if(string_length>0) {
             node_info<S,T> next_node_info;
             next_node_info.index = current_node_info->node->next;
             if(next_node_info.index==UNDEFINED_INDEX) {
@@ -595,7 +591,7 @@ template<class S,class T> int tst<S,T>::build_node(node_info<S,T>* current_node_
                 current_node_info->node->next=next_node_info.index;
             }
             next_node_info.node = array + next_node_info.index;
-            result=build_node(&next_node_info,current_char,current_key_length);
+            result=build_node(&next_node_info,string,string_length,current_key_length);
             current_node_info->node = array + current_node_info->index;
             current_node_info->node->next = next_node_info.index;
             return result;
@@ -613,7 +609,7 @@ template<class S,class T> int tst<S,T>::build_node(node_info<S,T>* current_node_
             current_node_info->node->right=next_node_info.index;
         }
         next_node_info.node = array + next_node_info.index;
-        result=build_node(&next_node_info,current_char,current_key_length);
+        result=build_node(&next_node_info,string,string_length,current_key_length);
         current_node_info->node = array + current_node_info->index;
         current_node_info->node->right = next_node_info.index;
 
@@ -656,7 +652,7 @@ template<class S,class T> int tst<S,T>::build_node(node_info<S,T>* current_node_
             current_node_info->node->left=next_node_info.index;
         }
         next_node_info.node = array + next_node_info.index;
-        result=build_node(&next_node_info,current_char,current_key_length);
+        result=build_node(&next_node_info,string,string_length,current_key_length);
         current_node_info->node = array + current_node_info->index;
         current_node_info->node->left = next_node_info.index;
 
@@ -693,7 +689,7 @@ template<class S,class T> int tst<S,T>::build_node(node_info<S,T>* current_node_
     }
 }
 
-template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* current_char,int current_key_length) {
+template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* string,int string_length,int current_key_length) {
     tst_node<S,T>* current_node = array + *current_index;
     int diff,*next_index;
 
@@ -701,19 +697,20 @@ template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* curre
         return;
     }
     else {
-        diff=(*current_char)-(current_node->c);
+        diff=(*string)-(current_node->c);
     }
 
     if(diff==0) {
-        current_char++;
+        string++;
+        string_length--;
         current_key_length++;
-        if(*current_char) {
+        if(string_length>0) {
             if(current_key_length>maximum_key_length) {
                 maximum_key_length=current_key_length;
             }
             next_index = &(current_node->next);
             if(*next_index!=UNDEFINED_INDEX) {
-                remove_node(next_index,current_char,current_key_length);
+                remove_node(next_index,string,string_length,current_key_length);
             }
         }
         else {
@@ -723,13 +720,13 @@ template<class S,class T> void tst<S,T>::remove_node(int* current_index,S* curre
     else if(diff>0) {
         next_index = &(current_node->right);
         if(*next_index!=UNDEFINED_INDEX) {
-            remove_node(next_index,current_char,current_key_length);
+            remove_node(next_index,string,string_length,current_key_length);
         }
     }
     else {
         next_index = &(current_node->left);
         if(*next_index!=UNDEFINED_INDEX) {
-            remove_node(next_index,current_char,current_key_length);
+            remove_node(next_index,string,string_length,current_key_length);
         }
     }
 

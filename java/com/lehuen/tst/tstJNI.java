@@ -21,8 +21,8 @@ class tstJNI {
   public final static native Object _ObjectTST_scan(long jarg1, String jarg2, long jarg3);
   public final static native Object _ObjectTST_scan_with_stop_chars(long jarg1, String jarg2, String jarg3, long jarg4);
   public final static native Object _ObjectTST_get(long jarg1, String jarg2);
-  public final static native Object _ObjectTST_get_or_build(long jarg1, String jarg2, long jarg3);
-  public final static native Object _ObjectTST_put(long jarg1, String jarg2, Object jarg3);
+  public final static native Object _ObjectTST_get_or_build(long jarg1, String jarg2, long jarg4);
+  public final static native Object _ObjectTST_put(long jarg1, String jarg2, Object jarg4);
   public final static native void _ObjectTST_remove(long jarg1, String jarg2);
   public final static native int _ObjectTST_get_maximum_key_length(long jarg1);
   public final static native long _ObjectTST_bytes_allocated(long jarg1);
@@ -46,8 +46,8 @@ class tstJNI {
   public final static native long LongTST_scan(long jarg1, String jarg2, long jarg3);
   public final static native long LongTST_scan_with_stop_chars(long jarg1, String jarg2, String jarg3, long jarg4);
   public final static native long LongTST_get(long jarg1, String jarg2);
-  public final static native long LongTST_get_or_build(long jarg1, String jarg2, long jarg3);
-  public final static native long LongTST_put(long jarg1, String jarg2, long jarg3);
+  public final static native long LongTST_get_or_build(long jarg1, String jarg2, long jarg4);
+  public final static native long LongTST_put(long jarg1, String jarg2, long jarg4);
   public final static native void LongTST_remove(long jarg1, String jarg2);
   public final static native int LongTST_get_maximum_key_length(long jarg1);
   public final static native long LongTST_bytes_allocated(long jarg1);

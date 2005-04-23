@@ -133,7 +133,7 @@ int main2(int argc,char** argv) {
 //    for(int i=ITERATIONS-1;i>=0;i--) {
         char* line=(char*)malloc(10);
         sprintf(line,"%d\0",i);
-        linetst->put(line,line);
+        linetst->put(line,strlen(line),line);
     }
 
     end = clock();
@@ -182,7 +182,7 @@ int main(int argc,char **argv) {
     while(true) {
         char line[256];
         fscanf(input,"%s\n",line);
-        md5tst.put(line,1L);
+        md5tst.put(line,strlen(line),1L);
         if(lines++%1000==0) {
             printf("%d ==> %d\n",lines,md5tst.bytes_allocated());
         }

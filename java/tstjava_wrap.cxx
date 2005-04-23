@@ -361,11 +361,12 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get(JNIEnv *je
 }
 
 
-JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get_1or_1build(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
+JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get_1or_1build(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
-    filter<char,jobject > *arg3 = (filter<char,jobject > *) 0 ;
+    int arg3 ;
+    filter<char,jobject > *arg4 = (filter<char,jobject > *) 0 ;
     jobject result;
     
     (void)jenv;
@@ -376,10 +377,11 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get_1or_1build
         if (jarg2) {
             arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
             if (!arg2) return 0;
+            arg3 = strlen(arg2);
         }
     }
-    arg3 = *(filter<char,jobject > **)&jarg3; 
-    result = (arg1)->get_or_build(arg2,arg3);
+    arg4 = *(filter<char,jobject > **)&jarg4; 
+    result = (arg1)->get_or_build(arg2,arg3,arg4);
     
     jresult = result; 
     {
@@ -389,11 +391,12 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get_1or_1build
 }
 
 
-JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1put(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jobject jarg3) {
+JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1put(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jobject jarg4) {
     jobject jresult = 0 ;
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
-    jobject arg3 ;
+    int arg3 ;
+    jobject arg4 ;
     jobject result;
     
     (void)jenv;
@@ -404,10 +407,11 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1put(JNIEnv *je
         if (jarg2) {
             arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
             if (!arg2) return 0;
+            arg3 = strlen(arg2);
         }
     }
-    arg3 = jarg3; 
-    result = (arg1)->put(arg2,arg3);
+    arg4 = jarg4; 
+    result = (arg1)->put(arg2,arg3,arg4);
     
     jresult = result; 
     {
@@ -420,6 +424,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1put(JNIEnv *je
 JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1remove(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
     tst<char,jobject > *arg1 = (tst<char,jobject > *) 0 ;
     char *arg2 = (char *) 0 ;
+    int arg3 ;
     
     (void)jenv;
     (void)jcls;
@@ -429,9 +434,10 @@ JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1remove(JNIEnv *je
         if (jarg2) {
             arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
             if (!arg2) return ;
+            arg3 = strlen(arg2);
         }
     }
-    (arg1)->remove(arg2);
+    (arg1)->remove(arg2,arg3);
     
     {
         if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
@@ -865,11 +871,12 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1get(JNIEnv *jenv, jc
 }
 
 
-JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1get_1or_1build(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1get_1or_1build(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4) {
     jlong jresult = 0 ;
     tst<char,long long > *arg1 = (tst<char,long long > *) 0 ;
     char *arg2 = (char *) 0 ;
-    filter<char,long long > *arg3 = (filter<char,long long > *) 0 ;
+    int arg3 ;
+    filter<char,long long > *arg4 = (filter<char,long long > *) 0 ;
     long long result;
     
     (void)jenv;
@@ -880,10 +887,11 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1get_1or_1build(JNIEn
         if (jarg2) {
             arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
             if (!arg2) return 0;
+            arg3 = strlen(arg2);
         }
     }
-    arg3 = *(filter<char,long long > **)&jarg3; 
-    result = (long long)(arg1)->get_or_build(arg2,arg3);
+    arg4 = *(filter<char,long long > **)&jarg4; 
+    result = (long long)(arg1)->get_or_build(arg2,arg3,arg4);
     
     jresult = (jlong)result; 
     {
@@ -893,11 +901,12 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1get_1or_1build(JNIEn
 }
 
 
-JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1put(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg3) {
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1put(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4) {
     jlong jresult = 0 ;
     tst<char,long long > *arg1 = (tst<char,long long > *) 0 ;
     char *arg2 = (char *) 0 ;
-    long long arg3 ;
+    int arg3 ;
+    long long arg4 ;
     long long result;
     
     (void)jenv;
@@ -908,10 +917,11 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1put(JNIEnv *jenv, jc
         if (jarg2) {
             arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
             if (!arg2) return 0;
+            arg3 = strlen(arg2);
         }
     }
-    arg3 = (long long)jarg3; 
-    result = (long long)(arg1)->put(arg2,arg3);
+    arg4 = (long long)jarg4; 
+    result = (long long)(arg1)->put(arg2,arg3,arg4);
     
     jresult = (jlong)result; 
     {
@@ -924,6 +934,7 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1put(JNIEnv *jenv, jc
 JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1remove(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
     tst<char,long long > *arg1 = (tst<char,long long > *) 0 ;
     char *arg2 = (char *) 0 ;
+    int arg3 ;
     
     (void)jenv;
     (void)jcls;
@@ -933,9 +944,10 @@ JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_LongTST_1remove(JNIEnv *jenv, 
         if (jarg2) {
             arg2 = (char *)jenv->GetStringUTFChars(jarg2, 0);
             if (!arg2) return ;
+            arg3 = strlen(arg2);
         }
     }
-    (arg1)->remove(arg2);
+    (arg1)->remove(arg2,arg3);
     
     {
         if (arg2) jenv->ReleaseStringUTFChars(jarg2, arg2); 
