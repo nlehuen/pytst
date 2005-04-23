@@ -22,7 +22,7 @@
 %apply (char *STRING, int LENGTH) { (char *string, int string_length) };
 
 %{
-#include "TST.cxx"
+#include "pythonTST.h"
 %}
 
 %exception {
@@ -37,5 +37,5 @@
 %template(_Filter)      filter<char,PyObject*>;
 %template(_Serializer)  serializer<char,PyObject*>;
 
-%include "TST.cxx"
+%include "pythonTST.h"
 

@@ -152,6 +152,9 @@
 				RelativePath="..\debug.h">
 			</File>
 			<File
+				RelativePath=".\pythonTST.h">
+			</File>
+			<File
 				RelativePath="..\tst.h">
 			</File>
 		</Filter>

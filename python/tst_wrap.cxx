@@ -1368,7 +1368,7 @@ static swig_type_info *swig_types[19];
 
 #define SWIG_name    "_tst"
 
-#include "TST.cxx"
+#include "pythonTST.h"
 
 
   /*@E:\\SWIG-1.3.24\\Lib\\python\\pymacros.swg,66,SWIG_define@*/
