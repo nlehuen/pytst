@@ -19,9 +19,12 @@
 #include "tst.h"
 #include "jni.h"
 
-class ObjectTST : public tst<jchar,jobject> {
+typedef memory_storage<jchar,jobject> java_object_memory_storage;
+typedef memory_storage<jchar,jlong> java_long_memory_storage;
+
+class ObjectTST : public tst<jchar,jobject,java_object_memory_storage> {
 public:
-    ObjectTST(int initial_size,jobject data,JNIEnv* jenv2) : tst<jchar,jobject>(initial_size,data) {
+    ObjectTST(int initial_size,jobject data,JNIEnv* jenv2) : tst<jchar,jobject,java_object_memory_storage>(new java_object_memory_storage(initial_size),data) {
         jenv = jenv2;
         if(data) {
             jenv->NewGlobalRef(data);
@@ -155,9 +158,15 @@ public:
     }
 };
 
-class LongAction : public action<jchar,long long> {
+class LongTST : public tst<jchar,jlong,java_long_memory_storage> {
 public:
-    LongAction(jobject target,char *perform,char* result,JNIEnv* jenv) : action<jchar,long long>() {
+    LongTST(int initial_size,jlong data) : tst<jchar,jlong,java_long_memory_storage>(new java_long_memory_storage(initial_size),data) {
+    }
+};
+
+class LongAction : public action<jchar,jlong> {
+public:
+    LongAction(jobject target,char *perform,char* result,JNIEnv* jenv) : action<jchar,jlong>() {
         this->jenv=jenv;
         this->target=jenv->NewGlobalRef(target);
         jclass clazz = jenv->GetObjectClass(this->target);
@@ -183,7 +192,7 @@ public:
         jenv->DeleteGlobalRef(target);
     }
 
-    virtual void perform(jchar* string,int string_length,int remaining_distance,long long data) {
+    virtual void perform(jchar* string,int string_length,int remaining_distance,jlong data) {
         if(performID) {
             jstring key_string = jenv->NewString(string,string_length);
             if(key_string) {
@@ -192,9 +201,9 @@ public:
         }
     }
 
-    virtual long long result() {
+    virtual jlong result() {
         if(resultID) {
-            long long result = (long long)jenv->CallLongMethod(target,resultID);
+            jlong result = (jlong)jenv->CallLongMethod(target,resultID);
             return result;
         }
         else {
@@ -208,9 +217,9 @@ private:
     jmethodID performID,resultID;
 };
 
-class LongFilter : public filter<jchar,long long> {
+class LongFilter : public filter<jchar,jlong> {
 public:
-    LongFilter(jobject target,char *perform,JNIEnv* jenv) : filter<jchar,long long>() {
+    LongFilter(jobject target,char *perform,JNIEnv* jenv) : filter<jchar,jlong>() {
         this->jenv=jenv;
         this->target=jenv->NewGlobalRef(target);
         jclass clazz = jenv->GetObjectClass(this->target);
@@ -229,13 +238,13 @@ public:
         jenv->DeleteGlobalRef(target);
     }
 
-    virtual long long perform(jchar* string,int string_length,int remaining_distance,long long data) {
-        long long result = NULL;
+    virtual jlong perform(jchar* string,int string_length,int remaining_distance,jlong data) {
+        jlong result = NULL;
 
         if(performID) {
             jstring key_string = jenv->NewString(string,string_length);
             if(key_string) {
-                result = (long long)jenv->CallLongMethod(target,performID,key_string,(jint)remaining_distance,data);
+                result = (jlong)jenv->CallLongMethod(target,performID,key_string,(jint)remaining_distance,data);
             }
         }
 
@@ -248,14 +257,14 @@ private:
     jmethodID performID;
 };
 
-class LongSerializer : public serializer<jchar,long long> {
+class LongSerializer : public serializer<jchar,jlong> {
 public:
-    virtual void write(FILE* file,long long data) {
+    virtual void write(FILE* file,jlong data) {
         fwrite(&data,sizeof(data),1,file);
     }
 
-    virtual long long read(FILE* file) {
-        long long data;
+    virtual jlong read(FILE* file) {
+        jlong data;
         fread(&data,sizeof(data),1,file);
         return data;
     }

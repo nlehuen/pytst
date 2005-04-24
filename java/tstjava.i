@@ -29,6 +29,9 @@
 
 %include "tst.h"
 
+typedef memory_storage<jchar,jobject> java_object_memory_storage;
+typedef memory_storage<jchar,jlong> java_long_memory_storage;
+
 %typemap(in) (char* result,JNIEnv* jenv),(char* perform,JNIEnv* jenv) {
     $1 = 0;
     if ($input) {
@@ -60,14 +63,14 @@
 	if ($1) jenv->ReleaseStringChars((jstring)$input, $1);
 }
 
-%template(_ObjectTST) tst<jchar,jobject>;
+%template(_ObjectTST) tst<jchar,jobject,java_object_memory_storage>;
 %template(_ObjectAction) action<jchar,jobject>;
 %template(_ObjectFilter) filter<jchar,jobject>;
 %template(_ObjectSerializer) serializer<jchar,jobject>;
 
-%template(LongTST) tst<jchar,long long>;
-%template(_LongAction) action<jchar,long long>;
-%template(_LongFilter) filter<jchar,long long>;
-%template(_LongSerializer) serializer<jchar,long long>;
+%template(_LongTST) tst<jchar,jlong,java_long_memory_storage>;
+%template(_LongAction) action<jchar,jlong>;
+%template(_LongFilter) filter<jchar,jlong>;
+%template(_LongSerializer) serializer<jchar,jlong>;
 
 %include "javaTST.h"

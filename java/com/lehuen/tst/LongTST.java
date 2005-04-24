@@ -8,12 +8,11 @@
 
 package com.lehuen.tst;
 
-public class LongTST {
+public class LongTST extends _LongTST {
   private long swigCPtr;
-  protected boolean swigCMemOwn;
 
   protected LongTST(long cPtr, boolean cMemoryOwn) {
-    swigCMemOwn = cMemoryOwn;
+    super(tstJNI.SWIGLongTSTUpcast(cPtr), cMemoryOwn);
     swigCPtr = cPtr;
   }
 
@@ -35,62 +34,11 @@ public class LongTST {
       tstJNI.delete_LongTST(swigCPtr);
     }
     swigCPtr = 0;
+    super.delete();
   }
 
-  public LongTST(SWIGTYPE_p_FILE file, _LongSerializer reader) {
-    this(tstJNI.new_LongTST__SWIG_0(SWIGTYPE_p_FILE.getCPtr(file), _LongSerializer.getCPtr(reader)), true);
-  }
-
-  public LongTST(int initial_size, long default_value) {
-    this(tstJNI.new_LongTST__SWIG_1(initial_size, default_value), true);
-  }
-
-  public void pack() {
-    tstJNI.LongTST_pack(swigCPtr);
-  }
-
-  public long walk(_LongFilter filter, _LongAction to_perform) {
-    return tstJNI.LongTST_walk(swigCPtr, _LongFilter.getCPtr(filter), _LongAction.getCPtr(to_perform));
-  }
-
-  public long almost(String string, int maximum_distance, _LongFilter filter, _LongAction to_perform) {
-    return tstJNI.LongTST_almost(swigCPtr, string, maximum_distance, _LongFilter.getCPtr(filter), _LongAction.getCPtr(to_perform));
-  }
-
-  public long common_prefix(String string, _LongFilter filter, _LongAction to_perform) {
-    return tstJNI.LongTST_common_prefix(swigCPtr, string, _LongFilter.getCPtr(filter), _LongAction.getCPtr(to_perform));
-  }
-
-  public long get(String string) {
-    return tstJNI.LongTST_get(swigCPtr, string);
-  }
-
-  public long get_or_build(String string, _LongFilter factory) {
-    return tstJNI.LongTST_get_or_build(swigCPtr, string, _LongFilter.getCPtr(factory));
-  }
-
-  public long put(String string, long data) {
-    return tstJNI.LongTST_put(swigCPtr, string, data);
-  }
-
-  public void remove(String string) {
-    tstJNI.LongTST_remove(swigCPtr, string);
-  }
-
-  public int get_maximum_key_length() {
-    return tstJNI.LongTST_get_maximum_key_length(swigCPtr);
-  }
-
-  public long bytes_allocated() {
-    return tstJNI.LongTST_bytes_allocated(swigCPtr);
-  }
-
-  public void write(SWIGTYPE_p_FILE file, _LongSerializer writer) {
-    tstJNI.LongTST_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), _LongSerializer.getCPtr(writer));
-  }
-
-  public void debug_print_root() {
-    tstJNI.LongTST_debug_print_root(swigCPtr);
+  public LongTST(int initial_size, long data) {
+    this(tstJNI.new_LongTST(initial_size, data), true);
   }
 
 }
