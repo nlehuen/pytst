@@ -32,7 +32,9 @@
 
 %include "tst.h"
 
-%template(_TST)         tst<char,PyObject*>;
+typedef memory_storage<char,PyObject*> py_memory_storage;
+
+%template(_TST)         tst<char,PyObject*,py_memory_storage>;
 %template(_Action)      action<char,PyObject*>;
 %template(_Filter)      filter<char,PyObject*>;
 %template(_Serializer)  serializer<char,PyObject*>;

@@ -52,16 +52,18 @@ class printer : public donothing {
         }
 };
 
-class stringtst : public tst<char,char*> {
+typedef memory_storage<char,char*> memory_storage_char_string;
+
+class stringtst : public tst<char,char*,memory_storage_char_string> {
     public:
-        stringtst() : tst<char,char*>(1600,NULL) {
+        stringtst() : tst<char,char*,memory_storage_char_string>(1600,NULL) {
         }
 
         virtual ~stringtst() {
             clear_nodes();
         }
 
-        stringtst(FILE* file) : tst<char,char*>() {
+        stringtst(FILE* file) : tst<char,char*,memory_storage_char_string>() {
             stringserializer* s=new stringserializer();
             read(file,s);
             delete s;
@@ -82,7 +84,7 @@ void stringtst::store_data(tst_node<char,char*>* node,char* data) {
 
 class tester : public donothing {
     public:
-        tester(tst<char,char*>* mytst) : donothing() {
+        tester(stringtst* mytst) : donothing() {
             this->mytst=mytst;
         }
 
@@ -94,13 +96,13 @@ class tester : public donothing {
         }
 
     private:
-        tst<char,char*>* mytst;
+        stringtst* mytst;
 };
 
 #define ITERATIONS 4000000
 
 int main2(int argc,char** argv) {
-    tst<char,char*>* linetst=new stringtst();
+    stringtst* linetst=new stringtst();
 
     clock_t start, end;
     double elapsed;
@@ -162,8 +164,10 @@ int main2(int argc,char** argv) {
     return 0;
 }
 
+typedef memory_storage<char,int> memory_storage_char_int;
+
 int main(int argc,char **argv) {
-    tst<char,int> md5tst(256,0L);
+    tst<char,int,memory_storage_char_int> md5tst(256,0L);
     clock_t start, end;
     double elapsed;
     FILE* input;

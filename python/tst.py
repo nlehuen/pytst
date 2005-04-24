@@ -44,7 +44,7 @@ class _TST(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, _TST, name)
     def __repr__(self):
-        return "<%s.%s; proxy of C++ tst<char,PyObject * > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+        return "<%s.%s; proxy of C++ tst<char,PyObject *,py_memory_storage > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
     def __init__(self, *args):
         _swig_setattr(self, _TST, 'this', _tst.new__TST(*args))
         _swig_setattr(self, _TST, 'thisown', 1)

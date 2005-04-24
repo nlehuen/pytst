@@ -275,7 +275,9 @@ private:
     PyObject *dumps,*loads;
 };
 
-class TST : public tst<char,PyObject*> {
+typedef memory_storage<char,PyObject*> py_memory_storage;
+
+class TST : public tst<char,PyObject*,py_memory_storage> {
 public:
     TST();
     TST(PyObject* file);
@@ -293,19 +295,19 @@ protected:
     virtual PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data,int want_old_value);
 };
 
-TST::TST() : tst<char,PyObject*>(16,Py_None) {
+TST::TST() : tst<char,PyObject*,py_memory_storage>(new py_memory_storage(16),Py_None) {
     Py_INCREF(Py_None);
 }
 
-TST::TST(PyObject* file) : tst<char,PyObject*>() {
+TST::TST(PyObject* file) : tst<char,PyObject*,py_memory_storage>(new py_memory_storage(16),NULL) {
     if(!PyFile_Check(file)) {
         throw TSTException("Argument of constructor must be a file object");
     }
     ObjectSerializer os;
-    tst<char,PyObject*>::read(PyFile_AsFile(file),&os);
+    tst<char,PyObject*,py_memory_storage>::read(PyFile_AsFile(file),&os);
 }
 
-TST::TST(int initial_size,PyObject* default_value) : tst<char,PyObject*>(initial_size,default_value) {
+TST::TST(int initial_size,PyObject* default_value) : tst<char,PyObject*,py_memory_storage>(new py_memory_storage(initial_size),default_value) {
     if(!default_value) default_value=Py_None;
     Py_INCREF(default_value);
 }
@@ -331,26 +333,26 @@ PyObject* TST::write(PyObject* file) {
         throw TSTException("Argument of write() must be a file object");
     }
     ObjectSerializer *os=new ObjectSerializer();
-    tst<char,PyObject*>::write(PyFile_AsFile(file),os);
+    tst<char,PyObject*,py_memory_storage>::write(PyFile_AsFile(file),os);
     delete os;
     return Py_None;
 }
 
 PyObject* TST::get(char* string,int string_length) {
-    PyObject* result=tst<char,PyObject*>::get(string,string_length);
+    PyObject* result=tst<char,PyObject*,py_memory_storage>::get(string,string_length);
     Py_INCREF(result);
     return result;
 }
 
 PyObject* TST::get_or_build(char* string,int string_length,filter<char,PyObject*>* factory) {
-    PyObject* result=tst<char,PyObject*>::get_or_build(string,string_length,factory);
+    PyObject* result=tst<char,PyObject*,py_memory_storage>::get_or_build(string,string_length,factory);
     Py_INCREF(result);
     return result;
 }
 
 
 PyObject* TST::put(char* string,int string_length,PyObject* data) {
-    PyObject* result=tst<char,PyObject*>::put(string,string_length,data);
+    PyObject* result=tst<char,PyObject*,py_memory_storage>::put(string,string_length,data);
     return result;
 }
 
