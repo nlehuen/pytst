@@ -38,13 +38,42 @@ del types
 
 UNDEFINED_INDEX = _tst.UNDEFINED_INDEX
 TST_VERSION = _tst.TST_VERSION
+class _MemoryStorage(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, _MemoryStorage, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, _MemoryStorage, name)
+    def __repr__(self):
+        return "<%s.%s; proxy of C++ memory_storage<char,PyObject * > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, _MemoryStorage, 'this', _tst.new__MemoryStorage(*args))
+        _swig_setattr(self, _MemoryStorage, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete__MemoryStorage):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+
+    def get(*args): return _tst._MemoryStorage_get(*args)
+    def store_data(*args): return _tst._MemoryStorage_store_data(*args)
+    def set(*args): return _tst._MemoryStorage_set(*args)
+    def new_node(*args): return _tst._MemoryStorage_new_node(*args)
+    def delete_node(*args): return _tst._MemoryStorage_delete_node(*args)
+    def pack(*args): return _tst._MemoryStorage_pack(*args)
+
+class _MemoryStoragePtr(_MemoryStorage):
+    def __init__(self, this):
+        _swig_setattr(self, _MemoryStorage, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, _MemoryStorage, 'thisown', 0)
+        _swig_setattr(self, _MemoryStorage,self.__class__,_MemoryStorage)
+_tst._MemoryStorage_swigregister(_MemoryStoragePtr)
+
 class _TST(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, _TST, name, value)
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, _TST, name)
     def __repr__(self):
-        return "<%s.%s; proxy of C++ tst<char,PyObject *,py_memory_storage > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+        return "<%s.%s; proxy of C++ tst<char,PyObject *,MemoryStorage > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
     def __init__(self, *args):
         _swig_setattr(self, _TST, 'this', _tst.new__TST(*args))
         _swig_setattr(self, _TST, 'thisown', 1)
@@ -62,11 +91,7 @@ class _TST(_object):
     def put(*args): return _tst._TST_put(*args)
     def remove(*args): return _tst._TST_remove(*args)
     def get_maximum_key_length(*args): return _tst._TST_get_maximum_key_length(*args)
-    def bytes_allocated(*args): return _tst._TST_bytes_allocated(*args)
     def write(*args): return _tst._TST_write(*args)
-    def debug_print_root(*args): return _tst._TST_debug_print_root(*args)
-    def scan(*args): return _tst._TST_scan(*args)
-    def scan_with_stop_chars(*args): return _tst._TST_scan_with_stop_chars(*args)
 
 class _TSTPtr(_TST):
     def __init__(self, this):
@@ -329,6 +354,32 @@ class ObjectSerializerPtr(ObjectSerializer):
         if not hasattr(self,"thisown"): _swig_setattr(self, ObjectSerializer, 'thisown', 0)
         _swig_setattr(self, ObjectSerializer,self.__class__,ObjectSerializer)
 _tst.ObjectSerializer_swigregister(ObjectSerializerPtr)
+
+class MemoryStorage(_MemoryStorage):
+    __swig_setmethods__ = {}
+    for _s in [_MemoryStorage]: __swig_setmethods__.update(_s.__swig_setmethods__)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, MemoryStorage, name, value)
+    __swig_getmethods__ = {}
+    for _s in [_MemoryStorage]: __swig_getmethods__.update(_s.__swig_getmethods__)
+    __getattr__ = lambda self, name: _swig_getattr(self, MemoryStorage, name)
+    def __repr__(self):
+        return "<%s.%s; proxy of C++ MemoryStorage instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, MemoryStorage, 'this', _tst.new_MemoryStorage(*args))
+        _swig_setattr(self, MemoryStorage, 'thisown', 1)
+    def __del__(self, destroy=_tst.delete_MemoryStorage):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+
+    def store_data(*args): return _tst.MemoryStorage_store_data(*args)
+
+class MemoryStoragePtr(MemoryStorage):
+    def __init__(self, this):
+        _swig_setattr(self, MemoryStorage, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, MemoryStorage, 'thisown', 0)
+        _swig_setattr(self, MemoryStorage,self.__class__,MemoryStorage)
+_tst.MemoryStorage_swigregister(MemoryStoragePtr)
 
 class TST(_TST):
     __swig_setmethods__ = {}

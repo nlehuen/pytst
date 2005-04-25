@@ -37,12 +37,12 @@ public class _ObjectTST {
     swigCPtr = 0;
   }
 
-  public _ObjectTST(SWIGTYPE_p_memory_storageTjchar_jobject_t storage, SWIGTYPE_p_FILE file, _ObjectSerializer reader) {
-    this(tstJNI.new__ObjectTST__SWIG_0(SWIGTYPE_p_memory_storageTjchar_jobject_t.getCPtr(storage), SWIGTYPE_p_FILE.getCPtr(file), _ObjectSerializer.getCPtr(reader)), true);
+  public _ObjectTST(ObjectMemoryStorage storage, SWIGTYPE_p_FILE file, _ObjectSerializer reader) {
+    this(tstJNI.new__ObjectTST__SWIG_0(ObjectMemoryStorage.getCPtr(storage), SWIGTYPE_p_FILE.getCPtr(file), _ObjectSerializer.getCPtr(reader)), true);
   }
 
-  public _ObjectTST(SWIGTYPE_p_memory_storageTjchar_jobject_t storage, Object default_value) {
-    this(tstJNI.new__ObjectTST__SWIG_1(SWIGTYPE_p_memory_storageTjchar_jobject_t.getCPtr(storage), default_value), true);
+  public _ObjectTST(ObjectMemoryStorage storage, Object default_value) {
+    this(tstJNI.new__ObjectTST__SWIG_1(ObjectMemoryStorage.getCPtr(storage), default_value), true);
   }
 
   public void pack() {
@@ -81,24 +81,8 @@ public class _ObjectTST {
     return tstJNI._ObjectTST_get_maximum_key_length(swigCPtr);
   }
 
-  public long bytes_allocated() {
-    return tstJNI._ObjectTST_bytes_allocated(swigCPtr);
-  }
-
   public void write(SWIGTYPE_p_FILE file, _ObjectSerializer writer) {
     tstJNI._ObjectTST_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), _ObjectSerializer.getCPtr(writer));
-  }
-
-  public void debug_print_root() {
-    tstJNI._ObjectTST_debug_print_root(swigCPtr);
-  }
-
-  public Object scan(String string, _ObjectAction to_perform) {
-    return tstJNI._ObjectTST_scan(swigCPtr, string, _ObjectAction.getCPtr(to_perform));
-  }
-
-  public Object scan_with_stop_chars(String string, String stop_chars, _ObjectAction to_perform) {
-    return tstJNI._ObjectTST_scan_with_stop_chars(swigCPtr, string, stop_chars, _ObjectAction.getCPtr(to_perform));
   }
 
 }

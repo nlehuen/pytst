@@ -118,7 +118,7 @@ JNIEXPORT jstring JNICALL Java_com_lehuen_tst_tstJNI_get_1TST_1VERSION(JNIEnv *j
     
     (void)jenv;
     (void)jcls;
-    result = (char *) "0.70";
+    result = (char *) "0.80";
     
     {
         if(result) jresult = jenv->NewStringUTF(result); 
@@ -127,59 +127,175 @@ JNIEXPORT jstring JNICALL Java_com_lehuen_tst_tstJNI_get_1TST_1VERSION(JNIEnv *j
 }
 
 
-JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_new_1_1ObjectTST_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3) {
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_new_1_1ObjectMemoryStorage(JNIEnv *jenv, jclass jcls, jint jarg1) {
     jlong jresult = 0 ;
-    java_object_memory_storage *arg1 = (java_object_memory_storage *) 0 ;
-    FILE *arg2 = (FILE *) 0 ;
-    serializer<jchar,jobject > *arg3 = (serializer<jchar,jobject > *) 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *result;
+    int arg1 ;
+    memory_storage<jchar,jobject > *result;
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(java_object_memory_storage **)&jarg1; 
+    arg1 = (int)jarg1; 
+    result = (memory_storage<jchar,jobject > *)new memory_storage<jchar,jobject >(arg1);
+    
+    *(memory_storage<jchar,jobject > **)&jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_delete_1_1ObjectMemoryStorage(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    memory_storage<jchar,jobject > *arg1 = (memory_storage<jchar,jobject > *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jobject > **)&jarg1; 
+    delete arg1;
+    
+}
+
+
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI__1ObjectMemoryStorage_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jint jarg2) {
+    jlong jresult = 0 ;
+    memory_storage<jchar,jobject > *arg1 = (memory_storage<jchar,jobject > *) 0 ;
+    int arg2 ;
+    tst_node<jchar,jobject > *result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jobject > **)&jarg1; 
+    arg2 = (int)jarg2; 
+    result = (tst_node<jchar,jobject > *)(arg1)->get(arg2);
+    
+    *(tst_node<jchar,jobject > **)&jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectMemoryStorage_1store_1data(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jobject jarg3) {
+    jobject jresult = 0 ;
+    memory_storage<jchar,jobject > *arg1 = (memory_storage<jchar,jobject > *) 0 ;
+    tst_node<jchar,jobject > *arg2 = (tst_node<jchar,jobject > *) 0 ;
+    jobject arg3 ;
+    jobject result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jobject > **)&jarg1; 
+    arg2 = *(tst_node<jchar,jobject > **)&jarg2; 
+    arg3 = jarg3; 
+    result = (arg1)->store_data(arg2,arg3);
+    
+    jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectMemoryStorage_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jint jarg2, jlong jarg3) {
+    memory_storage<jchar,jobject > *arg1 = (memory_storage<jchar,jobject > *) 0 ;
+    int arg2 ;
+    tst_node<jchar,jobject > *arg3 = (tst_node<jchar,jobject > *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jobject > **)&jarg1; 
+    arg2 = (int)jarg2; 
+    arg3 = *(tst_node<jchar,jobject > **)&jarg3; 
+    (arg1)->set(arg2,arg3);
+    
+}
+
+
+JNIEXPORT jint JNICALL Java_com_lehuen_tst_tstJNI__1ObjectMemoryStorage_1new_1node(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    jint jresult = 0 ;
+    memory_storage<jchar,jobject > *arg1 = (memory_storage<jchar,jobject > *) 0 ;
+    int result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jobject > **)&jarg1; 
+    result = (int)(arg1)->new_node();
+    
+    jresult = (jint)result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectMemoryStorage_1delete_1node(JNIEnv *jenv, jclass jcls, jlong jarg1, jint jarg2) {
+    memory_storage<jchar,jobject > *arg1 = (memory_storage<jchar,jobject > *) 0 ;
+    int arg2 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jobject > **)&jarg1; 
+    arg2 = (int)jarg2; 
+    (arg1)->delete_node(arg2);
+    
+}
+
+
+JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectMemoryStorage_1pack(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    memory_storage<jchar,jobject > *arg1 = (memory_storage<jchar,jobject > *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jobject > **)&jarg1; 
+    (arg1)->pack();
+    
+}
+
+
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_new_1_1ObjectTST_1_1SWIG_10(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3) {
+    jlong jresult = 0 ;
+    ObjectMemoryStorage *arg1 = (ObjectMemoryStorage *) 0 ;
+    FILE *arg2 = (FILE *) 0 ;
+    serializer<jchar,jobject > *arg3 = (serializer<jchar,jobject > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(ObjectMemoryStorage **)&jarg1; 
     arg2 = *(FILE **)&jarg2; 
     arg3 = *(serializer<jchar,jobject > **)&jarg3; 
-    result = (tst<jchar,jobject,java_object_memory_storage > *)new tst<jchar,jobject,java_object_memory_storage >(arg1,arg2,arg3);
+    result = (tst<jchar,jobject,ObjectMemoryStorage > *)new tst<jchar,jobject,ObjectMemoryStorage >(arg1,arg2,arg3);
     
-    *(tst<jchar,jobject,java_object_memory_storage > **)&jresult = result; 
+    *(tst<jchar,jobject,ObjectMemoryStorage > **)&jresult = result; 
     return jresult;
 }
 
 
 JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_new_1_1ObjectTST_1_1SWIG_11(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2) {
     jlong jresult = 0 ;
-    java_object_memory_storage *arg1 = (java_object_memory_storage *) 0 ;
+    ObjectMemoryStorage *arg1 = (ObjectMemoryStorage *) 0 ;
     jobject arg2 ;
-    tst<jchar,jobject,java_object_memory_storage > *result;
+    tst<jchar,jobject,ObjectMemoryStorage > *result;
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(java_object_memory_storage **)&jarg1; 
+    arg1 = *(ObjectMemoryStorage **)&jarg1; 
     arg2 = jarg2; 
-    result = (tst<jchar,jobject,java_object_memory_storage > *)new tst<jchar,jobject,java_object_memory_storage >(arg1,arg2);
+    result = (tst<jchar,jobject,ObjectMemoryStorage > *)new tst<jchar,jobject,ObjectMemoryStorage >(arg1,arg2);
     
-    *(tst<jchar,jobject,java_object_memory_storage > **)&jresult = result; 
+    *(tst<jchar,jobject,ObjectMemoryStorage > **)&jresult = result; 
     return jresult;
 }
 
 
 JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_delete_1_1ObjectTST(JNIEnv *jenv, jclass jcls, jlong jarg1) {
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     delete arg1;
     
 }
 
 
 JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1pack(JNIEnv *jenv, jclass jcls, jlong jarg1) {
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     (arg1)->pack();
     
 }
@@ -187,14 +303,14 @@ JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1pack(JNIEnv *jenv
 
 JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1walk(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3) {
     jobject jresult = 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     filter<jchar,jobject > *arg2 = (filter<jchar,jobject > *) 0 ;
     action<jchar,jobject > *arg3 = (action<jchar,jobject > *) 0 ;
     jobject result;
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     arg2 = *(filter<jchar,jobject > **)&jarg2; 
     arg3 = *(action<jchar,jobject > **)&jarg3; 
     result = (arg1)->walk(arg2,arg3);
@@ -206,7 +322,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1walk(JNIEnv *j
 
 JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1almost(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jint jarg4, jlong jarg5, jlong jarg6) {
     jobject jresult = 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     jchar *arg2 = (jchar *) 0 ;
     int arg3 ;
     int arg4 ;
@@ -216,7 +332,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1almost(JNIEnv 
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     {
         arg2 = 0;
         if (jarg2) {
@@ -240,7 +356,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1almost(JNIEnv 
 
 JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1common_1prefix(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4, jlong jarg5) {
     jobject jresult = 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     jchar *arg2 = (jchar *) 0 ;
     int arg3 ;
     filter<jchar,jobject > *arg4 = (filter<jchar,jobject > *) 0 ;
@@ -249,7 +365,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1common_1prefix
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     {
         arg2 = 0;
         if (jarg2) {
@@ -272,14 +388,14 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1common_1prefix
 
 JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
     jobject jresult = 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     jchar *arg2 = (jchar *) 0 ;
     int arg3 ;
     jobject result;
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     {
         arg2 = 0;
         if (jarg2) {
@@ -300,7 +416,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get(JNIEnv *je
 
 JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get_1or_1build(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4) {
     jobject jresult = 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     jchar *arg2 = (jchar *) 0 ;
     int arg3 ;
     filter<jchar,jobject > *arg4 = (filter<jchar,jobject > *) 0 ;
@@ -308,7 +424,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get_1or_1build
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     {
         arg2 = 0;
         if (jarg2) {
@@ -330,7 +446,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get_1or_1build
 
 JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1put(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jobject jarg4) {
     jobject jresult = 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     jchar *arg2 = (jchar *) 0 ;
     int arg3 ;
     jobject arg4 ;
@@ -338,7 +454,7 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1put(JNIEnv *je
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     {
         arg2 = 0;
         if (jarg2) {
@@ -359,13 +475,13 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1put(JNIEnv *je
 
 
 JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1remove(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2) {
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     jchar *arg2 = (jchar *) 0 ;
     int arg3 ;
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     {
         arg2 = 0;
         if (jarg2) {
@@ -384,12 +500,12 @@ JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1remove(JNIEnv *je
 
 JNIEXPORT jint JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get_1maximum_1key_1length(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     jint jresult = 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     int result;
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     result = (int)(arg1)->get_maximum_key_length();
     
     jresult = (jint)result; 
@@ -397,117 +513,18 @@ JNIEXPORT jint JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1get_1maximum_1key
 }
 
 
-JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1bytes_1allocated(JNIEnv *jenv, jclass jcls, jlong jarg1) {
-    jlong jresult = 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
-    size_t result;
-    
-    (void)jenv;
-    (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
-    result = (arg1)->bytes_allocated();
-    
-    jresult = (jlong)result; 
-    return jresult;
-}
-
-
 JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1write(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3) {
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
     FILE *arg2 = (FILE *) 0 ;
     serializer<jchar,jobject > *arg3 = (serializer<jchar,jobject > *) 0 ;
     
     (void)jenv;
     (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
     arg2 = *(FILE **)&jarg2; 
     arg3 = *(serializer<jchar,jobject > **)&jarg3; 
     (arg1)->write(arg2,arg3);
     
-}
-
-
-JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1debug_1print_1root(JNIEnv *jenv, jclass jcls, jlong jarg1) {
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
-    
-    (void)jenv;
-    (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
-    (arg1)->debug_print_root();
-    
-}
-
-
-JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1scan(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4) {
-    jobject jresult = 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
-    jchar *arg2 = (jchar *) 0 ;
-    int arg3 ;
-    action<jchar,jobject > *arg4 = (action<jchar,jobject > *) 0 ;
-    jobject result;
-    
-    (void)jenv;
-    (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
-    {
-        arg2 = 0;
-        if (jarg2) {
-            arg2 = (jchar*)jenv->GetStringChars((jstring)jarg2, 0);
-            if (!arg2) return 0;
-            arg3 = jenv->GetStringLength((jstring)jarg2);
-        }
-    }
-    arg4 = *(action<jchar,jobject > **)&jarg4; 
-    result = (arg1)->scan(arg2,arg3,arg4);
-    
-    jresult = result; 
-    {
-        if (arg2) jenv->ReleaseStringChars((jstring)jarg2, arg2);
-    }
-    return jresult;
-}
-
-
-JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1scan_1with_1stop_1chars(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg4, jlong jarg6) {
-    jobject jresult = 0 ;
-    tst<jchar,jobject,java_object_memory_storage > *arg1 = (tst<jchar,jobject,java_object_memory_storage > *) 0 ;
-    jchar *arg2 = (jchar *) 0 ;
-    int arg3 ;
-    jchar *arg4 = (jchar *) 0 ;
-    int arg5 ;
-    action<jchar,jobject > *arg6 = (action<jchar,jobject > *) 0 ;
-    jobject result;
-    
-    (void)jenv;
-    (void)jcls;
-    arg1 = *(tst<jchar,jobject,java_object_memory_storage > **)&jarg1; 
-    {
-        arg2 = 0;
-        if (jarg2) {
-            arg2 = (jchar*)jenv->GetStringChars((jstring)jarg2, 0);
-            if (!arg2) return 0;
-            arg3 = jenv->GetStringLength((jstring)jarg2);
-        }
-    }
-    {
-        arg4 = 0;
-        if (jarg4) {
-            arg4 = (jchar*)jenv->GetStringChars((jstring)jarg4, 0);
-            if (!arg4) return 0;
-            arg5 = jenv->GetStringLength((jstring)jarg4);
-        }
-    }
-    arg6 = *(action<jchar,jobject > **)&jarg6; 
-    result = (arg1)->scan_with_stop_chars(arg2,arg3,arg4,arg5,arg6);
-    
-    jresult = result; 
-    {
-        if (arg2) jenv->ReleaseStringChars((jstring)jarg2, arg2);
-    }
-    {
-        if (arg4) jenv->ReleaseStringChars((jstring)jarg4, arg4);
-    }
-    return jresult;
 }
 
 
@@ -648,6 +665,122 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectSerializer_1read(JN
     
     jresult = result; 
     return jresult;
+}
+
+
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_new_1_1LongMemoryStorage(JNIEnv *jenv, jclass jcls, jint jarg1) {
+    jlong jresult = 0 ;
+    int arg1 ;
+    memory_storage<jchar,jlong > *result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = (int)jarg1; 
+    result = (memory_storage<jchar,jlong > *)new memory_storage<jchar,jlong >(arg1);
+    
+    *(memory_storage<jchar,jlong > **)&jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_delete_1_1LongMemoryStorage(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    memory_storage<jchar,jlong > *arg1 = (memory_storage<jchar,jlong > *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jlong > **)&jarg1; 
+    delete arg1;
+    
+}
+
+
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI__1LongMemoryStorage_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jint jarg2) {
+    jlong jresult = 0 ;
+    memory_storage<jchar,jlong > *arg1 = (memory_storage<jchar,jlong > *) 0 ;
+    int arg2 ;
+    tst_node<jchar,jlong > *result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jlong > **)&jarg1; 
+    arg2 = (int)jarg2; 
+    result = (tst_node<jchar,jlong > *)(arg1)->get(arg2);
+    
+    *(tst_node<jchar,jlong > **)&jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI__1LongMemoryStorage_1store_1data(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3) {
+    jlong jresult = 0 ;
+    memory_storage<jchar,jlong > *arg1 = (memory_storage<jchar,jlong > *) 0 ;
+    tst_node<jchar,jlong > *arg2 = (tst_node<jchar,jlong > *) 0 ;
+    jlong arg3 ;
+    jlong result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jlong > **)&jarg1; 
+    arg2 = *(tst_node<jchar,jlong > **)&jarg2; 
+    arg3 = jarg3; 
+    result = (arg1)->store_data(arg2,arg3);
+    
+    jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1LongMemoryStorage_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jint jarg2, jlong jarg3) {
+    memory_storage<jchar,jlong > *arg1 = (memory_storage<jchar,jlong > *) 0 ;
+    int arg2 ;
+    tst_node<jchar,jlong > *arg3 = (tst_node<jchar,jlong > *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jlong > **)&jarg1; 
+    arg2 = (int)jarg2; 
+    arg3 = *(tst_node<jchar,jlong > **)&jarg3; 
+    (arg1)->set(arg2,arg3);
+    
+}
+
+
+JNIEXPORT jint JNICALL Java_com_lehuen_tst_tstJNI__1LongMemoryStorage_1new_1node(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    jint jresult = 0 ;
+    memory_storage<jchar,jlong > *arg1 = (memory_storage<jchar,jlong > *) 0 ;
+    int result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jlong > **)&jarg1; 
+    result = (int)(arg1)->new_node();
+    
+    jresult = (jint)result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1LongMemoryStorage_1delete_1node(JNIEnv *jenv, jclass jcls, jlong jarg1, jint jarg2) {
+    memory_storage<jchar,jlong > *arg1 = (memory_storage<jchar,jlong > *) 0 ;
+    int arg2 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jlong > **)&jarg1; 
+    arg2 = (int)jarg2; 
+    (arg1)->delete_node(arg2);
+    
+}
+
+
+JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1LongMemoryStorage_1pack(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    memory_storage<jchar,jlong > *arg1 = (memory_storage<jchar,jlong > *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(memory_storage<jchar,jlong > **)&jarg1; 
+    (arg1)->pack();
+    
 }
 
 
@@ -921,21 +1054,6 @@ JNIEXPORT jint JNICALL Java_com_lehuen_tst_tstJNI__1LongTST_1get_1maximum_1key_1
 }
 
 
-JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI__1LongTST_1bytes_1allocated(JNIEnv *jenv, jclass jcls, jlong jarg1) {
-    jlong jresult = 0 ;
-    tst<jchar,jlong,java_long_memory_storage > *arg1 = (tst<jchar,jlong,java_long_memory_storage > *) 0 ;
-    size_t result;
-    
-    (void)jenv;
-    (void)jcls;
-    arg1 = *(tst<jchar,jlong,java_long_memory_storage > **)&jarg1; 
-    result = (arg1)->bytes_allocated();
-    
-    jresult = (jlong)result; 
-    return jresult;
-}
-
-
 JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1LongTST_1write(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3) {
     tst<jchar,jlong,java_long_memory_storage > *arg1 = (tst<jchar,jlong,java_long_memory_storage > *) 0 ;
     FILE *arg2 = (FILE *) 0 ;
@@ -948,90 +1066,6 @@ JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1LongTST_1write(JNIEnv *jenv,
     arg3 = *(serializer<jchar,jlong > **)&jarg3; 
     (arg1)->write(arg2,arg3);
     
-}
-
-
-JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1LongTST_1debug_1print_1root(JNIEnv *jenv, jclass jcls, jlong jarg1) {
-    tst<jchar,jlong,java_long_memory_storage > *arg1 = (tst<jchar,jlong,java_long_memory_storage > *) 0 ;
-    
-    (void)jenv;
-    (void)jcls;
-    arg1 = *(tst<jchar,jlong,java_long_memory_storage > **)&jarg1; 
-    (arg1)->debug_print_root();
-    
-}
-
-
-JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI__1LongTST_1scan(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4) {
-    jlong jresult = 0 ;
-    tst<jchar,jlong,java_long_memory_storage > *arg1 = (tst<jchar,jlong,java_long_memory_storage > *) 0 ;
-    jchar *arg2 = (jchar *) 0 ;
-    int arg3 ;
-    action<jchar,jlong > *arg4 = (action<jchar,jlong > *) 0 ;
-    jlong result;
-    
-    (void)jenv;
-    (void)jcls;
-    arg1 = *(tst<jchar,jlong,java_long_memory_storage > **)&jarg1; 
-    {
-        arg2 = 0;
-        if (jarg2) {
-            arg2 = (jchar*)jenv->GetStringChars((jstring)jarg2, 0);
-            if (!arg2) return 0;
-            arg3 = jenv->GetStringLength((jstring)jarg2);
-        }
-    }
-    arg4 = *(action<jchar,jlong > **)&jarg4; 
-    result = (arg1)->scan(arg2,arg3,arg4);
-    
-    jresult = result; 
-    {
-        if (arg2) jenv->ReleaseStringChars((jstring)jarg2, arg2);
-    }
-    return jresult;
-}
-
-
-JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI__1LongTST_1scan_1with_1stop_1chars(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg4, jlong jarg6) {
-    jlong jresult = 0 ;
-    tst<jchar,jlong,java_long_memory_storage > *arg1 = (tst<jchar,jlong,java_long_memory_storage > *) 0 ;
-    jchar *arg2 = (jchar *) 0 ;
-    int arg3 ;
-    jchar *arg4 = (jchar *) 0 ;
-    int arg5 ;
-    action<jchar,jlong > *arg6 = (action<jchar,jlong > *) 0 ;
-    jlong result;
-    
-    (void)jenv;
-    (void)jcls;
-    arg1 = *(tst<jchar,jlong,java_long_memory_storage > **)&jarg1; 
-    {
-        arg2 = 0;
-        if (jarg2) {
-            arg2 = (jchar*)jenv->GetStringChars((jstring)jarg2, 0);
-            if (!arg2) return 0;
-            arg3 = jenv->GetStringLength((jstring)jarg2);
-        }
-    }
-    {
-        arg4 = 0;
-        if (jarg4) {
-            arg4 = (jchar*)jenv->GetStringChars((jstring)jarg4, 0);
-            if (!arg4) return 0;
-            arg5 = jenv->GetStringLength((jstring)jarg4);
-        }
-    }
-    arg6 = *(action<jchar,jlong > **)&jarg6; 
-    result = (arg1)->scan_with_stop_chars(arg2,arg3,arg4,arg5,arg6);
-    
-    jresult = result; 
-    {
-        if (arg2) jenv->ReleaseStringChars((jstring)jarg2, arg2);
-    }
-    {
-        if (arg4) jenv->ReleaseStringChars((jstring)jarg4, arg4);
-    }
-    return jresult;
 }
 
 
@@ -1172,6 +1206,53 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI__1LongSerializer_1read(JNIEnv
     
     jresult = result; 
     return jresult;
+}
+
+
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_new_1ObjectMemoryStorage(JNIEnv *jenv, jclass jcls, jint jarg1, jlong jarg2) {
+    jlong jresult = 0 ;
+    int arg1 ;
+    JNIEnv *arg2 = (JNIEnv *) 0 ;
+    ObjectMemoryStorage *result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = (int)jarg1; 
+    arg2 = *(JNIEnv **)&jarg2; 
+    result = (ObjectMemoryStorage *)new ObjectMemoryStorage(arg1,arg2);
+    
+    *(ObjectMemoryStorage **)&jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI_ObjectMemoryStorage_1store_1data(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jobject jarg3) {
+    jobject jresult = 0 ;
+    ObjectMemoryStorage *arg1 = (ObjectMemoryStorage *) 0 ;
+    tst_node<jchar,jobject > *arg2 = (tst_node<jchar,jobject > *) 0 ;
+    jobject arg3 ;
+    jobject result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(ObjectMemoryStorage **)&jarg1; 
+    arg2 = *(tst_node<jchar,jobject > **)&jarg2; 
+    arg3 = jarg3; 
+    result = (arg1)->store_data(arg2,arg3);
+    
+    jresult = result; 
+    return jresult;
+}
+
+
+JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_delete_1ObjectMemoryStorage(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    ObjectMemoryStorage *arg1 = (ObjectMemoryStorage *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(ObjectMemoryStorage **)&jarg1; 
+    delete arg1;
+    
 }
 
 
@@ -1675,11 +1756,19 @@ JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_delete_1LongSerializer(JNIEnv 
 }
 
 
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_SWIGObjectMemoryStorageUpcast(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    jlong baseptr = 0;
+    (void)jenv;
+    (void)jcls;
+    *(memory_storage<jchar,jobject > **)&baseptr = *(ObjectMemoryStorage **)&jarg1;
+    return baseptr;
+}
+
 JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_SWIGObjectTSTUpcast(JNIEnv *jenv, jclass jcls, jlong jarg1) {
     jlong baseptr = 0;
     (void)jenv;
     (void)jcls;
-    *(tst<jchar,jobject,java_object_memory_storage > **)&baseptr = *(ObjectTST **)&jarg1;
+    *(tst<jchar,jobject,ObjectMemoryStorage > **)&baseptr = *(ObjectTST **)&jarg1;
     return baseptr;
 }
 

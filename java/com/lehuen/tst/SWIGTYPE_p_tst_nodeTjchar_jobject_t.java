@@ -8,18 +8,18 @@
 
 package com.lehuen.tst;
 
-public class SWIGTYPE_p_memory_storageTjchar_jobject_t {
+public class SWIGTYPE_p_tst_nodeTjchar_jobject_t {
   private long swigCPtr;
 
-  protected SWIGTYPE_p_memory_storageTjchar_jobject_t(long cPtr, boolean bFutureUse) {
+  protected SWIGTYPE_p_tst_nodeTjchar_jobject_t(long cPtr, boolean bFutureUse) {
     swigCPtr = cPtr;
   }
 
-  protected SWIGTYPE_p_memory_storageTjchar_jobject_t() {
+  protected SWIGTYPE_p_tst_nodeTjchar_jobject_t() {
     swigCPtr = 0;
   }
 
-  protected static long getCPtr(SWIGTYPE_p_memory_storageTjchar_jobject_t obj) {
+  protected static long getCPtr(SWIGTYPE_p_tst_nodeTjchar_jobject_t obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 }

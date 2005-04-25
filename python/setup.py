@@ -32,7 +32,7 @@ else:
 
 setup(
     name = "pytst",
-    version = "0.70",
+    version = "0.80",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
     url = "http://nicolas.lehuen.com/",

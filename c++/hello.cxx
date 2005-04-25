@@ -56,11 +56,7 @@ typedef memory_storage<char,char*> memory_storage_char_string;
 
 class stringtst : public tst<char,char*,memory_storage_char_string> {
     public:
-        stringtst() : tst<char,char*,memory_storage_char_string>(1600,NULL) {
-        }
-
-        virtual ~stringtst() {
-            clear_nodes();
+        stringtst() : tst<char,char*,memory_storage_char_string>(new memory_storage_char_string(1600),NULL) {
         }
 
         stringtst(FILE* file) : tst<char,char*,memory_storage_char_string>() {
@@ -136,7 +132,6 @@ int main2(int argc,char** argv) {
     printf("Write : %f\n",elapsed);
 
     linetst->pack();
-    linetst->debug_print_root();
 
     /*printer p;
     linetst->walk(NULL,&p);
@@ -167,7 +162,7 @@ int main2(int argc,char** argv) {
 typedef memory_storage<char,int> memory_storage_char_int;
 
 int main(int argc,char **argv) {
-    tst<char,int,memory_storage_char_int> md5tst(256,0L);
+    tst<char,int,memory_storage_char_int> md5tst(new memory_storage_char_int(256),0L);
     clock_t start, end;
     double elapsed;
     FILE* input;
@@ -181,9 +176,9 @@ int main(int argc,char **argv) {
         fscanf(input,"%s\n",line);
         md5tst.put(line,strlen(line),1L);
         if(lines++%1000==0) {
-            printf("%d ==> %d\n",lines,md5tst.bytes_allocated());
+            printf("%d\n",lines);
         }
-        if(lines==1000000) {
+        if(lines==100000) {
             break;
         }
     }
@@ -202,7 +197,7 @@ int main(int argc,char **argv) {
             printf("Bummer ! %d %s\n",lines++,line);
             return 1;
         }
-        if(lines==1000000) {
+        if(lines==100000) {
             break;
         }
     }

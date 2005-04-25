@@ -17,7 +17,6 @@ public class TestTST2 {
         LongTST tP=new LongTST(256,-987987L);
         long startP,endP;
         
-		tP.debug_print_root();
 		System.in.read();
 		
 		startP=System.currentTimeMillis();

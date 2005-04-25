@@ -275,9 +275,32 @@ private:
     PyObject *dumps,*loads;
 };
 
-typedef memory_storage<char,PyObject*> py_memory_storage;
+class MemoryStorage : public memory_storage<char,PyObject*> {
+public:
+    MemoryStorage() : memory_storage<char,PyObject*>(16) {
+    }
 
-class TST : public tst<char,PyObject*,py_memory_storage> {
+    MemoryStorage(int initial_size) : memory_storage<char,PyObject*>(initial_size) {
+    }
+
+    virtual ~MemoryStorage() {
+        int i;
+        tst_node<char,PyObject*>* node;
+        for(i=0,node=array;i<next;i++,node++) {
+            store_data(node,NULL);
+        }
+    }
+
+    virtual PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data) {
+        PyObject* result=node->data;
+        Py_XINCREF(data);
+        Py_XDECREF(result);
+        node->data=data;
+        return result;
+    }
+};
+
+class TST : public tst<char,PyObject*,MemoryStorage> {
 public:
     TST();
     TST(PyObject* file);
@@ -290,42 +313,28 @@ public:
     PyObject* __getitem__(char* string,int string_length);
     PyObject* __setitem__(char* string,int string_length,PyObject* data);
     void __delitem__(char* string,int string_length);
-
-protected:
-    virtual PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data,int want_old_value);
 };
 
-TST::TST() : tst<char,PyObject*,py_memory_storage>(new py_memory_storage(16),Py_None) {
+TST::TST() : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(16),Py_None) {
     Py_INCREF(Py_None);
 }
 
-TST::TST(PyObject* file) : tst<char,PyObject*,py_memory_storage>(new py_memory_storage(16),NULL) {
+TST::TST(PyObject* file) : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(16),NULL) {
     if(!PyFile_Check(file)) {
         throw TSTException("Argument of constructor must be a file object");
     }
     ObjectSerializer os;
-    tst<char,PyObject*,py_memory_storage>::read(PyFile_AsFile(file),&os);
+    tst<char,PyObject*,MemoryStorage>::read(PyFile_AsFile(file),&os);
 }
 
-TST::TST(int initial_size,PyObject* default_value) : tst<char,PyObject*,py_memory_storage>(new py_memory_storage(initial_size),default_value) {
+TST::TST(int initial_size,PyObject* default_value) : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(initial_size),default_value) {
     if(!default_value) default_value=Py_None;
     Py_INCREF(default_value);
 }
 
 TST::~TST() {
-    clear_nodes();
     // TODO : pourquoi ce DECREF est en trop ?
     Py_DECREF(default_value);
-}
-
-PyObject* TST::store_data(tst_node<char,PyObject*>* node,PyObject* data,int want_old_value) {
-    PyObject* result=node->data;
-    if(want_old_value==0) {
-        Py_XDECREF(result);
-    }
-    Py_XINCREF(data);
-    node->data=data;
-    return result;
 }
 
 PyObject* TST::write(PyObject* file) {
@@ -333,26 +342,27 @@ PyObject* TST::write(PyObject* file) {
         throw TSTException("Argument of write() must be a file object");
     }
     ObjectSerializer *os=new ObjectSerializer();
-    tst<char,PyObject*,py_memory_storage>::write(PyFile_AsFile(file),os);
+    tst<char,PyObject*,MemoryStorage>::write(PyFile_AsFile(file),os);
     delete os;
     return Py_None;
 }
 
 PyObject* TST::get(char* string,int string_length) {
-    PyObject* result=tst<char,PyObject*,py_memory_storage>::get(string,string_length);
+    PyObject* result=tst<char,PyObject*,MemoryStorage>::get(string,string_length);
     Py_INCREF(result);
     return result;
 }
 
 PyObject* TST::get_or_build(char* string,int string_length,filter<char,PyObject*>* factory) {
-    PyObject* result=tst<char,PyObject*,py_memory_storage>::get_or_build(string,string_length,factory);
+    PyObject* result=tst<char,PyObject*,MemoryStorage>::get_or_build(string,string_length,factory);
     Py_INCREF(result);
     return result;
 }
 
 
 PyObject* TST::put(char* string,int string_length,PyObject* data) {
-    PyObject* result=tst<char,PyObject*,py_memory_storage>::put(string,string_length,data);
+    PyObject* result=tst<char,PyObject*,MemoryStorage>::put(string,string_length,data);
+    Py_INCREF(result);
     return result;
 }
 

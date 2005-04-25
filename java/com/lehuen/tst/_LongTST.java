@@ -37,12 +37,12 @@ public class _LongTST {
     swigCPtr = 0;
   }
 
-  public _LongTST(SWIGTYPE_p_memory_storageTjchar_jlong_t storage, SWIGTYPE_p_FILE file, _LongSerializer reader) {
-    this(tstJNI.new__LongTST__SWIG_0(SWIGTYPE_p_memory_storageTjchar_jlong_t.getCPtr(storage), SWIGTYPE_p_FILE.getCPtr(file), _LongSerializer.getCPtr(reader)), true);
+  public _LongTST(_LongMemoryStorage storage, SWIGTYPE_p_FILE file, _LongSerializer reader) {
+    this(tstJNI.new__LongTST__SWIG_0(_LongMemoryStorage.getCPtr(storage), SWIGTYPE_p_FILE.getCPtr(file), _LongSerializer.getCPtr(reader)), true);
   }
 
-  public _LongTST(SWIGTYPE_p_memory_storageTjchar_jlong_t storage, long default_value) {
-    this(tstJNI.new__LongTST__SWIG_1(SWIGTYPE_p_memory_storageTjchar_jlong_t.getCPtr(storage), default_value), true);
+  public _LongTST(_LongMemoryStorage storage, long default_value) {
+    this(tstJNI.new__LongTST__SWIG_1(_LongMemoryStorage.getCPtr(storage), default_value), true);
   }
 
   public void pack() {
@@ -81,24 +81,8 @@ public class _LongTST {
     return tstJNI._LongTST_get_maximum_key_length(swigCPtr);
   }
 
-  public long bytes_allocated() {
-    return tstJNI._LongTST_bytes_allocated(swigCPtr);
-  }
-
   public void write(SWIGTYPE_p_FILE file, _LongSerializer writer) {
     tstJNI._LongTST_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), _LongSerializer.getCPtr(writer));
-  }
-
-  public void debug_print_root() {
-    tstJNI._LongTST_debug_print_root(swigCPtr);
-  }
-
-  public long scan(String string, _LongAction to_perform) {
-    return tstJNI._LongTST_scan(swigCPtr, string, _LongAction.getCPtr(to_perform));
-  }
-
-  public long scan_with_stop_chars(String string, String stop_chars, _LongAction to_perform) {
-    return tstJNI._LongTST_scan_with_stop_chars(swigCPtr, string, stop_chars, _LongAction.getCPtr(to_perform));
   }
 
 }

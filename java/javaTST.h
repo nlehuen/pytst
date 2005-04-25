@@ -19,12 +19,35 @@
 #include "tst.h"
 #include "jni.h"
 
-typedef memory_storage<jchar,jobject> java_object_memory_storage;
 typedef memory_storage<jchar,jlong> java_long_memory_storage;
 
-class ObjectTST : public tst<jchar,jobject,java_object_memory_storage> {
+class ObjectMemoryStorage : public memory_storage<jchar,jobject> {
 public:
-    ObjectTST(int initial_size,jobject data,JNIEnv* jenv2) : tst<jchar,jobject,java_object_memory_storage>(new java_object_memory_storage(initial_size),data) {
+    ObjectMemoryStorage(int initial_size,JNIEnv* jenv2) : memory_storage<jchar,jobject>(initial_size) {
+        this->jenv=jenv2;
+    }
+
+    virtual jobject store_data(tst_node<jchar,jobject>* node,jobject data) {
+        jobject old_data = node->data;
+        if(old_data!=NULL) {
+            jenv->DeleteGlobalRef(old_data);
+        }
+        if(data!=NULL) {
+            data = jenv->NewGlobalRef(data);
+            node->data = data;
+        }
+        else {
+            data=NULL;
+        }
+        return old_data;
+    }
+private:
+    JNIEnv* jenv;
+};
+
+class ObjectTST : public tst<jchar,jobject,ObjectMemoryStorage> {
+public:
+    ObjectTST(int initial_size,jobject data,JNIEnv* jenv2) : tst<jchar,jobject,ObjectMemoryStorage>(new ObjectMemoryStorage(initial_size,jenv2),data) {
         jenv = jenv2;
         if(data) {
             jenv->NewGlobalRef(data);
@@ -35,21 +58,6 @@ public:
         if(default_value) {
             jenv->DeleteGlobalRef(default_value);
         }
-    }
-protected:
-    virtual jobject store_data(tst_node<jchar,jobject>* node,jobject data,int want_old_value) {
-        jobject old_data = node->data;
-        if(old_data!=default_value) {
-            jenv->DeleteGlobalRef(old_data);
-        }
-        if(data!=default_value) {
-            data = jenv->NewGlobalRef(data);
-            node->data = data;
-        }
-        else {
-            data=default_value;
-        }
-        return old_data;
     }
 private:
     JNIEnv* jenv;
