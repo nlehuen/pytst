@@ -27,7 +27,15 @@ public:
         this->jenv=jenv2;
     }
 
-    virtual jobject store_data(tst_node<jchar,jobject>* node,jobject data) {
+    ~ObjectMemoryStorage() {
+        int i;
+        tst_node<jchar,jobject>* node;
+        for(i=0,node=array;i<next;i++,node++) {
+            store_data(node,NULL);
+        }
+    }
+
+    jobject store_data(tst_node<jchar,jobject>* node,jobject data) {
         jobject old_data = node->data;
         if(old_data!=NULL) {
             jenv->DeleteGlobalRef(old_data);
@@ -37,7 +45,7 @@ public:
             node->data = data;
         }
         else {
-            data=NULL;
+            node->data = NULL;
         }
         return old_data;
     }

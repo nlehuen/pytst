@@ -161,13 +161,16 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
+				RelativePath="..\include\debug.h">
+			</File>
+			<File
 				RelativePath=".\javaTST.h">
 			</File>
 			<File
 				RelativePath="C:\j2sdk1.4.2_05\include\jni.h">
 			</File>
 			<File
-				RelativePath="..\tst.h">
+				RelativePath="..\include\tst.h">
 			</File>
 		</Filter>
 		<Filter

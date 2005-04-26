@@ -21,9 +21,6 @@ if __name__=='__main__':
             self.t['olaaf']='olaaf'
             self.t['laslo']='laslo'
 
-        def testRoot(self):
-            self.t.debug_print_root()
-
         def testScan0_1(self):
             self.assertEqual(self.t.scan('Nicolas',TupleListAction()),[('Nicolas', 7, 'Nicolas'),])
         

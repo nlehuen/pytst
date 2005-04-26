@@ -1,7 +1,7 @@
 from tst import *
 from time import clock
 
-ITERATIONS = 1000000
+ITERATIONS = 100
 
 t = TST()
 

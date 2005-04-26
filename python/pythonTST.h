@@ -283,7 +283,7 @@ public:
     MemoryStorage(int initial_size) : memory_storage<char,PyObject*>(initial_size) {
     }
 
-    virtual ~MemoryStorage() {
+    ~MemoryStorage() {
         int i;
         tst_node<char,PyObject*>* node;
         for(i=0,node=array;i<next;i++,node++) {
@@ -291,7 +291,7 @@ public:
         }
     }
 
-    virtual PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data) {
+    PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data) {
         PyObject* result=node->data;
         Py_XINCREF(data);
         Py_XDECREF(result);

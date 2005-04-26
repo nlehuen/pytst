@@ -1226,6 +1226,17 @@ JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI_new_1ObjectMemoryStorage(JNIE
 }
 
 
+JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_delete_1ObjectMemoryStorage(JNIEnv *jenv, jclass jcls, jlong jarg1) {
+    ObjectMemoryStorage *arg1 = (ObjectMemoryStorage *) 0 ;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(ObjectMemoryStorage **)&jarg1; 
+    delete arg1;
+    
+}
+
+
 JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI_ObjectMemoryStorage_1store_1data(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jobject jarg3) {
     jobject jresult = 0 ;
     ObjectMemoryStorage *arg1 = (ObjectMemoryStorage *) 0 ;
@@ -1242,17 +1253,6 @@ JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI_ObjectMemoryStorage_1store_
     
     jresult = result; 
     return jresult;
-}
-
-
-JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI_delete_1ObjectMemoryStorage(JNIEnv *jenv, jclass jcls, jlong jarg1) {
-    ObjectMemoryStorage *arg1 = (ObjectMemoryStorage *) 0 ;
-    
-    (void)jenv;
-    (void)jcls;
-    arg1 = *(ObjectMemoryStorage **)&jarg1; 
-    delete arg1;
-    
 }
 
 

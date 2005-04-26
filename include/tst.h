@@ -45,7 +45,11 @@
 #define TST_VERSION "0.80"
 
 // Pour ajouter/supprimer les fonctions de scanning.
+#ifdef __PYTHON__BUILD__
+#define SCANNER
+#else
 // #define SCANNER
+#endif
 
 template<class S,class T> class tst_node {
 public:
@@ -110,7 +114,7 @@ public:
         empty=UNDEFINED_INDEX;
     }
 
-    virtual ~memory_storage() {
+    ~memory_storage() {
         tst_free(array);
     }
 
@@ -118,7 +122,7 @@ public:
         return array+index;
     }
 
-    virtual inline T store_data(tst_node<S,T>* node,T data) {
+    inline T store_data(tst_node<S,T>* node,T data) {
         T result = node->data;
         node->data = data;
         return result;
