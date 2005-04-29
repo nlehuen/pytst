@@ -1374,11 +1374,6 @@ static swig_type_info *swig_types[22];
 #include "pythonTST.h"
 
 
-  /*@E:\\SWIG-1.3.24\\Lib\\python\\pymacros.swg,66,SWIG_define@*/
-#define SWIG_From_int PyInt_FromLong
-/*@@*/
-
-
 SWIGINTERN PyObject *
 SWIG_FromCharPtr(const char* cptr)
 { 
@@ -1398,6 +1393,11 @@ SWIG_FromCharPtr(const char* cptr)
   Py_INCREF(Py_None);
   return Py_None;
 }
+
+
+  /*@E:\\SWIG-1.3.24\\Lib\\python\\pymacros.swg,66,SWIG_define@*/
+#define SWIG_From_int PyInt_FromLong
+/*@@*/
 
 
 #include <limits.h>
@@ -2283,6 +2283,101 @@ static PyObject *_wrap__TST_write(PyObject *, PyObject *args) {
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap__TST_scan(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    tst<char,PyObject *,MemoryStorage > *arg1 = (tst<char,PyObject *,MemoryStorage > *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    action<char,PyObject * > *arg4 = (action<char,PyObject * > *) 0 ;
+    PyObject *result;
+    char *buf2 ;
+    size_t size2 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    PyObject * obj2 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OOO:_TST_scan",&obj0,&obj1,&obj2)) goto fail;
+    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_MemoryStorage_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(1)) SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
+    }
+    SWIG_Python_ConvertPtr(obj2, (void **)&arg4, SWIGTYPE_p_actionTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(4)) SWIG_fail;
+    {
+        try {
+            result = (PyObject *)(arg1)->scan(arg2,arg3,arg4);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = result;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    tst<char,PyObject *,MemoryStorage > *arg1 = (tst<char,PyObject *,MemoryStorage > *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    char *arg4 = (char *) 0 ;
+    int arg5 ;
+    action<char,PyObject * > *arg6 = (action<char,PyObject * > *) 0 ;
+    PyObject *result;
+    char *buf2 ;
+    size_t size2 ;
+    char *buf4 ;
+    size_t size4 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    PyObject * obj2 = 0 ;
+    PyObject * obj3 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OOOO:_TST_scan_with_stop_chars",&obj0,&obj1,&obj2,&obj3)) goto fail;
+    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PyObject_p_MemoryStorage_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(1)) SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
+    }
+    {
+        int res = SWIG_AsCharPtrAndSize(obj2, &buf4, &size4);
+        if (!res) {
+            SWIG_arg_fail(4);SWIG_fail;
+        }
+        arg4 = (char *) buf4;
+        arg5 = (int) size4 - 1;
+    }
+    SWIG_Python_ConvertPtr(obj3, (void **)&arg6, SWIGTYPE_p_actionTchar_PyObject_p_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(6)) SWIG_fail;
+    {
+        try {
+            result = (PyObject *)(arg1)->scan_with_stop_chars(arg2,arg3,arg4,arg5,arg6);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = result;
     return resultobj;
     fail:
     return NULL;
@@ -3899,6 +3994,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_TST_remove", _wrap__TST_remove, METH_VARARGS, NULL},
 	 { (char *)"_TST_get_maximum_key_length", _wrap__TST_get_maximum_key_length, METH_VARARGS, NULL},
 	 { (char *)"_TST_write", _wrap__TST_write, METH_VARARGS, NULL},
+	 { (char *)"_TST_scan", _wrap__TST_scan, METH_VARARGS, NULL},
+	 { (char *)"_TST_scan_with_stop_chars", _wrap__TST_scan_with_stop_chars, METH_VARARGS, NULL},
 	 { (char *)"_TST_swigregister", _TST_swigregister, METH_VARARGS, NULL},
 	 { (char *)"delete__Action", _wrap_delete__Action, METH_VARARGS, NULL},
 	 { (char *)"_Action_perform", _wrap__Action_perform, METH_VARARGS, NULL},
@@ -4040,7 +4137,7 @@ _swigt__p_ObjectSerializer,
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (END) -------- */
 
 static swig_const_info swig_const_table[] = {
-{ SWIG_PY_POINTER, (char*)"TST_VERSION", 0, 0, (void *)"0.80", &SWIGTYPE_p_char},
+{ SWIG_PY_POINTER, (char*)"TST_VERSION", 0, 0, (void *)"0.81", &SWIGTYPE_p_char},
 {0, 0, 0, 0.0, 0, 0}};
 
 #ifdef __cplusplus
@@ -4384,9 +4481,9 @@ SWIGEXPORT(void) SWIG_init(void) {
     }
     SWIG_InstallConstants(d,swig_const_table);
     
+    PyDict_SetItemString(d,"TST_VERSION", SWIG_FromCharPtr("0.81"));
     {
         PyDict_SetItemString(d,"UNDEFINED_INDEX", SWIG_From_int((int)(-1))); 
     }
-    PyDict_SetItemString(d,"TST_VERSION", SWIG_FromCharPtr("0.80"));
 }
 

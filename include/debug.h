@@ -19,4 +19,6 @@
 #ifndef __DEBUG_H_INCLUDED__
 #define __DEBUG_H_INCLUDED__
 #include <assert.h>
+#define TRACE(a) printf("%s:%d:%s\n",__FILE__,__LINE__,a)
+#define TRACE2(a,b) printf("%s:%d:" a "\n",__FILE__,__LINE__,b)
 #endif

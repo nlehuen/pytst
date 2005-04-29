@@ -19,37 +19,30 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
+#define TST_VERSION "0.81"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <memory.h>
+
+#include "debug.h"
 
 #ifdef __PYTHON__BUILD__
     #include "Python.h"
     #define tst_malloc PyMem_Malloc
     #define tst_realloc PyMem_Realloc
     #define tst_free PyMem_Free
+    #define SCANNER
 #else
     #define tst_malloc malloc
     #define tst_realloc realloc
     #define tst_free free
+    // Pour ajouter/supprimer les fonctions de scanning.
+    // #define SCANNER
 #endif
-
-#include "debug.h"
 
 #define UNDEFINED_INDEX -1
-
-#define TRACE(a) printf("%s:%d:%s\n",__FILE__,__LINE__,a)
-#define TRACE2(a,b) printf("%s:%d:" a "\n",__FILE__,__LINE__,b)
-
-#define TST_VERSION "0.80"
-
-// Pour ajouter/supprimer les fonctions de scanning.
-#ifdef __PYTHON__BUILD__
-#define SCANNER
-#else
-// #define SCANNER
-#endif
 
 template<class S,class T> class tst_node {
 public:

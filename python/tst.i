@@ -30,6 +30,7 @@
     catch (TSTException e) { PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;}
 }
 
+#define __PYTHON__BUILD__
 %include "tst.h"
 
 %template(_MemoryStorage)  memory_storage<char,PyObject*>;

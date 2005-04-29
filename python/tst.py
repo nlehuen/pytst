@@ -36,8 +36,8 @@ except AttributeError:
 del types
 
 
-UNDEFINED_INDEX = _tst.UNDEFINED_INDEX
 TST_VERSION = _tst.TST_VERSION
+UNDEFINED_INDEX = _tst.UNDEFINED_INDEX
 class _MemoryStorage(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, _MemoryStorage, name, value)
@@ -92,6 +92,8 @@ class _TST(_object):
     def remove(*args): return _tst._TST_remove(*args)
     def get_maximum_key_length(*args): return _tst._TST_get_maximum_key_length(*args)
     def write(*args): return _tst._TST_write(*args)
+    def scan(*args): return _tst._TST_scan(*args)
+    def scan_with_stop_chars(*args): return _tst._TST_scan_with_stop_chars(*args)
 
 class _TSTPtr(_TST):
     def __init__(self, this):
