@@ -9,8 +9,8 @@
 package com.lehuen.tst;
 
 class tstJNI {
-  public final static native int get_UNDEFINED_INDEX();
   public final static native String get_TST_VERSION();
+  public final static native int get_UNDEFINED_INDEX();
   public final static native long new__ObjectMemoryStorage(int jarg1);
   public final static native void delete__ObjectMemoryStorage(long jarg1);
   public final static native long _ObjectMemoryStorage_get(long jarg1, int jarg2);
@@ -32,6 +32,8 @@ class tstJNI {
   public final static native void _ObjectTST_remove(long jarg1, String jarg2);
   public final static native int _ObjectTST_get_maximum_key_length(long jarg1);
   public final static native void _ObjectTST_write(long jarg1, long jarg2, long jarg3);
+  public final static native Object _ObjectTST_scan(long jarg1, String jarg2, long jarg4);
+  public final static native Object _ObjectTST_scan_with_stop_chars(long jarg1, String jarg2, String jarg4, long jarg6);
   public final static native void delete__ObjectAction(long jarg1);
   public final static native void _ObjectAction_perform(long jarg1, String jarg2, int jarg4, Object jarg5);
   public final static native Object _ObjectAction_result(long jarg1);
@@ -61,6 +63,8 @@ class tstJNI {
   public final static native void _LongTST_remove(long jarg1, String jarg2);
   public final static native int _LongTST_get_maximum_key_length(long jarg1);
   public final static native void _LongTST_write(long jarg1, long jarg2, long jarg3);
+  public final static native long _LongTST_scan(long jarg1, String jarg2, long jarg4);
+  public final static native long _LongTST_scan_with_stop_chars(long jarg1, String jarg2, String jarg4, long jarg6);
   public final static native void delete__LongAction(long jarg1);
   public final static native void _LongAction_perform(long jarg1, String jarg2, int jarg4, long jarg5);
   public final static native long _LongAction_result(long jarg1);

@@ -9,6 +9,6 @@
 package com.lehuen.tst;
 
 public interface tstConstants {
-  public final static int UNDEFINED_INDEX = tstJNI.get_UNDEFINED_INDEX();
   public final static String TST_VERSION = tstJNI.get_TST_VERSION();
+  public final static int UNDEFINED_INDEX = tstJNI.get_UNDEFINED_INDEX();
 }

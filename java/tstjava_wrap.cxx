@@ -99,6 +99,21 @@ static void SWIG_JavaThrowException(JNIEnv *jenv, SWIG_JavaExceptionCodes code, 
 extern "C" {
 #endif
 
+JNIEXPORT jstring JNICALL Java_com_lehuen_tst_tstJNI_get_1TST_1VERSION(JNIEnv *jenv, jclass jcls) {
+    jstring jresult = 0 ;
+    char *result;
+    
+    (void)jenv;
+    (void)jcls;
+    result = (char *) "0.81";
+    
+    {
+        if(result) jresult = jenv->NewStringUTF(result); 
+    }
+    return jresult;
+}
+
+
 JNIEXPORT jint JNICALL Java_com_lehuen_tst_tstJNI_get_1UNDEFINED_1INDEX(JNIEnv *jenv, jclass jcls) {
     jint jresult = 0 ;
     int result;
@@ -108,21 +123,6 @@ JNIEXPORT jint JNICALL Java_com_lehuen_tst_tstJNI_get_1UNDEFINED_1INDEX(JNIEnv *
     result = (int) -1;
     
     jresult = (jint)result; 
-    return jresult;
-}
-
-
-JNIEXPORT jstring JNICALL Java_com_lehuen_tst_tstJNI_get_1TST_1VERSION(JNIEnv *jenv, jclass jcls) {
-    jstring jresult = 0 ;
-    char *result;
-    
-    (void)jenv;
-    (void)jcls;
-    result = (char *) "0.80";
-    
-    {
-        if(result) jresult = jenv->NewStringUTF(result); 
-    }
     return jresult;
 }
 
@@ -525,6 +525,79 @@ JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1write(JNIEnv *jen
     arg3 = *(serializer<jchar,jobject > **)&jarg3; 
     (arg1)->write(arg2,arg3);
     
+}
+
+
+JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1scan(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4) {
+    jobject jresult = 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
+    jchar *arg2 = (jchar *) 0 ;
+    int arg3 ;
+    action<jchar,jobject > *arg4 = (action<jchar,jobject > *) 0 ;
+    jobject result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (jchar*)jenv->GetStringChars((jstring)jarg2, 0);
+            if (!arg2) return 0;
+            arg3 = jenv->GetStringLength((jstring)jarg2);
+        }
+    }
+    arg4 = *(action<jchar,jobject > **)&jarg4; 
+    result = (arg1)->scan(arg2,arg3,arg4);
+    
+    jresult = result; 
+    {
+        if (arg2) jenv->ReleaseStringChars((jstring)jarg2, arg2);
+    }
+    return jresult;
+}
+
+
+JNIEXPORT jobject JNICALL Java_com_lehuen_tst_tstJNI__1ObjectTST_1scan_1with_1stop_1chars(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg4, jlong jarg6) {
+    jobject jresult = 0 ;
+    tst<jchar,jobject,ObjectMemoryStorage > *arg1 = (tst<jchar,jobject,ObjectMemoryStorage > *) 0 ;
+    jchar *arg2 = (jchar *) 0 ;
+    int arg3 ;
+    jchar *arg4 = (jchar *) 0 ;
+    int arg5 ;
+    action<jchar,jobject > *arg6 = (action<jchar,jobject > *) 0 ;
+    jobject result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(tst<jchar,jobject,ObjectMemoryStorage > **)&jarg1; 
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (jchar*)jenv->GetStringChars((jstring)jarg2, 0);
+            if (!arg2) return 0;
+            arg3 = jenv->GetStringLength((jstring)jarg2);
+        }
+    }
+    {
+        arg4 = 0;
+        if (jarg4) {
+            arg4 = (jchar*)jenv->GetStringChars((jstring)jarg4, 0);
+            if (!arg4) return 0;
+            arg5 = jenv->GetStringLength((jstring)jarg4);
+        }
+    }
+    arg6 = *(action<jchar,jobject > **)&jarg6; 
+    result = (arg1)->scan_with_stop_chars(arg2,arg3,arg4,arg5,arg6);
+    
+    jresult = result; 
+    {
+        if (arg2) jenv->ReleaseStringChars((jstring)jarg2, arg2);
+    }
+    {
+        if (arg4) jenv->ReleaseStringChars((jstring)jarg4, arg4);
+    }
+    return jresult;
 }
 
 
@@ -1066,6 +1139,79 @@ JNIEXPORT void JNICALL Java_com_lehuen_tst_tstJNI__1LongTST_1write(JNIEnv *jenv,
     arg3 = *(serializer<jchar,jlong > **)&jarg3; 
     (arg1)->write(arg2,arg3);
     
+}
+
+
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI__1LongTST_1scan(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jlong jarg4) {
+    jlong jresult = 0 ;
+    tst<jchar,jlong,java_long_memory_storage > *arg1 = (tst<jchar,jlong,java_long_memory_storage > *) 0 ;
+    jchar *arg2 = (jchar *) 0 ;
+    int arg3 ;
+    action<jchar,jlong > *arg4 = (action<jchar,jlong > *) 0 ;
+    jlong result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(tst<jchar,jlong,java_long_memory_storage > **)&jarg1; 
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (jchar*)jenv->GetStringChars((jstring)jarg2, 0);
+            if (!arg2) return 0;
+            arg3 = jenv->GetStringLength((jstring)jarg2);
+        }
+    }
+    arg4 = *(action<jchar,jlong > **)&jarg4; 
+    result = (arg1)->scan(arg2,arg3,arg4);
+    
+    jresult = result; 
+    {
+        if (arg2) jenv->ReleaseStringChars((jstring)jarg2, arg2);
+    }
+    return jresult;
+}
+
+
+JNIEXPORT jlong JNICALL Java_com_lehuen_tst_tstJNI__1LongTST_1scan_1with_1stop_1chars(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jstring jarg4, jlong jarg6) {
+    jlong jresult = 0 ;
+    tst<jchar,jlong,java_long_memory_storage > *arg1 = (tst<jchar,jlong,java_long_memory_storage > *) 0 ;
+    jchar *arg2 = (jchar *) 0 ;
+    int arg3 ;
+    jchar *arg4 = (jchar *) 0 ;
+    int arg5 ;
+    action<jchar,jlong > *arg6 = (action<jchar,jlong > *) 0 ;
+    jlong result;
+    
+    (void)jenv;
+    (void)jcls;
+    arg1 = *(tst<jchar,jlong,java_long_memory_storage > **)&jarg1; 
+    {
+        arg2 = 0;
+        if (jarg2) {
+            arg2 = (jchar*)jenv->GetStringChars((jstring)jarg2, 0);
+            if (!arg2) return 0;
+            arg3 = jenv->GetStringLength((jstring)jarg2);
+        }
+    }
+    {
+        arg4 = 0;
+        if (jarg4) {
+            arg4 = (jchar*)jenv->GetStringChars((jstring)jarg4, 0);
+            if (!arg4) return 0;
+            arg5 = jenv->GetStringLength((jstring)jarg4);
+        }
+    }
+    arg6 = *(action<jchar,jlong > **)&jarg6; 
+    result = (arg1)->scan_with_stop_chars(arg2,arg3,arg4,arg5,arg6);
+    
+    jresult = result; 
+    {
+        if (arg2) jenv->ReleaseStringChars((jstring)jarg2, arg2);
+    }
+    {
+        if (arg4) jenv->ReleaseStringChars((jstring)jarg4, arg4);
+    }
+    return jresult;
 }
 
 

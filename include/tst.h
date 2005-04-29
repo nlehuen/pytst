@@ -39,7 +39,7 @@
     #define tst_realloc realloc
     #define tst_free free
     // Pour ajouter/supprimer les fonctions de scanning.
-    // #define SCANNER
+    #define SCANNER
 #endif
 
 #define UNDEFINED_INDEX -1

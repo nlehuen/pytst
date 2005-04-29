@@ -85,4 +85,12 @@ public class _LongTST {
     tstJNI._LongTST_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), _LongSerializer.getCPtr(writer));
   }
 
+  public long scan(String string, _LongAction to_perform) {
+    return tstJNI._LongTST_scan(swigCPtr, string, _LongAction.getCPtr(to_perform));
+  }
+
+  public long scan_with_stop_chars(String string, String stop_chars, _LongAction to_perform) {
+    return tstJNI._LongTST_scan_with_stop_chars(swigCPtr, string, stop_chars, _LongAction.getCPtr(to_perform));
+  }
+
 }
