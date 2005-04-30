@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-#define TST_VERSION "0.81"
+#define TST_VERSION "0.82"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -176,6 +176,65 @@ public:
         }
     }    
 
+    void read(FILE* file,serializer<S,T>* reader,int* root,int* maximum_key_length,T* default_value) {
+        fread(&size,sizeof(int),1,file);
+        next=size;
+        fread(root,sizeof(int),1,file);
+        fread(maximum_key_length,sizeof(int),1,file);
+        int has_data=fgetc(file);
+        if(has_data) {
+            *default_value=reader->read(file);
+        }
+        else {
+            *default_value=NULL;
+        }
+        array=(tst_node<S,T>*)tst_malloc(size*sizeof(tst_node<S,T>));
+        for(int i=0;i<size;i++) {
+            tst_node<S,T>* node=array+i;
+
+            node->c=fgetc(file);
+            fread(&(node->left),sizeof(int),1,file);
+            fread(&(node->next),sizeof(int),1,file);
+            fread(&(node->right),sizeof(int),1,file);
+
+            has_data=fgetc(file);
+            if(has_data) {
+                store_data(node,reader->read(file));
+            }
+            else {
+                store_data(node,*default_value);
+            }
+        }
+    }
+
+    void write(FILE* file,serializer<S,T>* writer,int root,int maximum_key_length,T default_value) {
+        fwrite(&next,sizeof(int),1,file);
+        fwrite(&root,sizeof(int),1,file);
+        fwrite(&maximum_key_length,sizeof(int),1,file);
+        if(default_value) {
+            putc('\1',file);
+            writer->write(file,default_value);
+        }
+        else {
+            putc('\0',file);
+        }
+        for(int i=0;i<next;i++) {
+            tst_node<S,T>* node=array+i;
+            fputc(node->c,file);
+            fwrite(&(node->left),sizeof(int),1,file);
+            fwrite(&(node->next),sizeof(int),1,file);
+            fwrite(&(node->right),sizeof(int),1,file);
+            T data=node->data;
+            if(data!=default_value) {
+                fputc('\1',file);
+                writer->write(file,data);
+            }
+            else {
+                fputc('\0',file);
+            }
+        }
+    }
+
 protected:
     tst_node<S,T>* array;
     int next;
@@ -255,63 +314,11 @@ template<class S,class T,class M> tst<S,T,M>::tst(M* storage,FILE* file, seriali
 }
 
 template<class S,class T,class M> void tst<S,T,M>::read(FILE* file, serializer<S,T>* reader) {
-    /*fread(&size,sizeof(int),1,file);
-    next=size;
-    fread(&root,sizeof(int),1,file);
-    fread(&maximum_key_length,sizeof(int),1,file);
-    int has_data=fgetc(file);
-    if(has_data) {
-        default_value=reader->read(file);
-    }
-    else {
-        default_value=NULL;
-    }
-    array=(tst_node<S,T>*)tst_malloc(size*sizeof(tst_node<S,T>));
-    memset(array,0,size*sizeof(tst_node<S,T>));
-    for(int i=0;i<size;i++) {
-        tst_node<S,T>* node=array+i;
-
-        node->c=fgetc(file);
-        fread(&(node->left),sizeof(int),1,file);
-        fread(&(node->next),sizeof(int),1,file);
-        fread(&(node->right),sizeof(int),1,file);
-
-        has_data=fgetc(file);
-        if(has_data) {
-            store_data(node,reader->read(file),0);
-        }
-        else {
-            store_data(node,default_value,0);
-        }
-    }*/
+    storage->read(file,reader,&root,&maximum_key_length,&default_value);
 }
 
 template<class S,class T,class M> void tst<S,T,M>::write(FILE* file, serializer<S,T>* writer) {
-    /*fwrite(&next,sizeof(int),1,file);
-    fwrite(&root,sizeof(int),1,file);
-    fwrite(&maximum_key_length,sizeof(int),1,file);
-    if(default_value) {
-        putc('\1',file);
-        writer->write(file,default_value);
-    }
-    else {
-        putc('\0',file);
-    }
-    for(int i=0;i<next;i++) {
-        tst_node<S,T>* node=array+i;
-        fputc(node->c,file);
-        fwrite(&(node->left),sizeof(int),1,file);
-        fwrite(&(node->next),sizeof(int),1,file);
-        fwrite(&(node->right),sizeof(int),1,file);
-        T data=node->data;
-        if(data!=default_value) {
-            fputc('\1',file);
-            writer->write(file,data);
-        }
-        else {
-            fputc('\0',file);
-        }
-    }*/
+    storage->write(file,writer,root,maximum_key_length,default_value);
 }
 
 template<class S,class T,class M> void tst<S,T,M>::pack() {

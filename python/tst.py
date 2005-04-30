@@ -59,6 +59,8 @@ class _MemoryStorage(_object):
     def new_node(*args): return _tst._MemoryStorage_new_node(*args)
     def delete_node(*args): return _tst._MemoryStorage_delete_node(*args)
     def pack(*args): return _tst._MemoryStorage_pack(*args)
+    def read(*args): return _tst._MemoryStorage_read(*args)
+    def write(*args): return _tst._MemoryStorage_write(*args)
 
 class _MemoryStoragePtr(_MemoryStorage):
     def __init__(self, this):

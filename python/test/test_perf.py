@@ -1,7 +1,7 @@
 from tst import *
 from time import clock
 
-ITERATIONS = 100
+ITERATIONS = 10000
 
 t = TST()
 
@@ -26,3 +26,11 @@ for i in xrange(ITERATIONS):
 print 'Read : %f'%(clock()-c)
 
 raw_input("OK")
+
+t.write(file("toto.tst","wb"))
+
+raw_input("OK 2")
+
+t = TST(file("toto.tst","rb"))
+
+raw_input("OK 3")
