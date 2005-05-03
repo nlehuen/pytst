@@ -26,8 +26,8 @@ if sys.version < '2.2.3':
     DistributionMetadata.download_url = None
 
 extra_compile_args = []
-# if sys.platform=="win32":
-# 	extra_compile_args = '/Zp1 /Og /Ob2 /Oi /Ot /GS'.split()
+if sys.platform == "win32" and sys.version >= '2.4':
+	extra_compile_args = '/Zp1 /Og /Ob2 /Oi /Ot /GS'.split()
 
 setup(
     name = "pytst",
