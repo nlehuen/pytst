@@ -25,14 +25,13 @@ if sys.version < '2.2.3':
     DistributionMetadata.classifiers = None
     DistributionMetadata.download_url = None
 
-if sys.platform=="win32":
-	extra_compile_args = '/Zp1 /Og /Ob2 /Oi /Ot /GS'.split()
-else:
-	extra_compile_args = []
+extra_compile_args = []
+# if sys.platform=="win32":
+# 	extra_compile_args = '/Zp1 /Og /Ob2 /Oi /Ot /GS'.split()
 
 setup(
     name = "pytst",
-    version = "0.82",
+    version = "0.83",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
     url = "http://nicolas.lehuen.com/",

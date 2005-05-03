@@ -52,7 +52,7 @@ public:
         if(!data) {
             data=Py_None;
         }
-
+        Py_XINCREF(data);
         PyObject* tuple=Py_BuildValue("s#iO",string,string_length,remaining_distance,data);
         Py_DECREF(PyObject_CallObject(_perform,tuple));
         Py_DECREF(tuple);
@@ -86,6 +86,7 @@ public:
         if(!data) {
             data=Py_None;
         }
+        Py_XINCREF(data);
         PyObject* tuple=Py_BuildValue("s#iO",string,string_length,remaining_distance,data);
         PyObject* result=PyObject_CallObject(callable,tuple);
         Py_DECREF(tuple);
@@ -307,9 +308,11 @@ public:
 
     PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data) {
         PyObject* result=node->data;
-        Py_XINCREF(data);
-        Py_XDECREF(result);
-        node->data=data;
+        if(data!=result) {
+            Py_XINCREF(data);
+            Py_XDECREF(result);
+            node->data=data;
+        }
         return result;
     }
 };
@@ -381,11 +384,15 @@ PyObject* TST::put(char* string,int string_length,PyObject* data) {
 }
 
 PyObject* TST::__getitem__(char* string,int string_length) {
-    return get(string,string_length);
+    PyObject* result=get(string,string_length);
+    Py_INCREF(result);
+    return result;
 }
 
 PyObject* TST::__setitem__(char* string,int string_length,PyObject* data) {
-    return put(string,string_length,data);
+    PyObject* result=put(string,string_length,data);
+    Py_INCREF(result);
+    return result;
 }
 
 void TST::__delitem__(char* string,int string_length) {
