@@ -96,6 +96,20 @@ private:
     PyObject* callable;
 };
 
+class NullFilter : public filter<char,PyObject*> {
+public:
+    NullFilter() {
+    }
+
+    virtual ~NullFilter() {
+    }
+
+    virtual PyObject* perform(char* string,int string_length,int remaining_distance,PyObject* data) {
+        Py_XINCREF(data);
+        return data;
+    }
+};
+
 class DictAction : public action<char,PyObject*> {
 public:
     DictAction() {

@@ -1356,12 +1356,13 @@ SWIG_Python_GetTypeList() {
 #define  SWIGTYPE_p_filterTchar_PyObject_p_t swig_types[15] 
 #define  SWIGTYPE_p_actionTchar_PyObject_p_t swig_types[16] 
 #define  SWIGTYPE_p_MemoryStorage swig_types[17] 
-#define  SWIGTYPE_p_DictAction swig_types[18] 
-#define  SWIGTYPE_p_ListAction swig_types[19] 
-#define  SWIGTYPE_p_TupleListAction swig_types[20] 
-#define  SWIGTYPE_p_ObjectSerializer swig_types[21] 
-#define  SWIGTYPE_p_int swig_types[22] 
-static swig_type_info *swig_types[24];
+#define  SWIGTYPE_p_NullFilter swig_types[18] 
+#define  SWIGTYPE_p_DictAction swig_types[19] 
+#define  SWIGTYPE_p_ListAction swig_types[20] 
+#define  SWIGTYPE_p_TupleListAction swig_types[21] 
+#define  SWIGTYPE_p_ObjectSerializer swig_types[22] 
+#define  SWIGTYPE_p_int swig_types[23] 
+static swig_type_info *swig_types[25];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -1397,7 +1398,7 @@ SWIG_FromCharPtr(const char* cptr)
 }
 
 
-  /*@E:\\SWIG-1.3.24\\Lib\\python\\pymacros.swg,66,SWIG_define@*/
+  /*@C:\\SWIG-1.3.24\\Lib\\python\\pymacros.swg,66,SWIG_define@*/
 #define SWIG_From_int PyInt_FromLong
 /*@@*/
 
@@ -3071,6 +3072,102 @@ static PyObject * CallableFilter_swigregister(PyObject *, PyObject *args) {
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
+static PyObject *_wrap_new_NullFilter(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    NullFilter *result;
+    
+    if(!PyArg_ParseTuple(args,(char *)":new_NullFilter")) goto fail;
+    {
+        try {
+            result = (NullFilter *)new NullFilter();
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_NullFilter, 1);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_delete_NullFilter(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    NullFilter *arg1 = (NullFilter *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:delete_NullFilter",&obj0)) goto fail;
+    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_NullFilter, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(1)) SWIG_fail;
+    {
+        try {
+            delete arg1;
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_NullFilter_perform(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    NullFilter *arg1 = (NullFilter *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    int arg4 ;
+    PyObject *arg5 = (PyObject *) 0 ;
+    PyObject *result;
+    char *buf2 ;
+    size_t size2 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    PyObject * obj2 = 0 ;
+    PyObject * obj3 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OOOO:NullFilter_perform",&obj0,&obj1,&obj2,&obj3)) goto fail;
+    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_NullFilter, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(1)) SWIG_fail;
+    {
+        int res = SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (!res) {
+            SWIG_arg_fail(2);SWIG_fail;
+        }
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
+    }
+    {
+        arg4 = (int)(SWIG_As_int(obj2)); 
+        if (SWIG_arg_fail(4)) SWIG_fail;
+    }
+    arg5 = obj3;
+    {
+        try {
+            result = (PyObject *)(arg1)->perform(arg2,arg3,arg4,arg5);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = result;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject * NullFilter_swigregister(PyObject *, PyObject *args) {
+    PyObject *obj;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
+    SWIG_TypeClientData(SWIGTYPE_p_NullFilter, obj);
+    Py_INCREF(obj);
+    return Py_BuildValue((char *)"");
+}
 static PyObject *_wrap_new_DictAction(PyObject *, PyObject *args) {
     PyObject *resultobj;
     DictAction *result;
@@ -4115,6 +4212,10 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"delete_CallableFilter", _wrap_delete_CallableFilter, METH_VARARGS, NULL},
 	 { (char *)"CallableFilter_perform", _wrap_CallableFilter_perform, METH_VARARGS, NULL},
 	 { (char *)"CallableFilter_swigregister", CallableFilter_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_NullFilter", _wrap_new_NullFilter, METH_VARARGS, NULL},
+	 { (char *)"delete_NullFilter", _wrap_delete_NullFilter, METH_VARARGS, NULL},
+	 { (char *)"NullFilter_perform", _wrap_NullFilter_perform, METH_VARARGS, NULL},
+	 { (char *)"NullFilter_swigregister", NullFilter_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_DictAction", _wrap_new_DictAction, METH_VARARGS, NULL},
 	 { (char *)"delete_DictAction", _wrap_delete_DictAction, METH_VARARGS, NULL},
 	 { (char *)"DictAction_perform", _wrap_DictAction_perform, METH_VARARGS, NULL},
@@ -4164,6 +4265,9 @@ static void *_p_MemoryStorageTo_p_memory_storageTchar_PyObject_p_t(void *x) {
 static void *_p_ObjectSerializerTo_p_serializerTchar_PyObject_p_t(void *x) {
     return (void *)((serializer<char,PyObject * > *)  ((ObjectSerializer *) x));
 }
+static void *_p_NullFilterTo_p_filterTchar_PyObject_p_t(void *x) {
+    return (void *)((filter<char,PyObject * > *)  ((NullFilter *) x));
+}
 static void *_p_CallableFilterTo_p_filterTchar_PyObject_p_t(void *x) {
     return (void *)((filter<char,PyObject * > *)  ((CallableFilter *) x));
 }
@@ -4194,9 +4298,10 @@ static swig_type_info _swigt__p_p_PyObject[] = {{"_p_p_PyObject", 0, "PyObject *
 static swig_type_info _swigt__p_tst_nodeTchar_PyObject_p_t[] = {{"_p_tst_nodeTchar_PyObject_p_t", 0, "tst_node<char,PyObject * > *", 0, 0, 0, 0},{"_p_tst_nodeTchar_PyObject_p_t", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_memory_storageTchar_PyObject_p_t[] = {{"_p_memory_storageTchar_PyObject_p_t", 0, "memory_storage<char,PyObject * > *", 0, 0, 0, 0},{"_p_MemoryStorage", _p_MemoryStorageTo_p_memory_storageTchar_PyObject_p_t, 0, 0, 0, 0, 0},{"_p_memory_storageTchar_PyObject_p_t", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_serializerTchar_PyObject_p_t[] = {{"_p_serializerTchar_PyObject_p_t", 0, "serializer<char,PyObject * > *", 0, 0, 0, 0},{"_p_serializerTchar_PyObject_p_t", 0, 0, 0, 0, 0, 0},{"_p_ObjectSerializer", _p_ObjectSerializerTo_p_serializerTchar_PyObject_p_t, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
-static swig_type_info _swigt__p_filterTchar_PyObject_p_t[] = {{"_p_filterTchar_PyObject_p_t", 0, "filter<char,PyObject * > *", 0, 0, 0, 0},{"_p_CallableFilter", _p_CallableFilterTo_p_filterTchar_PyObject_p_t, 0, 0, 0, 0, 0},{"_p_filterTchar_PyObject_p_t", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
+static swig_type_info _swigt__p_filterTchar_PyObject_p_t[] = {{"_p_filterTchar_PyObject_p_t", 0, "filter<char,PyObject * > *", 0, 0, 0, 0},{"_p_NullFilter", _p_NullFilterTo_p_filterTchar_PyObject_p_t, 0, 0, 0, 0, 0},{"_p_CallableFilter", _p_CallableFilterTo_p_filterTchar_PyObject_p_t, 0, 0, 0, 0, 0},{"_p_filterTchar_PyObject_p_t", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_actionTchar_PyObject_p_t[] = {{"_p_actionTchar_PyObject_p_t", 0, "action<char,PyObject * > *", 0, 0, 0, 0},{"_p_actionTchar_PyObject_p_t", 0, 0, 0, 0, 0, 0},{"_p_DictAction", _p_DictActionTo_p_actionTchar_PyObject_p_t, 0, 0, 0, 0, 0},{"_p_ListAction", _p_ListActionTo_p_actionTchar_PyObject_p_t, 0, 0, 0, 0, 0},{"_p_TupleListAction", _p_TupleListActionTo_p_actionTchar_PyObject_p_t, 0, 0, 0, 0, 0},{"_p_CallableAction", _p_CallableActionTo_p_actionTchar_PyObject_p_t, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_MemoryStorage[] = {{"_p_MemoryStorage", 0, "MemoryStorage *", 0, 0, 0, 0},{"_p_MemoryStorage", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
+static swig_type_info _swigt__p_NullFilter[] = {{"_p_NullFilter", 0, "NullFilter *", 0, 0, 0, 0},{"_p_NullFilter", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_DictAction[] = {{"_p_DictAction", 0, "DictAction *", 0, 0, 0, 0},{"_p_DictAction", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_ListAction[] = {{"_p_ListAction", 0, "ListAction *", 0, 0, 0, 0},{"_p_ListAction", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_TupleListAction[] = {{"_p_TupleListAction", 0, "TupleListAction *", 0, 0, 0, 0},{"_p_TupleListAction", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
@@ -4222,6 +4327,7 @@ _swigt__p_serializerTchar_PyObject_p_t,
 _swigt__p_filterTchar_PyObject_p_t, 
 _swigt__p_actionTchar_PyObject_p_t, 
 _swigt__p_MemoryStorage, 
+_swigt__p_NullFilter, 
 _swigt__p_DictAction, 
 _swigt__p_ListAction, 
 _swigt__p_TupleListAction, 
