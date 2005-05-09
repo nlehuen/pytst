@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-#define TST_VERSION "0.83"
+#define TST_VERSION "0.84"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -368,9 +368,9 @@ template<class S,class T,class M> T tst<S,T,M>::get_or_build(S* string,int strin
 }
 
 template<class S,class T,class M> T tst<S,T,M>::almost(S* string, int string_length, int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) {
-    S* current_key=(S*)tst_malloc((string_length+maximum_distance+1)*sizeof(S));
+    S* current_key=(S*)tst_malloc((string_length+maximum_distance+2)*sizeof(S));
     *current_key='\0';
-    almost_recurse(storage->get(root),current_key,0,string,0,string_length,string_length,maximum_distance,filter,to_perform,string_length+maximum_distance);
+    almost_recurse(storage->get(root),current_key,0,string,0,string_length,string_length,maximum_distance,filter,to_perform,string_length+maximum_distance+1);
     tst_free(current_key);
     return to_perform->result();
 }
