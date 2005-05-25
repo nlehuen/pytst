@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-#define TST_VERSION "0.84"
+#define TST_VERSION "0.85"
 
 #include <stdlib.h>
 #include <stdio.h>

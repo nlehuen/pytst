@@ -351,38 +351,76 @@ public:
         return Py_None;
     }
 
-    PyObject* get(char* string,int string_length) {
+    inline PyObject* get(char* string,int string_length) {
         PyObject* result=tst<char,PyObject*,MemoryStorage>::get(string,string_length);
         Py_INCREF(result);
         return result;
     }
 
-    PyObject* get_or_build(char* string,int string_length,filter<char,PyObject*>* factory) {
+    inline PyObject* get_or_build(char* string,int string_length,filter<char,PyObject*>* factory) {
         PyObject* result=tst<char,PyObject*,MemoryStorage>::get_or_build(string,string_length,factory);
         Py_INCREF(result);
         return result;
     }
 
 
-    PyObject* put(char* string,int string_length,PyObject* data) {
+    inline PyObject* put(char* string,int string_length,PyObject* data) {
+        Py_INCREF(data);
         PyObject* result=tst<char,PyObject*,MemoryStorage>::put(string,string_length,data);
         Py_INCREF(result);
         return result;
     }
 
-    PyObject* __getitem__(char* string,int string_length) {
+    inline PyObject* __getitem__(char* string,int string_length) {
         PyObject* result=get(string,string_length);
-        // Py_INCREF(result);
         return result;
     }
 
-    PyObject* __setitem__(char* string,int string_length,PyObject* data) {
+    inline PyObject* __setitem__(char* string,int string_length,PyObject* data) {
         PyObject* result=put(string,string_length,data);
-        // Py_INCREF(result);
         return result;
     }
 
-    void __delitem__(char* string,int string_length) {
+    inline void __delitem__(char* string,int string_length) {
         remove(string,string_length);
     }
+};
+
+class PythonReference {
+public:
+    inline PythonReference() {
+        this->ref=NULL;
+    }
+
+    inline PythonReference(PyObject *object) {
+        this->ref = object;
+        Py_XINCREF(object);
+    }
+
+    inline PythonReference(const PythonReference& that) {
+        this->ref = that.ref;
+        Py_XINCREF(this->ref);
+    }
+
+    inline PythonReference& operator= (const PythonReference& that) {
+        PyObject* old = this->ref;
+        
+        if((this->ref = that.ref) != old) {
+            Py_XINCREF(this->ref);
+            Py_XDECREF(old);
+        }
+        
+        return *this;
+    }
+
+    inline PyObject* object() {
+        return ref;
+    }
+
+    inline ~PythonReference() {
+        Py_XDECREF(ref);
+    }
+
+private:
+    PyObject* ref;
 };

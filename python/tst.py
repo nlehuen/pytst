@@ -443,4 +443,28 @@ class TSTPtr(TST):
         _swig_setattr(self, TST,self.__class__,TST)
 _tst.TST_swigregister(TSTPtr)
 
+class PythonReference(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, PythonReference, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, PythonReference, name)
+    def __repr__(self):
+        return "<%s.%s; proxy of C++ PythonReference instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, PythonReference, 'this', _tst.new_PythonReference(*args))
+        _swig_setattr(self, PythonReference, 'thisown', 1)
+    def object(*args): return _tst.PythonReference_object(*args)
+    def __del__(self, destroy=_tst.delete_PythonReference):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+
+
+class PythonReferencePtr(PythonReference):
+    def __init__(self, this):
+        _swig_setattr(self, PythonReference, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, PythonReference, 'thisown', 0)
+        _swig_setattr(self, PythonReference,self.__class__,PythonReference)
+_tst.PythonReference_swigregister(PythonReferencePtr)
+
 

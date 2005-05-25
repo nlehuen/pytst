@@ -1341,28 +1341,29 @@ SWIG_Python_GetTypeList() {
 #define  SWIGTYPE_std__size_t swig_types[0] 
 #define  SWIGTYPE_size_t swig_types[1] 
 #define  SWIGTYPE_p_TST swig_types[2] 
-#define  SWIGTYPE_p_tstTchar_PyObject_p_MemoryStorage_t swig_types[3] 
-#define  SWIGTYPE_p_char swig_types[4] 
-#define  SWIGTYPE_p_TSTException swig_types[5] 
-#define  SWIGTYPE_p_CallableAction swig_types[6] 
-#define  SWIGTYPE_p_CallableFilter swig_types[7] 
-#define  SWIGTYPE_p_FILE swig_types[8] 
-#define  SWIGTYPE_std__ptrdiff_t swig_types[9] 
-#define  SWIGTYPE_ptrdiff_t swig_types[10] 
-#define  SWIGTYPE_p_p_PyObject swig_types[11] 
-#define  SWIGTYPE_p_tst_nodeTchar_PyObject_p_t swig_types[12] 
-#define  SWIGTYPE_p_memory_storageTchar_PyObject_p_t swig_types[13] 
-#define  SWIGTYPE_p_serializerTchar_PyObject_p_t swig_types[14] 
-#define  SWIGTYPE_p_filterTchar_PyObject_p_t swig_types[15] 
-#define  SWIGTYPE_p_actionTchar_PyObject_p_t swig_types[16] 
-#define  SWIGTYPE_p_MemoryStorage swig_types[17] 
-#define  SWIGTYPE_p_NullFilter swig_types[18] 
-#define  SWIGTYPE_p_DictAction swig_types[19] 
-#define  SWIGTYPE_p_ListAction swig_types[20] 
-#define  SWIGTYPE_p_TupleListAction swig_types[21] 
-#define  SWIGTYPE_p_ObjectSerializer swig_types[22] 
-#define  SWIGTYPE_p_int swig_types[23] 
-static swig_type_info *swig_types[25];
+#define  SWIGTYPE_p_PythonReference swig_types[3] 
+#define  SWIGTYPE_p_tstTchar_PyObject_p_MemoryStorage_t swig_types[4] 
+#define  SWIGTYPE_p_char swig_types[5] 
+#define  SWIGTYPE_p_TSTException swig_types[6] 
+#define  SWIGTYPE_p_CallableAction swig_types[7] 
+#define  SWIGTYPE_p_CallableFilter swig_types[8] 
+#define  SWIGTYPE_p_FILE swig_types[9] 
+#define  SWIGTYPE_std__ptrdiff_t swig_types[10] 
+#define  SWIGTYPE_ptrdiff_t swig_types[11] 
+#define  SWIGTYPE_p_p_PyObject swig_types[12] 
+#define  SWIGTYPE_p_tst_nodeTchar_PyObject_p_t swig_types[13] 
+#define  SWIGTYPE_p_memory_storageTchar_PyObject_p_t swig_types[14] 
+#define  SWIGTYPE_p_serializerTchar_PyObject_p_t swig_types[15] 
+#define  SWIGTYPE_p_filterTchar_PyObject_p_t swig_types[16] 
+#define  SWIGTYPE_p_actionTchar_PyObject_p_t swig_types[17] 
+#define  SWIGTYPE_p_MemoryStorage swig_types[18] 
+#define  SWIGTYPE_p_NullFilter swig_types[19] 
+#define  SWIGTYPE_p_DictAction swig_types[20] 
+#define  SWIGTYPE_p_ListAction swig_types[21] 
+#define  SWIGTYPE_p_TupleListAction swig_types[22] 
+#define  SWIGTYPE_p_ObjectSerializer swig_types[23] 
+#define  SWIGTYPE_p_int swig_types[24] 
+static swig_type_info *swig_types[26];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -4160,6 +4161,173 @@ static PyObject * TST_swigregister(PyObject *, PyObject *args) {
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
+static PyObject *_wrap_new_PythonReference__SWIG_0(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    PythonReference *result;
+    
+    if(!PyArg_ParseTuple(args,(char *)":new_PythonReference")) goto fail;
+    {
+        try {
+            result = (PythonReference *)new PythonReference();
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_PythonReference, 1);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_new_PythonReference__SWIG_1(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    PyObject *arg1 = (PyObject *) 0 ;
+    PythonReference *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:new_PythonReference",&obj0)) goto fail;
+    arg1 = obj0;
+    {
+        try {
+            result = (PythonReference *)new PythonReference(arg1);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_PythonReference, 1);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_new_PythonReference__SWIG_2(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    PythonReference *arg1 = 0 ;
+    PythonReference *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:new_PythonReference",&obj0)) goto fail;
+    {
+        SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_PythonReference, SWIG_POINTER_EXCEPTION | 0);
+        if (SWIG_arg_fail(1)) SWIG_fail;
+        if (arg1 == NULL) {
+            SWIG_null_ref("PythonReference");
+        }
+        if (SWIG_arg_fail(1)) SWIG_fail;
+    }
+    {
+        try {
+            result = (PythonReference *)new PythonReference((PythonReference const &)*arg1);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_PythonReference, 1);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_new_PythonReference(PyObject *self, PyObject *args) {
+    int argc;
+    PyObject *argv[2];
+    int ii;
+    
+    argc = PyObject_Length(args);
+    for (ii = 0; (ii < argc) && (ii < 1); ii++) {
+        argv[ii] = PyTuple_GetItem(args,ii);
+    }
+    if (argc == 0) {
+        return _wrap_new_PythonReference__SWIG_0(self,args);
+    }
+    if (argc == 1) {
+        int _v;
+        _v = (argv[0] != 0);
+        if (_v) {
+            return _wrap_new_PythonReference__SWIG_1(self,args);
+        }
+    }
+    if (argc == 1) {
+        int _v;
+        {
+            void *ptr = 0;
+            if (SWIG_ConvertPtr(argv[0], &ptr, SWIGTYPE_p_PythonReference, 0) == -1) {
+                _v = 0;
+                PyErr_Clear();
+            } else {
+                _v = (ptr != 0);
+            }
+        }
+        if (_v) {
+            return _wrap_new_PythonReference__SWIG_2(self,args);
+        }
+    }
+    
+    PyErr_SetString(PyExc_NotImplementedError,"No matching function for overloaded 'new_PythonReference'");
+    return NULL;
+}
+
+
+static PyObject *_wrap_PythonReference_object(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    PythonReference *arg1 = (PythonReference *) 0 ;
+    PyObject *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:PythonReference_object",&obj0)) goto fail;
+    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_PythonReference, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(1)) SWIG_fail;
+    {
+        try {
+            result = (PyObject *)(arg1)->object();
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = result;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_delete_PythonReference(PyObject *, PyObject *args) {
+    PyObject *resultobj;
+    PythonReference *arg1 = (PythonReference *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:delete_PythonReference",&obj0)) goto fail;
+    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_PythonReference, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(1)) SWIG_fail;
+    {
+        try {
+            delete arg1;
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject * PythonReference_swigregister(PyObject *, PyObject *args) {
+    PyObject *obj;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
+    SWIG_TypeClientData(SWIGTYPE_p_PythonReference, obj);
+    Py_INCREF(obj);
+    return Py_BuildValue((char *)"");
+}
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"new__MemoryStorage", _wrap_new__MemoryStorage, METH_VARARGS, NULL},
 	 { (char *)"delete__MemoryStorage", _wrap_delete__MemoryStorage, METH_VARARGS, NULL},
@@ -4250,6 +4418,10 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"TST___setitem__", _wrap_TST___setitem__, METH_VARARGS, NULL},
 	 { (char *)"TST___delitem__", _wrap_TST___delitem__, METH_VARARGS, NULL},
 	 { (char *)"TST_swigregister", TST_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_PythonReference", _wrap_new_PythonReference, METH_VARARGS, NULL},
+	 { (char *)"PythonReference_object", _wrap_PythonReference_object, METH_VARARGS, NULL},
+	 { (char *)"delete_PythonReference", _wrap_delete_PythonReference, METH_VARARGS, NULL},
+	 { (char *)"PythonReference_swigregister", PythonReference_swigregister, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -4286,6 +4458,7 @@ static void *_p_CallableActionTo_p_actionTchar_PyObject_p_t(void *x) {
 static swig_type_info _swigt__std__size_t[] = {{"_std__size_t", 0, "std::size_t", 0, 0, 0, 0},{"_std__size_t", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__size_t[] = {{"_size_t", 0, "size_t", 0, 0, 0, 0},{"_size_t", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_TST[] = {{"_p_TST", 0, "TST *", 0, 0, 0, 0},{"_p_TST", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
+static swig_type_info _swigt__p_PythonReference[] = {{"_p_PythonReference", 0, "PythonReference *", 0, 0, 0, 0},{"_p_PythonReference", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_tstTchar_PyObject_p_MemoryStorage_t[] = {{"_p_tstTchar_PyObject_p_MemoryStorage_t", 0, "tst<char,PyObject *,MemoryStorage > *", 0, 0, 0, 0},{"_p_tstTchar_PyObject_p_MemoryStorage_t", 0, 0, 0, 0, 0, 0},{"_p_TST", _p_TSTTo_p_tstTchar_PyObject_p_MemoryStorage_t, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_char[] = {{"_p_char", 0, "char *", 0, 0, 0, 0},{"_p_char", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
 static swig_type_info _swigt__p_TSTException[] = {{"_p_TSTException", 0, "TSTException *", 0, 0, 0, 0},{"_p_TSTException", 0, 0, 0, 0, 0, 0},{0, 0, 0, 0, 0, 0, 0}};
@@ -4312,6 +4485,7 @@ static swig_type_info *swig_types_initial[] = {
 _swigt__std__size_t, 
 _swigt__size_t, 
 _swigt__p_TST, 
+_swigt__p_PythonReference, 
 _swigt__p_tstTchar_PyObject_p_MemoryStorage_t, 
 _swigt__p_char, 
 _swigt__p_TSTException, 
@@ -4340,7 +4514,7 @@ _swigt__p_int,
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (END) -------- */
 
 static swig_const_info swig_const_table[] = {
-{ SWIG_PY_POINTER, (char*)"TST_VERSION", 0, 0, (void *)"0.84", &SWIGTYPE_p_char},
+{ SWIG_PY_POINTER, (char*)"TST_VERSION", 0, 0, (void *)"0.85", &SWIGTYPE_p_char},
 {0, 0, 0, 0.0, 0, 0}};
 
 #ifdef __cplusplus
@@ -4684,7 +4858,7 @@ SWIGEXPORT(void) SWIG_init(void) {
     }
     SWIG_InstallConstants(d,swig_const_table);
     
-    PyDict_SetItemString(d,"TST_VERSION", SWIG_FromCharPtr("0.84"));
+    PyDict_SetItemString(d,"TST_VERSION", SWIG_FromCharPtr("0.85"));
     {
         PyDict_SetItemString(d,"UNDEFINED_INDEX", SWIG_From_int((int)(-1))); 
     }
