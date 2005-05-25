@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-#define TST_VERSION "0.85"
+#define TST_VERSION "0.86"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -43,6 +43,15 @@
 #endif
 
 #define UNDEFINED_INDEX -1
+
+class TSTException {
+public:
+    TSTException(char* _message) {
+        message=_message;
+    }
+
+    char* message;
+};
 
 template<class S,class T> class tst_node {
 public:
@@ -177,16 +186,29 @@ public:
     }    
 
     void read(FILE* file,serializer<S,T>* reader,int* root,int* maximum_key_length,T* default_value) {
+        // We check the version number
+        fread(&size,sizeof(int),1,file);
+        char* version=(char*)tst_malloc(size+1);
+        version[size]='\0';
+        fread(version,sizeof(char),size,file);
+        if(strcmp(TST_VERSION,version)!=0) {
+            tst_free(version);
+            throw TSTException("Invalid version number");
+        }
+        else {
+            tst_free(version);
+        }
+
         fread(&size,sizeof(int),1,file);
         next=size;
         fread(root,sizeof(int),1,file);
         fread(maximum_key_length,sizeof(int),1,file);
         int has_data=fgetc(file);
         if(has_data) {
-            *default_value=reader->read(file);
+            *default_value = reader->read(file);
         }
         else {
-            *default_value=NULL;
+            *default_value = NULL;
         }
         array=(tst_node<S,T>*)tst_malloc(size*sizeof(tst_node<S,T>));
         for(int i=0;i<size;i++) {
@@ -198,7 +220,9 @@ public:
             fread(&(node->right),sizeof(int),1,file);
 
             has_data=fgetc(file);
+            node->data = NULL;
             if(has_data) {
+                printf("S");
                 store_data(node,reader->read(file));
             }
             else {
@@ -208,6 +232,11 @@ public:
     }
 
     void write(FILE* file,serializer<S,T>* writer,int root,int maximum_key_length,T default_value) {
+        // We save the version number
+        int version_length = strlen(TST_VERSION);
+        fwrite(&version_length,sizeof(int),1,file);
+        fwrite(TST_VERSION,sizeof(char),version_length,file);
+
         fwrite(&next,sizeof(int),1,file);
         fwrite(&root,sizeof(int),1,file);
         fwrite(&maximum_key_length,sizeof(int),1,file);

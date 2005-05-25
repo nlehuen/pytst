@@ -38,6 +38,32 @@ del types
 
 TST_VERSION = _tst.TST_VERSION
 UNDEFINED_INDEX = _tst.UNDEFINED_INDEX
+class TSTException(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, TSTException, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, TSTException, name)
+    def __repr__(self):
+        return "<%s.%s; proxy of C++ TSTException instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, TSTException, 'this', _tst.new_TSTException(*args))
+        _swig_setattr(self, TSTException, 'thisown', 1)
+    __swig_setmethods__["message"] = _tst.TSTException_message_set
+    __swig_getmethods__["message"] = _tst.TSTException_message_get
+    if _newclass:message = property(_tst.TSTException_message_get, _tst.TSTException_message_set)
+    def __del__(self, destroy=_tst.delete_TSTException):
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+
+
+class TSTExceptionPtr(TSTException):
+    def __init__(self, this):
+        _swig_setattr(self, TSTException, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, TSTException, 'thisown', 0)
+        _swig_setattr(self, TSTException,self.__class__,TSTException)
+_tst.TSTException_swigregister(TSTExceptionPtr)
+
 class _MemoryStorage(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, _MemoryStorage, name, value)
@@ -171,32 +197,6 @@ class _SerializerPtr(_Serializer):
         if not hasattr(self,"thisown"): _swig_setattr(self, _Serializer, 'thisown', 0)
         _swig_setattr(self, _Serializer,self.__class__,_Serializer)
 _tst._Serializer_swigregister(_SerializerPtr)
-
-class TSTException(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, TSTException, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, TSTException, name)
-    def __repr__(self):
-        return "<%s.%s; proxy of C++ TSTException instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
-    def __init__(self, *args):
-        _swig_setattr(self, TSTException, 'this', _tst.new_TSTException(*args))
-        _swig_setattr(self, TSTException, 'thisown', 1)
-    __swig_setmethods__["message"] = _tst.TSTException_message_set
-    __swig_getmethods__["message"] = _tst.TSTException_message_get
-    if _newclass:message = property(_tst.TSTException_message_get, _tst.TSTException_message_set)
-    def __del__(self, destroy=_tst.delete_TSTException):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-
-
-class TSTExceptionPtr(TSTException):
-    def __init__(self, this):
-        _swig_setattr(self, TSTException, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, TSTException, 'thisown', 0)
-        _swig_setattr(self, TSTException,self.__class__,TSTException)
-_tst.TSTException_swigregister(TSTExceptionPtr)
 
 class CallableAction(_Action):
     __swig_setmethods__ = {}

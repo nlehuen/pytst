@@ -20,15 +20,6 @@
 
 #include "tst.h"
 
-class TSTException {
-public:
-    TSTException(char* _message) {
-        message=_message;
-    }
-
-    char* message;
-};
-
 class CallableAction : public action<char,PyObject*> {
 public:
     CallableAction(PyObject* perform,PyObject* result) {
@@ -308,10 +299,9 @@ public:
 
     PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data) {
         PyObject* result=node->data;
-        if(data!=result) {
+        if((node->data=data)!=result) {
             Py_XINCREF(data);
             Py_XDECREF(result);
-            node->data=data;
         }
         return result;
     }
@@ -329,6 +319,7 @@ public:
         }
         ObjectSerializer os;
         tst<char,PyObject*,MemoryStorage>::read(PyFile_AsFile(file),&os);
+        Py_XINCREF(default_value);
     }
 
     TST(int initial_size,PyObject* default_value) : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(initial_size),default_value) {
@@ -337,8 +328,7 @@ public:
     }
 
     ~TST() {
-        // TODO : pourquoi ce DECREF est en trop ?
-        Py_DECREF(default_value);
+        Py_XDECREF(default_value);
     }
 
     PyObject* write(PyObject* file) {
