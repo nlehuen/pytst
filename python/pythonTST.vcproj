@@ -20,9 +20,9 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\Python24\include;.."
+				AdditionalIncludeDirectories="C:\Python24\include;..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				BufferSecurityCheck="TRUE"
@@ -34,7 +34,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/_tst_d.pyd"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="E:\Python24\libs"
+				AdditionalLibraryDirectories="C:\Python24\libs"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/pyd.pdb"
 				SubSystem="2"
@@ -75,7 +75,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="E:\Python24\include;..\include"
+				AdditionalIncludeDirectories="C:\Python24\include;..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS"
 				RuntimeLibrary="0"
 				StructMemberAlignment="1"
@@ -89,7 +89,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/_tst.pyd"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="E:\Python24\libs"
+				AdditionalLibraryDirectories="C:\Python24\libs"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -146,8 +146,7 @@
 					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="E:\SWIG-1.3.24\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)
-"
+						CommandLine="C:\SWIG-1.3.24\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)"
 						AdditionalDependencies="..\tst.h;pythonTST.h"
 						Outputs="tst_wrap.cxx"/>
 				</FileConfiguration>
