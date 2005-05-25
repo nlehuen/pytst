@@ -319,83 +319,70 @@ public:
 
 class TST : public tst<char,PyObject*,MemoryStorage> {
 public:
-    TST();
-    TST(PyObject* file);
-    TST(int initial_size,PyObject* default_value);
-    virtual ~TST();
-    PyObject* write(PyObject* file);
-    virtual PyObject* get(char* string,int string_length);
-    virtual PyObject* get_or_build(char* string,int string_length,filter<char,PyObject*>* factory);
-    virtual PyObject* put(char* string,int string_length,PyObject* data);
-    PyObject* __getitem__(char* string,int string_length);
-    PyObject* __setitem__(char* string,int string_length,PyObject* data);
-    void __delitem__(char* string,int string_length);
+    TST() : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(16),Py_None) {
+        Py_INCREF(Py_None);
+    }
+
+    TST(PyObject* file) : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(16),NULL) {
+        if(!PyFile_Check(file)) {
+            throw TSTException("Argument of constructor must be a file object");
+        }
+        ObjectSerializer os;
+        tst<char,PyObject*,MemoryStorage>::read(PyFile_AsFile(file),&os);
+    }
+
+    TST(int initial_size,PyObject* default_value) : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(initial_size),default_value) {
+        if(!default_value) default_value=Py_None;
+        Py_INCREF(default_value);
+    }
+
+    ~TST() {
+        // TODO : pourquoi ce DECREF est en trop ?
+        Py_DECREF(default_value);
+    }
+
+    PyObject* write(PyObject* file) {
+        if(!PyFile_Check(file)) {
+            throw TSTException("Argument of write() must be a file object");
+        }
+        ObjectSerializer *os=new ObjectSerializer();
+        tst<char,PyObject*,MemoryStorage>::write(PyFile_AsFile(file),os);
+        delete os;
+        return Py_None;
+    }
+
+    PyObject* get(char* string,int string_length) {
+        PyObject* result=tst<char,PyObject*,MemoryStorage>::get(string,string_length);
+        Py_INCREF(result);
+        return result;
+    }
+
+    PyObject* get_or_build(char* string,int string_length,filter<char,PyObject*>* factory) {
+        PyObject* result=tst<char,PyObject*,MemoryStorage>::get_or_build(string,string_length,factory);
+        Py_INCREF(result);
+        return result;
+    }
+
+
+    PyObject* put(char* string,int string_length,PyObject* data) {
+        PyObject* result=tst<char,PyObject*,MemoryStorage>::put(string,string_length,data);
+        Py_INCREF(result);
+        return result;
+    }
+
+    PyObject* __getitem__(char* string,int string_length) {
+        PyObject* result=get(string,string_length);
+        // Py_INCREF(result);
+        return result;
+    }
+
+    PyObject* __setitem__(char* string,int string_length,PyObject* data) {
+        PyObject* result=put(string,string_length,data);
+        // Py_INCREF(result);
+        return result;
+    }
+
+    void __delitem__(char* string,int string_length) {
+        remove(string,string_length);
+    }
 };
-
-TST::TST() : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(16),Py_None) {
-    Py_INCREF(Py_None);
-}
-
-TST::TST(PyObject* file) : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(16),NULL) {
-    if(!PyFile_Check(file)) {
-        throw TSTException("Argument of constructor must be a file object");
-    }
-    ObjectSerializer os;
-    tst<char,PyObject*,MemoryStorage>::read(PyFile_AsFile(file),&os);
-}
-
-TST::TST(int initial_size,PyObject* default_value) : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(initial_size),default_value) {
-    if(!default_value) default_value=Py_None;
-    Py_INCREF(default_value);
-}
-
-TST::~TST() {
-    // TODO : pourquoi ce DECREF est en trop ?
-    Py_DECREF(default_value);
-}
-
-PyObject* TST::write(PyObject* file) {
-    if(!PyFile_Check(file)) {
-        throw TSTException("Argument of write() must be a file object");
-    }
-    ObjectSerializer *os=new ObjectSerializer();
-    tst<char,PyObject*,MemoryStorage>::write(PyFile_AsFile(file),os);
-    delete os;
-    return Py_None;
-}
-
-PyObject* TST::get(char* string,int string_length) {
-    PyObject* result=tst<char,PyObject*,MemoryStorage>::get(string,string_length);
-    Py_INCREF(result);
-    return result;
-}
-
-PyObject* TST::get_or_build(char* string,int string_length,filter<char,PyObject*>* factory) {
-    PyObject* result=tst<char,PyObject*,MemoryStorage>::get_or_build(string,string_length,factory);
-    Py_INCREF(result);
-    return result;
-}
-
-
-PyObject* TST::put(char* string,int string_length,PyObject* data) {
-    PyObject* result=tst<char,PyObject*,MemoryStorage>::put(string,string_length,data);
-    Py_INCREF(result);
-    return result;
-}
-
-PyObject* TST::__getitem__(char* string,int string_length) {
-    PyObject* result=get(string,string_length);
-    Py_INCREF(result);
-    return result;
-}
-
-PyObject* TST::__setitem__(char* string,int string_length,PyObject* data) {
-    PyObject* result=put(string,string_length,data);
-    Py_INCREF(result);
-    return result;
-}
-
-void TST::__delitem__(char* string,int string_length) {
-    remove(string,string_length);
-}
-

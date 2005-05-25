@@ -173,7 +173,9 @@ int main(int argc,char **argv) {
     input = fopen("url-list.txt","r");
     while(true) {
         char line[256];
-        fscanf(input,"%s\n",line);
+        if(fscanf(input,"%s\n",line)<=0) {
+            break;
+        }
         md5tst.put(line,strlen(line),1L);
         if(lines++%1000==0) {
             printf("%d\n",lines);
@@ -192,7 +194,9 @@ int main(int argc,char **argv) {
     lines=0;
     while(true) {
         char line[256];
-        fscanf(input,"%s\n",line);
+        if(fscanf(input,"%s\n",line)<=0) {
+            break;
+        }
         if(md5tst.get(line,strlen(line))!=1L) {
             printf("Bummer ! %d %s\n",lines++,line);
             return 1;
