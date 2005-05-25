@@ -116,7 +116,7 @@ public:
         empty=UNDEFINED_INDEX;
     }
 
-    ~memory_storage() {
+    virtual ~memory_storage() {
         tst_free(array);
     }
 

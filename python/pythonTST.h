@@ -289,7 +289,7 @@ public:
     MemoryStorage(int initial_size) : memory_storage<char,PyObject*>(initial_size) {
     }
 
-    ~MemoryStorage() {
+    virtual ~MemoryStorage() {
         int i;
         tst_node<char,PyObject*>* node;
         for(i=0,node=array;i<next;i++,node++) {
