@@ -297,7 +297,7 @@ public:
         }
     }
 
-    PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data) {
+    inline virtual PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data) {
         PyObject* result=node->data;
         if((node->data=data)!=result) {
             Py_XINCREF(data);

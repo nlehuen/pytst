@@ -124,7 +124,7 @@ public:
         return array+index;
     }
 
-    inline T store_data(tst_node<S,T>* node,T data) {
+    inline virtual T store_data(tst_node<S,T>* node,T data) {
         T result = node->data;
         node->data = data;
         return result;
@@ -222,7 +222,6 @@ public:
             has_data=fgetc(file);
             node->data = NULL;
             if(has_data) {
-                printf("S");
                 store_data(node,reader->read(file));
             }
             else {
