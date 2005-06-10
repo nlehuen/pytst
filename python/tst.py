@@ -175,35 +175,36 @@ class _FilterPtr(_Filter):
         _swig_setattr(self, _Filter,self.__class__,_Filter)
 _tst._Filter_swigregister(_FilterPtr)
 
-class _Serializer(_object):
+class PythonReference(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, _Serializer, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, PythonReference, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, _Serializer, name)
-    def __init__(self): raise RuntimeError, "No constructor defined"
+    __getattr__ = lambda self, name: _swig_getattr(self, PythonReference, name)
     def __repr__(self):
-        return "<%s.%s; proxy of C++ serializer<char,PyObject * > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
-    def __del__(self, destroy=_tst.delete__Serializer):
+        return "<%s.%s; proxy of C++ PythonReference instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __init__(self, *args):
+        _swig_setattr(self, PythonReference, 'this', _tst.new_PythonReference(*args))
+        _swig_setattr(self, PythonReference, 'thisown', 1)
+    def get(*args): return _tst.PythonReference_get(*args)
+    def lend(*args): return _tst.PythonReference_lend(*args)
+    def __del__(self, destroy=_tst.delete_PythonReference):
         try:
             if self.thisown: destroy(self)
         except: pass
 
-    def write(*args): return _tst._Serializer_write(*args)
-    def read(*args): return _tst._Serializer_read(*args)
+    def write(*args): return _tst.PythonReference_write(*args)
 
-class _SerializerPtr(_Serializer):
+class PythonReferencePtr(PythonReference):
     def __init__(self, this):
-        _swig_setattr(self, _Serializer, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, _Serializer, 'thisown', 0)
-        _swig_setattr(self, _Serializer,self.__class__,_Serializer)
-_tst._Serializer_swigregister(_SerializerPtr)
+        _swig_setattr(self, PythonReference, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, PythonReference, 'thisown', 0)
+        _swig_setattr(self, PythonReference,self.__class__,PythonReference)
+_tst.PythonReference_swigregister(PythonReferencePtr)
 
-class CallableAction(_Action):
+class CallableAction(_object):
     __swig_setmethods__ = {}
-    for _s in [_Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, CallableAction, name, value)
     __swig_getmethods__ = {}
-    for _s in [_Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, CallableAction, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ CallableAction instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -225,12 +226,10 @@ class CallableActionPtr(CallableAction):
         _swig_setattr(self, CallableAction,self.__class__,CallableAction)
 _tst.CallableAction_swigregister(CallableActionPtr)
 
-class CallableFilter(_Filter):
+class CallableFilter(_object):
     __swig_setmethods__ = {}
-    for _s in [_Filter]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, CallableFilter, name, value)
     __swig_getmethods__ = {}
-    for _s in [_Filter]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, CallableFilter, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ CallableFilter instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -251,12 +250,10 @@ class CallableFilterPtr(CallableFilter):
         _swig_setattr(self, CallableFilter,self.__class__,CallableFilter)
 _tst.CallableFilter_swigregister(CallableFilterPtr)
 
-class NullFilter(_Filter):
+class NullFilter(_object):
     __swig_setmethods__ = {}
-    for _s in [_Filter]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, NullFilter, name, value)
     __swig_getmethods__ = {}
-    for _s in [_Filter]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, NullFilter, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ NullFilter instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -277,12 +274,10 @@ class NullFilterPtr(NullFilter):
         _swig_setattr(self, NullFilter,self.__class__,NullFilter)
 _tst.NullFilter_swigregister(NullFilterPtr)
 
-class DictAction(_Action):
+class DictAction(_object):
     __swig_setmethods__ = {}
-    for _s in [_Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, DictAction, name, value)
     __swig_getmethods__ = {}
-    for _s in [_Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, DictAction, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ DictAction instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -304,12 +299,10 @@ class DictActionPtr(DictAction):
         _swig_setattr(self, DictAction,self.__class__,DictAction)
 _tst.DictAction_swigregister(DictActionPtr)
 
-class ListAction(_Action):
+class ListAction(_object):
     __swig_setmethods__ = {}
-    for _s in [_Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, ListAction, name, value)
     __swig_getmethods__ = {}
-    for _s in [_Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, ListAction, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ ListAction instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -358,12 +351,10 @@ class TupleListActionPtr(TupleListAction):
         _swig_setattr(self, TupleListAction,self.__class__,TupleListAction)
 _tst.TupleListAction_swigregister(TupleListActionPtr)
 
-class ObjectSerializer(_Serializer):
+class ObjectSerializer(_object):
     __swig_setmethods__ = {}
-    for _s in [_Serializer]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, ObjectSerializer, name, value)
     __swig_getmethods__ = {}
-    for _s in [_Serializer]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, ObjectSerializer, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ ObjectSerializer instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -442,29 +433,5 @@ class TSTPtr(TST):
         if not hasattr(self,"thisown"): _swig_setattr(self, TST, 'thisown', 0)
         _swig_setattr(self, TST,self.__class__,TST)
 _tst.TST_swigregister(TSTPtr)
-
-class PythonReference(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, PythonReference, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, PythonReference, name)
-    def __repr__(self):
-        return "<%s.%s; proxy of C++ PythonReference instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
-    def __init__(self, *args):
-        _swig_setattr(self, PythonReference, 'this', _tst.new_PythonReference(*args))
-        _swig_setattr(self, PythonReference, 'thisown', 1)
-    def get(*args): return _tst.PythonReference_get(*args)
-    def __del__(self, destroy=_tst.delete_PythonReference):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-
-
-class PythonReferencePtr(PythonReference):
-    def __init__(self, this):
-        _swig_setattr(self, PythonReference, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, PythonReference, 'thisown', 0)
-        _swig_setattr(self, PythonReference,self.__class__,PythonReference)
-_tst.PythonReference_swigregister(PythonReferencePtr)
 
 
