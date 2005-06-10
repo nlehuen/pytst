@@ -378,36 +378,40 @@ public:
 
 class PythonReference {
 public:
-    inline PythonReference() {
-        this->ref=NULL;
+    explicit PythonReference() : ref(Py_None) {
+        Py_XINCREF(ref);
     }
 
-    inline PythonReference(PyObject *object) {
-        this->ref = object;
-        Py_XINCREF(object);
+    explicit PythonReference(PyObject *object) : ref(object) {
+        Py_XINCREF(ref);
     }
 
-    inline PythonReference(const PythonReference& that) {
-        this->ref = that.ref;
-        Py_XINCREF(this->ref);
+    explicit PythonReference(PyObject *object, int borrow) : ref(object) {
+        if(borrow==0) {
+            Py_XINCREF(ref);
+        }
     }
 
-    inline PythonReference& operator= (const PythonReference& that) {
-        PyObject* old = this->ref;
+    PythonReference(const PythonReference& that) : ref(that.ref) {
+        Py_XINCREF(ref);
+    }
+
+    PythonReference& operator= (const PythonReference& that) {
+        PyObject* old = ref;
         
         if((this->ref = that.ref) != old) {
-            Py_XINCREF(this->ref);
+            Py_XINCREF(ref);
             Py_XDECREF(old);
         }
         
         return *this;
     }
 
-    inline PyObject* object() {
+    PyObject* get() {
         return ref;
     }
 
-    inline ~PythonReference() {
+    ~PythonReference() {
         Py_XDECREF(ref);
     }
 

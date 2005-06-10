@@ -146,9 +146,10 @@ public:
             int original_size = size;
             tst_node<S,T>* original_array = array;
             array = NULL;
+
+            // on utilise le nombre d'or pour l'accroissement du tableau
             size=(int)(1.618*size)+1;
             
-            // on utilise le nombre d'or pour l'accroissement du tableau
             while(array==NULL && size>original_size) {
                 array=(tst_node<S,T>*)tst_realloc(original_array,size*sizeof(tst_node<S,T>));
                 if(array==NULL) {
@@ -277,7 +278,7 @@ public:
 
     virtual ~tst() {
         delete storage;
-    };
+    }
 
     void pack();
     T walk(filter<S,T>* filter,action<S,T>* to_perform);
