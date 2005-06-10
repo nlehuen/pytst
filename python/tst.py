@@ -70,7 +70,7 @@ class _MemoryStorage(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, _MemoryStorage, name)
     def __repr__(self):
-        return "<%s.%s; proxy of C++ memory_storage<char,PyObject * > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+        return "<%s.%s; proxy of C++ memory_storage<char,PythonReference > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
     def __init__(self, *args):
         _swig_setattr(self, _MemoryStorage, 'this', _tst.new__MemoryStorage(*args))
         _swig_setattr(self, _MemoryStorage, 'thisown', 1)
@@ -101,7 +101,7 @@ class _TST(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, _TST, name)
     def __repr__(self):
-        return "<%s.%s; proxy of C++ tst<char,PyObject *,MemoryStorage > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+        return "<%s.%s; proxy of C++ tst<char,PythonReference,MemoryStorage > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
     def __init__(self, *args):
         _swig_setattr(self, _TST, 'this', _tst.new__TST(*args))
         _swig_setattr(self, _TST, 'thisown', 1)
@@ -137,7 +137,7 @@ class _Action(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, _Action, name)
     def __init__(self): raise RuntimeError, "No constructor defined"
     def __repr__(self):
-        return "<%s.%s; proxy of C++ action<char,PyObject * > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+        return "<%s.%s; proxy of C++ action<char,PythonReference > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
     def __del__(self, destroy=_tst.delete__Action):
         try:
             if self.thisown: destroy(self)
@@ -160,7 +160,7 @@ class _Filter(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, _Filter, name)
     def __init__(self): raise RuntimeError, "No constructor defined"
     def __repr__(self):
-        return "<%s.%s; proxy of C++ filter<char,PyObject * > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+        return "<%s.%s; proxy of C++ filter<char,PythonReference > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
     def __del__(self, destroy=_tst.delete__Filter):
         try:
             if self.thisown: destroy(self)
@@ -175,36 +175,35 @@ class _FilterPtr(_Filter):
         _swig_setattr(self, _Filter,self.__class__,_Filter)
 _tst._Filter_swigregister(_FilterPtr)
 
-class PythonReference(_object):
+class _Serializer(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, PythonReference, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, _Serializer, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, PythonReference, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, _Serializer, name)
+    def __init__(self): raise RuntimeError, "No constructor defined"
     def __repr__(self):
-        return "<%s.%s; proxy of C++ PythonReference instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
-    def __init__(self, *args):
-        _swig_setattr(self, PythonReference, 'this', _tst.new_PythonReference(*args))
-        _swig_setattr(self, PythonReference, 'thisown', 1)
-    def get(*args): return _tst.PythonReference_get(*args)
-    def lend(*args): return _tst.PythonReference_lend(*args)
-    def __del__(self, destroy=_tst.delete_PythonReference):
+        return "<%s.%s; proxy of C++ serializer<char,PythonReference > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __del__(self, destroy=_tst.delete__Serializer):
         try:
             if self.thisown: destroy(self)
         except: pass
 
-    def write(*args): return _tst.PythonReference_write(*args)
+    def write(*args): return _tst._Serializer_write(*args)
+    def read(*args): return _tst._Serializer_read(*args)
 
-class PythonReferencePtr(PythonReference):
+class _SerializerPtr(_Serializer):
     def __init__(self, this):
-        _swig_setattr(self, PythonReference, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, PythonReference, 'thisown', 0)
-        _swig_setattr(self, PythonReference,self.__class__,PythonReference)
-_tst.PythonReference_swigregister(PythonReferencePtr)
+        _swig_setattr(self, _Serializer, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, _Serializer, 'thisown', 0)
+        _swig_setattr(self, _Serializer,self.__class__,_Serializer)
+_tst._Serializer_swigregister(_SerializerPtr)
 
-class CallableAction(_object):
+class CallableAction(_Action):
     __swig_setmethods__ = {}
+    for _s in [_Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, CallableAction, name, value)
     __swig_getmethods__ = {}
+    for _s in [_Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, CallableAction, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ CallableAction instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -226,10 +225,12 @@ class CallableActionPtr(CallableAction):
         _swig_setattr(self, CallableAction,self.__class__,CallableAction)
 _tst.CallableAction_swigregister(CallableActionPtr)
 
-class CallableFilter(_object):
+class CallableFilter(_Filter):
     __swig_setmethods__ = {}
+    for _s in [_Filter]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, CallableFilter, name, value)
     __swig_getmethods__ = {}
+    for _s in [_Filter]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, CallableFilter, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ CallableFilter instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -250,10 +251,12 @@ class CallableFilterPtr(CallableFilter):
         _swig_setattr(self, CallableFilter,self.__class__,CallableFilter)
 _tst.CallableFilter_swigregister(CallableFilterPtr)
 
-class NullFilter(_object):
+class NullFilter(_Filter):
     __swig_setmethods__ = {}
+    for _s in [_Filter]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, NullFilter, name, value)
     __swig_getmethods__ = {}
+    for _s in [_Filter]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, NullFilter, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ NullFilter instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -274,10 +277,12 @@ class NullFilterPtr(NullFilter):
         _swig_setattr(self, NullFilter,self.__class__,NullFilter)
 _tst.NullFilter_swigregister(NullFilterPtr)
 
-class DictAction(_object):
+class DictAction(_Action):
     __swig_setmethods__ = {}
+    for _s in [_Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, DictAction, name, value)
     __swig_getmethods__ = {}
+    for _s in [_Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, DictAction, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ DictAction instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -299,10 +304,12 @@ class DictActionPtr(DictAction):
         _swig_setattr(self, DictAction,self.__class__,DictAction)
 _tst.DictAction_swigregister(DictActionPtr)
 
-class ListAction(_object):
+class ListAction(_Action):
     __swig_setmethods__ = {}
+    for _s in [_Action]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, ListAction, name, value)
     __swig_getmethods__ = {}
+    for _s in [_Action]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, ListAction, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ ListAction instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -351,10 +358,12 @@ class TupleListActionPtr(TupleListAction):
         _swig_setattr(self, TupleListAction,self.__class__,TupleListAction)
 _tst.TupleListAction_swigregister(TupleListActionPtr)
 
-class ObjectSerializer(_object):
+class ObjectSerializer(_Serializer):
     __swig_setmethods__ = {}
+    for _s in [_Serializer]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, ObjectSerializer, name, value)
     __swig_getmethods__ = {}
+    for _s in [_Serializer]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, ObjectSerializer, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ ObjectSerializer instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
@@ -393,7 +402,6 @@ class MemoryStorage(_MemoryStorage):
             if self.thisown: destroy(self)
         except: pass
 
-    def store_data(*args): return _tst.MemoryStorage_store_data(*args)
 
 class MemoryStoragePtr(MemoryStorage):
     def __init__(self, this):
@@ -419,10 +427,10 @@ class TST(_TST):
             if self.thisown: destroy(self)
         except: pass
 
-    def write(*args): return _tst.TST_write(*args)
-    def get(*args): return _tst.TST_get(*args)
-    def get_or_build(*args): return _tst.TST_get_or_build(*args)
-    def put(*args): return _tst.TST_put(*args)
+    def write2(*args): return _tst.TST_write2(*args)
+    def get2(*args): return _tst.TST_get2(*args)
+    def get_or_build2(*args): return _tst.TST_get_or_build2(*args)
+    def put2(*args): return _tst.TST_put2(*args)
     def __getitem__(*args): return _tst.TST___getitem__(*args)
     def __setitem__(*args): return _tst.TST___setitem__(*args)
     def __delitem__(*args): return _tst.TST___delitem__(*args)

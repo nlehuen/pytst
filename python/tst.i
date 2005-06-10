@@ -33,10 +33,11 @@
 #define __PYTHON__BUILD__
 %include "tst.h"
 
-%template(_MemoryStorage)  memory_storage<char,PyObject*>;
-%template(_TST)         tst<char,PyObject*,MemoryStorage>;
-%template(_Action)      action<char,PyObject*>;
-%template(_Filter)      filter<char,PyObject*>;
+%template(_MemoryStorage)  memory_storage<char,PythonReference>;
+%template(_TST)         tst<char,PythonReference,MemoryStorage>;
+%template(_Action)      action<char,PythonReference>;
+%template(_Filter)      filter<char,PythonReference>;
+%template(_Serializer)  serializer<char,PythonReference>;
 
 %include "pythonTST.h"
 

@@ -1,4 +1,8 @@
 if __name__=='__main__':
+    import sys
+    sys.path.append(r"C:\projets\development\tst-PythonReference\python")
+    sys.path.append(r"C:\projets\development\tst-PythonReference\python\Debug")
+
     from tst import *
     import unittest
 
