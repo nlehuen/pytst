@@ -36,8 +36,6 @@ except AttributeError:
 del types
 
 
-TST_VERSION = _tst.TST_VERSION
-UNDEFINED_INDEX = _tst.UNDEFINED_INDEX
 class TSTException(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, TSTException, name, value)
@@ -63,6 +61,9 @@ class TSTExceptionPtr(TSTException):
         if not hasattr(self,"thisown"): _swig_setattr(self, TSTException, 'thisown', 0)
         _swig_setattr(self, TSTException,self.__class__,TSTException)
 _tst.TSTException_swigregister(TSTExceptionPtr)
+cvar = _tst.cvar
+TST_VERSION = cvar.TST_VERSION
+UNDEFINED_INDEX = cvar.UNDEFINED_INDEX
 
 class _MemoryStorage(_object):
     __swig_setmethods__ = {}
@@ -81,7 +82,6 @@ class _MemoryStorage(_object):
 
     def get(*args): return _tst._MemoryStorage_get(*args)
     def store_data(*args): return _tst._MemoryStorage_store_data(*args)
-    def set(*args): return _tst._MemoryStorage_set(*args)
     def new_node(*args): return _tst._MemoryStorage_new_node(*args)
     def delete_node(*args): return _tst._MemoryStorage_delete_node(*args)
     def pack(*args): return _tst._MemoryStorage_pack(*args)
@@ -385,31 +385,6 @@ class ObjectSerializerPtr(ObjectSerializer):
         _swig_setattr(self, ObjectSerializer,self.__class__,ObjectSerializer)
 _tst.ObjectSerializer_swigregister(ObjectSerializerPtr)
 
-class MemoryStorage(_MemoryStorage):
-    __swig_setmethods__ = {}
-    for _s in [_MemoryStorage]: __swig_setmethods__.update(_s.__swig_setmethods__)
-    __setattr__ = lambda self, name, value: _swig_setattr(self, MemoryStorage, name, value)
-    __swig_getmethods__ = {}
-    for _s in [_MemoryStorage]: __swig_getmethods__.update(_s.__swig_getmethods__)
-    __getattr__ = lambda self, name: _swig_getattr(self, MemoryStorage, name)
-    def __repr__(self):
-        return "<%s.%s; proxy of C++ MemoryStorage instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
-    def __init__(self, *args):
-        _swig_setattr(self, MemoryStorage, 'this', _tst.new_MemoryStorage(*args))
-        _swig_setattr(self, MemoryStorage, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete_MemoryStorage):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-
-
-class MemoryStoragePtr(MemoryStorage):
-    def __init__(self, this):
-        _swig_setattr(self, MemoryStorage, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, MemoryStorage, 'thisown', 0)
-        _swig_setattr(self, MemoryStorage,self.__class__,MemoryStorage)
-_tst.MemoryStorage_swigregister(MemoryStoragePtr)
-
 class TST(_TST):
     __swig_setmethods__ = {}
     for _s in [_TST]: __swig_setmethods__.update(_s.__swig_setmethods__)
@@ -427,10 +402,10 @@ class TST(_TST):
             if self.thisown: destroy(self)
         except: pass
 
-    def write2(*args): return _tst.TST_write2(*args)
-    def get2(*args): return _tst.TST_get2(*args)
-    def get_or_build2(*args): return _tst.TST_get_or_build2(*args)
-    def put2(*args): return _tst.TST_put2(*args)
+    def write(*args): return _tst.TST_write(*args)
+    def get(*args): return _tst.TST_get(*args)
+    def get_or_build(*args): return _tst.TST_get_or_build(*args)
+    def put(*args): return _tst.TST_put(*args)
     def __getitem__(*args): return _tst.TST___getitem__(*args)
     def __setitem__(*args): return _tst.TST___setitem__(*args)
     def __delitem__(*args): return _tst.TST___delitem__(*args)

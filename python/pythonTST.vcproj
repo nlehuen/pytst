@@ -27,7 +27,8 @@
 				RuntimeLibrary="1"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="0"/>
+				UsePrecompiledHeader="0"
+				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -129,13 +130,10 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath=".\test\debug.py">
+			</File>
+			<File
 				RelativePath=".\setup.py">
-			</File>
-			<File
-				RelativePath=".\test\test_perf.py">
-			</File>
-			<File
-				RelativePath=".\test\test_tst3.py">
 			</File>
 			<File
 				RelativePath=".\tst.i">
@@ -143,8 +141,9 @@
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="E:\SWIG-1.3.24\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)"
-						AdditionalDependencies="..\tst.h;pythonTST.h"
+						CommandLine="E:\SWIG-1.3.24\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)
+"
+						AdditionalDependencies="..\include\tst.h;pythonTST.h"
 						Outputs="tst_wrap.cxx"/>
 				</FileConfiguration>
 				<FileConfiguration

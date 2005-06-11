@@ -19,12 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-#define TST_VERSION "0.90"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <malloc.h>
-#include <memory.h>
+const char* const TST_VERSION = "0.90";
 
 #include "debug.h"
 
@@ -33,8 +28,10 @@
     #define tst_malloc PyMem_Malloc
     #define tst_realloc PyMem_Realloc
     #define tst_free PyMem_Free
+    // Pour ajouter/supprimer les fonctions de scanning.
     #define SCANNER
 #else
+    #include "stdlib.h"
     #define tst_malloc malloc
     #define tst_realloc realloc
     #define tst_free free
@@ -42,7 +39,7 @@
     #define SCANNER
 #endif
 
-#define UNDEFINED_INDEX -1
+const int UNDEFINED_INDEX=-1;
 
 class TSTException {
 public:
@@ -55,6 +52,20 @@ public:
 
 template<class S,class T> class tst_node {
 public:
+    tst_node(T _data) :
+        c(0)
+        ,data(_data)
+        ,next(UNDEFINED_INDEX)
+        ,right(UNDEFINED_INDEX)
+        ,left(UNDEFINED_INDEX)
+#ifdef SCANNER
+        ,position(UNDEFINED_INDEX)
+        ,backtrack(UNDEFINED_INDEX)
+        ,backtrack_match_index(UNDEFINED_INDEX)
+#endif
+    {
+    }
+
     S c;
     T data;
     int next;
@@ -116,7 +127,7 @@ public:
         empty=UNDEFINED_INDEX;
     }
 
-    virtual ~memory_storage() {
+    ~memory_storage() {
         tst_free(array);
     }
 
@@ -128,9 +139,6 @@ public:
         T result = node->data;
         node->data = data;
         return result;
-    }
-
-    inline void set(int index,tst_node<S,T>* node) {
     }
 
     int new_node() {
@@ -263,7 +271,7 @@ public:
     tst(M* storage,FILE* file,serializer<S,T>* reader);
     tst(M* storage,T default_value);
 
-    virtual ~tst() {
+    ~tst() {
         delete storage;
     }
 
@@ -566,16 +574,7 @@ template<class S,class T,class M> T tst<S,T,M>::common_prefix(S* string,int stri
 template<class S,class T,class M> void tst<S,T,M>::create_node(node_info<S,T>* current_node_info) {
     int new_node_index = storage->new_node();
     tst_node<S,T>* new_node = storage->get(new_node_index);
-    new_node->c=0;
-    new_node->next=UNDEFINED_INDEX;
-    new_node->right=UNDEFINED_INDEX;
-    new_node->left=UNDEFINED_INDEX;
-#ifdef SCANNER
-    new_node->position=-1;
-    new_node->backtrack=UNDEFINED_INDEX;
-    new_node->backtrack_match_index=UNDEFINED_INDEX;
-#endif
-    storage->store_data(new_node,default_value);
+    new (new_node) tst_node<S,T>(default_value); // on initialize le noeud
 
     current_node_info->index = new_node_index;
     current_node_info->node = new_node;

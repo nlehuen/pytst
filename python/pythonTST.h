@@ -190,14 +190,8 @@ private:
     PythonReference dumps,loads;
 };
 
-class MemoryStorage : public memory_storage<char,PythonReference> {
-public:
-    MemoryStorage() : memory_storage<char,PythonReference>(16) {
-    }
 
-    MemoryStorage(int initial_size) : memory_storage<char,PythonReference>(initial_size) {
-    }
-};
+typedef memory_storage<char,PythonReference> MemoryStorage;
 
 class TST : public tst<char,PythonReference,MemoryStorage> {
 public:
@@ -212,7 +206,7 @@ public:
         tst<char,PythonReference,MemoryStorage>::read(PyFile_AsFile(file),&os);
     }
 
-    TST(int initial_size,PythonReference default_value) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(initial_size),default_value) {
+    TST(int initial_size,PyObject* default_value) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(initial_size),PythonReference(default_value)) {
     }
 
     TST(int initial_size) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(initial_size),PythonReference()) {
@@ -221,7 +215,7 @@ public:
     virtual ~TST() {
     }
 
-    PyObject* write2(PyObject* file) {
+    PyObject* write(PyObject* file) {
         if(!PyFile_Check(file)) {
             throw TSTException("Argument of write() must be a file object");
         }
@@ -231,26 +225,26 @@ public:
         return Py_None;
     }
 
-    inline PyObject* get2(char* string,int string_length) {
+    inline PyObject* get(char* string,int string_length) {
         return tst<char,PythonReference,MemoryStorage>::get(string,string_length).lend();
     }
 
-    inline PyObject* get_or_build2(char* string,int string_length,filter<char,PythonReference>* factory) {
+    inline PyObject* get_or_build(char* string,int string_length,filter<char,PythonReference>* factory) {
         return tst<char,PythonReference,MemoryStorage>::get_or_build(string,string_length,factory).lend();
     }
 
 
-    inline PyObject* put2(char* string,int string_length,PyObject* data) {
+    inline PyObject* put(char* string,int string_length,PyObject* data) {
         return tst<char,PythonReference,MemoryStorage>::put(string,string_length,PythonReference(data)).lend();
     }
 
     inline PyObject* __getitem__(char* string,int string_length) {
-        PyObject* result=get2(string,string_length);
+        PyObject* result=get(string,string_length);
         return result;
     }
 
     inline PyObject* __setitem__(char* string,int string_length,PyObject* data) {
-        PyObject* result=put2(string,string_length,data);
+        PyObject* result=put(string,string_length,data);
         return result;
     }
 

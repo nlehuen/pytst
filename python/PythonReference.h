@@ -2,17 +2,17 @@
 #define __PYTHONREFERENCE__
 class PythonReference {
 public:
-    explicit PythonReference();
-    explicit PythonReference(PyObject *object, int borrow=1);
-    PythonReference(const PythonReference& that);
+    inline explicit PythonReference();
+    inline explicit PythonReference(PyObject *object, int borrow=1);
+    inline PythonReference(const PythonReference& that);
 
-    PythonReference& operator= (const PythonReference& that);
-    int operator==(const PythonReference& that);
-    int operator!=(const PythonReference& that);
+    inline PythonReference& operator= (const PythonReference& that);
+    inline int operator==(const PythonReference& that);
+    inline int operator!=(const PythonReference& that);
 
-    PyObject* get();
-    PyObject* lend();
-    ~PythonReference();
+    inline PyObject* get();
+    inline PyObject* lend();
+    inline ~PythonReference();
 
 private:
     PyObject* ref;
