@@ -1,4 +1,5 @@
 from traceback import print_exc
+from random import shuffle
 
 if __name__=='__main__':
     try:
@@ -9,15 +10,33 @@ if __name__=='__main__':
         
         t = TST()
         
-        for i in xrange(1000):
+        r = range(10000)
+        
+        shuffle(r)
+
+        for i in r:
             t[str(i)] = i
         
-        for i in xrange(1000):
+        shuffle(r)
+        
+        for i in r:
             assert t[str(i)] == i
         
-        f = file("output.tst","wb")
-        t.write(f)
-        f.close()
+        print "asserts OK"
+        
+#         f = file("output.tst","wb")
+#         try:
+#             t.write(f)
+#         finally:
+#             f.close()
+#         print 'write OK'
+#         
+#         f = file("output.tst","rb")
+#         try:
+#             t2 = TST(f)
+#         finally:
+#             f.close()
+#         print 'read OK'
     except:
         print_exc()
         raw_input()

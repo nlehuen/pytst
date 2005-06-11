@@ -165,7 +165,7 @@ public:
     }
 
     virtual void write(FILE* file,PythonReference data) {
-        PythonReference call(Py_BuildValue("Oi",data.get,2),0);
+        PythonReference call(Py_BuildValue("Oi",data.get(),2),0);
         PythonReference result(PyObject_CallObject(dumps.get(),call.get()),0);
         char *string;
         int length;
@@ -216,7 +216,7 @@ public:
     }
 
     PyObject* write(PyObject* file) {
-        if(!PyFile_Check(file)) {
+        if(!PyFile_CheckExact(file)) {
             throw TSTException("Argument of write() must be a file object");
         }
         ObjectSerializer os;

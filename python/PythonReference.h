@@ -40,7 +40,7 @@ PythonReference& PythonReference::operator= (const PythonReference& that) {
     
     if((this->ref = that.ref) != old) {
         Py_INCREF(ref);
-        Py_XDECREF(old);
+        Py_DECREF(old);
     }
     
     return *this;
