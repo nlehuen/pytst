@@ -401,7 +401,12 @@ template<class S,class T,class M> T tst<S,T,M>::almost(S* string, int string_len
     *current_key='\0';
     almost_recurse(storage->get(root),current_key,0,string,0,string_length,string_length,maximum_distance,filter,to_perform,string_length+maximum_distance+1);
     tst_free(current_key);
-    return to_perform->result();
+    if(to_perform) {
+        return to_perform->result();
+    }
+    else {
+        return default_value;
+    }
 }
 
 template<class S,class T,class M> T tst<S,T,M>::walk(filter<S,T>* filter,action<S,T>* to_perform) {
@@ -409,7 +414,12 @@ template<class S,class T,class M> T tst<S,T,M>::walk(filter<S,T>* filter,action<
     *key='\0';
     walk_recurse(storage->get(root),key,0,maximum_key_length+1,filter,to_perform);
     tst_free(key);
-    return to_perform->result();
+    if(to_perform) {
+        return to_perform->result();
+    }
+    else {
+        return default_value;
+    }
 }
 
 template<class S,class T,class M> void tst<S,T,M>::walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) {
@@ -474,8 +484,10 @@ template<class S,class T,class M> void tst<S,T,M>::almost_recurse(tst_node<S,T>*
     if(data!=default_value) {
         diff2=(remaining_distance-abs(current_key_length-string_length))-diff;
         if(diff2>=0) {
-            data = filter->perform(current_key,current_key_length,diff2,data);
-            if(data!=default_value) {
+            if(filter) {
+                data = filter->perform(current_key,current_key_length,diff2,data);
+            }
+            if(data!=default_value && to_perform) {
                 to_perform->perform(current_key,current_key_length,diff2,data);
             }
         }

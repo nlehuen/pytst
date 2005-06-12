@@ -24,6 +24,9 @@ if __name__=='__main__':
         
         print "asserts OK"
         
+        t.walk(None,None)
+        print t.almost("1234",1,None,DictAction())
+        
 #         f = file("output.tst","wb")
 #         try:
 #             t.write(f)
