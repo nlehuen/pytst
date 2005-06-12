@@ -198,57 +198,41 @@ public:
     TST() : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(16),PythonReference()) {
     }
 
-    TST(PyObject* file) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(16),PythonReference()) {
-        if(!PyFile_Check(file)) {
+    TST(PythonReference file) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(16),PythonReference()) {
+        if(!PyFile_CheckExact(file.get())) {
             throw TSTException("Argument of constructor must be a file object");
         }
         ObjectSerializer os;
-        tst<char,PythonReference,MemoryStorage>::read(PyFile_AsFile(file),&os);
+        tst<char,PythonReference,MemoryStorage>::read(PyFile_AsFile(file.get()),&os);
     }
 
-    TST(int initial_size,PyObject* default_value) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(initial_size),PythonReference(default_value)) {
+    TST(int initial_size,PythonReference default_value) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(initial_size),default_value) {
     }
 
     TST(int initial_size) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(initial_size),PythonReference()) {
     }
 
-    virtual ~TST() {
+    ~TST() {
     }
 
-    PyObject* write(PyObject* file) {
-        if(!PyFile_CheckExact(file)) {
+    PythonReference write(PythonReference file) {
+        if(!PyFile_CheckExact(file.get())) {
             throw TSTException("Argument of write() must be a file object");
         }
         ObjectSerializer os;
-        tst<char,PythonReference,MemoryStorage>::write(PyFile_AsFile(file),&os);
-        // Should we INCREF here ?
-        return Py_None;
+        tst<char,PythonReference,MemoryStorage>::write(PyFile_AsFile(file.get()),&os);
+        return PythonReference();
     }
 
-    inline PyObject* get(char* string,int string_length) {
-        return tst<char,PythonReference,MemoryStorage>::get(string,string_length).lend();
+    PythonReference __getitem__(char* string,int string_length) {
+        return get(string,string_length);
     }
 
-    inline PyObject* get_or_build(char* string,int string_length,filter<char,PythonReference>* factory) {
-        return tst<char,PythonReference,MemoryStorage>::get_or_build(string,string_length,factory).lend();
+    PythonReference __setitem__(char* string,int string_length,PythonReference data) {
+        return put(string,string_length,data);
     }
 
-
-    inline PyObject* put(char* string,int string_length,PyObject* data) {
-        return tst<char,PythonReference,MemoryStorage>::put(string,string_length,PythonReference(data)).lend();
-    }
-
-    inline PyObject* __getitem__(char* string,int string_length) {
-        PyObject* result=get(string,string_length);
-        return result;
-    }
-
-    inline PyObject* __setitem__(char* string,int string_length,PyObject* data) {
-        PyObject* result=put(string,string_length,data);
-        return result;
-    }
-
-    inline void __delitem__(char* string,int string_length) {
+    void __delitem__(char* string,int string_length) {
         remove(string,string_length);
     }
 };

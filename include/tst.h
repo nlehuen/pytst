@@ -23,6 +23,8 @@ const char* const TST_VERSION = "0.90";
 
 #include "debug.h"
 
+#include <new>
+
 #ifdef __PYTHON__BUILD__
     #include "Python.h"
     #define tst_malloc PyMem_Malloc
@@ -128,6 +130,9 @@ public:
     }
 
     ~memory_storage() {
+        for(int i=0;i<next;i++) {
+            (array+i)->~tst_node<S,T>();
+        }
         tst_free(array);
     }
 

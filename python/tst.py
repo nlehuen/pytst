@@ -65,36 +65,6 @@ cvar = _tst.cvar
 TST_VERSION = cvar.TST_VERSION
 UNDEFINED_INDEX = cvar.UNDEFINED_INDEX
 
-class _MemoryStorage(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, _MemoryStorage, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, _MemoryStorage, name)
-    def __repr__(self):
-        return "<%s.%s; proxy of C++ memory_storage<char,PythonReference > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
-    def __init__(self, *args):
-        _swig_setattr(self, _MemoryStorage, 'this', _tst.new__MemoryStorage(*args))
-        _swig_setattr(self, _MemoryStorage, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete__MemoryStorage):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-
-    def get(*args): return _tst._MemoryStorage_get(*args)
-    def store_data(*args): return _tst._MemoryStorage_store_data(*args)
-    def new_node(*args): return _tst._MemoryStorage_new_node(*args)
-    def delete_node(*args): return _tst._MemoryStorage_delete_node(*args)
-    def pack(*args): return _tst._MemoryStorage_pack(*args)
-    def read(*args): return _tst._MemoryStorage_read(*args)
-    def write(*args): return _tst._MemoryStorage_write(*args)
-
-class _MemoryStoragePtr(_MemoryStorage):
-    def __init__(self, this):
-        _swig_setattr(self, _MemoryStorage, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, _MemoryStorage, 'thisown', 0)
-        _swig_setattr(self, _MemoryStorage,self.__class__,_MemoryStorage)
-_tst._MemoryStorage_swigregister(_MemoryStoragePtr)
-
 class _TST(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, _TST, name, value)
@@ -403,9 +373,6 @@ class TST(_TST):
         except: pass
 
     def write(*args): return _tst.TST_write(*args)
-    def get(*args): return _tst.TST_get(*args)
-    def get_or_build(*args): return _tst.TST_get_or_build(*args)
-    def put(*args): return _tst.TST_put(*args)
     def __getitem__(*args): return _tst.TST___getitem__(*args)
     def __setitem__(*args): return _tst.TST___setitem__(*args)
     def __delitem__(*args): return _tst.TST___delitem__(*args)
