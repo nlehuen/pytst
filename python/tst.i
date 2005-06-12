@@ -21,19 +21,12 @@
 %apply (char *STRING, int LENGTH) { (char *string, int string_length) };
 %apply (char *STRING, int LENGTH) { (char *stop_chars, int stop_chars_length) };
 
-
 %typemap(in) PythonReference {
    $1 = PythonReference($input);
 }
-
 %typemap(out) PythonReference {
    $result = $1.lend();
 }
-
-
-%{
-#include "pythonTST.h"
-%}
 
 %exception {
     try { $action }
@@ -50,3 +43,6 @@
 
 %include "pythonTST.h"
 
+%{
+#include "pythonTST.h"
+%}

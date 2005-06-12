@@ -1371,9 +1371,6 @@ static swig_type_info *swig_types[22];
 
 #define SWIG_name    "_tst"
 
-#include "pythonTST.h"
-
-
 SWIGINTERN PyObject *
 SWIG_FromCharPtr(const char* cptr)
 { 
@@ -1543,6 +1540,9 @@ SWIG_Check_int(PyObject* obj)
 {
   return SWIG_AsVal_int(obj, (int*)0);
 }
+
+
+#include "pythonTST.h"
 
 #ifdef __cplusplus
 extern "C" {

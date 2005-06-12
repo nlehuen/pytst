@@ -19,6 +19,7 @@
 #define __PYTHON__BUILD__
 
 #include "tst.h"
+#include "Python.h"
 #include "PythonReference.h"
 
 class CallableAction : public action<char,PythonReference> {
