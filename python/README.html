@@ -3,10 +3,10 @@
 <head>
   <meta content="text/html; charset=ISO-8859-1"
  http-equiv="content-type">
-  <title>pytst 0.51 README</title>
+  <title>pytst 0.90 README</title>
 </head>
 <body>
-<h1>pytst 0.51 README</h1>
+<h1>pytst 0.90 README</h1>
 <p>&copy; Nicolas Lehuen
 2004-2005<br>
 This work is released under the LGPL
@@ -86,7 +86,8 @@ so that I can add it to this list ! Even better, we could add the
 binaries to the downloads directory.<br>
 <h2>Running the tests</h2>
 Well, for now, the test are really crappy. I only have one script using
-unittest, the other ones don't say anything&nbsp; about the test
+<span style="font-family: monospace;">unittest</span>, the other ones
+don't say anything&nbsp; about the test
 passing or failing. So for now, forget about running the test and go
 straight to the...<br>
 <h2>Ternary Search Tree crash
@@ -170,7 +171,7 @@ is the object associated to the key in the TST. If the first item is a
 substring from the scanned string, the second item is the substring
 length with a negative sign, and the third item is None. Typically, the
 result object can be used like this :<br>
-<pre><br>&gt;&gt;&gt; import sys<br>&gt;&gt;&gt; for matched_string, matched_length, matched_object in result:<br>... if matched_length&gt;0:<br>... sys.stdout.write(matched_object)<br>... else:<br>... sys.stdout.write(print matched_string)<br>... else:<br>... print<br>token 2token 278910token 15<br><br></pre>
+<pre><br>&gt;&gt;&gt; import sys<br>&gt;&gt;&gt; for matched_string, matched_length, matched_object in result:<br>... 	if matched_length&gt;0:<br>... 		sys.stdout.write(matched_object)<br>... 	else:<br>... 		sys.stdout.write(print matched_string)<br>... else:<br>... 	print<br>token 2token 278910token 15<br><br></pre>
 Here you are, you have built a transcriber that could handle millions
 of transcribing rules very efficiently.&nbsp; Well, that's not
 totally
@@ -192,12 +193,12 @@ The second one
 is called at the end of the scan, without any arguments. Its return
 value is returned by the <span style="font-family: monospace;">scan</span>
 method, which allows you to write shortcuts like :<br>
-<pre>&gt;&gt;&gt; class Counter(object):<br>... def __init__(self):<br>... self.counter = 0 <br>... def hit(self,key,length,obj):<br>... &nbsp;&nbsp;&nbsp; if length&gt;0:<br>...&nbsp;&nbsp;&nbsp;&nbsp; self.counter += 1<br>... def result(self):<br>... return 'I found %i hits'%self.counter<br>...<br>&gt;&gt;&gt; c = Counter()<br>&gt;&gt;&gt; print t.scan('1234561234567891012345',tst.CallableAction(c.hit,c.result))<br>I found 3 hits<br></pre>
+<pre>&gt;&gt;&gt; class Counter(object):<br>... 	def __init__(self):<br>... 		self.counter = 0 <br>... 	def hit(self,key,length,obj):<br>... &nbsp;&nbsp;&nbsp; 	if length&gt;0:<br>...&nbsp;&nbsp;&nbsp;&nbsp; 		self.counter += 1<br>... 	def result(self):<br>... 		return 'I found %i hits'%self.counter<br>...<br>&gt;&gt;&gt; c = Counter()<br>&gt;&gt;&gt; print t.scan('1234561234567891012345',tst.CallableAction(c.hit,c.result))<br>I found 3 hits<br></pre>
 You can even subclass <span style="font-family: monospace;">tcc.CallableAction</span>
 for more compacity. For example, you could reimplement <span
  style="font-family: monospace;">TupleListAction</span>
 like this :<br>
-<pre>&gt;&gt;&gt; class MyTupleListAction(tst.CallableAction):<br>... def __init__(self):<br>... tst.CallableAction.__init__(self,self.callback,self.result)<br>... self.list = []<br>... def callback(self,key,length,obj):<br>... self.list.append((key,length,obj))<br>... def result(self):<br>... return self.list<br>...<br>&gt;&gt;&gt; print t.scan('1234561234567891012345',MyTupleListAction())<br>[('123456', 6, 'token 2'), ('123456', 6, 'token 2'), ('78910', -5, None), ('1234', 4, 'token 1'), ('5', -1, None)]<br></pre>
+<pre>&gt;&gt;&gt; class MyTupleListAction(tst.CallableAction):<br>... 	def __init__(self):<br>... 		tst.CallableAction.__init__(self,self.callback,self.result)<br>... 		self.list = []<br>... 	def callback(self,key,length,obj):<br>... 		self.list.append((key,length,obj))<br>... 	def result(self):<br>... 		return self.list<br>...<br>&gt;&gt;&gt; print t.scan('1234561234567891012345',MyTupleListAction())<br>[('123456', 6, 'token 2'), ('123456', 6, 'token 2'), ('78910', -5, None), ('1234', 4, 'token 1'), ('5', -1, None)]<br></pre>
 Of course this version is less efficient than the original <span
  style="font-family: monospace;">tst.TupleListAction</span>
 which saves
