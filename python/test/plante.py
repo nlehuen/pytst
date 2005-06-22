@@ -1,4 +1,4 @@
-# -*- coding: CP1252 -*-
+# -*- coding: iso-8859-1 -*-
 from tcc import tst
 import sys
 
