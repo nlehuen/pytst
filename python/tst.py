@@ -90,6 +90,7 @@ class _TST(_object):
     def remove(*args): return _tst._TST_remove(*args)
     def get_maximum_key_length(*args): return _tst._TST_get_maximum_key_length(*args)
     def write(*args): return _tst._TST_write(*args)
+    def read(*args): return _tst._TST_read(*args)
     def scan(*args): return _tst._TST_scan(*args)
     def scan_with_stop_chars(*args): return _tst._TST_scan_with_stop_chars(*args)
 
@@ -144,29 +145,6 @@ class _FilterPtr(_Filter):
         if not hasattr(self,"thisown"): _swig_setattr(self, _Filter, 'thisown', 0)
         _swig_setattr(self, _Filter,self.__class__,_Filter)
 _tst._Filter_swigregister(_FilterPtr)
-
-class _Serializer(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, _Serializer, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, _Serializer, name)
-    def __init__(self): raise RuntimeError, "No constructor defined"
-    def __repr__(self):
-        return "<%s.%s; proxy of C++ serializer<char,PythonReference > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
-    def __del__(self, destroy=_tst.delete__Serializer):
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-
-    def write(*args): return _tst._Serializer_write(*args)
-    def read(*args): return _tst._Serializer_read(*args)
-
-class _SerializerPtr(_Serializer):
-    def __init__(self, this):
-        _swig_setattr(self, _Serializer, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, _Serializer, 'thisown', 0)
-        _swig_setattr(self, _Serializer,self.__class__,_Serializer)
-_tst._Serializer_swigregister(_SerializerPtr)
 
 class CallableAction(_Action):
     __swig_setmethods__ = {}
@@ -328,25 +306,23 @@ class TupleListActionPtr(TupleListAction):
         _swig_setattr(self, TupleListAction,self.__class__,TupleListAction)
 _tst.TupleListAction_swigregister(TupleListActionPtr)
 
-class ObjectSerializer(_Serializer):
+class ObjectSerializer(_object):
     __swig_setmethods__ = {}
-    for _s in [_Serializer]: __swig_setmethods__.update(_s.__swig_setmethods__)
     __setattr__ = lambda self, name, value: _swig_setattr(self, ObjectSerializer, name, value)
     __swig_getmethods__ = {}
-    for _s in [_Serializer]: __swig_getmethods__.update(_s.__swig_getmethods__)
     __getattr__ = lambda self, name: _swig_getattr(self, ObjectSerializer, name)
     def __repr__(self):
         return "<%s.%s; proxy of C++ ObjectSerializer instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
     def __init__(self, *args):
         _swig_setattr(self, ObjectSerializer, 'this', _tst.new_ObjectSerializer(*args))
         _swig_setattr(self, ObjectSerializer, 'thisown', 1)
+    def write(*args): return _tst.ObjectSerializer_write(*args)
+    def read(*args): return _tst.ObjectSerializer_read(*args)
     def __del__(self, destroy=_tst.delete_ObjectSerializer):
         try:
             if self.thisown: destroy(self)
         except: pass
 
-    def write(*args): return _tst.ObjectSerializer_write(*args)
-    def read(*args): return _tst.ObjectSerializer_read(*args)
 
 class ObjectSerializerPtr(ObjectSerializer):
     def __init__(self, this):
@@ -373,6 +349,7 @@ class TST(_TST):
         except: pass
 
     def write(*args): return _tst.TST_write(*args)
+    def read(*args): return _tst.TST_read(*args)
     def __getitem__(*args): return _tst.TST___getitem__(*args)
     def __setitem__(*args): return _tst.TST___setitem__(*args)
     def __delitem__(*args): return _tst.TST___delitem__(*args)

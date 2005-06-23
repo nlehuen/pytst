@@ -27,19 +27,20 @@ if __name__=='__main__':
         t.walk(None,None)
         print t.almost("1234",1,None,DictAction())
         
-#         f = file("output.tst","wb")
-#         try:
-#             t.write(f)
-#         finally:
-#             f.close()
-#         print 'write OK'
-#         
-#         f = file("output.tst","rb")
-#         try:
-#             t2 = TST(f)
-#         finally:
-#             f.close()
-#         print 'read OK'
+        f = file(r"c:\temp\output.tst","wb")
+        try:
+            t.write(f)
+        finally:
+            f.close()
+        print 'write OK'
+        
+        f = file("c:\temp\output.tst","rb")
+        try:
+            t2 = TST()
+            t2.read(f)
+        finally:
+            f.close()
+        print 'read OK'
     except:
         print_exc()
         raw_input()

@@ -153,87 +153,87 @@ private:
     PythonReference list;
 };
 
-class ObjectSerializer : public serializer<char,PythonReference> {
+class ObjectSerializer {
 public:
-    ObjectSerializer() {
-        PythonReference name(PyString_FromString("cPickle"),0);
-        PythonReference cPickle(PyImport_Import(name.get()),0);
-        dumps = PythonReference(PyObject_GetAttrString(cPickle.get(),"dumps"),0);
-        loads = PythonReference(PyObject_GetAttrString(cPickle.get(),"loads"),0);
-    }
-
-    virtual ~ObjectSerializer() {
-    }
-
-    virtual void write(FILE* file,PythonReference data) {
-        PythonReference call(Py_BuildValue("Oi",data.get(),2),0);
-        PythonReference result(PyObject_CallObject(dumps.get(),call.get()),0);
-        char *string;
-        int length;
-        PyString_AsStringAndSize(result.get(),&string,&length);
-        fwrite(&length,sizeof(int),1,file);
-        fwrite(string,sizeof(char),length,file);
-    }
-
-    virtual PythonReference read(FILE* file) {
-        int length;
-        fread(&length,sizeof(int),1,file);
-        char* string=(char*)malloc(length);
-        fread(string,sizeof(char),length,file);
-        PythonReference dumped(PyString_FromStringAndSize(string,length),0);
-        PythonReference call(Py_BuildValue("(O)",dumped.get()),0);
-        PythonReference result(PyObject_CallObject(loads.get(),call.get()),0);
-        free(string);
-        return result;
-    }
+    ObjectSerializer();
+    
+    void write(FILE* file,PythonReference data);
+    PythonReference ObjectSerializer::read(FILE* file);
 
 private:
     PythonReference dumps,loads;
 };
 
+ObjectSerializer::ObjectSerializer() {
+    PythonReference name(PyString_FromString("pickle"),0);
+    PythonReference cPickle(PyImport_Import(name.get()),0);
+    dumps = PythonReference(PyObject_GetAttrString(cPickle.get(),"dumps"),0);
+    loads = PythonReference(PyObject_GetAttrString(cPickle.get(),"loads"),0);
+}
 
-typedef memory_storage<char,PythonReference> MemoryStorage;
+void ObjectSerializer::write(FILE* file,PythonReference data) {
+    PythonReference call(Py_BuildValue("Oi",data.get(),2),0);
+    PythonReference result(PyObject_CallObject(dumps.get(),call.get()),0);
+    char *string;
+    int length;
+    PyString_AsStringAndSize(result.get(),&string,&length);
+    fwrite(&length,sizeof(int),1,file);
+    fwrite(string,sizeof(char),length,file);
+}
+
+PythonReference ObjectSerializer::read(FILE* file) {
+    int length;
+    fread(&length,sizeof(int),1,file);
+    char* string=(char*)malloc(length);
+    fread(string,sizeof(char),length,file);
+    PythonReference dumped(PyString_FromStringAndSize(string,length),0);
+    PythonReference call(Py_BuildValue("(O)",dumped.get()),0);
+    PythonReference result(PyObject_CallObject(loads.get(),call.get()),0);
+    free(string);
+    return result;
+}
+
+
+typedef memory_storage<char,PythonReference,ObjectSerializer> MemoryStorage;
 
 class TST : public tst<char,PythonReference,MemoryStorage> {
 public:
     TST() : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(16),PythonReference()) {
     }
 
-    TST(PythonReference file) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(16),PythonReference()) {
-        if(!PyFile_CheckExact(file.get())) {
-            throw TSTException("Argument of constructor must be a file object");
-        }
-        ObjectSerializer os;
-        tst<char,PythonReference,MemoryStorage>::read(PyFile_AsFile(file.get()),&os);
+    virtual ~TST() {
     }
 
-    TST(int initial_size,PythonReference default_value) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(initial_size),default_value) {
-    }
-
-    TST(int initial_size) : tst<char,PythonReference,MemoryStorage>(new MemoryStorage(initial_size),PythonReference()) {
-    }
-
-    ~TST() {
-    }
-
-    PythonReference write(PythonReference file) {
+    virtual PythonReference write(PythonReference file) {
         if(!PyFile_CheckExact(file.get())) {
             throw TSTException("Argument of write() must be a file object");
         }
-        ObjectSerializer os;
-        tst<char,PythonReference,MemoryStorage>::write(PyFile_AsFile(file.get()),&os);
+        this->write(PyFile_AsFile(file.get()));
         return PythonReference();
     }
 
-    PythonReference __getitem__(char* string,int string_length) {
+    virtual PythonReference read(PythonReference file) {
+        if(!PyFile_CheckExact(file.get())) {
+            throw TSTException("Argument of write() must be a file object");
+        }
+        set_storage(new MemoryStorage(16));
+        this->read(PyFile_AsFile(file.get()));
+        return PythonReference();
+    }
+
+    virtual PythonReference __getitem__(char* string,int string_length) {
         return get(string,string_length);
     }
 
-    PythonReference __setitem__(char* string,int string_length,PythonReference data) {
+    virtual PythonReference __setitem__(char* string,int string_length,PythonReference data) {
         return put(string,string_length,data);
     }
 
-    void __delitem__(char* string,int string_length) {
+    virtual void __delitem__(char* string,int string_length) {
         remove(string,string_length);
     }
+
+protected:
+    using tst<char,PythonReference,MemoryStorage>::write;
+    using tst<char,PythonReference,MemoryStorage>::read;
 };

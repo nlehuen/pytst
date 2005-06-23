@@ -39,7 +39,6 @@
 %template(_TST)         tst<char,PythonReference,MemoryStorage>;
 %template(_Action)      action<char,PythonReference>;
 %template(_Filter)      filter<char,PythonReference>;
-%template(_Serializer)  serializer<char,PythonReference>;
 
 %include "pythonTST.h"
 

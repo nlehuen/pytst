@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "0.90";
+const char* const TST_VERSION = "0.91";
 
 #include "debug.h"
 
@@ -107,15 +107,7 @@ public:
     virtual T perform(S* string,int string_length,int remaining_distance,T data)=0;
 };
 
-template<class S,class T> class serializer {
-public:
-    serializer() {}
-    virtual ~serializer() {}
-    virtual void write(FILE* file,T data)=0;
-    virtual T read(FILE* file)=0;
-};
-
-template<class S,class T> class memory_storage {
+template<class S,class T,class RW> class memory_storage {
 public:
     memory_storage(int initial_size) {
         size=initial_size;
@@ -199,13 +191,12 @@ public:
         }
     }    
 
-    void read(FILE* file,serializer<S,T>* reader,int* root,int* maximum_key_length,T* default_value) {
+    void read(FILE* file,int* root,int* maximum_key_length,T* default_value) {
         // We check the version number
         fread(&size,sizeof(size_t),1,file);
-        char* version=(char*)tst_malloc(size+1);
-        version[size]='\0';
+        char* version=(char*)tst_malloc(size);
         fread(version,sizeof(char),size,file);
-        if(strcmp(TST_VERSION,version)!=0) {
+        if(strncmp(TST_VERSION,version,strlen(TST_VERSION))!=0) {
             tst_free(version);
             throw TSTException("Invalid version number");
         }
@@ -213,54 +204,74 @@ public:
             tst_free(version);
         }
 
-        fread(&size,sizeof(int),1,file);
-        next=size;
-        fread(root,sizeof(int),1,file);
+        RW reader;
         fread(maximum_key_length,sizeof(int),1,file);
-        *default_value = reader->read(file);
-        array=(tst_node<S,T>*)tst_malloc(size*sizeof(tst_node<S,T>));
-        for(int i=0;i<size;i++) {
-            tst_node<S,T>* node=array+i;
+        *default_value = reader.read(file);
+        *root = read(file,&reader,default_value);
+    }
 
-            node->c=fgetc(file);
-            fread(&(node->left),sizeof(int),1,file);
-            fread(&(node->next),sizeof(int),1,file);
-            fread(&(node->right),sizeof(int),1,file);
-
-            int has_data=fgetc(file);
-            if(has_data) {
+    int read(FILE* file,RW* reader,T* default_value) {
+        if(fgetc(file)) {
+            int index = new_node();
+            tst_node<S,T>* node = get(index);
+            node->c = fgetc(file);
+            if(fgetc(file)) {
                 store_data(node,reader->read(file));
             }
             else {
                 store_data(node,*default_value);
             }
+#ifdef SCANNER
+            fread(&(node->position),sizeof(int),1,file);
+            fread(&(node->backtrack),sizeof(int),1,file);
+            fread(&(node->backtrack_match_index),sizeof(int),1,file);
+#endif
+            node->next = read(file,reader,default_value);
+            node->left = read(file,reader,default_value);
+            node->right = read(file,reader,default_value);
+
+            return index;
+        }
+        else {
+            return UNDEFINED_INDEX;
         }
     }
 
-    void write(FILE* file,serializer<S,T>* writer,int root,int maximum_key_length,T default_value) {
+    void write(FILE* file,int root,int maximum_key_length,T* default_value) {
         // We save the version number
         size_t version_length = strlen(TST_VERSION);
         fwrite(&version_length,sizeof(size_t),1,file);
         fwrite(TST_VERSION,sizeof(char),version_length,file);
 
-        fwrite(&next,sizeof(int),1,file);
-        fwrite(&root,sizeof(int),1,file);
         fwrite(&maximum_key_length,sizeof(int),1,file);
-        writer->write(file,default_value);
-        for(int i=0;i<next;i++) {
-            tst_node<S,T>* node=array+i;
+        RW writer;
+        writer.write(file,*default_value);
+        write(file,&writer,root,default_value);
+    }
+
+    void write(FILE* file,RW* writer,int index,T* default_value) {
+        if(index==UNDEFINED_INDEX) {
+            fputc(0,file);
+        }
+        else {
+            tst_node<S,T>* node = get(index);
+            fputc(1,file);
             fputc(node->c,file);
-            fwrite(&(node->left),sizeof(int),1,file);
-            fwrite(&(node->next),sizeof(int),1,file);
-            fwrite(&(node->right),sizeof(int),1,file);
-            T data=node->data;
-            if(data!=default_value) {
+            if(node->data!=*default_value) {
                 fputc('\1',file);
-                writer->write(file,data);
+                writer->write(file,node->data);
             }
             else {
                 fputc('\0',file);
             }
+#ifdef SCANNER
+            fwrite(&(node->position),sizeof(int),1,file);
+            fwrite(&(node->backtrack),sizeof(int),1,file);
+            fwrite(&(node->backtrack_match_index),sizeof(int),1,file);
+#endif
+            write(file,writer,node->next,default_value);
+            write(file,writer,node->left,default_value);
+            write(file,writer,node->right,default_value);
         }
     }
 
@@ -273,37 +284,42 @@ protected:
 
 template<class S,class T,class M> class tst {
 public:
-    tst(M* storage,FILE* file,serializer<S,T>* reader);
     tst(M* storage,T default_value);
 
-    ~tst() {
+    virtual ~tst() {
         delete storage;
     }
 
-    void pack();
-    T walk(filter<S,T>* filter,action<S,T>* to_perform);
-    T almost(S* string,int string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform);
-    T common_prefix(S* string,int string_length,filter<S,T>* filter,action<S,T>* to_perform);
+    virtual void pack();
+    virtual T walk(filter<S,T>* filter,action<S,T>* to_perform);
+    virtual T almost(S* string,int string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform);
+    virtual T common_prefix(S* string,int string_length,filter<S,T>* filter,action<S,T>* to_perform);
 
-    T get(S* string,int string_length);
-    T get_or_build(S* string,int string_length,filter<S,T>* factory);
-    T put(S* string,int string_length,T data);
-    void remove(S* string,int string_length);
-    int get_maximum_key_length();
-    void write(FILE* file,serializer<S,T>* writer);
+    virtual T get(S* string,int string_length);
+    virtual T get_or_build(S* string,int string_length,filter<S,T>* factory);
+    virtual T put(S* string,int string_length,T data);
+    virtual void remove(S* string,int string_length);
+    virtual int get_maximum_key_length();
+    virtual void write(FILE* file);
+    virtual void read(FILE* file);
 
 #ifdef SCANNER
-    T scan(S* string,int string_length,action<S,T>* to_perform);
-    T scan_with_stop_chars(S* string,int string_length,S* stop_chars,int stop_chars_length,action<S,T>* to_perform);
+    virtual T scan(S* string,int string_length,action<S,T>* to_perform);
+    virtual T scan_with_stop_chars(S* string,int string_length,S* stop_chars,int stop_chars_length,action<S,T>* to_perform);
 #endif
 
 protected:
+    void set_storage(M* new_storage) {
+        delete storage;
+        storage = new_storage;
+    }
+
+private:
     M* storage;
     T default_value;
     int root,maximum_key_length;
 
     tst();
-    void read(FILE* file,serializer<S,T>* serializer);
 
     void walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform);
     void almost_recurse(tst_node<S,T>* current_node,S* current_key, int current_key_length, S* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,int current_key_limit);
@@ -337,17 +353,12 @@ template<class S,class T,class M> tst<S,T,M>::tst(M* storage,T default_value) {
 template<class S,class T,class M> tst<S,T,M>::tst() {
 }
 
-template<class S,class T,class M> tst<S,T,M>::tst(M* storage,FILE* file, serializer<S,T>* reader) {
-    this->storage=storage;
-    read(file,reader);
+template<class S,class T,class M> void tst<S,T,M>::read(FILE* file) {
+    storage->read(file,&root,&maximum_key_length,&default_value);
 }
 
-template<class S,class T,class M> void tst<S,T,M>::read(FILE* file, serializer<S,T>* reader) {
-    storage->read(file,reader,&root,&maximum_key_length,&default_value);
-}
-
-template<class S,class T,class M> void tst<S,T,M>::write(FILE* file, serializer<S,T>* writer) {
-    storage->write(file,writer,root,maximum_key_length,default_value);
+template<class S,class T,class M> void tst<S,T,M>::write(FILE* file) {
+    storage->write(file,root,maximum_key_length,&default_value);
 }
 
 template<class S,class T,class M> void tst<S,T,M>::pack() {
