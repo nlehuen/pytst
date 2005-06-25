@@ -22,20 +22,32 @@
 #include "tst.h"
 #include <time.h>
 
-class stringserializer : public serializer<char,char*> {
-    virtual void write(FILE* file,char* data) {
-        size_t len=strlen(data);
-        fwrite(&len,sizeof(int),1,file);
-        fwrite(data,sizeof(char),len,file);
+class stringserializer {
+public:
+    void write(FILE* file,char* data) {
+        if(data) {
+            size_t len=strlen(data);
+            fwrite(&len,sizeof(int),1,file);
+            fwrite(data,sizeof(char),len,file);
+        }
+        else {
+            size_t len=0;
+            fwrite(&len,sizeof(int),1,file);
+        }
     }
 
-    virtual char* read(FILE* file) {
+    char* read(FILE* file) {
         size_t len;
         fread(&len,sizeof(size_t),1,file);
-        char* data=(char*)tst_malloc((len+1)*sizeof(char));
-        fread(data,sizeof(char),len,file);
-        data[len]='\0';
-        return data;
+        if(len>0) {
+            char* data=(char*)tst_malloc((len+1)*sizeof(char));
+            fread(data,sizeof(char),len,file);
+            data[len]='\0';
+            return data;
+        }
+        else {
+            return NULL;
+        }
     }
 };
 
@@ -53,30 +65,7 @@ class printer : public donothing {
 };
 
 typedef memory_storage<char,char*> memory_storage_char_string;
-
-class stringtst : public tst<char,char*,memory_storage_char_string> {
-    public:
-        stringtst() : tst<char,char*,memory_storage_char_string>(new memory_storage_char_string(1600),NULL) {
-        }
-
-        stringtst(FILE* file) : tst<char,char*,memory_storage_char_string>() {
-            stringserializer* s=new stringserializer();
-            read(file,s);
-            delete s;
-        }
-
-    protected:
-       virtual void store_data(tst_node<char,char*>* node,char* data);
-};
-
-void stringtst::store_data(tst_node<char,char*>* node,char* data) {
-            // printf("sd %x %x %x %s\n",(int)node,(int)node->data,node->c,data);
-            if(node->data) {
-                // printf("freeing %x\n",(int)node->data);
-                tst_free(node->data);
-            }
-            node->data=data;
-        }
+typedef tst<char,char*,memory_storage_char_string,stringserializer> stringtst;
 
 class tester : public donothing {
     public:
@@ -95,25 +84,20 @@ class tester : public donothing {
         stringtst* mytst;
 };
 
-#define ITERATIONS 4000000
+#define ITERATIONS 10000
 
-int main2(int argc,char** argv) {
-    stringtst* linetst=new stringtst();
+int main(int argc,char** argv) {
+    memory_storage_char_string* storage = new memory_storage_char_string(8);
+    stringtst* linetst=new stringtst(storage,NULL);
 
     clock_t start, end;
     double elapsed;
-
-
 
     start = clock();
     for(int i=0;i<ITERATIONS;i++) {
         char* line=(char*)malloc(10);
         sprintf(line,"%d\0",i);
         free(line);
-
-
-
-
     }
     end = clock();
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -121,7 +105,6 @@ int main2(int argc,char** argv) {
 
     start = clock();
     for(int i=0;i<ITERATIONS;i++) {
-//    for(int i=ITERATIONS-1;i>=0;i--) {
         char* line=(char*)malloc(10);
         sprintf(line,"%d\0",i);
         linetst->put(line,strlen(line),line);
@@ -133,82 +116,37 @@ int main2(int argc,char** argv) {
 
     linetst->pack();
 
-    /*printer p;
-    linetst->walk(NULL,&p);
-    char line[256];    
-    printf("OK...");
-    getchar();*/
-
     start = clock();
     for(int i=ITERATIONS-1;i>=0;i--) {
-//    for(int i=0;i<ITERATIONS;i++) {
         char line[256];
         sprintf(line,"%d\0",i);
-        // printf("%s\n",line);
         char *result=linetst->get(line,strlen(line));
         assert(result);
         assert(strcmp(line,result)==0);
     }
-
-
     end = clock();
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Read : %f\n",elapsed);
 
-
-    return 0;
-}
-
-typedef memory_storage<char,int> memory_storage_char_int;
-
-int main(int argc,char **argv) {
-    tst<char,int,memory_storage_char_int> md5tst(new memory_storage_char_int(256),0L);
-    clock_t start, end;
-    double elapsed;
-    FILE* input;
-    int lines;
-
     start = clock();
-    lines = 0;
-    input = fopen("url-list.txt","r");
-    while(true) {
-        char line[256];
-        if(fscanf(input,"%s\n",line)<=0) {
-            break;
-        }
-        md5tst.put(line,strlen(line),1L);
-        if(lines++%1000==0) {
-            printf("%d\n",lines);
-        }
-        if(lines==100000) {
-            break;
-        }
-    }
-    fclose(input);
-    end=clock();
+    FILE* output=fopen("test.dump","wb");
+    linetst->write(output);
+    fclose(output);
+    end = clock();
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("Load : %f\n",elapsed);
+    printf("Wrote to disk : %f\n",elapsed);
 
+    memory_storage_char_string* storage2 = new memory_storage_char_string(1);
+    stringtst* linetst2=new stringtst(storage2,NULL);
     start = clock();
-    input = fopen("url-list.txt","r");
-    lines=0;
-    while(true) {
-        char line[256];
-        if(fscanf(input,"%s\n",line)<=0) {
-            break;
-        }
-        if(md5tst.get(line,strlen(line))!=1L) {
-            printf("Bummer ! %d %s\n",lines++,line);
-            return 1;
-        }
-        if(lines==100000) {
-            break;
-        }
-    }
+    FILE* input=fopen("test.dump","rb");
+    linetst2->read(input);
     fclose(input);
-    end=clock();
+    end = clock();
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("Read : %f\n",elapsed);
+    printf("Read from disk : %f\n",elapsed);
+
+    getchar();
 
     return 0;
 }

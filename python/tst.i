@@ -18,6 +18,8 @@
  */
 %module tst
 
+%feature("autodoc", "0");
+
 %apply (char *STRING, int LENGTH) { (char *string, int string_length) };
 %apply (char *STRING, int LENGTH) { (char *stop_chars, int stop_chars_length) };
 
@@ -36,7 +38,7 @@
 #define __PYTHON__BUILD__
 %include "tst.h"
 
-%template(_TST)         tst<char,PythonReference,MemoryStorage>;
+%template(_TST)         tst<char,PythonReference,MemoryStorage,ObjectSerializer>;
 %template(_Action)      action<char,PythonReference>;
 %template(_Filter)      filter<char,PythonReference>;
 

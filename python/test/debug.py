@@ -29,18 +29,22 @@ if __name__=='__main__':
         
         f = file(r"c:\temp\output.tst","wb")
         try:
-            t.write(f)
+            t.write_to_file(f)
         finally:
             f.close()
         print 'write OK'
         
-        f = file("c:\temp\output.tst","rb")
-        try:
-            t2 = TST()
-            t2.read(f)
-        finally:
-            f.close()
-        print 'read OK'
+        for i in range(100):
+			f = file(r"c:\temp\output.tst","rb")
+			try:
+				t2 = TST()
+				t2.read_from_file(f)
+				shuffle(r)
+				for i in r:
+					assert t2[str(i)]==i
+			finally:
+				f.close()
+			print 'read OK'
     except:
         print_exc()
         raw_input()
