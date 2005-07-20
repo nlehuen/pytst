@@ -97,6 +97,17 @@ public:
     int right_balance;
     int left_balance;
     int balance_performed;
+
+    node_info() :
+        index(UNDEFINED_INDEX)
+        ,node(NULL)
+        ,height(0)
+        ,balance(0)
+        ,right_balance(0)
+        ,left_balance(0)
+        ,balance_performed(0)
+    {
+    }
 };
 
 template<class S,class T> class action {
@@ -143,13 +154,6 @@ public:
             array.resize(info->index+1);
             info->node=get(info->index);
         }
-
-        // Inutile ?
-        /*info->height=0;
-        info->balance=0;
-        info->left_balance=0;
-        info->right_balance=0;
-        info->balance_performed=0;*/
     }
 
     void delete_node(int index) {
@@ -1182,9 +1186,7 @@ template<class S,class T,class M,class RW> void tst<S,T,M,RW>::read(FILE* file) 
     RW reader;
     fread(&maximum_key_length,sizeof(int),1,file);
     default_value = reader.read(file);
-    printf("ROOT->");
     root = read_node(file,&reader,0);
-    printf("OK !\n");
 }
 
 template<class S,class T,class M,class RW> int tst<S,T,M,RW>::read_node(FILE* file,RW* reader,int depth) {
@@ -1192,15 +1194,11 @@ template<class S,class T,class M,class RW> int tst<S,T,M,RW>::read_node(FILE* fi
         node_info<S,T> node_info;
         storage->new_node(&node_info);
 
-        // printf("<%d:%d:%d>",depth,node_info.index,node_info.node);
         node_info.node->c = fgetc(file);
         if(fgetc(file)) {
-            //printf("(");
             node_info.node->store(reader->read(file));
-            //printf("D)\n");
         }
         else {
-            //printf("( )\n");
             node_info.node->store(default_value);
         }
 #ifdef SCANNER
@@ -1208,19 +1206,20 @@ template<class S,class T,class M,class RW> int tst<S,T,M,RW>::read_node(FILE* fi
         fread(&(node_info.node->backtrack),sizeof(int),1,file);
         fread(&(node_info.node->backtrack_match_index),sizeof(int),1,file);
 #endif
-        //printf("N->");
-        storage->get(node_info.index)->next = read_node(file,reader,depth+1);
-        //printf("L->");
-        storage->get(node_info.index)->left = read_node(file,reader,depth+1);
-        //printf("R->");
-        storage->get(node_info.index)->right = read_node(file,reader,depth+1);
+        int other_index;
 
-        //printf("</%d>\n",node_info.index);
+        other_index = read_node(file,reader,depth+1);
+        storage->get(node_info.index)->next = other_index;
+
+        other_index = read_node(file,reader,depth+1);
+        storage->get(node_info.index)->left = other_index;
+
+        other_index = read_node(file,reader,depth+1);
+        storage->get(node_info.index)->right = other_index;
 
         return node_info.index;
     }
     else {
-        //printf("X\n");
         return UNDEFINED_INDEX;
     }
 }

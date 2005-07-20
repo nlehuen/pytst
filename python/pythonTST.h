@@ -210,7 +210,7 @@ typedef memory_storage<char,PythonReference> MemoryStorage;
 
 class TST : public tst<char,PythonReference,MemoryStorage,ObjectSerializer> {
 public:
-    TST() : tst<char,PythonReference,MemoryStorage,ObjectSerializer>(new MemoryStorage(20000),PythonReference()) {
+    TST() : tst<char,PythonReference,MemoryStorage,ObjectSerializer>(new MemoryStorage(16),PythonReference()) {
     }
 
     virtual ~TST() {

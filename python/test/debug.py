@@ -4,13 +4,13 @@ from random import shuffle
 if __name__=='__main__':
     try:
         import sys
-        sys.path.append(r"C:\projets\development\tst-PythonReference\python")
-        sys.path.append(r"C:\projets\development\tst-PythonReference\python\Debug")
+        sys.path.append(r"D:\projets\tst\python")
+        sys.path.append(r"D:\projets\tst\python\Debug")
         from tst import *
         
         t = TST()
         
-        r = range(10000)
+        r = range(100000)
         
         shuffle(r)
 
