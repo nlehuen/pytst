@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "0.92";
+const char* const TST_VERSION = "0.93";
 
 #include "debug.h"
 
@@ -128,15 +128,18 @@ public:
 template<class S,class T> class memory_storage {
 public:
     memory_storage(int initial_size) {
-        array.reserve(initial_size);
+        array = new tst_node<S,T>[initial_size];
+        next = 0;
+        size = initial_size;
         empty=UNDEFINED_INDEX;
     }
 
     ~memory_storage() {
+        delete[] array;
     }
 
     inline tst_node<S,T>* get(int index) {
-        return &(array.at(index));
+        return array+index;
     }
 
     void new_node(node_info<S,T>* info) {
@@ -150,8 +153,18 @@ public:
             empty = get(empty)->next;
         }
         else {
-            info->index = array.size();
-            array.resize(info->index+1);
+            if(next==size) {
+                int new_size = 1 + (size << 1);
+                tst_node<S,T>* new_array = new tst_node<S,T>[new_size];
+                for(int i=0;i<size;i++) {
+                    new_array[i] = array[i];
+                }
+                delete[] array;
+                size = new_size;
+                array = new_array;
+            }
+
+            info->index = next++;
             info->node=get(info->index);
         }
     }
@@ -165,9 +178,8 @@ public:
     }    
 
 protected:
-    typedef tst_node<S,T> tst_node_S_T;
-    std::vector<tst_node_S_T> array;
-    int empty;
+    tst_node<S,T>* array;
+    int next,size,empty;
 };
 
 template<class S,class T,class M,class RW> class tst {

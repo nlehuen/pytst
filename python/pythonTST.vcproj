@@ -247,6 +247,9 @@
 				RelativePath=".\setup.py">
 			</File>
 			<File
+				RelativePath=".\test\test_perf.py">
+			</File>
+			<File
 				RelativePath=".\tst.i">
 				<FileConfiguration
 					Name="Debug|Win32">
