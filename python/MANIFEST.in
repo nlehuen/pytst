@@ -6,6 +6,7 @@ include tst_wrap.cxx
 include MANIFEST.in
 include README.html
 include tst.i
+include ez_setup.py
 include build.bat
 
 
