@@ -1,9 +1,9 @@
-# This file was created automatically by SWIG.
+# This file was created automatically by SWIG 1.3.26.
 # Don't modify this file, modify the SWIG interface instead.
-# This file is compatible with both classic and new-style classes.
 
 import _tst
 
+# This file is compatible with both classic and new-style classes.
 def _swig_setattr_nondynamic(self,class_type,name,value,static=1):
     if (name == "this"):
         if isinstance(value, class_type):
@@ -62,7 +62,7 @@ class TSTExceptionPtr(TSTException):
     def __init__(self, this):
         _swig_setattr(self, TSTException, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, TSTException, 'thisown', 0)
-        _swig_setattr(self, TSTException,self.__class__,TSTException)
+        self.__class__ = TSTException
 _tst.TSTException_swigregister(TSTExceptionPtr)
 cvar = _tst.cvar
 TST_VERSION = cvar.TST_VERSION
@@ -86,55 +86,55 @@ class _TST(_object):
             if self.thisown: destroy(self)
         except: pass
 
-    def pack(*args): 
+    def pack(*args):
         """pack(self)"""
         return _tst._TST_pack(*args)
 
-    def walk(*args): 
+    def walk(*args):
         """walk(self, filter, to_perform) -> PythonReference"""
         return _tst._TST_walk(*args)
 
-    def almost(*args): 
+    def almost(*args):
         """almost(self, string, maximum_distance, filter, to_perform) -> PythonReference"""
         return _tst._TST_almost(*args)
 
-    def common_prefix(*args): 
+    def common_prefix(*args):
         """common_prefix(self, string, filter, to_perform) -> PythonReference"""
         return _tst._TST_common_prefix(*args)
 
-    def get(*args): 
+    def get(*args):
         """get(self, string) -> PythonReference"""
         return _tst._TST_get(*args)
 
-    def get_or_build(*args): 
+    def get_or_build(*args):
         """get_or_build(self, string, factory) -> PythonReference"""
         return _tst._TST_get_or_build(*args)
 
-    def put(*args): 
+    def put(*args):
         """put(self, string, data) -> PythonReference"""
         return _tst._TST_put(*args)
 
-    def remove(*args): 
+    def remove(*args):
         """remove(self, string)"""
         return _tst._TST_remove(*args)
 
-    def get_maximum_key_length(*args): 
+    def get_maximum_key_length(*args):
         """get_maximum_key_length(self) -> int"""
         return _tst._TST_get_maximum_key_length(*args)
 
-    def write(*args): 
+    def write(*args):
         """write(self, file)"""
         return _tst._TST_write(*args)
 
-    def read(*args): 
+    def read(*args):
         """read(self, file)"""
         return _tst._TST_read(*args)
 
-    def scan(*args): 
+    def scan(*args):
         """scan(self, string, to_perform) -> PythonReference"""
         return _tst._TST_scan(*args)
 
-    def scan_with_stop_chars(*args): 
+    def scan_with_stop_chars(*args):
         """scan_with_stop_chars(self, string, stop_chars, to_perform) -> PythonReference"""
         return _tst._TST_scan_with_stop_chars(*args)
 
@@ -143,7 +143,7 @@ class _TSTPtr(_TST):
     def __init__(self, this):
         _swig_setattr(self, _TST, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, _TST, 'thisown', 0)
-        _swig_setattr(self, _TST,self.__class__,_TST)
+        self.__class__ = _TST
 _tst._TST_swigregister(_TSTPtr)
 
 class _Action(_object):
@@ -161,11 +161,11 @@ class _Action(_object):
             if self.thisown: destroy(self)
         except: pass
 
-    def perform(*args): 
+    def perform(*args):
         """perform(self, string, remaining_distance, data)"""
         return _tst._Action_perform(*args)
 
-    def result(*args): 
+    def result(*args):
         """result(self) -> PythonReference"""
         return _tst._Action_result(*args)
 
@@ -174,7 +174,7 @@ class _ActionPtr(_Action):
     def __init__(self, this):
         _swig_setattr(self, _Action, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, _Action, 'thisown', 0)
-        _swig_setattr(self, _Action,self.__class__,_Action)
+        self.__class__ = _Action
 _tst._Action_swigregister(_ActionPtr)
 
 class _Filter(_object):
@@ -192,7 +192,7 @@ class _Filter(_object):
             if self.thisown: destroy(self)
         except: pass
 
-    def perform(*args): 
+    def perform(*args):
         """perform(self, string, remaining_distance, data) -> PythonReference"""
         return _tst._Filter_perform(*args)
 
@@ -201,7 +201,7 @@ class _FilterPtr(_Filter):
     def __init__(self, this):
         _swig_setattr(self, _Filter, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, _Filter, 'thisown', 0)
-        _swig_setattr(self, _Filter,self.__class__,_Filter)
+        self.__class__ = _Filter
 _tst._Filter_swigregister(_FilterPtr)
 
 class CallableAction(_Action):
@@ -224,11 +224,11 @@ class CallableAction(_Action):
             if self.thisown: destroy(self)
         except: pass
 
-    def perform(*args): 
+    def perform(*args):
         """perform(self, string, remaining_distance, data)"""
         return _tst.CallableAction_perform(*args)
 
-    def result(*args): 
+    def result(*args):
         """result(self) -> PythonReference"""
         return _tst.CallableAction_result(*args)
 
@@ -237,7 +237,7 @@ class CallableActionPtr(CallableAction):
     def __init__(self, this):
         _swig_setattr(self, CallableAction, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, CallableAction, 'thisown', 0)
-        _swig_setattr(self, CallableAction,self.__class__,CallableAction)
+        self.__class__ = CallableAction
 _tst.CallableAction_swigregister(CallableActionPtr)
 
 class CallableFilter(_Filter):
@@ -260,7 +260,7 @@ class CallableFilter(_Filter):
             if self.thisown: destroy(self)
         except: pass
 
-    def perform(*args): 
+    def perform(*args):
         """perform(self, string, remaining_distance, data) -> PythonReference"""
         return _tst.CallableFilter_perform(*args)
 
@@ -269,7 +269,7 @@ class CallableFilterPtr(CallableFilter):
     def __init__(self, this):
         _swig_setattr(self, CallableFilter, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, CallableFilter, 'thisown', 0)
-        _swig_setattr(self, CallableFilter,self.__class__,CallableFilter)
+        self.__class__ = CallableFilter
 _tst.CallableFilter_swigregister(CallableFilterPtr)
 
 class NullFilter(_Filter):
@@ -292,7 +292,7 @@ class NullFilter(_Filter):
             if self.thisown: destroy(self)
         except: pass
 
-    def perform(*args): 
+    def perform(*args):
         """perform(self, string, remaining_distance, data) -> PythonReference"""
         return _tst.NullFilter_perform(*args)
 
@@ -301,7 +301,7 @@ class NullFilterPtr(NullFilter):
     def __init__(self, this):
         _swig_setattr(self, NullFilter, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, NullFilter, 'thisown', 0)
-        _swig_setattr(self, NullFilter,self.__class__,NullFilter)
+        self.__class__ = NullFilter
 _tst.NullFilter_swigregister(NullFilterPtr)
 
 class DictAction(_Action):
@@ -324,11 +324,11 @@ class DictAction(_Action):
             if self.thisown: destroy(self)
         except: pass
 
-    def perform(*args): 
+    def perform(*args):
         """perform(self, string, remaining_distance, data)"""
         return _tst.DictAction_perform(*args)
 
-    def result(*args): 
+    def result(*args):
         """result(self) -> PythonReference"""
         return _tst.DictAction_result(*args)
 
@@ -337,7 +337,7 @@ class DictActionPtr(DictAction):
     def __init__(self, this):
         _swig_setattr(self, DictAction, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, DictAction, 'thisown', 0)
-        _swig_setattr(self, DictAction,self.__class__,DictAction)
+        self.__class__ = DictAction
 _tst.DictAction_swigregister(DictActionPtr)
 
 class ListAction(_Action):
@@ -360,11 +360,11 @@ class ListAction(_Action):
             if self.thisown: destroy(self)
         except: pass
 
-    def perform(*args): 
+    def perform(*args):
         """perform(self, string, remaining_distance, data)"""
         return _tst.ListAction_perform(*args)
 
-    def result(*args): 
+    def result(*args):
         """result(self) -> PythonReference"""
         return _tst.ListAction_result(*args)
 
@@ -373,7 +373,7 @@ class ListActionPtr(ListAction):
     def __init__(self, this):
         _swig_setattr(self, ListAction, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, ListAction, 'thisown', 0)
-        _swig_setattr(self, ListAction,self.__class__,ListAction)
+        self.__class__ = ListAction
 _tst.ListAction_swigregister(ListActionPtr)
 
 class TupleListAction(_Action):
@@ -396,11 +396,11 @@ class TupleListAction(_Action):
             if self.thisown: destroy(self)
         except: pass
 
-    def perform(*args): 
+    def perform(*args):
         """perform(self, string, remaining_distance, data)"""
         return _tst.TupleListAction_perform(*args)
 
-    def result(*args): 
+    def result(*args):
         """result(self) -> PythonReference"""
         return _tst.TupleListAction_result(*args)
 
@@ -409,7 +409,7 @@ class TupleListActionPtr(TupleListAction):
     def __init__(self, this):
         _swig_setattr(self, TupleListAction, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, TupleListAction, 'thisown', 0)
-        _swig_setattr(self, TupleListAction,self.__class__,TupleListAction)
+        self.__class__ = TupleListAction
 _tst.TupleListAction_swigregister(TupleListActionPtr)
 
 class ObjectSerializer(_object):
@@ -424,19 +424,19 @@ class ObjectSerializer(_object):
         """__init__(self) -> ObjectSerializer"""
         _swig_setattr(self, ObjectSerializer, 'this', _tst.new_ObjectSerializer(*args))
         _swig_setattr(self, ObjectSerializer, 'thisown', 1)
-    def write(*args): 
+    def write(*args):
         """write(self, file, data)"""
         return _tst.ObjectSerializer_write(*args)
 
-    def read(*args): 
+    def read(*args):
         """read(self, file) -> PythonReference"""
         return _tst.ObjectSerializer_read(*args)
 
-    def write_to_file(*args): 
+    def write_to_file(*args):
         """write_to_file(self, file, data)"""
         return _tst.ObjectSerializer_write_to_file(*args)
 
-    def read_from_file(*args): 
+    def read_from_file(*args):
         """read_from_file(self, file) -> PythonReference"""
         return _tst.ObjectSerializer_read_from_file(*args)
 
@@ -451,7 +451,7 @@ class ObjectSerializerPtr(ObjectSerializer):
     def __init__(self, this):
         _swig_setattr(self, ObjectSerializer, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, ObjectSerializer, 'thisown', 0)
-        _swig_setattr(self, ObjectSerializer,self.__class__,ObjectSerializer)
+        self.__class__ = ObjectSerializer
 _tst.ObjectSerializer_swigregister(ObjectSerializerPtr)
 
 class TST(_TST):
@@ -474,23 +474,23 @@ class TST(_TST):
             if self.thisown: destroy(self)
         except: pass
 
-    def write_to_file(*args): 
+    def write_to_file(*args):
         """write_to_file(self, file) -> PythonReference"""
         return _tst.TST_write_to_file(*args)
 
-    def read_from_file(*args): 
+    def read_from_file(*args):
         """read_from_file(self, file) -> PythonReference"""
         return _tst.TST_read_from_file(*args)
 
-    def __getitem__(*args): 
+    def __getitem__(*args):
         """__getitem__(self, string) -> PythonReference"""
         return _tst.TST___getitem__(*args)
 
-    def __setitem__(*args): 
+    def __setitem__(*args):
         """__setitem__(self, string, data) -> PythonReference"""
         return _tst.TST___setitem__(*args)
 
-    def __delitem__(*args): 
+    def __delitem__(*args):
         """__delitem__(self, string)"""
         return _tst.TST___delitem__(*args)
 
@@ -499,7 +499,8 @@ class TSTPtr(TST):
     def __init__(self, this):
         _swig_setattr(self, TST, 'this', this)
         if not hasattr(self,"thisown"): _swig_setattr(self, TST, 'thisown', 0)
-        _swig_setattr(self, TST,self.__class__,TST)
+        self.__class__ = TST
 _tst.TST_swigregister(TSTPtr)
+
 
 
