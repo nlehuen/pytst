@@ -433,6 +433,7 @@ template<class S,class T,class M,class RW> T tst<S,T,M,RW>::common_prefix(S* str
     int current_key_length=0;
 
     T biggest=default_value;
+    int biggest_length=0;
     int current_index=root;
     tst_node<S,T>* current_node;
     int diff;
@@ -453,8 +454,9 @@ template<class S,class T,class M,class RW> T tst<S,T,M,RW>::common_prefix(S* str
             if(diff==0) {
                 if(current_node->data!=default_value) {
                     biggest=current_node->data;
+                    biggest_length=current_key_length;
                     if(filter) {
-                        biggest=filter->perform(current_key,current_key_length,0,biggest);
+                        biggest=filter->perform(current_key,biggest_length,0,biggest);
                     }
                 }
                 if(*string) {
@@ -463,7 +465,7 @@ template<class S,class T,class M,class RW> T tst<S,T,M,RW>::common_prefix(S* str
                 }
                 else {
                     if(biggest!=default_value && to_perform) {
-                        to_perform->perform(current_key,current_key_length,0,biggest);
+                        to_perform->perform(current_key,biggest_length,0,biggest);
                     }
                     current_index=current_node->next;
                     if(current_index!=UNDEFINED_INDEX) {
@@ -486,7 +488,7 @@ template<class S,class T,class M,class RW> T tst<S,T,M,RW>::common_prefix(S* str
     }
 
     if(biggest!=default_value && to_perform) {
-        to_perform->perform(current_key,current_key_length,0,biggest);
+        to_perform->perform(current_key,biggest_length,0,biggest);
     }
 
     tst_free(current_key);
