@@ -29,19 +29,19 @@ for i in xrange(1000000000):
 
     d = tst.DictAction()
 
-    print t.almost('PARIS',3,None,d)
-    print t.almost('PARIS 15',5,None,tst.DictAction())
-    print t.almost('PARIS 15EME ARRONDISSEMENT',3,None,tst.DictAction())
+    print t.close_match('PARIS',3,None,d)
+    print t.close_match('PARIS 15',5,None,tst.DictAction())
+    print t.close_match('PARIS 15EME ARRONDISSEMENT',3,None,tst.DictAction())
     print '------------------------------------------------------------'
-    print t.common_prefix('PAR',None,tst.ListAction())
-    print t.common_prefix('PARIS',None,tst.ListAction())
-    print t.common_prefix('PARIS 15',None,tst.ListAction())
-    print t.common_prefix('PARIS 15EME',None,tst.ListAction())
-    print t.common_prefix('PARIS 15EME ARRONDISSEMENT',None,tst.ListAction())
-    print t.common_prefix('PARIS 17EME ARRONDISSEMENT',None,tst.ListAction())
-    print t.common_prefix('',None,tst.ListAction())
-    print t.common_prefix('P',None,tst.ListAction())
-    print t.common_prefix('PYTHON',None,tst.ListAction())
+    print t.prefix_match('PAR',None,tst.ListAction())
+    print t.prefix_match('PARIS',None,tst.ListAction())
+    print t.prefix_match('PARIS 15',None,tst.ListAction())
+    print t.prefix_match('PARIS 15EME',None,tst.ListAction())
+    print t.prefix_match('PARIS 15EME ARRONDISSEMENT',None,tst.ListAction())
+    print t.prefix_match('PARIS 17EME ARRONDISSEMENT',None,tst.ListAction())
+    print t.prefix_match('',None,tst.ListAction())
+    print t.prefix_match('P',None,tst.ListAction())
+    print t.prefix_match('PYTHON',None,tst.ListAction())
 
     print '>>>>>>>>>'
     # print t.scan('Bonjour  APPARITION PARIS ca va PARIS 15 PARIS 17 YOUPI PARIS 15EME GUEH PARIS 2',tst.CallableAction(prout,None))

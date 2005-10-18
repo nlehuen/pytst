@@ -75,8 +75,8 @@ class tester : public donothing {
 
         virtual void perform(char* string,int string_length,int remaining_distance,char* data) {
             donothing* dn = new donothing();
-            mytst->almost(string,string_length,3,NULL,dn);
-            mytst->common_prefix(string,string_length,NULL,dn);
+            mytst->close_match(string,string_length,3,NULL,dn);
+            mytst->prefix_match(string,string_length,NULL,dn);
             delete dn;
         }
 

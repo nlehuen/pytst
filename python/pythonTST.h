@@ -243,4 +243,14 @@ public:
     void __delitem__(char* string,int string_length) {
         remove(string,string_length);
     }
+
+    PythonReference __contains__(char* string,int string_length) {
+        PythonReference result = get(string,string_length);
+        if(result.get()==Py_None) {
+            return PythonReference(Py_False);
+        }
+        else {
+            return PythonReference(Py_True);
+        }
+    }
 };

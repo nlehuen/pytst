@@ -91,16 +91,19 @@ class _TST(_object):
         return _tst._TST_pack(*args)
 
     def walk(*args):
-        """walk(self, filter, to_perform) -> PythonReference"""
+        """
+        walk(self, filter, to_perform) -> PythonReference
+        walk(self, filter, to_perform, string) -> PythonReference
+        """
         return _tst._TST_walk(*args)
 
-    def almost(*args):
-        """almost(self, string, maximum_distance, filter, to_perform) -> PythonReference"""
-        return _tst._TST_almost(*args)
+    def close_match(*args):
+        """close_match(self, string, maximum_distance, filter, to_perform) -> PythonReference"""
+        return _tst._TST_close_match(*args)
 
-    def common_prefix(*args):
-        """common_prefix(self, string, filter, to_perform) -> PythonReference"""
-        return _tst._TST_common_prefix(*args)
+    def prefix_match(*args):
+        """prefix_match(self, string, filter, to_perform) -> PythonReference"""
+        return _tst._TST_prefix_match(*args)
 
     def get(*args):
         """get(self, string) -> PythonReference"""
@@ -493,6 +496,10 @@ class TST(_TST):
     def __delitem__(*args):
         """__delitem__(self, string)"""
         return _tst.TST___delitem__(*args)
+
+    def __contains__(*args):
+        """__contains__(self, string) -> PythonReference"""
+        return _tst.TST___contains__(*args)
 
 
 class TSTPtr(TST):

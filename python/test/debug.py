@@ -25,7 +25,7 @@ if __name__=='__main__':
         print "asserts OK"
         
         t.walk(None,None)
-        print t.almost("1234",1,None,DictAction())
+        print t.close_match("1234",1,None,DictAction())
         
         f = file(r"c:\temp\output.tst","wb")
         try:

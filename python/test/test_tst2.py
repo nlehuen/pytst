@@ -18,8 +18,8 @@ print 'Python version : ',time.time()-start
 
 for s in ('Nicolas;H','Yohan;H'):
     for i in range(7):
-        print "almost(%i)"%i
-        _dict = t.almost(s,i,f,tst.DictAction())
+        print "close_match(%i)"%i
+        _dict = t.close_match(s,i,f,tst.DictAction())
         print len(_dict)
         print _dict
         for key,item in _dict.items():
