@@ -275,38 +275,6 @@ class CallableFilterPtr(CallableFilter):
         self.__class__ = CallableFilter
 _tst.CallableFilter_swigregister(CallableFilterPtr)
 
-class NullFilter(_Filter):
-    """Proxy of C++ NullFilter class"""
-    __swig_setmethods__ = {}
-    for _s in [_Filter]: __swig_setmethods__.update(_s.__swig_setmethods__)
-    __setattr__ = lambda self, name, value: _swig_setattr(self, NullFilter, name, value)
-    __swig_getmethods__ = {}
-    for _s in [_Filter]: __swig_getmethods__.update(_s.__swig_getmethods__)
-    __getattr__ = lambda self, name: _swig_getattr(self, NullFilter, name)
-    def __repr__(self):
-        return "<%s.%s; proxy of C++ NullFilter instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
-    def __init__(self, *args):
-        """__init__(self) -> NullFilter"""
-        _swig_setattr(self, NullFilter, 'this', _tst.new_NullFilter(*args))
-        _swig_setattr(self, NullFilter, 'thisown', 1)
-    def __del__(self, destroy=_tst.delete_NullFilter):
-        """__del__(self)"""
-        try:
-            if self.thisown: destroy(self)
-        except: pass
-
-    def perform(*args):
-        """perform(self, string, remaining_distance, data) -> PythonReference"""
-        return _tst.NullFilter_perform(*args)
-
-
-class NullFilterPtr(NullFilter):
-    def __init__(self, this):
-        _swig_setattr(self, NullFilter, 'this', this)
-        if not hasattr(self,"thisown"): _swig_setattr(self, NullFilter, 'thisown', 0)
-        self.__class__ = NullFilter
-_tst.NullFilter_swigregister(NullFilterPtr)
-
 class DictAction(_Action):
     """Proxy of C++ DictAction class"""
     __swig_setmethods__ = {}

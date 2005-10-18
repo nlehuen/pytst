@@ -68,19 +68,6 @@ private:
     PythonReference callable;
 };
 
-class NullFilter : public filter<char,PythonReference> {
-public:
-    NullFilter() {
-    }
-
-    virtual ~NullFilter() {
-    }
-
-    virtual PythonReference perform(char* string,int string_length,int remaining_distance,PythonReference data) {
-        return data;
-    }
-};
-
 class DictAction : public action<char,PythonReference> {
 public:
     DictAction() : dict(PyDict_New(),0) {
