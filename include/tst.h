@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "0.96";
+const char* const TST_VERSION = "0.97";
 
 #include "debug.h"
 
@@ -334,10 +334,23 @@ template<class S,class T,class M,class RW> T tst<S,T,M,RW>::walk(filter<S,T>* fi
     tst_node<S,T>* start = find_node(&index,&best_node,string,string_length);
 
     if(start) {
-        S* key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
-        memcpy(key,string,string_length*sizeof(S));
-        walk_recurse(start,key,string_length-1,maximum_key_length+1,filter,to_perform);
-        tst_free(key);
+        T data = start->data;
+        if(data!=default_value) {
+            if(filter) {
+                data = filter->perform(string,string_length,0,data);
+            }
+            if(to_perform) {
+                to_perform->perform(string,string_length,0,data);
+            }
+        }
+        
+        index = start->next; 
+        if(index!=UNDEFINED_INDEX) {
+            S* key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
+            memcpy(key,string,string_length*sizeof(S));
+            walk_recurse(storage->get(index),key,string_length,maximum_key_length+1,filter,to_perform);
+            tst_free(key);
+        }
     }
 
     if(to_perform) {
