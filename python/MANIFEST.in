@@ -8,5 +8,6 @@ include README.html
 include tst.i
 include ez_setup.py
 include build.bat
+include LICENSE
 
 
