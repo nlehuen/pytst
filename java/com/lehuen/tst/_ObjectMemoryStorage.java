@@ -50,10 +50,6 @@ public class _ObjectMemoryStorage {
     return tstJNI._ObjectMemoryStorage_store_data(swigCPtr, SWIGTYPE_p_tst_nodeTjchar_jobject_t.getCPtr(node), data);
   }
 
-  public void set(int index, SWIGTYPE_p_tst_nodeTjchar_jobject_t node) {
-    tstJNI._ObjectMemoryStorage_set(swigCPtr, index, SWIGTYPE_p_tst_nodeTjchar_jobject_t.getCPtr(node));
-  }
-
   public int new_node() {
     return tstJNI._ObjectMemoryStorage_new_node(swigCPtr);
   }
@@ -64,6 +60,14 @@ public class _ObjectMemoryStorage {
 
   public void pack() {
     tstJNI._ObjectMemoryStorage_pack(swigCPtr);
+  }
+
+  public void read(SWIGTYPE_p_FILE file, _ObjectSerializer reader, SWIGTYPE_p_int root, SWIGTYPE_p_int maximum_key_length, SWIGTYPE_p_jobject default_value) {
+    tstJNI._ObjectMemoryStorage_read(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), _ObjectSerializer.getCPtr(reader), SWIGTYPE_p_int.getCPtr(root), SWIGTYPE_p_int.getCPtr(maximum_key_length), SWIGTYPE_p_jobject.getCPtr(default_value));
+  }
+
+  public void write(SWIGTYPE_p_FILE file, _ObjectSerializer writer, int root, int maximum_key_length, Object default_value) {
+    tstJNI._ObjectMemoryStorage_write(swigCPtr, SWIGTYPE_p_FILE.getCPtr(file), _ObjectSerializer.getCPtr(writer), root, maximum_key_length, default_value);
   }
 
 }

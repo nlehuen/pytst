@@ -14,16 +14,11 @@
  # You should have received a copy of the GNU Lesser General Public
  # License along with this library; if not, write to the Free Software
  # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-import distutils
-from distutils.core import setup, Extension
+import ez_setup
+ez_setup.use_setuptools()
 
-# patch distutils if it can't cope with the "classifiers" or
-# "download_url" keywords
+from setuptools import setup, find_packages, Extension
 import sys
-if sys.version < '2.2.3':
-    from distutils.dist import DistributionMetadata
-    DistributionMetadata.classifiers = None
-    DistributionMetadata.download_url = None
 
 extra_compile_args = []
 if sys.platform == "win32" and sys.version >= '2.4':
@@ -31,7 +26,7 @@ if sys.platform == "win32" and sys.version >= '2.4':
 
 setup(
     name = "pytst",
-    version = "0.86",
+    version = "0.97",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
     url = "http://nicolas.lehuen.com/",

@@ -1,4 +1,4 @@
-# -*- coding: CP1252 -*-
+# -*- coding: iso-8859-1 -*-
 import tst
 from tcc.util import levenshtein
 
@@ -42,8 +42,8 @@ class action(object):
 for s in ('Nicolas;H','Yohan;H'):
     print '------------',s
     for i in range(7):
-        # print "almost(%i)"%i
-        print len(t.almost(s,i,filt,tst.DictAction()))
+        # print "close_match(%i)"%i
+        print len(t.close_match(s,i,filt,tst.DictAction()))
 
 print 'maximum key length :', t.get_maximum_key_length()
 
@@ -84,11 +84,11 @@ start = time.time()
 for line in file('prenoms.txt','r').readlines():
     line = line.strip()
     t[line]=line+str(i)
-    for k,v in t.almost(line,4,filt,tst.DictAction()).items():
+    for k,v in t.close_match(line,4,filt,tst.DictAction()).items():
         ld = levenshtein(line,k)
         if ld!=(4-v[0]):
             print line, k, ld, 4-v[0]
-    t.common_prefix(line,filt,tst.ListAction())
-    t.almost(line+line,4,filt,tst.DictAction())
-    t.common_prefix(line+line,filt,tst.ListAction())
+    t.prefix_match(line,filt,tst.ListAction())
+    t.close_match(line+line,4,filt,tst.DictAction())
+    t.prefix_match(line+line,filt,tst.ListAction())
 print time.time()-start

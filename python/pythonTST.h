@@ -19,402 +19,225 @@
 #define __PYTHON__BUILD__
 
 #include "tst.h"
+#include "Python.h"
+#include "PythonReference.h"
 
-class CallableAction : public action<char,PyObject*> {
+class CallableAction : public action<char,PythonReference> {
 public:
-    CallableAction(PyObject* perform,PyObject* result) {
-        if(!perform) perform=Py_None;
-        Py_INCREF(perform);
-        _perform=perform;
-        if(!result) result=Py_None;
-        Py_INCREF(result);
-        _result=result;
+    CallableAction(PythonReference perform,PythonReference result) : _perform(perform), _result(result) {
     }
 
     virtual ~CallableAction() {
-        Py_DECREF(_perform);
-        Py_DECREF(_result);
     }
 
-    virtual void perform(char* string,int string_length,int remaining_distance,PyObject* data) {
-        if(_perform==Py_None) {
+    virtual void perform(char* string,int string_length,int remaining_distance,PythonReference data) {
+        if(_perform.get()==Py_None) {
             return;
         }
-        if(!data) {
-            data=Py_None;
-        }
-        Py_XINCREF(data);
-        PyObject* tuple=Py_BuildValue("s#iO",string,string_length,remaining_distance,data);
-        Py_DECREF(PyObject_CallObject(_perform,tuple));
-        Py_DECREF(tuple);
+        PythonReference tuple(Py_BuildValue("s#iO",string,string_length,remaining_distance,data.get()),0);
+        Py_DECREF(PyObject_CallObject(_perform.get(),tuple.get()));
     }
 
-    virtual PyObject* result() {
-        if(_result==Py_None) {
-            return Py_None;
+    virtual PythonReference result() {
+        if(_result.get()==Py_None) {
+            return PythonReference();
         }
         else {
-            return PyObject_CallObject(_result,NULL);
+            return PythonReference(PyObject_CallObject(_result.get(),NULL),0);
         }
     }
 
 private:
-    PyObject *_perform,*_result;
+    PythonReference _perform,_result;
 };
 
-class CallableFilter : public filter<char,PyObject*> {
+class CallableFilter : public filter<char,PythonReference> {
 public:
-    CallableFilter(PyObject* _callable) {
-        Py_INCREF(_callable);
-        callable=_callable;
+    CallableFilter(PythonReference _callable) : callable(_callable) {
     }
 
     virtual ~CallableFilter() {
-        Py_DECREF(callable);
     }
 
-    virtual PyObject* perform(char* string,int string_length,int remaining_distance,PyObject* data) {
-        if(!data) {
-            data=Py_None;
-        }
-        Py_XINCREF(data);
-        PyObject* tuple=Py_BuildValue("s#iO",string,string_length,remaining_distance,data);
-        PyObject* result=PyObject_CallObject(callable,tuple);
-        Py_DECREF(tuple);
-        return result;
+    virtual PythonReference perform(char* string,int string_length,int remaining_distance,PythonReference data) {
+        PythonReference tuple(Py_BuildValue("s#iO",string,string_length,remaining_distance,data.get()),0);
+        return PythonReference(PyObject_CallObject(callable.get(),tuple.get()),0);
     }
 
 private:
-    PyObject* callable;
+    PythonReference callable;
 };
 
-class NullFilter : public filter<char,PyObject*> {
+class DictAction : public action<char,PythonReference> {
 public:
-    NullFilter() {
-    }
-
-    virtual ~NullFilter() {
-    }
-
-    virtual PyObject* perform(char* string,int string_length,int remaining_distance,PyObject* data) {
-        Py_XINCREF(data);
-        return data;
-    }
-};
-
-class DictAction : public action<char,PyObject*> {
-public:
-    DictAction() {
-        dict=PyDict_New();
-        if(!dict) {
-            throw TSTException("Cannot build a list");
-        }
+    DictAction() : dict(PyDict_New(),0) {
     }
 
     virtual ~DictAction() {
-        Py_DECREF(dict);
     }
 
-    virtual void perform(char* string,int string_length,int remaining_distance,PyObject* data) {
-        if(!data) {
-            data=Py_None;
-        }
-
-        PyObject* key = Py_BuildValue("s#",string,string_length);
+    virtual void perform(char* string,int string_length,int remaining_distance,PythonReference data) {
+        PythonReference key(Py_BuildValue("s#",string,string_length),0);
         
-        PyObject* old_tuple=PyDict_GetItem(dict,key);
+        PyObject* old_tuple=PyDict_GetItem(dict.get(),key.get());
         if(old_tuple!=NULL) {
             long value=PyInt_AsLong(PyTuple_GetItem(old_tuple,0));
             if(value>=remaining_distance) {
-                Py_DECREF(key);
                 return;
             }
         }
 
-        PyObject* tuple=PyTuple_New(2);
-        PyTuple_SetItem(tuple,0,PyInt_FromLong(remaining_distance));
-        Py_INCREF(data);
-        PyTuple_SetItem(tuple,1,data);
-        PyDict_SetItem(dict,key,tuple);
-        Py_DECREF(tuple);
-        Py_DECREF(key);
+        PythonReference tuple(Py_BuildValue("iO",remaining_distance,data.get()),0);
+        PyDict_SetItem(dict.get(),key.get(),tuple.get());
     };
 
-    virtual PyObject* result() {
-        Py_INCREF(dict);
+    virtual PythonReference result() {
         return dict;
     }
 
 private:
-    PyObject* dict;
+    PythonReference dict;
 };
 
-class ListAction : public action<char,PyObject*> {
+class ListAction : public action<char,PythonReference> {
 public:
-    ListAction() {
-        list=PyList_New(0);
-        if(!list) {
-            throw TSTException("Cannot build a list");
-        }
+    ListAction() : list(PyList_New(0),0) {
     }
 
     virtual ~ListAction() {
-        Py_DECREF(list);
     }
 
-    virtual void perform(char* string,int string_length,int remaining_distance,PyObject* data) {
-        if(!data) {
-            data=Py_None;
-        }
-        PyList_Append(list,data);
+    virtual void perform(char* string,int string_length,int remaining_distance,PythonReference data) {
+        PyList_Append(list.get(),data.get());
     }
 
-    virtual PyObject* result() {
-        Py_INCREF(list);
+    virtual PythonReference result() {
         return list;
     }
 
 private:
-    PyObject* list;
+    PythonReference list;
 };
 
-class TupleListAction : public action<char,PyObject*> {
+class TupleListAction : public action<char,PythonReference> {
 public:
-    TupleListAction() {
-        list=PyList_New(0);
-        if(!list) {
-            throw TSTException("Cannot build a list");
-        }
+    TupleListAction() : list(PyList_New(0),0){
     }
 
     virtual ~TupleListAction() {
-        Py_DECREF(list);
     }
 
-    virtual void perform(char* string,int string_length,int remaining_distance,PyObject* data) {
-        if(!data) {
-            data=Py_None;
-        }
-        PyObject* tuple=Py_BuildValue("s#iO",string,string_length,remaining_distance,data);
-        PyList_Append(list,tuple);
-        Py_DECREF(tuple);
+    virtual void perform(char* string,int string_length,int remaining_distance,PythonReference data) {
+        PythonReference tuple(Py_BuildValue("s#iO",string,string_length,remaining_distance,data.get()),0);
+        PyList_Append(list.get(),tuple.get());
     }
 
-    virtual PyObject* result() {
-        Py_INCREF(list);
+    virtual PythonReference result() {
         return list;
     }
 
 private:
-    PyObject* list;
+    PythonReference list;
 };
 
-class ObjectSerializer : public serializer<char,PyObject*> {
+class ObjectSerializer {
 public:
-    ObjectSerializer() {
-        PyObject* name=PyString_FromString("cPickle");
-        PyObject* cPickle=PyImport_Import(name);
-        Py_DECREF(name);
-        if(!cPickle) {
-            throw TSTException("Cannot get module cPickle");
-        }
-        dumps = PyObject_GetAttrString(cPickle,"dumps");
-        if(!dumps) {
-            Py_DECREF(cPickle);
-            throw TSTException("Cannot get cPickle.dumps");
-        }
-        loads = PyObject_GetAttrString(cPickle,"loads");
-        if(!loads) {
-            Py_DECREF(dumps);
-            Py_DECREF(cPickle);
-            throw TSTException("Cannot get cPickle.loads");
-        }
-        Py_DECREF(cPickle);
-    }
+    ObjectSerializer();
+    
+    void write(FILE* file,PythonReference data);
+    PythonReference ObjectSerializer::read(FILE* file);
 
-    virtual ~ObjectSerializer() {
-        Py_DECREF(dumps);
-        Py_DECREF(loads);
-    }
-
-    virtual void write(FILE* file,PyObject* data) {
-        PyObject* call=Py_BuildValue("Oi",data,2);
-        if(!call) {
-            throw TSTException("Py_BuildValue(\"Oi\",data,2) failed");
-        }
-        PyObject* result=PyObject_CallObject(dumps,call);
-        Py_DECREF(call);
-        if(!result) {
-            throw TSTException("Call to dumps failed");
-        }
-        char *string;
-        int length;
-        PyString_AsStringAndSize(result,&string,&length);
-        fwrite(&length,sizeof(int),1,file);
-        fwrite(string,sizeof(char),length,file);
-        Py_DECREF(result);
-    }
-
-    virtual PyObject* read(FILE* file) {
-        int length;
-        fread(&length,sizeof(int),1,file);
-        char* string=(char*)malloc(length);
-        fread(string,sizeof(char),length,file);
-        PyObject* dumps=PyString_FromStringAndSize(string,length);
-        PyObject* call=Py_BuildValue("(O)",dumps);
-        if(!call) {
-            Py_DECREF(dumps);
-            free(string);
-            throw TSTException("Py_BuildValue(\"(O)\",dumps) failed");
-        }
-        PyObject* result=PyObject_CallObject(loads,call);
-        Py_DECREF(call);
-        Py_DECREF(dumps);
-        free(string);
-        if(!result) {
-            throw TSTException("Call to loads failed");
-        }
-        return result;
-    }
+    void write_to_file(PythonReference file,PythonReference data);
+    PythonReference ObjectSerializer::read_from_file(PythonReference file);
 
 private:
-    PyObject *dumps,*loads;
+    PythonReference dumps,loads;
 };
 
-class MemoryStorage : public memory_storage<char,PyObject*> {
+ObjectSerializer::ObjectSerializer() {
+    PythonReference name(PyString_FromString("cPickle"),0);
+    PythonReference cPickle(PyImport_Import(name.get()),0);
+    dumps = PythonReference(PyObject_GetAttrString(cPickle.get(),"dumps"),0);
+    loads = PythonReference(PyObject_GetAttrString(cPickle.get(),"loads"),0);
+}
+
+
+void ObjectSerializer::write(FILE* file,PythonReference data) {
+    PythonReference call(Py_BuildValue("Oi",data.get(),2),0);
+    PythonReference result(PyObject_CallObject(dumps.get(),call.get()),0);
+    char *string;
+    int length;
+    PyString_AsStringAndSize(result.get(),&string,&length);
+    fwrite(&length,sizeof(int),1,file);
+    fwrite(string,sizeof(char),length,file);
+}
+
+void ObjectSerializer::write_to_file(PythonReference file,PythonReference data) {
+    return write(PyFile_AsFile(file.get()),data);
+}
+
+PythonReference ObjectSerializer::read(FILE* file) {
+    int length;
+    fread(&length,sizeof(int),1,file);
+    char* string=(char*)malloc(length);
+    fread(string,sizeof(char),length,file);
+    PythonReference dumped(PyString_FromStringAndSize(string,length),0);
+    PythonReference call(Py_BuildValue("(O)",dumped.get()),0);
+    PythonReference result(PyObject_CallObject(loads.get(),call.get()),0);
+    free(string);
+    return result;
+}
+
+PythonReference ObjectSerializer::read_from_file(PythonReference file) {
+    return read(PyFile_AsFile(file.get()));
+}
+
+
+typedef memory_storage<char,PythonReference> MemoryStorage;
+
+class TST : public tst<char,PythonReference,MemoryStorage,ObjectSerializer> {
 public:
-    MemoryStorage() : memory_storage<char,PyObject*>(16) {
+    TST() : tst<char,PythonReference,MemoryStorage,ObjectSerializer>(new MemoryStorage(16),PythonReference()) {
     }
 
-    MemoryStorage(int initial_size) : memory_storage<char,PyObject*>(initial_size) {
+    virtual ~TST() {
     }
 
-    virtual ~MemoryStorage() {
-        int i;
-        tst_node<char,PyObject*>* node;
-        for(i=0,node=array;i<next;i++,node++) {
-            store_data(node,NULL);
-        }
-    }
-
-    inline virtual PyObject* store_data(tst_node<char,PyObject*>* node,PyObject* data) {
-        PyObject* result=node->data;
-        if((node->data=data)!=result) {
-            Py_XINCREF(data);
-            Py_XDECREF(result);
-        }
-        return result;
-    }
-};
-
-class TST : public tst<char,PyObject*,MemoryStorage> {
-public:
-    TST() : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(16),Py_None) {
-        Py_INCREF(Py_None);
-    }
-
-    TST(PyObject* file) : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(16),NULL) {
-        if(!PyFile_Check(file)) {
-            throw TSTException("Argument of constructor must be a file object");
-        }
-        ObjectSerializer os;
-        tst<char,PyObject*,MemoryStorage>::read(PyFile_AsFile(file),&os);
-        Py_XINCREF(default_value);
-    }
-
-    TST(int initial_size,PyObject* default_value) : tst<char,PyObject*,MemoryStorage>(new MemoryStorage(initial_size),default_value) {
-        if(!default_value) default_value=Py_None;
-        Py_INCREF(default_value);
-    }
-
-    ~TST() {
-        Py_XDECREF(default_value);
-    }
-
-    PyObject* write(PyObject* file) {
-        if(!PyFile_Check(file)) {
+    virtual PythonReference write_to_file(PythonReference file) {
+        if(!PyFile_CheckExact(file.get())) {
             throw TSTException("Argument of write() must be a file object");
         }
-        ObjectSerializer *os=new ObjectSerializer();
-        tst<char,PyObject*,MemoryStorage>::write(PyFile_AsFile(file),os);
-        delete os;
-        return Py_None;
+        this->write(PyFile_AsFile(file.get()));
+        return PythonReference();
     }
 
-    inline PyObject* get(char* string,int string_length) {
-        PyObject* result=tst<char,PyObject*,MemoryStorage>::get(string,string_length);
-        Py_INCREF(result);
-        return result;
+    virtual PythonReference read_from_file(PythonReference file) {
+        if(!PyFile_CheckExact(file.get())) {
+            throw TSTException("Argument of write() must be a file object");
+        }
+        this->read(PyFile_AsFile(file.get()));
+        return PythonReference();
     }
 
-    inline PyObject* get_or_build(char* string,int string_length,filter<char,PyObject*>* factory) {
-        PyObject* result=tst<char,PyObject*,MemoryStorage>::get_or_build(string,string_length,factory);
-        Py_INCREF(result);
-        return result;
+    PythonReference __getitem__(char* string,int string_length) {
+        return get(string,string_length);
     }
 
-
-    inline PyObject* put(char* string,int string_length,PyObject* data) {
-        Py_INCREF(data);
-        PyObject* result=tst<char,PyObject*,MemoryStorage>::put(string,string_length,data);
-        Py_INCREF(result);
-        return result;
+    PythonReference __setitem__(char* string,int string_length,PythonReference data) {
+        return put(string,string_length,data);
     }
 
-    inline PyObject* __getitem__(char* string,int string_length) {
-        PyObject* result=get(string,string_length);
-        return result;
-    }
-
-    inline PyObject* __setitem__(char* string,int string_length,PyObject* data) {
-        PyObject* result=put(string,string_length,data);
-        return result;
-    }
-
-    inline void __delitem__(char* string,int string_length) {
+    void __delitem__(char* string,int string_length) {
         remove(string,string_length);
     }
-};
 
-class PythonReference {
-public:
-    explicit PythonReference() : ref(Py_None) {
-        Py_XINCREF(ref);
-    }
-
-    explicit PythonReference(PyObject *object) : ref(object) {
-        Py_XINCREF(ref);
-    }
-
-    explicit PythonReference(PyObject *object, int borrow) : ref(object) {
-        if(borrow==0) {
-            Py_XINCREF(ref);
+    PythonReference __contains__(char* string,int string_length) {
+        PythonReference result = get(string,string_length);
+        if(result.get()==Py_None) {
+            return PythonReference(Py_False);
+        }
+        else {
+            return PythonReference(Py_True);
         }
     }
-
-    PythonReference(const PythonReference& that) : ref(that.ref) {
-        Py_XINCREF(ref);
-    }
-
-    PythonReference& operator= (const PythonReference& that) {
-        PyObject* old = ref;
-        
-        if((this->ref = that.ref) != old) {
-            Py_XINCREF(ref);
-            Py_XDECREF(old);
-        }
-        
-        return *this;
-    }
-
-    PyObject* get() {
-        return ref;
-    }
-
-    ~PythonReference() {
-        Py_XDECREF(ref);
-    }
-
-private:
-    PyObject* ref;
 };

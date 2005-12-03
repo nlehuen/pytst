@@ -19,22 +19,22 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-#define TST_VERSION "0.86"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <malloc.h>
-#include <memory.h>
+const char* const TST_VERSION = "0.97";
 
 #include "debug.h"
+
+#include <new>
+#include <vector>
 
 #ifdef __PYTHON__BUILD__
     #include "Python.h"
     #define tst_malloc PyMem_Malloc
     #define tst_realloc PyMem_Realloc
     #define tst_free PyMem_Free
+    // Pour ajouter/supprimer les fonctions de scanning.
     #define SCANNER
 #else
+    #include "stdlib.h"
     #define tst_malloc malloc
     #define tst_realloc realloc
     #define tst_free free
@@ -42,7 +42,7 @@
     #define SCANNER
 #endif
 
-#define UNDEFINED_INDEX -1
+const int UNDEFINED_INDEX=-1;
 
 class TSTException {
 public:
@@ -55,6 +55,20 @@ public:
 
 template<class S,class T> class tst_node {
 public:
+    tst_node() :
+        c(0)
+        ,data()
+        ,next(UNDEFINED_INDEX)
+        ,right(UNDEFINED_INDEX)
+        ,left(UNDEFINED_INDEX)
+#ifdef SCANNER
+        ,position(UNDEFINED_INDEX)
+        ,backtrack(UNDEFINED_INDEX)
+        ,backtrack_match_index(UNDEFINED_INDEX)
+#endif
+    {
+    }
+
     S c;
     T data;
     int next;
@@ -65,6 +79,12 @@ public:
     int backtrack;
     int backtrack_match_index;
 #endif
+
+    T store(T value) {
+        T old = data;
+        data = value;
+        return old;
+    }
 };
 
 template<class S,class T> class node_info {
@@ -77,6 +97,17 @@ public:
     int right_balance;
     int left_balance;
     int balance_performed;
+
+    node_info() :
+        index(UNDEFINED_INDEX)
+        ,node(NULL)
+        ,height(0)
+        ,balance(0)
+        ,right_balance(0)
+        ,left_balance(0)
+        ,balance_performed(0)
+    {
+    }
 };
 
 template<class S,class T> class action {
@@ -94,77 +125,48 @@ public:
     virtual T perform(S* string,int string_length,int remaining_distance,T data)=0;
 };
 
-template<class S,class T> class serializer {
-public:
-    serializer() {}
-    virtual ~serializer() {}
-    virtual void write(FILE* file,T data)=0;
-    virtual T read(FILE* file)=0;
-};
-
 template<class S,class T> class memory_storage {
 public:
     memory_storage(int initial_size) {
-        size=initial_size;
-        array=(tst_node<S,T>*)tst_malloc(size*sizeof(tst_node<S,T>));
-        assert(array);
-        if(array==NULL) {
-            printf("Out of memory trying to allocate %d nodes of %d bytes, totalling %d Mb\n",size,sizeof(tst_node<S,T>),(size*sizeof(tst_node<S,T>))>>20);
-            exit(1);
-        }
-        next=0;
+        array = new tst_node<S,T>[initial_size];
+        next = 0;
+        size = initial_size;
         empty=UNDEFINED_INDEX;
     }
 
-    virtual ~memory_storage() {
-        tst_free(array);
+    ~memory_storage() {
+        delete[] array;
     }
 
     inline tst_node<S,T>* get(int index) {
         return array+index;
     }
 
-    inline virtual T store_data(tst_node<S,T>* node,T data) {
-        T result = node->data;
-        node->data = data;
-        return result;
-    }
-
-    inline void set(int index,tst_node<S,T>* node) {
-    }
-
-    int new_node() {
+    void new_node(node_info<S,T>* info) {
         if(empty!=UNDEFINED_INDEX) {
             // si on a un noeud vide on l'utilise.
-            int new_node_index=empty;
+            info->index=empty;
+            info->node=get(empty);
+            info->height=0;
+            
             // on passe au noeud vide suivant.
             empty = get(empty)->next;
-            return new_node_index;
         }
-        
-        if(next==size) {
-            int original_size = size;
-            tst_node<S,T>* original_array = array;
-            array = NULL;
-
-            // on utilise le nombre d'or pour l'accroissement du tableau
-            size=(int)(1.618*size)+1;
-            
-            while(array==NULL && size>original_size) {
-                array=(tst_node<S,T>*)tst_realloc(original_array,size*sizeof(tst_node<S,T>));
-                if(array==NULL) {
-                    printf("Out of memory trying to allocate %d nodes of %d bytes, totalling %d Mb",size,sizeof(tst_node<S,T>),(size*sizeof(tst_node<S,T>))>>20);
-                    size = (int)(size*0.9)-1;
-                    printf(" ...trying to allocate %d nodes, totalling %d Mb, instead\n",size,(size*sizeof(tst_node<S,T>))>>20);
+        else {
+            if(next==size) {
+                int new_size = 1 + (size << 1);
+                tst_node<S,T>* new_array = new tst_node<S,T>[new_size];
+                for(int i=0;i<size;i++) {
+                    new_array[i] = array[i];
                 }
+                delete[] array;
+                size = new_size;
+                array = new_array;
             }
-            if(array==NULL) {
-                printf("Out of memory trying to allocate %d nodes of %d bytes, totalling %d Mb\n",size,sizeof(tst_node<S,T>),(size*sizeof(tst_node<S,T>))>>20);
-                exit(1);
-            }
-        }
 
-        return next++;
+            info->index = next++;
+            info->node=get(info->index);
+        }
     }
 
     void delete_node(int index) {
@@ -173,107 +175,15 @@ public:
     }
 
     void pack() {
-        if(next<size) {
-            tst_node<S,T>* original_array = array;
-            array=(tst_node<S,T>*)tst_realloc(original_array,next*sizeof(tst_node<S,T>));
-            if(array==NULL) {
-                printf("Out of memory trying to allocate %d nodes of %d bytes, totalling %d Mb\n",next,sizeof(tst_node<S,T>),(next*sizeof(tst_node<S,T>))>>20);
-                array = original_array;
-            }
-            else {
-                size = next;
-            }
-        }
     }    
-
-    void read(FILE* file,serializer<S,T>* reader,int* root,int* maximum_key_length,T* default_value) {
-        // We check the version number
-        fread(&size,sizeof(int),1,file);
-        char* version=(char*)tst_malloc(size+1);
-        version[size]='\0';
-        fread(version,sizeof(char),size,file);
-        if(strcmp(TST_VERSION,version)!=0) {
-            tst_free(version);
-            throw TSTException("Invalid version number");
-        }
-        else {
-            tst_free(version);
-        }
-
-        fread(&size,sizeof(int),1,file);
-        next=size;
-        fread(root,sizeof(int),1,file);
-        fread(maximum_key_length,sizeof(int),1,file);
-        int has_data=fgetc(file);
-        if(has_data) {
-            *default_value = reader->read(file);
-        }
-        else {
-            *default_value = NULL;
-        }
-        array=(tst_node<S,T>*)tst_malloc(size*sizeof(tst_node<S,T>));
-        for(int i=0;i<size;i++) {
-            tst_node<S,T>* node=array+i;
-
-            node->c=fgetc(file);
-            fread(&(node->left),sizeof(int),1,file);
-            fread(&(node->next),sizeof(int),1,file);
-            fread(&(node->right),sizeof(int),1,file);
-
-            has_data=fgetc(file);
-            node->data = NULL;
-            if(has_data) {
-                store_data(node,reader->read(file));
-            }
-            else {
-                store_data(node,*default_value);
-            }
-        }
-    }
-
-    void write(FILE* file,serializer<S,T>* writer,int root,int maximum_key_length,T default_value) {
-        // We save the version number
-        int version_length = strlen(TST_VERSION);
-        fwrite(&version_length,sizeof(int),1,file);
-        fwrite(TST_VERSION,sizeof(char),version_length,file);
-
-        fwrite(&next,sizeof(int),1,file);
-        fwrite(&root,sizeof(int),1,file);
-        fwrite(&maximum_key_length,sizeof(int),1,file);
-        if(default_value) {
-            putc('\1',file);
-            writer->write(file,default_value);
-        }
-        else {
-            putc('\0',file);
-        }
-        for(int i=0;i<next;i++) {
-            tst_node<S,T>* node=array+i;
-            fputc(node->c,file);
-            fwrite(&(node->left),sizeof(int),1,file);
-            fwrite(&(node->next),sizeof(int),1,file);
-            fwrite(&(node->right),sizeof(int),1,file);
-            T data=node->data;
-            if(data!=default_value) {
-                fputc('\1',file);
-                writer->write(file,data);
-            }
-            else {
-                fputc('\0',file);
-            }
-        }
-    }
 
 protected:
     tst_node<S,T>* array;
-    int next;
-    int size;
-    int empty;
+    int next,size,empty;
 };
 
-template<class S,class T,class M> class tst {
+template<class S,class T,class M,class RW> class tst {
 public:
-    tst(M* storage,FILE* file,serializer<S,T>* reader);
     tst(M* storage,T default_value);
 
     virtual ~tst() {
@@ -282,15 +192,17 @@ public:
 
     void pack();
     T walk(filter<S,T>* filter,action<S,T>* to_perform);
-    T almost(S* string,int string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform);
-    T common_prefix(S* string,int string_length,filter<S,T>* filter,action<S,T>* to_perform);
+    T walk(filter<S,T>* filter,action<S,T>* to_perform,S* string, int string_length);
+    T close_match(S* string,int string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform);
+    T prefix_match(S* string,int string_length,filter<S,T>* filter,action<S,T>* to_perform);
 
     T get(S* string,int string_length);
     T get_or_build(S* string,int string_length,filter<S,T>* factory);
     T put(S* string,int string_length,T data);
     void remove(S* string,int string_length);
     int get_maximum_key_length();
-    void write(FILE* file,serializer<S,T>* writer);
+    void write(FILE* file);
+    void read(FILE* file);
 
 #ifdef SCANNER
     T scan(S* string,int string_length,action<S,T>* to_perform);
@@ -298,17 +210,21 @@ public:
 #endif
 
 protected:
+    void set_storage(M* new_storage) {
+        delete storage;
+        storage = new_storage;
+    }
+
+private:
     M* storage;
     T default_value;
     int root,maximum_key_length;
 
     tst();
-    void read(FILE* file,serializer<S,T>* serializer);
 
     void walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform);
-    void almost_recurse(tst_node<S,T>* current_node,S* current_key, int current_key_length, S* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,int current_key_limit);
+    void close_match_recurse(tst_node<S,T>* current_node,S* current_key, int current_key_length, S* current_char,int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,int current_key_limit);
 
-    void create_node(node_info<S,T>* current_node_info);
     int build_node(node_info<S,T>* current_node,S* string,int string_length,int current_position);
     void remove_node(int* current_index,S* string,int string_length);
     tst_node<S,T>* find_node(int* current_index,int* best_node, S* string,int string_length);
@@ -320,41 +236,31 @@ protected:
     void rl(node_info<S,T>* bal);
     void compute_height_and_balance(node_info<S,T>* current_node_info);
 
+    void write_node(FILE* file,RW* writer,int index);
+    int read_node(FILE* file,RW* reader,int depth);
+
 #ifdef SCANNER
     void compute_backtrack(tst_node<S,T> *current_node,S* string,int si_match_start,int si_match_end);
 #endif
 };
 
-template<class S,class T,class M> tst<S,T,M>::tst(M* storage,T default_value) {
+template<class S,class T,class M,class RW> tst<S,T,M,RW>::tst(M* storage,T default_value) {
     this->storage=storage;
     this->default_value=default_value;
     node_info<S,T> root_info;
-    create_node(&root_info);
+    storage->new_node(&root_info);
     root = root_info.index;
     maximum_key_length=0;
 }
 
-template<class S,class T,class M> tst<S,T,M>::tst() {
+template<class S,class T,class M,class RW> tst<S,T,M,RW>::tst() {
 }
 
-template<class S,class T,class M> tst<S,T,M>::tst(M* storage,FILE* file, serializer<S,T>* reader) {
-    this->storage=storage;
-    read(file,reader);
-}
-
-template<class S,class T,class M> void tst<S,T,M>::read(FILE* file, serializer<S,T>* reader) {
-    storage->read(file,reader,&root,&maximum_key_length,&default_value);
-}
-
-template<class S,class T,class M> void tst<S,T,M>::write(FILE* file, serializer<S,T>* writer) {
-    storage->write(file,writer,root,maximum_key_length,default_value);
-}
-
-template<class S,class T,class M> void tst<S,T,M>::pack() {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::pack() {
     storage->pack();
 }
 
-template<class S,class T,class M> T tst<S,T,M>::get(S* string,int string_length) {
+template<class S,class T,class M,class RW> T tst<S,T,M,RW>::get(S* string,int string_length) {
     int current_index=root,best_node=UNDEFINED_INDEX;
     tst_node<S,T>* current_node=find_node(&current_index,&best_node,string,string_length);
     if(current_node) {
@@ -365,25 +271,25 @@ template<class S,class T,class M> T tst<S,T,M>::get(S* string,int string_length)
     }
 }
 
-template<class S,class T,class M> T tst<S,T,M>::put(S* string,int string_length,T data) {
+template<class S,class T,class M,class RW> T tst<S,T,M,RW>::put(S* string,int string_length,T data) {
     node_info<S,T> root_info;
     root_info.index=root;
     root_info.node=storage->get(root);
     int node_index=build_node(&root_info,string,string_length,0);
     root = root_info.index;
-    return storage->store_data(storage->get(node_index),data);
+    return storage->get(node_index)->store(data);
 }
 
-template<class S,class T,class M> void tst<S,T,M>::remove(S* string,int string_length) {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::remove(S* string,int string_length) {
     remove_node(&root,string,string_length);
     if(root==UNDEFINED_INDEX) {
         node_info<S,T> root_info;
-        create_node(&root_info);
+        storage->new_node(&root_info);
         root = root_info.index;
     }
 }
 
-template<class S,class T,class M> T tst<S,T,M>::get_or_build(S* string,int string_length,filter<S,T>* factory) {
+template<class S,class T,class M,class RW> T tst<S,T,M,RW>::get_or_build(S* string,int string_length,filter<S,T>* factory) {
     node_info<S,T> root_info;
     root_info.index=root;
     root_info.node=storage->get(root);
@@ -392,27 +298,70 @@ template<class S,class T,class M> T tst<S,T,M>::get_or_build(S* string,int strin
 
     tst_node<S,T>* current_node=storage->get(node_index);
     T data=factory->perform(string,string_length,0,current_node->data);
-    storage->store_data(current_node,data);
+    current_node->store(data);
     return data;
 }
 
-template<class S,class T,class M> T tst<S,T,M>::almost(S* string, int string_length, int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) {
+template<class S,class T,class M,class RW> T tst<S,T,M,RW>::close_match(S* string, int string_length, int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) {
     S* current_key=(S*)tst_malloc((string_length+maximum_distance+2)*sizeof(S));
     *current_key='\0';
-    almost_recurse(storage->get(root),current_key,0,string,0,string_length,string_length,maximum_distance,filter,to_perform,string_length+maximum_distance+1);
+    close_match_recurse(storage->get(root),current_key,0,string,0,string_length,string_length,maximum_distance,filter,to_perform,string_length+maximum_distance+1);
     tst_free(current_key);
-    return to_perform->result();
+    if(to_perform) {
+        return to_perform->result();
+    }
+    else {
+        return default_value;
+    }
 }
 
-template<class S,class T,class M> T tst<S,T,M>::walk(filter<S,T>* filter,action<S,T>* to_perform) {
+template<class S,class T,class M,class RW> T tst<S,T,M,RW>::walk(filter<S,T>* filter,action<S,T>* to_perform) {
     S* key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
     *key='\0';
     walk_recurse(storage->get(root),key,0,maximum_key_length+1,filter,to_perform);
     tst_free(key);
-    return to_perform->result();
+    if(to_perform) {
+        return to_perform->result();
+    }
+    else {
+        return default_value;
+    }
 }
 
-template<class S,class T,class M> void tst<S,T,M>::walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) {
+template<class S,class T,class M,class RW> T tst<S,T,M,RW>::walk(filter<S,T>* filter,action<S,T>* to_perform,S* string, int string_length) {
+    int index = root;
+    int best_node = UNDEFINED_INDEX;
+    tst_node<S,T>* start = find_node(&index,&best_node,string,string_length);
+
+    if(start) {
+        T data = start->data;
+        if(data!=default_value) {
+            if(filter) {
+                data = filter->perform(string,string_length,0,data);
+            }
+            if(to_perform) {
+                to_perform->perform(string,string_length,0,data);
+            }
+        }
+        
+        index = start->next; 
+        if(index!=UNDEFINED_INDEX) {
+            S* key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
+            memcpy(key,string,string_length*sizeof(S));
+            walk_recurse(storage->get(index),key,string_length,maximum_key_length+1,filter,to_perform);
+            tst_free(key);
+        }
+    }
+
+    if(to_perform) {
+        return to_perform->result();
+    }
+    else {
+        return default_value;
+    }
+}
+
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) {
     int other_index;
 
     other_index=current_node->left;
@@ -447,13 +396,13 @@ template<class S,class T,class M> void tst<S,T,M>::walk_recurse(tst_node<S,T>* c
     }
 }
 
-template<class S,class T,class M> void tst<S,T,M>::almost_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,S* string, int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform,int current_key_limit) {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::close_match_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,S* string, int current_index, int real_string_length, int string_length, int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform,int current_key_limit) {
     int other_index;
     int diff,diff2;
 
     other_index=current_node->left;
     if (other_index!=UNDEFINED_INDEX) {
-        almost_recurse(storage->get(other_index),current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,filter,to_perform,current_key_limit);
+        close_match_recurse(storage->get(other_index),current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,filter,to_perform,current_key_limit);
     }
 
     diff=0;
@@ -474,8 +423,10 @@ template<class S,class T,class M> void tst<S,T,M>::almost_recurse(tst_node<S,T>*
     if(data!=default_value) {
         diff2=(remaining_distance-abs(current_key_length-string_length))-diff;
         if(diff2>=0) {
-            data = filter->perform(current_key,current_key_length,diff2,data);
-            if(data!=default_value) {
+            if(filter) {
+                data = filter->perform(current_key,current_key_length,diff2,data);
+            }
+            if(data!=default_value && to_perform) {
                 to_perform->perform(current_key,current_key_length,diff2,data);
             }
         }
@@ -485,14 +436,14 @@ template<class S,class T,class M> void tst<S,T,M>::almost_recurse(tst_node<S,T>*
     if (other_index!=UNDEFINED_INDEX) {
         diff2 = remaining_distance - diff;
         if (diff2>=0) {
-            almost_recurse(storage->get(other_index),current_key,current_key_length,string,current_index+1,real_string_length,string_length,diff2,filter,to_perform,current_key_limit);
+            close_match_recurse(storage->get(other_index),current_key,current_key_length,string,current_index+1,real_string_length,string_length,diff2,filter,to_perform,current_key_limit);
         }
     }
 
     current_key_length--;
 
     if(current_index<string_length && remaining_distance>0) {
-        almost_recurse(current_node,current_key,current_key_length,string,current_index+1,real_string_length,string_length-1,remaining_distance-1,filter,to_perform,current_key_limit);
+        close_match_recurse(current_node,current_key,current_key_length,string,current_index+1,real_string_length,string_length-1,remaining_distance-1,filter,to_perform,current_key_limit);
     }
 
     if(other_index!=UNDEFINED_INDEX && remaining_distance>0) {
@@ -500,22 +451,23 @@ template<class S,class T,class M> void tst<S,T,M>::almost_recurse(tst_node<S,T>*
         current_key[current_key_length]=current_node->c;
         current_key_length++;
 
-        almost_recurse(storage->get(other_index),current_key,current_key_length,string,current_index,real_string_length,string_length+1,remaining_distance-1,filter,to_perform,current_key_limit);
+        close_match_recurse(storage->get(other_index),current_key,current_key_length,string,current_index,real_string_length,string_length+1,remaining_distance-1,filter,to_perform,current_key_limit);
     
         current_key_length--;
     }
 
     other_index = current_node->right;
     if(other_index!=UNDEFINED_INDEX) {
-        almost_recurse(storage->get(other_index),current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,filter,to_perform,current_key_limit);
+        close_match_recurse(storage->get(other_index),current_key,current_key_length,string,current_index,real_string_length,string_length,remaining_distance,filter,to_perform,current_key_limit);
     }
 }
 
-template<class S,class T,class M> T tst<S,T,M>::common_prefix(S* string,int string_length,filter<S,T>* filter,action<S,T>* to_perform) {
+template<class S,class T,class M,class RW> T tst<S,T,M,RW>::prefix_match(S* string,int string_length,filter<S,T>* filter,action<S,T>* to_perform) {
     S* current_key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
     int current_key_length=0;
 
     T biggest=default_value;
+    int biggest_length=0;
     int current_index=root;
     tst_node<S,T>* current_node;
     int diff;
@@ -536,8 +488,9 @@ template<class S,class T,class M> T tst<S,T,M>::common_prefix(S* string,int stri
             if(diff==0) {
                 if(current_node->data!=default_value) {
                     biggest=current_node->data;
+                    biggest_length=current_key_length;
                     if(filter) {
-                        biggest=filter->perform(current_key,current_key_length,0,biggest);
+                        biggest=filter->perform(current_key,biggest_length,0,biggest);
                     }
                 }
                 if(*string) {
@@ -546,7 +499,7 @@ template<class S,class T,class M> T tst<S,T,M>::common_prefix(S* string,int stri
                 }
                 else {
                     if(biggest!=default_value && to_perform) {
-                        to_perform->perform(current_key,current_key_length,0,biggest);
+                        to_perform->perform(current_key,biggest_length,0,biggest);
                     }
                     current_index=current_node->next;
                     if(current_index!=UNDEFINED_INDEX) {
@@ -569,37 +522,14 @@ template<class S,class T,class M> T tst<S,T,M>::common_prefix(S* string,int stri
     }
 
     if(biggest!=default_value && to_perform) {
-        to_perform->perform(current_key,current_key_length,0,biggest);
+        to_perform->perform(current_key,biggest_length,0,biggest);
     }
 
     tst_free(current_key);
     return to_perform->result();
 }
 
-template<class S,class T,class M> void tst<S,T,M>::create_node(node_info<S,T>* current_node_info) {
-    int new_node_index = storage->new_node();
-    tst_node<S,T>* new_node = storage->get(new_node_index);
-    new_node->c=0;
-    new_node->next=UNDEFINED_INDEX;
-    new_node->right=UNDEFINED_INDEX;
-    new_node->left=UNDEFINED_INDEX;
-    new_node->data=NULL;
-#ifdef SCANNER
-    new_node->position=-1;
-    new_node->backtrack=UNDEFINED_INDEX;
-    new_node->backtrack_match_index=UNDEFINED_INDEX;
-#endif
-    storage->store_data(new_node,default_value);
-
-    current_node_info->index = new_node_index;
-    current_node_info->node = new_node;
-    current_node_info->height = 0;
-    current_node_info->balance = 0;
-    current_node_info->left_balance = 0;
-    current_node_info->right_balance =0;
-}
-
-template<class S,class T,class M> int tst<S,T,M>::build_node(node_info<S,T>* current_node_info,S* string,int string_length,int current_position) {
+template<class S,class T,class M,class RW> int tst<S,T,M,RW>::build_node(node_info<S,T>* current_node_info,S* string,int string_length,int current_position) {
     int diff,result;
 
     if(current_node_info->node->c==0) {
@@ -621,17 +551,17 @@ template<class S,class T,class M> int tst<S,T,M>::build_node(node_info<S,T>* cur
         current_position++;
         string_length--;
 
+        if(current_position>maximum_key_length) {
+            maximum_key_length=current_position;
+        }
+
         compute_height_and_balance(current_node_info); // TODO : est-ce bien necessaire ?
 
         if(string_length>0) {
-            if(current_position>maximum_key_length) {
-                maximum_key_length=current_position;
-            }
-
             node_info<S,T> next_node_info;
             next_node_info.index = current_node_info->node->next;
             if(next_node_info.index==UNDEFINED_INDEX) {
-                create_node(&next_node_info);
+                storage->new_node(&next_node_info);
             }
             else {
                 next_node_info.node = storage->get(next_node_info.index);
@@ -649,7 +579,7 @@ template<class S,class T,class M> int tst<S,T,M>::build_node(node_info<S,T>* cur
         node_info<S,T> next_node_info;
         next_node_info.index = current_node_info->node->right;
         if(next_node_info.index==UNDEFINED_INDEX) {
-            create_node(&next_node_info);
+            storage->new_node(&next_node_info);
         }
         else {
             next_node_info.node = storage->get(next_node_info.index);
@@ -692,7 +622,7 @@ template<class S,class T,class M> int tst<S,T,M>::build_node(node_info<S,T>* cur
         node_info<S,T> next_node_info;
         next_node_info.index = current_node_info->node->left;
         if(next_node_info.index==UNDEFINED_INDEX) {
-            create_node(&next_node_info);
+            storage->new_node(&next_node_info);
         }
         else {
             next_node_info.node = storage->get(next_node_info.index);
@@ -734,7 +664,7 @@ template<class S,class T,class M> int tst<S,T,M>::build_node(node_info<S,T>* cur
     }
 }
 
-template<class S,class T,class M> void tst<S,T,M>::remove_node(int* current_index,S* string,int string_length) {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::remove_node(int* current_index,S* string,int string_length) {
     tst_node<S,T>* current_node = storage->get(*current_index);
     int diff,*next_index;
 
@@ -755,7 +685,7 @@ template<class S,class T,class M> void tst<S,T,M>::remove_node(int* current_inde
             }
         }
         else {
-            storage->store_data(current_node,default_value);
+            current_node->store(default_value);
         }
     }
     else if(diff>0) {
@@ -790,7 +720,7 @@ template<class S,class T,class M> void tst<S,T,M>::remove_node(int* current_inde
     }
 }
 
-template<class S,class T,class M> tst_node<S,T>* tst<S,T,M>::find_node(int* current_index,int* best_node,S* string,int string_length) {
+template<class S,class T,class M,class RW> tst_node<S,T>* tst<S,T,M,RW>::find_node(int* current_index,int* best_node,S* string,int string_length) {
     tst_node<S,T>* current_node;
     int diff;
 
@@ -831,7 +761,7 @@ template<class S,class T,class M> tst_node<S,T>* tst<S,T,M>::find_node(int* curr
 }
 
 #ifdef SCANNER
-template<class S,class T,class M> void tst<S,T,M>::compute_backtrack(tst_node<S,T> *current_node,S* string, int si_match_start, int si_match_end) {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::compute_backtrack(tst_node<S,T> *current_node,S* string, int si_match_start, int si_match_end) {
     if(current_node->backtrack==UNDEFINED_INDEX) {
         while(si_match_start<si_match_end) {
             current_node->backtrack=root;
@@ -852,7 +782,7 @@ template<class S,class T,class M> void tst<S,T,M>::compute_backtrack(tst_node<S,
     }
 }
 
-template<class S,class T,class M> T tst<S,T,M>::scan(S* string,int string_length,action<S,T>* to_perform) {
+template<class S,class T,class M,class RW> T tst<S,T,M,RW>::scan(S* string,int string_length,action<S,T>* to_perform) {
     // Le premier caractère de la chaine ne correspondant pas à un match
     int si_non_match_start=0;
     // Le noeud pour lequel on a enregistré un match (noeud avec un objet associé)
@@ -1009,7 +939,7 @@ template<class S> inline int is_in(S c,S* stop_chars,int stop_chars_length) {
     return 0;
 }
 
-template<class S,class T,class M> T tst<S,T,M>::scan_with_stop_chars(S* string,int string_length,S* stop_chars,int stop_chars_length,action<S,T>* to_perform) {
+template<class S,class T,class M,class RW> T tst<S,T,M,RW>::scan_with_stop_chars(S* string,int string_length,S* stop_chars,int stop_chars_length,action<S,T>* to_perform) {
     // Le premier caractère de la chaine ne correspondant pas à un match
     int si_non_match_start=0;
     // Le noeud pour lequel on a enregistré un match (noeud avec un objet associé)
@@ -1151,7 +1081,7 @@ template<class S,class T,class M> T tst<S,T,M>::scan_with_stop_chars(S* string,i
 }
 #endif
 
-template<class S,class T,class M> void tst<S,T,M>::balance_node(node_info<S,T>* bal) {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::balance_node(node_info<S,T>* bal) {
     if(bal->height==-1) {
         compute_height_and_balance(bal);
     }
@@ -1180,7 +1110,7 @@ template<class S,class T,class M> void tst<S,T,M>::balance_node(node_info<S,T>* 
     assert(abs(bal->left_balance)<2);
 }
 
-template<class S,class T,class M> void tst<S,T,M>::ll(node_info<S,T>* bal) {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::ll(node_info<S,T>* bal) {
     int left_index=bal->node->left;
     tst_node<S,T>* left_node=storage->get(left_index);
     int left_right_index=left_node->right;
@@ -1194,7 +1124,7 @@ template<class S,class T,class M> void tst<S,T,M>::ll(node_info<S,T>* bal) {
     bal->right_balance=0;
 }
 
-template<class S,class T,class M> void tst<S,T,M>::rr(node_info<S,T>* bal) {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::rr(node_info<S,T>* bal) {
     int right_index=bal->node->right;
     tst_node<S,T>* right_node=storage->get(right_index);
     int right_left_index=right_node->left;
@@ -1208,7 +1138,7 @@ template<class S,class T,class M> void tst<S,T,M>::rr(node_info<S,T>* bal) {
     bal->left_balance=0;
 }
 
-template<class S,class T,class M> void tst<S,T,M>::lr(node_info<S,T>* bal) {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::lr(node_info<S,T>* bal) {
     node_info<S,T> left;
     left.index = bal->node->left;
     left.node = storage->get(left.index);
@@ -1217,7 +1147,7 @@ template<class S,class T,class M> void tst<S,T,M>::lr(node_info<S,T>* bal) {
     ll(bal);
 }
 
-template<class S,class T,class M> void tst<S,T,M>::rl(node_info<S,T>* bal) {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::rl(node_info<S,T>* bal) {
     node_info<S,T> right;
     right.index = bal->node->right;
     right.node = storage->get(right.index);
@@ -1226,7 +1156,7 @@ template<class S,class T,class M> void tst<S,T,M>::rl(node_info<S,T>* bal) {
     rr(bal);
 }
 
-template<class S,class T,class M> void tst<S,T,M>::compute_height_and_balance(node_info<S,T>* current_node_info) {
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::compute_height_and_balance(node_info<S,T>* current_node_info) {
     int left = current_node_info->node->left;
     int right = current_node_info->node->right;
 
@@ -1280,8 +1210,104 @@ template<class S,class T,class M> void tst<S,T,M>::compute_height_and_balance(no
     }
 }
 
-template<class S,class T,class M> int tst<S,T,M>::get_maximum_key_length() {
+template<class S,class T,class M,class RW> int tst<S,T,M,RW>::get_maximum_key_length() {
     return maximum_key_length;
+}
+
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::read(FILE* file) {
+    // We check the version number
+    int version_length;
+    fread(&version_length,sizeof(size_t),1,file);
+    char* version=(char*)tst_malloc(version_length+1);
+    version[version_length]=0;
+    assert(version);
+    fread(version,sizeof(char),version_length,file);
+
+    if(strcmp(TST_VERSION,version)!=0) {
+        tst_free(version);
+        throw TSTException("Invalid version number");
+    }
+    else {
+        tst_free(version);
+    }
+
+    RW reader;
+    fread(&maximum_key_length,sizeof(int),1,file);
+    default_value = reader.read(file);
+    root = read_node(file,&reader,0);
+}
+
+template<class S,class T,class M,class RW> int tst<S,T,M,RW>::read_node(FILE* file,RW* reader,int depth) {
+    if(fgetc(file)) {
+        node_info<S,T> node_info;
+        storage->new_node(&node_info);
+
+        node_info.node->c = fgetc(file);
+        if(fgetc(file)) {
+            node_info.node->store(reader->read(file));
+        }
+        else {
+            node_info.node->store(default_value);
+        }
+#ifdef SCANNER
+        fread(&(node_info.node->position),sizeof(int),1,file);
+        fread(&(node_info.node->backtrack),sizeof(int),1,file);
+        fread(&(node_info.node->backtrack_match_index),sizeof(int),1,file);
+#endif
+        int other_index;
+
+        other_index = read_node(file,reader,depth+1);
+        storage->get(node_info.index)->next = other_index;
+
+        other_index = read_node(file,reader,depth+1);
+        storage->get(node_info.index)->left = other_index;
+
+        other_index = read_node(file,reader,depth+1);
+        storage->get(node_info.index)->right = other_index;
+
+        return node_info.index;
+    }
+    else {
+        return UNDEFINED_INDEX;
+    }
+}
+
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::write(FILE* file) {
+    // We save the version number
+    size_t version_length = strlen(TST_VERSION);
+    fwrite(&version_length,sizeof(size_t),1,file);
+    fwrite(TST_VERSION,sizeof(char),version_length,file);
+
+    fwrite(&maximum_key_length,sizeof(int),1,file);
+    RW writer;
+    writer.write(file,default_value);
+    write_node(file,&writer,root);
+}
+
+template<class S,class T,class M,class RW> void tst<S,T,M,RW>::write_node(FILE* file,RW* writer,int index) {
+    if(index==UNDEFINED_INDEX) {
+        fputc(0,file);
+    }
+    else {
+        tst_node<S,T>* node = storage->get(index);
+        fputc(1,file);
+        fputc(node->c,file);
+        if(node->data!=default_value) {
+            fputc('\1',file);
+            writer->write(file,node->data);
+        }
+        else {
+            fputc('\0',file);
+        }
+#ifdef SCANNER
+        fwrite(&(node->position),sizeof(int),1,file);
+        fwrite(&(node->backtrack),sizeof(int),1,file);
+        fwrite(&(node->backtrack_match_index),sizeof(int),1,file);
+#endif
+        write_node(file,writer,node->next);
+        write_node(file,writer,node->left);
+        write_node(file,writer,node->right);
+    }
 }
 
 #endif

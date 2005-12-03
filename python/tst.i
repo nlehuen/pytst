@@ -18,12 +18,17 @@
  */
 %module tst
 
+%feature("autodoc", "0");
+
 %apply (char *STRING, int LENGTH) { (char *string, int string_length) };
 %apply (char *STRING, int LENGTH) { (char *stop_chars, int stop_chars_length) };
 
-%{
-#include "pythonTST.h"
-%}
+%typemap(in) PythonReference {
+   $1 = PythonReference($input);
+}
+%typemap(out) PythonReference {
+   $result = $1.lend();
+}
 
 %exception {
     try { $action }
@@ -33,11 +38,12 @@
 #define __PYTHON__BUILD__
 %include "tst.h"
 
-%template(_MemoryStorage)  memory_storage<char,PyObject*>;
-%template(_TST)         tst<char,PyObject*,MemoryStorage>;
-%template(_Action)      action<char,PyObject*>;
-%template(_Filter)      filter<char,PyObject*>;
-%template(_Serializer)  serializer<char,PyObject*>;
+%template(_TST)         tst<char,PythonReference,MemoryStorage,ObjectSerializer>;
+%template(_Action)      action<char,PythonReference>;
+%template(_Filter)      filter<char,PythonReference>;
 
 %include "pythonTST.h"
 
+%{
+#include "pythonTST.h"
+%}

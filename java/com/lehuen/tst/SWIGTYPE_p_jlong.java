@@ -8,13 +8,19 @@
 
 package com.lehuen.tst;
 
-public class tst {
-  public static String getTST_VERSION() {
-    return tstJNI.get_TST_VERSION();
+public class SWIGTYPE_p_jlong {
+  private long swigCPtr;
+
+  protected SWIGTYPE_p_jlong(long cPtr, boolean bFutureUse) {
+    swigCPtr = cPtr;
   }
 
-  public static int getUNDEFINED_INDEX() {
-    return tstJNI.get_UNDEFINED_INDEX();
+  protected SWIGTYPE_p_jlong() {
+    swigCPtr = 0;
   }
 
+  protected static long getCPtr(SWIGTYPE_p_jlong obj) {
+    return (obj == null) ? 0 : obj.swigCPtr;
+  }
 }
+

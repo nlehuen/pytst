@@ -1,36 +1,38 @@
-from tst import *
-from time import clock
+# import sys
+# sys.path.append(r"D:\projets\tst\python")
+# sys.path.append(r"D:\projets\tst\python\Debug CRM")
 
-ITERATIONS = 10000
+try:
+	from tst import *
+	from time import clock
+	from random import shuffle
 
-t = TST()
+	print 'TST version : %s'%TST_VERSION
 
-c = clock()
-for i in xrange(ITERATIONS):
-    number = '%i'%i
-print 'Build : %f'%(clock()-c)
+	ITERATIONS = range(500000)
+	shuffle(ITERATIONS)
 
-c = clock()
-for i in xrange(ITERATIONS):
-    number = '%i'%i
-    t[number]=i
-print 'Write : %f'%(clock()-c)
+	t = TST()
 
-t.pack()
+	c = clock()
+	for i in ITERATIONS:
+		number = '%i'%i
+	print 'Build : %f'%(clock()-c)
 
-c = clock()
-for i in xrange(ITERATIONS):
-    number = '%i'%i
-    r = t[number]
-    assert r==i
-print 'Read : %f'%(clock()-c)
+	c = clock()
+	for i in ITERATIONS:
+		number = '%i'%i
+		t[number]=i
+	print 'Write : %f'%(clock()-c)
 
-raw_input("OK")
+	t.pack()
 
-t.write(file("toto.tst","wb"))
-
-raw_input("OK 2")
-
-t = TST(file("toto.tst","rb"))
-
-raw_input("OK 3")
+	c = clock()
+	for i in ITERATIONS:
+		number = '%i'%i
+		assert t[number]==i
+	print 'Read : %f'%(clock()-c)
+except:
+	import traceback
+	traceback.print_exc()
+	raw_input()

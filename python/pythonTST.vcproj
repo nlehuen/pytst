@@ -20,23 +20,27 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Python24\include;..\include"
+				AdditionalIncludeDirectories="E:\Python24\include;..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="0"/>
+				UsePrecompiledHeader="0"
+				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/_tst_d.pyd"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="C:\Python24\libs"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;C:\projets\Python-2.4.1\PCbuild&quot;;E:\Python24\libs"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/pyd.pdb"
+				ProgramDatabaseFile="$(OutDir)/_tst_d.pdb"
+				GenerateMapFile="TRUE"
+				MapExports="TRUE"
+				MapLines="TRUE"
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/pyd.lib"
 				TargetMachine="1"/>
@@ -65,6 +69,117 @@
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
+			ConfigurationType="2"
+			CharacterSet="2"
+			WholeProgramOptimization="TRUE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="3"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="TRUE"
+				FavorSizeOrSpeed="1"
+				AdditionalIncludeDirectories="E:\Python24\include;..\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS"
+				RuntimeLibrary="0"
+				StructMemberAlignment="1"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="3"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)/_tst.pyd"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="E:\Python24\libs"
+				GenerateDebugInformation="TRUE"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				ImportLibrary="$(OutDir)/pyd.lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Debug CRM|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;D:\projets\python-cvs\dist\src\include&quot;;&quot;D:\projets\python-cvs\dist\src\PC&quot;;..\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS"
+				MinimalRebuild="FALSE"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				BufferSecurityCheck="TRUE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				DebugInformationFormat="3"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)/_tst_d.pyd"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;D:\projets\python-cvs\dist\src\PCbuild&quot;"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/_tst_d.pdb"
+				GenerateMapFile="TRUE"
+				MapExports="TRUE"
+				MapLines="TRUE"
+				SubSystem="2"
+				ImportLibrary="$(OutDir)/pyd.lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release CRM|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="TRUE">
@@ -126,6 +241,9 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath=".\test\debug.py">
+			</File>
+			<File
 				RelativePath=".\setup.py">
 			</File>
 			<File
@@ -137,13 +255,31 @@
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="E:\SWIG-1.3.24\swig -c++ -python -I.. -o $(InputName)_wrap.cxx $(InputPath)
+						CommandLine="E:\SWIG-1.3.24\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)
 "
-						AdditionalDependencies="tst.i;..\tst.h;TST.cxx"
+						AdditionalDependencies="..\include\tst.h;pythonTST.h"
 						Outputs="tst_wrap.cxx"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="E:\SWIG-1.3.24\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)
+"
+						AdditionalDependencies="..\tst.h;pythonTST.h"
+						Outputs="tst_wrap.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug CRM|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="C:\SWIG-1.3.24\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)
+"
+						AdditionalDependencies="..\include\tst.h;pythonTST.h"
+						Outputs="tst_wrap.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release CRM|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="C:\SWIG-1.3.24\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)
@@ -165,6 +301,9 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath="..\include\debug.h">
+			</File>
+			<File
+				RelativePath=".\PythonReference.h">
 			</File>
 			<File
 				RelativePath=".\pythonTST.h">
