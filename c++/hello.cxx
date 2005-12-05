@@ -146,6 +146,18 @@ int main(int argc,char** argv) {
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Read from disk : %f\n",elapsed);
 
+    start = clock();
+    for(int i=ITERATIONS-1;i>=0;i--) {
+        char line[256];
+        sprintf(line,"%d\0",i);
+        char *result=linetst->get(line,strlen(line));
+        assert(result);
+        assert(strcmp(line,result)==0);
+    }
+    end = clock();
+    elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Read : %f\n",elapsed);
+
     getchar();
 
     return 0;
