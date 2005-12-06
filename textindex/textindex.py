@@ -36,7 +36,7 @@ class textindex(object):
         ranked = {}
         for key in result:
             ranked[key] = ranked.get(key,0) + 1
-        ranked = sorted(((rank,key) for key, rank in ranked.iteritems()),key=lambda i : -i[0])
+        ranked = sorted(ranked.iteritems(),key=lambda i : -i[1])
         
         return ranked
     
@@ -51,8 +51,8 @@ class textindex(object):
             
         ranked = {}
         for key in result:
-            ranked[key] = ranked.get(key,0) - 1
-        ranked = sorted(((rank,key) for key, rank in ranked.iteritems()),key=lambda i : -i[0])
+            ranked[key] = ranked.get(key,0) + 1
+        ranked = sorted(ranked.iteritems(),key=lambda i : -i[1])
         
         return ranked
     
@@ -80,28 +80,34 @@ if __name__ == "__main__":
 
     ti = textindex()
     
-    for linenumber, line in enumerate(file('12137-8.txt','rb')):
-        ti.add(line,linenumber)
-        if linenumber % 100 == 0:
-            sys.stdout.write('.')
+    start = time()
+    lines = 0
+    for f in ('12137-8.txt','8act310.txt','8act110.txt'):
+        for linenumber, line in enumerate(file(f,'rb')):
+            lines += 1
+            ti.add(line,(f,linenumber))
+            if linenumber % 100 == 0:
+                sys.stdout.write('.')
+        print 'OK'
     ti.pack()
-    print 'OK'
-    # print '%s words'%ti.words()
+    print 'Indexing time : %.2fs for %i lines'%(time()-start,lines)
     
     def lines(text):
-        for r, ln in ti.find(text):
-            print '%i:%i:%s'%(
+        for ln, r in ti.find(text):
+            print '%i:%s:%i:%s'%(
                 r,
-                ln,
-                linecache.getline('12137-8.txt',ln+1)
+                ln[0],
+                ln[1],
+                linecache.getline(ln[0],ln[1]+1)
             ),
 
     def ilines(text):
-        for r, ln in ti.find_incremental(text):
-            print '%i:%i:%s'%(
+        for ln, r in ti.find_incremental(text):
+            print '%i:%s:%i:%s'%(
                 r,
-                ln,
-                linecache.getline('12137-8.txt',ln+1)
+                ln[0],
+                ln[1],
+                linecache.getline(ln[0],ln[1]+1)
             ),
 
     start = time()
