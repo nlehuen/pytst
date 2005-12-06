@@ -4,7 +4,7 @@ from tst import *
 from itertools import groupby
 import re
 
-re_word = re.compile(r'\b\w+\b')
+re_word = re.compile(r'\b[a-zàâäéèêëiîïoôöùûüç]+\b')
 
 class Collector(object):
     def __init__(self,result):
@@ -53,10 +53,13 @@ class textindex(object):
                 result.append(self.tst.walk(None,CallableAction(collector.perform,collector.result),word))
             
             # Calcul de l'intersection en sommant les résultats
-            intersection = result[0]
-            for d in result[1:]:
-                intersection = intersect(intersection,d)
-            result = intersection
+            if result:
+                intersection = result[0]
+                for d in result[1:]:
+                    intersection = intersect(intersection,d)
+                result = intersection
+            else:
+                result = {}
         else:
             collector = Collector(dict())
             for word in re_word.finditer(text.lower()):
@@ -83,10 +86,13 @@ class textindex(object):
                 result.append(current_result)
             
             # Calcul de l'intersection en sommant les résultats
-            intersection = result[0]
-            for d in result[1:]:
-                intersection = intersect(intersection,d)
-            result = intersection
+            if result:
+                intersection = result[0]
+                for d in result[1:]:
+                    intersection = intersect(intersection,d)
+                result = intersection
+            else:
+                result = {}
         else:
             result = dict()
             for word in re_word.finditer(text.lower()):
@@ -158,29 +164,34 @@ if __name__ == "__main__":
         class Explorer(object):
             def __init__(self,master):
                 self.frame = Frame(master)
-                self.frame.grid(sticky=W+E+N+S)
+                self.frame.pack(fill=BOTH, expand=1)
                 
                 self.entry = Entry(self.frame, name='input')
-                self.entry.grid(row=0, column=0, columnspan=2, sticky=W+E)
+                self.entry.pack(fill=X)
                 self.entry.bind('<Key>',self.keyPressed)
                 
-                self.list = Listbox(self.frame, name='list')
-                self.list.grid(row=1, column=0, sticky=W+E+N+S)
+                frame = Frame(self.frame)
+                frame.pack(fill=BOTH, expand=1)
+                scrollbar = Scrollbar(frame, orient=VERTICAL)
+                self.list = Listbox(frame, name='list', yscrollcommand=scrollbar.set)
+                scrollbar.config(command=self.list.yview)
+                scrollbar.pack(side=RIGHT, fill=Y)
+                self.list.pack(side=LEFT, fill=BOTH, expand=1)
                 
                 self.label = Label(self.frame, name='count')
-                self.label.grid(row=2,column=0,columnspan=2, sticky=W+E)
+                self.label.pack()
             
             def keyPressed(self,event):
                 self.list.delete(0,END)
                 start = time()
                 result = ti.find_incremental(self.entry.get())
                 elapsed = time() - start
-                for ln, r in result:
+                for ln, r in result[:100]:
                     self.list.insert(END,'%02i:%16s:%5i:%s'%(
                         r,
                         ln[0],
                         ln[1],
-                        linecache.getline(ln[0],ln[1]+1)
+                        linecache.getline(ln[0],ln[1]+1).rstrip()
                     ))
                 self.label.config(text = '%i lines in %.2fs'%(
                     len(result),
