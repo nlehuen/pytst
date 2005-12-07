@@ -41,7 +41,6 @@ template <class S, class T> class Action : public action<S,T>, wrapper< action<S
         T result() {
             return call<T>(this->get_override("result").ptr());
         }
-    
 };
 
 class TST : public string_tst< char,int,memory_storage<char,int>,reader_writer<int> > {
@@ -64,4 +63,9 @@ BOOST_PYTHON_MODULE(tst)
         .def("close_match",&TST::close_match_string)
         .def("prefix_match",&TST::prefix_match_string)
     ;
+    
+    /*class_< Action<char,int>, boost::noncopyable >("Action")
+        .def("perform", pure_virtual(&action<char,int>::perform))
+        .def("result", pure_virtual(&action<char,int>::result))
+    ;*/
 }
