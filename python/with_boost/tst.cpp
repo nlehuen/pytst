@@ -10,15 +10,15 @@ template <class S, class T, class M, class RW> class string_tst : public tst<S,T
         {
         }
         
-        int put(std::basic_string<S> string, T value) {
+        T put(std::basic_string<S> string, T value) {
             return tst<S,T,M,RW>::put(const_cast<S*>(string.data()),string.size(),value);
         }
 
-        int get(std::basic_string<S> string) {
+        T get(std::basic_string<S> string) {
             return tst<S,T,M,RW>::get(const_cast<S*>(string.data()),string.size());
         }
         
-        int get_or_build(std::basic_string<S> string,filter<S,T>* factory) {
+        T get_or_build(std::basic_string<S> string,filter<S,T>* factory) {
             return tst<S,T,M,RW>::get_or_build(const_cast<S*>(string.data()),string.size(),factory);
         }
 
@@ -53,7 +53,7 @@ template <class S, class T> class string_action_wrapper : public action<S,T>, pu
         }
         
         T result() {
-            return call<int>(this->get_override("result").ptr());
+            return call<T>(this->get_override("result").ptr());
         }
         
 };
@@ -70,17 +70,19 @@ template <class S, class T> class string_filter_wrapper : public filter<S,T>, pu
         }
 };
 
-class TST : public string_tst< char,int,memory_storage<char,int>,reader_writer<int> > {
+class TST : public string_tst< char,object,memory_storage<char,object>,reader_writer<object> > {
     public:
-        TST() : string_tst< char,int,memory_storage<char,int>,reader_writer<int> >(
-            new memory_storage<char,int>(16),
-            0
+        TST() : string_tst< char,object,memory_storage<char,object>,reader_writer<object> >(
+            new memory_storage<char,object>(16),
+            object()
         ) {
         }
 };
 
 BOOST_PYTHON_MODULE(tst)
 {
+    scope().attr("TST_VERSION") = std::string(TST_VERSION)+"-Boost.Python";
+
     class_< TST >("TST")
         .def("put",&TST::put)
         .def("__setitem__",&TST::put)
@@ -103,12 +105,12 @@ BOOST_PYTHON_MODULE(tst)
         .def("pack",&TST::pack)
     ;
     
-    class_< string_action_wrapper<char,int>, boost::noncopyable >("Action")
-        .def("perform", pure_virtual(&action<char,int>::perform))
-        .def("result", pure_virtual(&action<char,int>::result))
+    class_< string_action_wrapper<char,object>, boost::noncopyable >("Action")
+        .def("perform", pure_virtual(&action<char,object>::perform))
+        .def("result", pure_virtual(&action<char,object>::result))
     ;
 
-    class_< string_filter_wrapper<char,int>, boost::noncopyable >("Filter")
-        .def("perform", pure_virtual(&filter<char,int>::perform))
+    class_< string_filter_wrapper<char,object>, boost::noncopyable >("Filter")
+        .def("perform", pure_virtual(&filter<char,object>::perform))
     ;
 }
