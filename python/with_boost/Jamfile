@@ -3,8 +3,8 @@ project-root ;
 
 import python ;
 
-extension hello                     # Declare a Python extension called hello
-:   hello.cpp                       # source
+extension tst                     # Declare a Python extension called hello
+:   tst.cpp                       # source
     # requirements and dependencies for Boost.Python extensions
     <template>@boost/libs/python/build/extension
     ;
