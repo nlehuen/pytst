@@ -18,6 +18,15 @@ template <class S, class T, class M, class RW> class string_tst : public tst<S,T
             return tst<S,T,M,RW>::get(const_cast<S*>(string.data()),string.size());
         }
         
+        int get_or_build(std::basic_string<S> string,filter<S,T>* factory) {
+            return tst<S,T,M,RW>::get_or_build(const_cast<S*>(string.data()),string.size(),factory);
+        }
+
+
+        void remove(std::basic_string<S> string) {
+            tst<S,T,M,RW>::remove(const_cast<S*>(string.data()),string.size());
+        }
+
         T walk(filter<S,T>* filter,action<S,T>* to_perform,std::basic_string<S> string) {
             return tst<S,T,M,RW>::walk(filter,to_perform,const_cast<S*>(string.data()),string.size());
         }
@@ -49,6 +58,18 @@ template <class S, class T> class string_action_wrapper : public action<S,T>, pu
         
 };
 
+template <class S, class T> class string_filter_wrapper : public filter<S,T>, public wrapper< filter<S,T> > {
+    public:
+        T perform(S* string,int string_length,int remaining_distance,T data) {
+            return call<T,std::basic_string<S>,int,T>(
+                this->get_override("perform").ptr(),
+                std::basic_string<S>(string,string_length),
+                remaining_distance,
+                data
+            );
+        }
+};
+
 class TST : public string_tst< char,int,memory_storage<char,int>,reader_writer<int> > {
     public:
         TST() : string_tst< char,int,memory_storage<char,int>,reader_writer<int> >(
@@ -62,12 +83,24 @@ BOOST_PYTHON_MODULE(tst)
 {
     class_< TST >("TST")
         .def("put",&TST::put)
-        .def("get",&TST::get)
         .def("__setitem__",&TST::put)
+        
+        .def("get",&TST::get)
         .def("__getitem__",&TST::get)
+        
+        .def("get_or_build",&TST::get_or_build)
+        
+        .def("remove",&TST::remove)
+
+        .def("write",&TST::write)
+        .def("read",&TST::read)
+
         .def("walk",&TST::walk)
+
         .def("close_match",&TST::close_match)
         .def("prefix_match",&TST::prefix_match)
+
+        .def("pack",&TST::pack)
     ;
     
     string_action_wrapper<char,int> foobar;
@@ -75,5 +108,9 @@ BOOST_PYTHON_MODULE(tst)
     class_< string_action_wrapper<char,int>, boost::noncopyable >("Action")
         .def("perform", pure_virtual(&action<char,int>::perform))
         .def("result", pure_virtual(&action<char,int>::result))
+    ;
+
+    class_< string_filter_wrapper<char,int>, boost::noncopyable >("Filter")
+        .def("perform", pure_virtual(&filter<char,int>::perform))
     ;
 }
