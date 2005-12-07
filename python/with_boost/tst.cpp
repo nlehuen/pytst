@@ -41,7 +41,62 @@ template <class S, class T, class M, class RW> class string_tst : public tst<S,T
 
 };
 
-template <class S, class T> class string_action_wrapper : public action<S,T>, public wrapper< action<S,T> > {
+template <class S, class T> class memory_tst : public string_tst< char,T,memory_storage<S,T>,null_reader_writer<T> > {
+    public:
+        memory_tst<S,T>() : string_tst< S,T,memory_storage<S,T>,null_reader_writer<T> >(
+            new memory_storage<S,T>(16),
+            T()
+        ) {
+        }
+};
+
+/********************* PYTHON SPECIFIC CODE ***********************************/
+
+template <class S,class T> class DictAction : public action<S,T> {
+    public:
+        void perform(S* string,int string_length,int remaining_distance,T data) {
+            std::basic_string<S> s(string,string_length);
+            tuple r;
+            r = (tuple)result_dict.get(s);
+            if(!((bool)r) || r[1] > remaining_distance) {
+                result_dict[s] = make_tuple(data,remaining_distance);
+            }
+        }        
+        
+        T result() {
+            return result_dict;
+        }
+    
+    private:
+        dict result_dict;
+};
+
+template <class S,class T> class CallableAction : public action<S,T> {
+    public:
+        CallableAction(object perform,object result)  : 
+            _perform(perform),
+            _result(result)
+        {
+        }
+    
+        void perform(S* string,int string_length,int remaining_distance,T data) {
+            return call<void,std::basic_string<S>,int,T>(
+                _perform.ptr(),
+                std::basic_string<S>(string,string_length),
+                remaining_distance,
+                data
+            );
+        }
+    
+        T result() {
+            return call<T>(_result.ptr());
+        }
+    
+    private:
+        object _perform, _result;
+};
+
+template <class S, class T> class Action : public action<S,T>, public wrapper< action<S,T> > {
     public:
         void perform(S* string,int string_length,int remaining_distance,T data) {
             return call<void,std::basic_string<S>,int,T>(
@@ -58,7 +113,7 @@ template <class S, class T> class string_action_wrapper : public action<S,T>, pu
         
 };
 
-template <class S, class T> class string_filter_wrapper : public filter<S,T>, public wrapper< filter<S,T> > {
+template <class S, class T> class Filter : public filter<S,T>, public wrapper< filter<S,T> > {
     public:
         T perform(S* string,int string_length,int remaining_distance,T data) {
             return call<T,std::basic_string<S>,int,T>(
@@ -70,47 +125,48 @@ template <class S, class T> class string_filter_wrapper : public filter<S,T>, pu
         }
 };
 
-class TST : public string_tst< char,object,memory_storage<char,object>,reader_writer<object> > {
-    public:
-        TST() : string_tst< char,object,memory_storage<char,object>,reader_writer<object> >(
-            new memory_storage<char,object>(16),
-            object()
-        ) {
-        }
-};
+
 
 BOOST_PYTHON_MODULE(tst)
 {
     scope().attr("TST_VERSION") = std::string(TST_VERSION)+"-Boost.Python";
 
-    class_< TST >("TST")
-        .def("put",&TST::put)
-        .def("__setitem__",&TST::put)
+    class_< memory_tst<char,object> >("TST")
+        .def("put",&memory_tst<char,object>::put)
+        .def("__setitem__",&memory_tst<char,object>::put)
         
-        .def("get",&TST::get)
-        .def("__getitem__",&TST::get)
+        .def("get",&memory_tst<char,object>::get)
+        .def("__getitem__",&memory_tst<char,object>::get)
         
-        .def("get_or_build",&TST::get_or_build)
+        .def("get_or_build",&memory_tst<char,object>::get_or_build)
         
-        .def("remove",&TST::remove)
+        .def("remove",&memory_tst<char,object>::remove)
 
-        .def("write",&TST::write)
-        .def("read",&TST::read)
+        .def("write",&memory_tst<char,object>::write)
+        .def("read",&memory_tst<char,object>::read)
 
-        .def("walk",&TST::walk)
+        .def("walk",&memory_tst<char,object>::walk)
 
-        .def("close_match",&TST::close_match)
-        .def("prefix_match",&TST::prefix_match)
+        .def("close_match",&memory_tst<char,object>::close_match)
+        .def("prefix_match",&memory_tst<char,object>::prefix_match)
 
-        .def("pack",&TST::pack)
+        .def("pack",&memory_tst<char,object>::pack)
     ;
     
-    class_< string_action_wrapper<char,object>, boost::noncopyable >("Action")
+    class_< Action<char,object>, boost::noncopyable >("Action")
         .def("perform", pure_virtual(&action<char,object>::perform))
         .def("result", pure_virtual(&action<char,object>::result))
     ;
 
-    class_< string_filter_wrapper<char,object>, boost::noncopyable >("Filter")
+    class_< DictAction<char,object> >("DictAction")
+        .def("result", &DictAction<char,object>::result)
+    ;
+
+    class_< CallableAction<char,object> >("CallableAction", init<object,object>())
+        .def("result", &CallableAction<char,object>::result)
+    ;
+
+    class_< Filter<char,object>, boost::noncopyable >("Filter")
         .def("perform", pure_virtual(&filter<char,object>::perform))
     ;
 }

@@ -182,7 +182,7 @@ protected:
     int next,size,empty;
 };
 
-template<class T> class reader_writer {
+template<class T> class null_reader_writer {
     public:
         void write(FILE* file, T value) {
         }
