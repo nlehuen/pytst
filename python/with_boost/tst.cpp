@@ -32,15 +32,21 @@ template <class S, class T, class M, class RW> class string_tst : public tst<S,T
 
 };
 
-template <class S, class T> class Action : public action<S,T>, wrapper< action<S,T> > {
+template <class S, class T> class string_action_wrapper : public action<S,T>, public wrapper< action<S,T> > {
     public:
         void perform(S* string,int string_length,int remaining_distance,T data) {
-            return call<void>(this->get_override("perform").ptr());
+            return call<void,std::basic_string<S>,int,T>(
+                this->get_override("perform").ptr(),
+                std::basic_string<S>(string,string_length),
+                remaining_distance,
+                data
+            );
         }
         
         T result() {
-            return call<T>(this->get_override("result").ptr());
+            return call<int>(this->get_override("result").ptr());
         }
+        
 };
 
 class TST : public string_tst< char,int,memory_storage<char,int>,reader_writer<int> > {
@@ -50,7 +56,7 @@ class TST : public string_tst< char,int,memory_storage<char,int>,reader_writer<i
             0
         ) {
         }
-}; 
+};
 
 BOOST_PYTHON_MODULE(tst)
 {
@@ -64,8 +70,10 @@ BOOST_PYTHON_MODULE(tst)
         .def("prefix_match",&TST::prefix_match)
     ;
     
-    /*class_< Action<char,int>, boost::noncopyable >("Action")
+    string_action_wrapper<char,int> foobar;
+    
+    class_< string_action_wrapper<char,int>, boost::noncopyable >("Action")
         .def("perform", pure_virtual(&action<char,int>::perform))
         .def("result", pure_virtual(&action<char,int>::result))
-    ;*/
+    ;
 }
