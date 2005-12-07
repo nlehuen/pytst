@@ -182,6 +182,16 @@ protected:
     int next,size,empty;
 };
 
+template<class T> class reader_writer {
+    public:
+        void write(FILE* file, T value) {
+        }
+        
+        T read(FILE* file) {
+            return T();
+        }
+};
+
 template<class S,class T,class M,class RW> class tst {
 public:
     tst(M* storage,T default_value);

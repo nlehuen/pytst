@@ -7,4 +7,6 @@ extension tst                     # Declare a Python extension called hello
 :   tst.cpp                       # source
     # requirements and dependencies for Boost.Python extensions
     <template>@boost/libs/python/build/extension
-    ;
+:
+    <include>../../include
+;
