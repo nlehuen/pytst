@@ -22,21 +22,24 @@ template <class S, class T, class M, class RW> class string_tst : public tst<S,T
             return tst<S,T,M,RW>::get_or_build(const_cast<S*>(string.data()),string.size(),factory);
         }
 
-
         void remove(std::basic_string<S> string) {
             tst<S,T,M,RW>::remove(const_cast<S*>(string.data()),string.size());
         }
 
-        T walk(filter<S,T>* filter,action<S,T>* to_perform,std::basic_string<S> string) {
-            return tst<S,T,M,RW>::walk(filter,to_perform,const_cast<S*>(string.data()),string.size());
+        T walk1(filter<S,T> &filter,action<S,T> &to_perform) {
+            return tst<S,T,M,RW>::walk(&filter,&to_perform);
+        }
+
+        T walk2(filter<S,T> &filter,action<S,T> &to_perform,std::basic_string<S> string) {
+            return tst<S,T,M,RW>::walk(&filter,&to_perform,const_cast<S*>(string.data()),string.size());
         }
         
-        T close_match(std::basic_string<S> string,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) {
-            return tst<S,T,M,RW>::close_match(const_cast<S*>(string.data()),string.size(),maximum_distance,filter,to_perform);
+        T close_match(std::basic_string<S> string,int maximum_distance,filter<S,T> &filter,action<S,T> &to_perform) {
+            return tst<S,T,M,RW>::close_match(const_cast<S*>(string.data()),string.size(),maximum_distance,&filter,&to_perform);
         }
         
-        T prefix_match(std::basic_string<S> string,filter<S,T>* filter,action<S,T>* to_perform) {
-            return tst<S,T,M,RW>::prefix_match(const_cast<S*>(string.data()),string.size(),filter,to_perform);
+        T prefix_match(std::basic_string<S> string,filter<S,T> &filter,action<S,T> &to_perform) {
+            return tst<S,T,M,RW>::prefix_match(const_cast<S*>(string.data()),string.size(),&filter,&to_perform);
         }
 
 };
@@ -145,7 +148,8 @@ BOOST_PYTHON_MODULE(tst)
         .def("write",&memory_tst<char,object>::write)
         .def("read",&memory_tst<char,object>::read)
 
-        .def("walk",&memory_tst<char,object>::walk)
+        .def("walk",&memory_tst<char,object>::walk1)
+        .def("walk",&memory_tst<char,object>::walk2)
 
         .def("close_match",&memory_tst<char,object>::close_match)
         .def("prefix_match",&memory_tst<char,object>::prefix_match)
