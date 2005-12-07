@@ -103,8 +103,6 @@ BOOST_PYTHON_MODULE(tst)
         .def("pack",&TST::pack)
     ;
     
-    string_action_wrapper<char,int> foobar;
-    
     class_< string_action_wrapper<char,int>, boost::noncopyable >("Action")
         .def("perform", pure_virtual(&action<char,int>::perform))
         .def("result", pure_virtual(&action<char,int>::result))
