@@ -1,0 +1,1 @@
+bjam -sBUILD=release
