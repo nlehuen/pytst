@@ -70,13 +70,8 @@ template <class S,class T> class DictAction : public action<S,T>, public wrapper
         void perform(S* string,int string_length,int remaining_distance,T data) {
             // TODO : try to use dict.get() instead of has_key / []
             std::basic_string<S> s(string,string_length);
-            if(result_dict.has_key(s)) {
-                tuple r = extract<tuple>(result_dict[s]);
-                if(r[1] > remaining_distance) {
-                    result_dict[s] = make_tuple(data,remaining_distance);
-                }
-            }
-            else {
+            extract<tuple&> r(result_dict.get(s));
+            if((!r.check()) || ((tuple&)r)[1] > remaining_distance) {
                 result_dict[s] = make_tuple(data,remaining_distance);
             }
         }        
