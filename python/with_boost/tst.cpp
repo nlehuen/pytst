@@ -26,22 +26,21 @@ template <class S, class T, class M, class RW> class string_tst : public tst<S,T
             tst<S,T,M,RW>::remove(const_cast<S*>(string.data()),string.size());
         }
 
-        T walk1(filter<S,T> &filter,action<S,T> &to_perform) {
-            return tst<S,T,M,RW>::walk(&filter,&to_perform);
+        T walk1(filter<S,T> *filter,action<S,T> *to_perform) {
+            return tst<S,T,M,RW>::walk(filter,to_perform);
         }
 
-        T walk2(filter<S,T> &filter,action<S,T> &to_perform,std::basic_string<S> string) {
-            return tst<S,T,M,RW>::walk(&filter,&to_perform,const_cast<S*>(string.data()),string.size());
+        T walk2(filter<S,T> *filter,action<S,T> *to_perform,std::basic_string<S> string) {
+            return tst<S,T,M,RW>::walk(filter,to_perform,const_cast<S*>(string.data()),string.size());
         }
         
-        T close_match(std::basic_string<S> string,int maximum_distance,filter<S,T> &filter,action<S,T> &to_perform) {
-            return tst<S,T,M,RW>::close_match(const_cast<S*>(string.data()),string.size(),maximum_distance,&filter,&to_perform);
+        T close_match(std::basic_string<S> string,int maximum_distance,filter<S,T> *filter,action<S,T> *to_perform) {
+            return tst<S,T,M,RW>::close_match(const_cast<S*>(string.data()),string.size(),maximum_distance,filter,to_perform);
         }
         
-        T prefix_match(std::basic_string<S> string,filter<S,T> &filter,action<S,T> &to_perform) {
-            return tst<S,T,M,RW>::prefix_match(const_cast<S*>(string.data()),string.size(),&filter,&to_perform);
+        T prefix_match(std::basic_string<S> string,filter<S,T> *filter,action<S,T> *to_perform) {
+            return tst<S,T,M,RW>::prefix_match(const_cast<S*>(string.data()),string.size(),filter,to_perform);
         }
-
 };
 
 template <class S, class T> class memory_tst : public string_tst< char,T,memory_storage<S,T>,null_reader_writer<T> > {
@@ -55,13 +54,29 @@ template <class S, class T> class memory_tst : public string_tst< char,T,memory_
 
 /********************* PYTHON SPECIFIC CODE ***********************************/
 
-template <class S,class T> class DictAction : public action<S,T> {
+template <class S, class T> class NullAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
         void perform(S* string,int string_length,int remaining_distance,T data) {
+        }
+        
+        T result() {
+            return T();
+        }
+        
+};
+
+template <class S,class T> class DictAction : public action<S,T>, public wrapper< action<S,T> > {
+    public:
+        void perform(S* string,int string_length,int remaining_distance,T data) {
+            // TODO : try to use dict.get() instead of has_key / []
             std::basic_string<S> s(string,string_length);
-            tuple r;
-            r = (tuple)result_dict.get(s);
-            if(!((bool)r) || r[1] > remaining_distance) {
+            if(result_dict.has_key(s)) {
+                tuple r = extract<tuple>(result_dict[s]);
+                if(r[1] > remaining_distance) {
+                    result_dict[s] = make_tuple(data,remaining_distance);
+                }
+            }
+            else {
                 result_dict[s] = make_tuple(data,remaining_distance);
             }
         }        
@@ -74,64 +89,18 @@ template <class S,class T> class DictAction : public action<S,T> {
         dict result_dict;
 };
 
-template <class S,class T> class CallableAction : public action<S,T> {
-    public:
-        CallableAction(object perform,object result)  : 
-            _perform(perform),
-            _result(result)
-        {
-        }
-    
-        void perform(S* string,int string_length,int remaining_distance,T data) {
-            return call<void,std::basic_string<S>,int,T>(
-                _perform.ptr(),
-                std::basic_string<S>(string,string_length),
-                remaining_distance,
-                data
-            );
-        }
-    
-        T result() {
-            return call<T>(_result.ptr());
-        }
-    
-    private:
-        object _perform, _result;
-};
-
-template <class S, class T> class Action : public action<S,T>, public wrapper< action<S,T> > {
-    public:
-        void perform(S* string,int string_length,int remaining_distance,T data) {
-            return call<void,std::basic_string<S>,int,T>(
-                this->get_override("perform").ptr(),
-                std::basic_string<S>(string,string_length),
-                remaining_distance,
-                data
-            );
-        }
-        
-        T result() {
-            return call<T>(this->get_override("result").ptr());
-        }
-        
-};
-
-template <class S, class T> class Filter : public filter<S,T>, public wrapper< filter<S,T> > {
+template <class S, class T> class NullFilter : public filter<S,T>, public wrapper< filter<S,T> > {
     public:
         T perform(S* string,int string_length,int remaining_distance,T data) {
-            return call<T,std::basic_string<S>,int,T>(
-                this->get_override("perform").ptr(),
-                std::basic_string<S>(string,string_length),
-                remaining_distance,
-                data
-            );
+            return data;
         }
 };
-
-
 
 BOOST_PYTHON_MODULE(tst)
 {
+    filter<char,object> *test = new NullFilter<char,object>;
+    action<char,object> *test2 = new NullAction<char,object>;
+
     scope().attr("TST_VERSION") = std::string(TST_VERSION)+"-Boost.Python";
 
     class_< memory_tst<char,object> >("TST")
@@ -157,20 +126,13 @@ BOOST_PYTHON_MODULE(tst)
         .def("pack",&memory_tst<char,object>::pack)
     ;
     
-    class_< Action<char,object>, boost::noncopyable >("Action")
-        .def("perform", pure_virtual(&action<char,object>::perform))
-        .def("result", pure_virtual(&action<char,object>::result))
+    class_< NullAction<char,object>, boost::noncopyable >("NullAction")
     ;
 
-    class_< DictAction<char,object> >("DictAction")
+    class_< DictAction<char,object>, boost::noncopyable >("DictAction")
         .def("result", &DictAction<char,object>::result)
     ;
 
-    class_< CallableAction<char,object> >("CallableAction", init<object,object>())
-        .def("result", &CallableAction<char,object>::result)
-    ;
-
-    class_< Filter<char,object>, boost::noncopyable >("Filter")
-        .def("perform", pure_virtual(&filter<char,object>::perform))
+    class_< NullFilter<char,object>, boost::noncopyable >("NullFilter")
     ;
 }
