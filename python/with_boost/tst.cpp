@@ -98,6 +98,21 @@ template <class S,class T> class TupleListAction : public action<S,T>, public wr
         list result_list;
 };
 
+template <class S,class T> class ListAction : public action<S,T>, public wrapper< action<S,T> > {
+    public:
+        void perform(S* string,int string_length,int remaining_distance,T data) {
+            std::basic_string<S> s(string,string_length);
+            result_list.append(data);
+        }        
+        
+        T result() {
+            return result_list;
+        }
+    
+    private:
+        list result_list;
+};
+
 template <class S, class T> class NullFilter : public filter<S,T>, public wrapper< filter<S,T> > {
     public:
         T perform(S* string,int string_length,int remaining_distance,T data) {
@@ -142,8 +157,12 @@ BOOST_PYTHON_MODULE(tst)
         .def("result", &DictAction<char,object>::result)
     ;
 
-    class_< TupleListAction<char,object>, boost::noncopyable >("DictAction")
-        .def("result", &DictAction<char,object>::result)
+    class_< TupleListAction<char,object>, boost::noncopyable >("TupleListAction")
+        .def("result", &TupleListAction<char,object>::result)
+    ;
+
+    class_< ListAction<char,object>, boost::noncopyable >("ListAction")
+        .def("result", &ListAction<char,object>::result)
     ;
 
     class_< NullFilter<char,object>, boost::noncopyable >("NullFilter")

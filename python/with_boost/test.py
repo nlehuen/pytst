@@ -21,5 +21,6 @@ t['toto'] = 'toto'
 t['tata'] = 'tata'
 
 print t.close_match("tota",1,tst.NullFilter(),tst.NullAction())
-
 print t.close_match("tota",1,tst.NullFilter(),tst.DictAction())
+print t.close_match("tota",1,tst.NullFilter(),tst.TupleListAction())
+print t.close_match("tota",1,tst.NullFilter(),tst.ListAction())
