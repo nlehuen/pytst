@@ -68,10 +68,9 @@ template <class S, class T> class NullAction : public action<S,T>, public wrappe
 template <class S,class T> class DictAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
         void perform(S* string,int string_length,int remaining_distance,T data) {
-            // TODO : try to use dict.get() instead of has_key / []
             std::basic_string<S> s(string,string_length);
-            extract<tuple&> r(result_dict.get(s));
-            if((!r.check()) || ((tuple&)r)[1] > remaining_distance) {
+            object r = result_dict.get(s);
+            if(!r || (r[1] > remaining_distance) ) {
                 result_dict[s] = make_tuple(data,remaining_distance);
             }
         }        
@@ -82,6 +81,21 @@ template <class S,class T> class DictAction : public action<S,T>, public wrapper
     
     private:
         dict result_dict;
+};
+
+template <class S,class T> class TupleListAction : public action<S,T>, public wrapper< action<S,T> > {
+    public:
+        void perform(S* string,int string_length,int remaining_distance,T data) {
+            std::basic_string<S> s(string,string_length);
+            result_list.append(make_tuple(s,remaining_distance,data));
+        }        
+        
+        T result() {
+            return result_list;
+        }
+    
+    private:
+        list result_list;
 };
 
 template <class S, class T> class NullFilter : public filter<S,T>, public wrapper< filter<S,T> > {
@@ -125,6 +139,10 @@ BOOST_PYTHON_MODULE(tst)
     ;
 
     class_< DictAction<char,object>, boost::noncopyable >("DictAction")
+        .def("result", &DictAction<char,object>::result)
+    ;
+
+    class_< TupleListAction<char,object>, boost::noncopyable >("DictAction")
         .def("result", &DictAction<char,object>::result)
     ;
 
