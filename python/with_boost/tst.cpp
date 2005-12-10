@@ -113,11 +113,59 @@ template <class S,class T> class ListAction : public action<S,T>, public wrapper
         list result_list;
 };
 
+template <class S,class T> class CallableAction : public action<S,T>, public wrapper< action<S,T> > {
+    public:
+        CallableAction<S,T>(object perform, object result) :
+            _perform(perform),
+            _result(result) {
+        }
+    
+        void perform(S* string,int string_length,int remaining_distance,T data) {
+            std::basic_string<S> s(string,string_length);
+            call<void,std::basic_string<S>,int,T>(
+                _perform.ptr(),
+                s,
+                remaining_distance,
+                data
+            );
+        }        
+        
+        T result() {
+            return call<T>(
+                _result.ptr()
+            );
+        }
+    
+    private:
+        object _perform;
+        object _result;
+};
+
 template <class S, class T> class NullFilter : public filter<S,T>, public wrapper< filter<S,T> > {
     public:
         T perform(S* string,int string_length,int remaining_distance,T data) {
             return data;
         }
+};
+
+template <class S,class T> class CallableFilter : public filter<S,T>, public wrapper< filter<S,T> > {
+    public:
+        CallableFilter<S,T>(object perform) :
+            _perform(perform) {
+        }
+    
+        T perform(S* string,int string_length,int remaining_distance,T data) {
+            std::basic_string<S> s(string,string_length);
+            return call<T,std::basic_string<S>,int,T>(
+                _perform.ptr(),
+                s,
+                remaining_distance,
+                data
+            );
+        }        
+    
+    private:
+        object _perform;
 };
 
 BOOST_PYTHON_MODULE(tst)
@@ -165,6 +213,13 @@ BOOST_PYTHON_MODULE(tst)
         .def("result", &ListAction<char,object>::result)
     ;
 
+    class_< CallableAction<char,object>, boost::noncopyable >("CallableAction",init<object,object>())
+        .def("result", &CallableAction<char,object>::result)
+    ;
+
     class_< NullFilter<char,object>, boost::noncopyable >("NullFilter")
+    ;
+
+    class_< CallableFilter<char,object>, boost::noncopyable >("CallableFilter",init<object>())
     ;
 }
