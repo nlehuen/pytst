@@ -125,13 +125,15 @@ if __name__ == "__main__":
     import sys
     from time import time
     import linecache
+    import glob
 
 
     ti = textindex()
     
     start = time()
     lines = 0
-    for f in ('12137-8.txt','8act310.txt','8act110.txt'):
+    for f in glob.glob('*.txt'):
+        print f,
         for linenumber, line in enumerate(file(f,'rb')):
             lines += 1
             ti.add(line,(f,linenumber))
