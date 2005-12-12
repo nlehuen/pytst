@@ -1,0 +1,12 @@
+# This is the top of our own project tree
+project-root ;
+
+import python ;
+
+extension textindex                     # Declare a Python extension called hello
+:   textindex.cpp                       # source
+    # requirements and dependencies for Boost.Python extensions
+    <template>@boost/libs/python/build/extension
+:
+    <include>../include
+;

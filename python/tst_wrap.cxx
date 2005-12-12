@@ -1486,7 +1486,7 @@ SWIG_FromCharPtr(const char* cptr)
 }
 
 
-  /*@E:\\SWIG-1.3.27\\Lib\\python\\pymacros.swg,72,SWIG_define@*/
+  /*@C:\\swigwin-1.3.27\\Lib\\python\\pymacros.swg,72,SWIG_define@*/
 #define SWIG_From_int PyInt_FromLong
 /*@@*/
 

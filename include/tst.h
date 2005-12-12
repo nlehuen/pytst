@@ -192,7 +192,7 @@ template<class T> class null_reader_writer {
         }
 };
 
-template<class S,class T,class M,class RW> class tst {
+template< class S,class T,class M=memory_storage<S,T>,class RW=null_reader_writer<T> > class tst {
 public:
     tst(M* storage,T default_value);
 
@@ -252,6 +252,54 @@ private:
 #ifdef SCANNER
     void compute_backtrack(tst_node<S,T> *current_node,S* string,int si_match_start,int si_match_end);
 #endif
+};
+
+template <class S, class T, class M=memory_storage<S,T>, class RW=null_reader_writer<T> > class string_tst : public tst<S,T,M,RW> {
+    public:
+        string_tst<S,T,M,RW>(M* storage,T default_value) : tst<S,T,M,RW>(storage,default_value)
+        {
+        }
+        
+        T put(std::basic_string<S> string, T value) {
+            return tst<S,T,M,RW>::put(const_cast<S*>(string.data()),string.size(),value);
+        }
+
+        T get(std::basic_string<S> string) {
+            return tst<S,T,M,RW>::get(const_cast<S*>(string.data()),string.size());
+        }
+        
+        T get_or_build(std::basic_string<S> string,filter<S,T>* factory) {
+            return tst<S,T,M,RW>::get_or_build(const_cast<S*>(string.data()),string.size(),factory);
+        }
+
+        void remove(std::basic_string<S> string) {
+            tst<S,T,M,RW>::remove(const_cast<S*>(string.data()),string.size());
+        }
+
+        T walk1(filter<S,T> *filter,action<S,T> *to_perform) {
+            return tst<S,T,M,RW>::walk(filter,to_perform);
+        }
+
+        T walk2(filter<S,T> *filter,action<S,T> *to_perform,std::basic_string<S> string) {
+            return tst<S,T,M,RW>::walk(filter,to_perform,const_cast<S*>(string.data()),string.size());
+        }
+        
+        T close_match(std::basic_string<S> string,int maximum_distance,filter<S,T> *filter,action<S,T> *to_perform) {
+            return tst<S,T,M,RW>::close_match(const_cast<S*>(string.data()),string.size(),maximum_distance,filter,to_perform);
+        }
+        
+        T prefix_match(std::basic_string<S> string,filter<S,T> *filter,action<S,T> *to_perform) {
+            return tst<S,T,M,RW>::prefix_match(const_cast<S*>(string.data()),string.size(),filter,to_perform);
+        }
+};
+
+template <class S, class T> class memory_tst : public string_tst< char,T > {
+    public:
+        memory_tst<S,T>() : string_tst< S,T,memory_storage<S,T>,null_reader_writer<T> >(
+            new memory_storage<S,T>(16),
+            T()
+        ) {
+        }
 };
 
 template<class S,class T,class M,class RW> tst<S,T,M,RW>::tst(M* storage,T default_value) {
