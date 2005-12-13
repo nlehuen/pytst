@@ -20,8 +20,6 @@
 #include "tst.h"
 #include <map>
 #include <boost/shared_ptr.hpp>
-#include <boost/regex.hpp>
-
 
 template < class S, class T > class textindex : private filter< S, boost::shared_ptr< std::map< T, int > > > {
     public:
