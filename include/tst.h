@@ -355,9 +355,16 @@ template<class S,class T,class M,class RW> T tst<S,T,M,RW>::get_or_build(S* stri
     root = root_info.index;
 
     tst_node<S,T>* current_node=storage->get(node_index);
-    T data=factory->perform(string,string_length,0,current_node->data);
-    current_node->store(data);
-    return data;
+    
+    T data = current_node->data; 
+    if(data==default_value) {
+        data=factory->perform(string,string_length,0,current_node->data);
+        current_node->store(data);
+        return data;
+    }
+    else {
+        return data;
+    }
 }
 
 template<class S,class T,class M,class RW> T tst<S,T,M,RW>::close_match(S* string, int string_length, int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) {

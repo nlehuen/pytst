@@ -1,5 +1,5 @@
 /* 
- # $Id: tst.h 1488 2005-12-07 14:06:02Z nlehuen $
+ # $Id$
  # Copyright (C) 2004-2005 Nicolas Lehuen <nicolas@lehuen.com>
  #
  # This library is free software; you can redistribute it and/or
@@ -20,13 +20,31 @@
 #include <boost/python.hpp>
 using namespace boost::python;
 
+#include <iostream>
 #include <string>
 #include "textindex.h"
+
+template <class S, class T> class python_textindex : public textindex<S,T> {
+    public:
+        list find_list(std::basic_string<S> word) {
+            list result;
+            p_entries entries = find(word);
+            p_entries::element_type::iterator s,e;
+            
+            for(s=entries->begin(),e=entries->end();s != e;s++) {
+                result.append(make_tuple(s->first,s->second));
+            }
+            
+            return result;
+        }
+};
 
 BOOST_PYTHON_MODULE(textindex)
 {
     scope().attr("TST_VERSION") = std::string(TST_VERSION)+"-Boost.Python";
 
-    class_< textindex<char,object> >("textindex")
+    class_< python_textindex<char,object> >("textindex")
+        .def("put",&python_textindex<char,object>::put)
+        .def("find",&python_textindex<char,object>::find_list)
     ;
 }
