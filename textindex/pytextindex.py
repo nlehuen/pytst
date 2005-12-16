@@ -136,7 +136,8 @@ if __name__ == "__main__":
         print f,
         for linenumber, line in enumerate(file(f,'rb')):
             lines += 1
-            ti.add(line,(f,linenumber))
+            line = line.strip()
+            ti.add(line,'%12s:%04i:%s'%(f,linenumber,line))
             if linenumber % 100 == 0:
                 sys.stdout.write('.')
         print 'OK'
@@ -145,20 +146,16 @@ if __name__ == "__main__":
     
     def lines(text,intersection=True):
         for ln, r in ti.find(text,intersection):
-            print '%i:%s:%i:%s'%(
+            print '%02i:%s'%(
                 r,
-                ln[0],
-                ln[1],
-                linecache.getline(ln[0],ln[1]+1)
+                ln,
             ),
 
     def ilines(text,intersection=True):
         for ln, r in ti.find_incremental(text,intersection):
-            print '%i:%s:%i:%s'%(
+            print '%i:%s'%(
                 r,
-                ln[0],
-                ln[1],
-                linecache.getline(ln[0],ln[1]+1)
+                ln,
             ),
 
     if len(sys.argv)>1 and sys.argv[1]=='gui':
@@ -189,11 +186,9 @@ if __name__ == "__main__":
                 result = ti.find_incremental(self.entry.get())
                 elapsed = time() - start
                 for ln, r in result[:100]:
-                    self.list.insert(END,'%02i:%16s:%5i:%s'%(
+                    self.list.insert(END,'%02i:%s'%(
                         r,
-                        ln[0],
-                        ln[1],
-                        linecache.getline(ln[0],ln[1]+1).rstrip()
+                        ln,
                     ))
                 self.label.config(text = '%i lines in %.2fs'%(
                     len(result),

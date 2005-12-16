@@ -91,10 +91,13 @@ template < class S, class T > class textindex : private filter< S, boost::shared
                             }
                         }
 
-                        for(p_entries::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
+                        for(p_entries::element_type::iterator s(entries->begin()),e(entries->end());s != e;) {
                             p_entries::element_type::iterator found(additional->find(s->first));
                             if(found==additional->end()) {
-                                entries->erase(s->first);
+                                entries->erase((s++)->first);
+                            }
+                            else {
+                                s++;
                             }
                         }
 

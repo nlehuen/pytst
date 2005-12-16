@@ -13,7 +13,8 @@ if __name__ == "__main__":
         print f,
         for linenumber, line in enumerate(file(f,'rb')):
             lines += 1
-            ti.put_text(line,f)
+            line = line.strip()
+            ti.put_text(line.lower(),'%12s:%04i:%s'%(f,linenumber,line))
             if linenumber % 100 == 0:
                 sys.stdout.write('.')
         print 'OK'
@@ -21,21 +22,17 @@ if __name__ == "__main__":
     print 'Indexing time : %.2fs for %i lines'%(time()-start,lines)
     
     def lines(text,intersection=True):
-        for ln, r in ti.find_text(text,intersection):
-            print '%i:%s:%i:%s'%(
+        for ln, r in ti.find_text(text.lower(),intersection):
+            print '%02i:%s'%(
                 r,
-                ln[0],
-                ln[1],
-                linecache.getline(ln[0],ln[1]+1)
+                ln
             ),
 
     def ilines(text,intersection=True):
-        for ln, r in ti.find_text(text,intersection):
-            print '%i:%s:%i:%s'%(
+        for ln, r in ti.find_text(text.lower(),intersection):
+            print '%02i:%s'%(
                 r,
-                ln[0],
-                ln[1],
-                linecache.getline(ln[0],ln[1]+1)
+                ln,
             ),
 
     if len(sys.argv)>1 and sys.argv[1]=='gui':
@@ -63,10 +60,11 @@ if __name__ == "__main__":
             def keyPressed(self,event):
                 self.list.delete(0,END)
                 start = time()
-                result = ti.find_text(self.entry.get(),True)
+                result = ti.find_text(self.entry.get().lower(),True)
+                result.sort(key=lambda i : -i[1])
                 elapsed = time() - start
                 for ln, r in result[:100]:
-                    self.list.insert(END,'%02i:%16s'%(
+                    self.list.insert(END,'%02i:%s'%(
                         r,
                         ln,
                     ))
