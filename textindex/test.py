@@ -1,8 +1,80 @@
-import textindex
-t = textindex.textindex()
+if __name__ == "__main__":
+    import sys
+    from time import time
+    import linecache
+    import glob
+    from textindex import textindex
 
-print t.put('nicolas','nicolas')
-print t.put('nicolo','nicolas')
-print t.put('nico','nico')
+    ti = textindex()
+    
+    start = time()
+    lines = 0
+    for f in glob.glob('*.txt'):
+        print f,
+        for linenumber, line in enumerate(file(f,'rb')):
+            lines += 1
+            ti.put_text(line,f)
+            if linenumber % 100 == 0:
+                sys.stdout.write('.')
+        print 'OK'
+    ti.pack()
+    print 'Indexing time : %.2fs for %i lines'%(time()-start,lines)
+    
+    def lines(text,intersection=True):
+        for ln, r in ti.find_text(text,intersection):
+            print '%i:%s:%i:%s'%(
+                r,
+                ln[0],
+                ln[1],
+                linecache.getline(ln[0],ln[1]+1)
+            ),
 
-print t.find('nico')
+    def ilines(text,intersection=True):
+        for ln, r in ti.find_text(text,intersection):
+            print '%i:%s:%i:%s'%(
+                r,
+                ln[0],
+                ln[1],
+                linecache.getline(ln[0],ln[1]+1)
+            ),
+
+    if len(sys.argv)>1 and sys.argv[1]=='gui':
+        from Tkinter import *
+        class Explorer(object):
+            def __init__(self,master):
+                self.frame = Frame(master)
+                self.frame.pack(fill=BOTH, expand=1)
+                
+                self.entry = Entry(self.frame, name='input')
+                self.entry.pack(fill=X)
+                self.entry.bind('<Key>',self.keyPressed)
+                
+                frame = Frame(self.frame)
+                frame.pack(fill=BOTH, expand=1)
+                scrollbar = Scrollbar(frame, orient=VERTICAL)
+                self.list = Listbox(frame, name='list', yscrollcommand=scrollbar.set)
+                scrollbar.config(command=self.list.yview)
+                scrollbar.pack(side=RIGHT, fill=Y)
+                self.list.pack(side=LEFT, fill=BOTH, expand=1)
+                
+                self.label = Label(self.frame, name='count')
+                self.label.pack()
+            
+            def keyPressed(self,event):
+                self.list.delete(0,END)
+                start = time()
+                result = ti.find_text(self.entry.get(),True)
+                elapsed = time() - start
+                for ln, r in result[:100]:
+                    self.list.insert(END,'%02i:%16s'%(
+                        r,
+                        ln,
+                    ))
+                self.label.config(text = '%i lines in %.2fs'%(
+                    len(result),
+                    elapsed
+                ))
+                
+        root = Tk()
+        explorer = Explorer(root)
+        root.mainloop()

@@ -17,24 +17,30 @@
  # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <string>
+
 #include <boost/python.hpp>
 using namespace boost::python;
 
-#include <iostream>
-#include <string>
+#define __PYTHON__BUILD__
 #include "textindex.h"
 
 template <class S, class T> class python_textindex : public textindex<S,T> {
     public:
-        list find_list(std::basic_string<S> word) {
+        list find_word(std::basic_string<S> word) {
+            return to_list(textindex<S,T>::find_word(word));
+        }
+
+        list find_text(std::basic_string<S> word,bool intersection) {
+            return to_list(textindex<S,T>::find_text(word,intersection));
+        }
+
+protected:
+        list to_list(p_entries entries) {
             list result;
-            p_entries entries = find(word);
-            p_entries::element_type::iterator s,e;
-            
-            for(s=entries->begin(),e=entries->end();s != e;s++) {
+            for(p_entries::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
                 result.append(make_tuple(s->first,s->second));
             }
-            
             return result;
         }
 };
@@ -44,7 +50,10 @@ BOOST_PYTHON_MODULE(textindex)
     scope().attr("TST_VERSION") = std::string(TST_VERSION)+"-Boost.Python";
 
     class_< python_textindex<char,object> >("textindex")
-        .def("put",&python_textindex<char,object>::put)
-        .def("find",&python_textindex<char,object>::find_list)
+        .def("put_word",&python_textindex<char,object>::put_word)
+        .def("put_text",&python_textindex<char,object>::put_text)
+        .def("find_word",&python_textindex<char,object>::find_word)
+        .def("find_text",&python_textindex<char,object>::find_text)
+        .def("pack",&python_textindex<char,object>::pack)
     ;
 }

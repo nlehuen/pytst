@@ -26,7 +26,7 @@ if sys.platform == "win32" and sys.version >= '2.4':
 
 setup(
     name = "pytst",
-    version = "0.97",
+    version = "0.98",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
     url = "http://nicolas.lehuen.com/",
@@ -38,7 +38,8 @@ setup(
             ["tst_wrap.cxx"],
             include_dirs=['include'],
             extra_compile_args = extra_compile_args,
-        ),
+            define_macros=[('SCANNER', None),],
+        )
     ],
     download_url = "http://nicolas.lehuen.com/download/",
     classifiers = [

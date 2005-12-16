@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "0.97";
+const char* const TST_VERSION = "0.98";
 
 #include "debug.h"
 
@@ -32,14 +32,14 @@ const char* const TST_VERSION = "0.97";
     #define tst_realloc PyMem_Realloc
     #define tst_free PyMem_Free
     // Pour ajouter/supprimer les fonctions de scanning.
-    #define SCANNER
+    // #define SCANNER
 #else
     #include "stdlib.h"
     #define tst_malloc malloc
     #define tst_realloc realloc
     #define tst_free free
     // Pour ajouter/supprimer les fonctions de scanning.
-    #define SCANNER
+    // #define SCANNER
 #endif
 
 const int UNDEFINED_INDEX=-1;
