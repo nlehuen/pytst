@@ -31,7 +31,7 @@ template < class S, class T > class textindex : private filter< S, boost::shared
     
         template < class S > class collector : public action< S, p_entries > {
             public:
-                virtual collector() : _entries(new entries()), _first(true) {
+                collector() : _entries(new entries()), _first(true) {
                 }
             
                 virtual void perform(S* string, int string_length, int remaining_distance, p_entries data) {
