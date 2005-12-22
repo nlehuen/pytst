@@ -20,6 +20,9 @@ class DictAction(object):
 t = tst.TST()
 t['toto'] = 'toto'
 t['tata'] = 'tata'
+t.pack()
+t['tita'] = 'tita'
+t.pack()
 
 print t.close_match("tota",1,tst.NullFilter(),tst.NullAction())
 print t.close_match("tota",1,tst.NullFilter(),tst.DictAction())

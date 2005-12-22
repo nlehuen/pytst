@@ -36,44 +36,55 @@ public:
         return array+index;
     }
 
-    void new_node(node_info<S,T>* info) {
-        if(empty!=UNDEFINED_INDEX) {
-            // si on a un noeud vide on l'utilise.
-            info->index=empty;
-            info->node=get(empty);
-            info->height=0;
-            
-            // on passe au noeud vide suivant.
-            empty = get(empty)->next;
-        }
-        else {
-            if(next==size) {
-                int new_size = 1 + (size << 1);
-                tst_node<S,T>* new_array = new tst_node<S,T>[new_size];
-                for(int i=0;i<size;i++) {
-                    new_array[i] = array[i];
-                }
-                delete[] array;
-                size = new_size;
-                array = new_array;
-            }
 
-            info->index = next++;
-            info->node=get(info->index);
-        }
-    }
-
-    void delete_node(int index) {
+    inline void delete_node(int index) {
         get(index)->next = empty;
         empty = index;
     }
 
-    void pack() {
-    }    
-
+    void new_node(node_info<S,T>* info);
+    void pack();
+    
 protected:
     tst_node<S,T>* array;
     int next,size,empty;
 };
+
+template<class S,class T> void memory_storage<S,T>::new_node(node_info<S,T>* info) {
+    if(empty!=UNDEFINED_INDEX) {
+        // si on a un noeud vide on l'utilise.
+        info->index=empty;
+        info->node=get(empty);
+        info->height=0;
+        
+        // on passe au noeud vide suivant.
+        empty = get(empty)->next;
+    }
+    else {
+        if(next==size) {
+            int new_size = 1 + (size << 1);
+            tst_node<S,T>* new_array = new tst_node<S,T>[new_size];
+            for(int i=0;i<size;i++) {
+                new_array[i] = array[i];
+            }
+            delete[] array;
+            size = new_size;
+            array = new_array;
+        }
+
+        info->index = next++;
+        info->node=get(info->index);
+    }
+}
+
+template<class S,class T> void memory_storage<S,T>::pack() {
+    tst_node<S,T>* new_array = new tst_node<S,T>[next];
+    for(int i=0;i<next;i++) {
+        new_array[i] = array[i];
+    }
+    delete[] array;
+    size = next;
+    array = new_array;
+}
 
 #endif
