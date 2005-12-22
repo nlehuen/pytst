@@ -37,6 +37,8 @@
 
 #define __PYTHON__BUILD__
 %include "tst.h"
+%include "fundamentals.h"
+%include "memory_storage.h"
 
 %template(_TST)         tst<char,PythonReference,MemoryStorage,ObjectSerializer>;
 %template(_Action)      action<char,PythonReference>;
