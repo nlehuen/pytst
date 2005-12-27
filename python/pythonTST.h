@@ -179,12 +179,12 @@ void ObjectSerializer::write_to_file(PythonReference file,PythonReference data) 
 PythonReference ObjectSerializer::read(FILE* file) {
     int length;
     fread(&length,sizeof(int),1,file);
-    char* string=(char*)malloc(length);
+    char* string=(char*)tst_malloc(length);
     fread(string,sizeof(char),length,file);
     PythonReference dumped(PyString_FromStringAndSize(string,length),0);
     PythonReference call(Py_BuildValue("(O)",dumped.get()),0);
     PythonReference result(PyObject_CallObject(loads.get(),call.get()),0);
-    free(string);
+    tst_free(string);
     return result;
 }
 
@@ -232,8 +232,7 @@ public:
     }
 
     PythonReference __contains__(char* string,int string_length) {
-        PythonReference result = get(string,string_length);
-        if(result.get()==Py_None) {
+        if(contains(string,string_length)) {
             return PythonReference(Py_False);
         }
         else {

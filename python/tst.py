@@ -121,6 +121,10 @@ class _TST(_object):
         """remove(self, string)"""
         return _tst._TST_remove(*args)
 
+    def contains(*args):
+        """contains(self, string) -> bool"""
+        return _tst._TST_contains(*args)
+
     def get_maximum_key_length(*args):
         """get_maximum_key_length(self) -> int"""
         return _tst._TST_get_maximum_key_length(*args)

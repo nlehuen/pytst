@@ -1636,6 +1636,15 @@ SWIG_As_int(PyObject* obj)
 }
 
 
+SWIGINTERNINLINE PyObject*
+  SWIG_From_bool(bool value)
+{
+  PyObject *obj = value ? Py_True : Py_False;
+  Py_INCREF(obj);
+  return obj;
+}
+
+
 #include "pythonTST.h"
 
 #ifdef __cplusplus
@@ -2269,6 +2278,43 @@ static PyObject *_wrap__TST_remove(PyObject *, PyObject *args) {
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap__TST_contains(PyObject *, PyObject *args) {
+    PyObject *resultobj = NULL;
+    tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
+    char *arg2 = (char *) 0 ;
+    int arg3 ;
+    bool result;
+    char *buf2 ;
+    size_t size2 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OO:_TST_contains",&obj0,&obj1)) goto fail;
+    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(1)) SWIG_fail;
+    {
+        SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
+        if (SWIG_arg_fail(2)) SWIG_fail;
+        arg2 = (char *) buf2;
+        arg3 = (int) size2 - 1;
+    }
+    {
+        try {
+            result = (bool)(arg1)->contains(arg2,arg3);
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    {
+        resultobj = SWIG_From_bool(static_cast<bool >(result)); 
+    }
     return resultobj;
     fail:
     return NULL;
@@ -3685,6 +3731,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_TST_get_or_build", _wrap__TST_get_or_build, METH_VARARGS, NULL},
 	 { (char *)"_TST_put", _wrap__TST_put, METH_VARARGS, NULL},
 	 { (char *)"_TST_remove", _wrap__TST_remove, METH_VARARGS, NULL},
+	 { (char *)"_TST_contains", _wrap__TST_contains, METH_VARARGS, NULL},
 	 { (char *)"_TST_get_maximum_key_length", _wrap__TST_get_maximum_key_length, METH_VARARGS, NULL},
 	 { (char *)"_TST_write", _wrap__TST_write, METH_VARARGS, NULL},
 	 { (char *)"_TST_read", _wrap__TST_read, METH_VARARGS, NULL},

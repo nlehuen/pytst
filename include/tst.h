@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "0.98";
+const char* const TST_VERSION = "0.99";
 
 #include "debug.h"
 
@@ -64,6 +64,7 @@ public:
     T get_or_build(S* string,int string_length,filter<S,T>* factory);
     T put(S* string,int string_length,T data);
     void remove(S* string,int string_length);
+    bool contains(S* string,int string_length);
     int get_maximum_key_length();
     void write(FILE* file);
     void read(FILE* file);
@@ -130,6 +131,10 @@ template <class S, class T, class M=memory_storage<S,T>, class RW=null_reader_wr
             tst<S,T,M,RW>::remove(const_cast<S*>(string.data()),string.size());
         }
 
+        bool contains(std::basic_string<S> string) {
+            return tst<S,T,M,RW>::contains(const_cast<S*>(string.data()),string.size());
+        }
+
         T walk1(filter<S,T> *filter,action<S,T> *to_perform) {
             return tst<S,T,M,RW>::walk(filter,to_perform);
         }
@@ -145,15 +150,16 @@ template <class S, class T, class M=memory_storage<S,T>, class RW=null_reader_wr
         T prefix_match(std::basic_string<S> string,filter<S,T> *filter,action<S,T> *to_perform) {
             return tst<S,T,M,RW>::prefix_match(const_cast<S*>(string.data()),string.size(),filter,to_perform);
         }
-};
 
-template <class S, class T> class memory_tst : public string_tst< char,T > {
-    public:
-        memory_tst<S,T>() : string_tst< S,T,memory_storage<S,T>,null_reader_writer<T> >(
-            new memory_storage<S,T>(16),
-            T()
-        ) {
+#ifdef SCANNER
+        T scan(std::basic_string<S> string,action<S,T>* to_perform) {
+            return tst<S,T,M,RW>::scan(const_cast<S*>(string.data()),string.size(),to_perform);
         }
+        
+        T scan_with_stop_chars(std::basic_string<S> string,std::basic_string<S> stop_chars,action<S,T>* to_perform) {
+            return tst<S,T,M,RW>::scan_with_stop_chars(const_cast<S*>(string.data()),string.size(),const_cast<S*>(stop_chars.data()),stop_chars.size(),to_perform);
+        }
+#endif
 };
 
 template<class S,class T,class M,class RW> tst<S,T,M,RW>::tst(M* storage,T default_value) {
@@ -180,6 +186,17 @@ template<class S,class T,class M,class RW> T tst<S,T,M,RW>::get(S* string,int st
     }
     else {
         return default_value;
+    }
+}
+
+template<class S,class T,class M,class RW> bool tst<S,T,M,RW>::contains(S* string,int string_length) {
+    int current_index=root,best_node=UNDEFINED_INDEX;
+    tst_node<S,T>* current_node=find_node(&current_index,&best_node,string,string_length);
+    if(current_node) {
+        return true;
+    }
+    else {
+        return false;
     }
 }
 

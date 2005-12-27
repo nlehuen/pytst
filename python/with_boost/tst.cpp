@@ -1,5 +1,5 @@
 /* 
- # $Id: tst.h 1488 2005-12-07 14:06:02Z nlehuen $
+ # $Id$
  # Copyright (C) 2004-2005 Nicolas Lehuen <nicolas@lehuen.com>
  #
  # This library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 
 #include <boost/python.hpp>
 using namespace boost::python;
+
+#define SCANNER
 
 #include <string>
 #include "tst.h"
@@ -41,8 +43,8 @@ template <class S,class T> class DictAction : public action<S,T>, public wrapper
         void perform(S* string,int string_length,int remaining_distance,T data) {
             std::basic_string<S> s(string,string_length);
             object r = result_dict.get(s);
-            if(!r || (r[1] > remaining_distance) ) {
-                result_dict[s] = make_tuple(data,remaining_distance);
+            if(!r || (r[0] > remaining_distance) ) {
+                result_dict[s] = make_tuple(remaining_distance,data);
             }
         }        
         
@@ -139,6 +141,69 @@ template <class S,class T> class CallableFilter : public filter<S,T>, public wra
         object _perform;
 };
 
+class ObjectSerializer {
+    public:
+        ObjectSerializer();
+        
+        void write(FILE* file,object data);
+        object ObjectSerializer::read(FILE* file);
+    
+        void write_to_file(object file,object data);
+        object ObjectSerializer::read_from_file(object file);
+    
+    private:
+        object dumps,loads;
+};
+
+ObjectSerializer::ObjectSerializer() {
+    object cPickle(handle<>(PyImport_Import(str("cPickle").ptr())));
+    dumps = cPickle.attr("dumps");
+    loads = cPickle.attr("loads");
+}
+
+void ObjectSerializer::write(FILE* file,object data) {
+    str result = (str)dumps(data,2);
+    char *string;
+    int length;
+    PyString_AsStringAndSize(result.ptr(),&string,&length);
+    fwrite(&length,sizeof(int),1,file);
+    fwrite(string,sizeof(char),length,file);
+}
+
+void ObjectSerializer::write_to_file(object file,object data) {
+    return write(PyFile_AsFile(file.ptr()),data);
+}
+
+object ObjectSerializer::read(FILE* file) {
+    int length;
+    fread(&length,sizeof(int),1,file);
+    char* string=(char*)tst_malloc(length);
+    fread(string,sizeof(char),length,file);
+    
+    str dumped(string,length);
+    object result = loads(dumped);
+    tst_free(string);
+    return result;
+}
+
+object ObjectSerializer::read_from_file(object file) {
+    return read(PyFile_AsFile(file.ptr()));
+}
+
+class TST : public string_tst<char,object,memory_storage<char,object>,ObjectSerializer> {
+    public:
+        TST() : string_tst<char,object,memory_storage<char,object>,ObjectSerializer>(new memory_storage<char,object>(16),object()) {
+        }
+    
+        void write_to_file(object file) {
+            this->write(PyFile_AsFile(file.ptr()));
+        }
+    
+        void read_from_file(object file) {
+            this->read(PyFile_AsFile(file.ptr()));
+        }
+};
+
 BOOST_PYTHON_MODULE(tst)
 {
     filter<char,object> *test = new NullFilter<char,object>;
@@ -146,27 +211,37 @@ BOOST_PYTHON_MODULE(tst)
 
     scope().attr("TST_VERSION") = std::string(TST_VERSION)+"-Boost.Python";
 
-    class_< memory_tst<char,object> >("TST")
-        .def("put",&memory_tst<char,object>::put)
-        .def("__setitem__",&memory_tst<char,object>::put)
+    class_< TST >("TST")
+        .def("put",&TST::put)
+        .def("__setitem__",&TST::put)
         
-        .def("get",&memory_tst<char,object>::get)
-        .def("__getitem__",&memory_tst<char,object>::get)
+        .def("get",&TST::get)
+        .def("__getitem__",&TST::get)
         
-        .def("get_or_build",&memory_tst<char,object>::get_or_build)
+        .def("__delitem__",&TST::remove)
         
-        .def("remove",&memory_tst<char,object>::remove)
+        .def("contains",&TST::contains)
+        .def("__contains__",&TST::contains)
 
-        .def("write",&memory_tst<char,object>::write)
-        .def("read",&memory_tst<char,object>::read)
+        .def("get_or_build",&TST::get_or_build)
+        
+        .def("get_maximum_key_length",&TST::get_maximum_key_length)
+        
+        .def("remove",&TST::remove)
 
-        .def("walk",&memory_tst<char,object>::walk1)
-        .def("walk",&memory_tst<char,object>::walk2)
+        .def("scan",&TST::scan)
+        .def("scan_with_stop_chars",&TST::scan_with_stop_chars)
 
-        .def("close_match",&memory_tst<char,object>::close_match)
-        .def("prefix_match",&memory_tst<char,object>::prefix_match)
+        .def("write_to_file",&TST::write_to_file)
+        .def("read_from_file",&TST::read_from_file)
 
-        .def("pack",&memory_tst<char,object>::pack)
+        .def("walk",&TST::walk1)
+        .def("walk",&TST::walk2)
+
+        .def("close_match",&TST::close_match)
+        .def("prefix_match",&TST::prefix_match)
+
+        .def("pack",&TST::pack)
     ;
     
     class_< NullAction<char,object>, boost::noncopyable >("NullAction")
