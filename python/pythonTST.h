@@ -194,10 +194,11 @@ PythonReference ObjectSerializer::read_from_file(PythonReference file) {
 
 
 typedef memory_storage<char,PythonReference> MemoryStorage;
+typedef tst<char,PythonReference,MemoryStorage,ObjectSerializer> BaseTST;
 
-class TST : public tst<char,PythonReference,MemoryStorage,ObjectSerializer> {
+class TST : public BaseTST {
 public:
-    TST() : tst<char,PythonReference,MemoryStorage,ObjectSerializer>(new MemoryStorage(16),PythonReference()) {
+    TST() : BaseTST(new MemoryStorage(16),PythonReference()) {
     }
 
     virtual ~TST() {
