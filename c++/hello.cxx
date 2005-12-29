@@ -19,8 +19,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "tst.h"
 #include <time.h>
+
+#define SCANNER
+#include "tst.h"
 
 class stringserializer {
 public:
@@ -53,13 +55,13 @@ public:
 
 class donothing : public action<char,char*> {
     public:
-        virtual void perform(char* string,int string_length,int remaining_distance,char* data) {}
+        virtual void perform(const char* string,int string_length,int remaining_distance,char* data) {}
         virtual char* result() { return NULL; }
 };
 
 class printer : public donothing {
     public:
-        virtual void perform(char* key,int remaining_distance,char* data) {
+        virtual void perform(const char* key,int remaining_distance,char* data) {
             printf("%s = %s (%i)\n",key,data,remaining_distance);
         }
 };
@@ -73,7 +75,7 @@ class tester : public donothing {
             this->mytst=mytst;
         }
 
-        virtual void perform(char* string,int string_length,int remaining_distance,char* data) {
+        virtual void perform(const char* string,int string_length,int remaining_distance,char* data) {
             donothing* dn = new donothing();
             mytst->close_match(string,string_length,3,NULL,dn);
             mytst->prefix_match(string,string_length,NULL,dn);

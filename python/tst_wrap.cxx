@@ -1486,7 +1486,7 @@ SWIG_FromCharPtr(const char* cptr)
 }
 
 
-  /*@C:\\swigwin-1.3.27\\Lib\\python\\pymacros.swg,72,SWIG_define@*/
+  /*@E:\\SWIG-1.3.27\\Lib\\python\\pymacros.swg,72,SWIG_define@*/
 #define SWIG_From_int PyInt_FromLong
 /*@@*/
 
@@ -1876,7 +1876,7 @@ static PyObject *_wrap__TST_walk__SWIG_0(PyObject *, PyObject *args) {
     if (SWIG_arg_fail(3)) SWIG_fail;
     {
         try {
-            result = (arg1)->walk(arg2,arg3);
+            result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->walk(arg2,arg3);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -1921,7 +1921,7 @@ static PyObject *_wrap__TST_walk__SWIG_1(PyObject *, PyObject *args) {
     }
     {
         try {
-            result = (arg1)->walk(arg2,arg3,arg4,arg5);
+            result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->walk(arg2,arg3,(char const *)arg4,arg5);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2070,7 +2070,7 @@ static PyObject *_wrap__TST_close_match(PyObject *, PyObject *args) {
     if (SWIG_arg_fail(6)) SWIG_fail;
     {
         try {
-            result = (arg1)->close_match(arg2,arg3,arg4,arg5,arg6);
+            result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->close_match((char const *)arg2,arg3,arg4,arg5,arg6);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2115,7 +2115,7 @@ static PyObject *_wrap__TST_prefix_match(PyObject *, PyObject *args) {
     if (SWIG_arg_fail(5)) SWIG_fail;
     {
         try {
-            result = (arg1)->prefix_match(arg2,arg3,arg4,arg5);
+            result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->prefix_match((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2152,7 +2152,7 @@ static PyObject *_wrap__TST_get(PyObject *, PyObject *args) {
     }
     {
         try {
-            result = (arg1)->get(arg2,arg3);
+            result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->get((char const *)arg2,arg3);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2193,7 +2193,7 @@ static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
     if (SWIG_arg_fail(4)) SWIG_fail;
     {
         try {
-            result = (arg1)->get_or_build(arg2,arg3,arg4);
+            result = (arg1)->get_or_build((char const *)arg2,arg3,arg4);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2235,7 +2235,7 @@ static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
     }
     {
         try {
-            result = (arg1)->put(arg2,arg3,arg4);
+            result = (arg1)->put((char const *)arg2,arg3,arg4);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2271,7 +2271,7 @@ static PyObject *_wrap__TST_remove(PyObject *, PyObject *args) {
     }
     {
         try {
-            (arg1)->remove(arg2,arg3);
+            (arg1)->remove((char const *)arg2,arg3);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2306,7 +2306,7 @@ static PyObject *_wrap__TST_contains(PyObject *, PyObject *args) {
     }
     {
         try {
-            result = (bool)(arg1)->contains(arg2,arg3);
+            result = (bool)((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->contains((char const *)arg2,arg3);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2332,7 +2332,7 @@ static PyObject *_wrap__TST_get_maximum_key_length(PyObject *, PyObject *args) {
     if (SWIG_arg_fail(1)) SWIG_fail;
     {
         try {
-            result = (int)(arg1)->get_maximum_key_length();
+            result = (int)((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->get_maximum_key_length();
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2361,7 +2361,7 @@ static PyObject *_wrap__TST_write(PyObject *, PyObject *args) {
     if (SWIG_arg_fail(2)) SWIG_fail;
     {
         try {
-            (arg1)->write(arg2);
+            ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->write(arg2);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2427,7 +2427,7 @@ static PyObject *_wrap__TST_scan(PyObject *, PyObject *args) {
     if (SWIG_arg_fail(4)) SWIG_fail;
     {
         try {
-            result = (arg1)->scan(arg2,arg3,arg4);
+            result = (arg1)->scan((char const *)arg2,arg3,arg4);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2479,7 +2479,7 @@ static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
     if (SWIG_arg_fail(6)) SWIG_fail;
     {
         try {
-            result = (arg1)->scan_with_stop_chars(arg2,arg3,arg4,arg5,arg6);
+            result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->scan_with_stop_chars((char const *)arg2,arg3,(char const *)arg4,arg5,arg6);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2556,7 +2556,7 @@ static PyObject *_wrap__Action_perform(PyObject *, PyObject *args) {
     }
     {
         try {
-            (arg1)->perform(arg2,arg3,arg4,arg5);
+            (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2658,7 +2658,7 @@ static PyObject *_wrap__Filter_perform(PyObject *, PyObject *args) {
     }
     {
         try {
-            result = (arg1)->perform(arg2,arg3,arg4,arg5);
+            result = (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2765,7 +2765,7 @@ static PyObject *_wrap_CallableAction_perform(PyObject *, PyObject *args) {
     }
     {
         try {
-            (arg1)->perform(arg2,arg3,arg4,arg5);
+            (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2892,7 +2892,7 @@ static PyObject *_wrap_CallableFilter_perform(PyObject *, PyObject *args) {
     }
     {
         try {
-            result = (arg1)->perform(arg2,arg3,arg4,arg5);
+            result = (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -2989,7 +2989,7 @@ static PyObject *_wrap_DictAction_perform(PyObject *, PyObject *args) {
     }
     {
         try {
-            (arg1)->perform(arg2,arg3,arg4,arg5);
+            (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -3110,7 +3110,7 @@ static PyObject *_wrap_ListAction_perform(PyObject *, PyObject *args) {
     }
     {
         try {
-            (arg1)->perform(arg2,arg3,arg4,arg5);
+            (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -3231,7 +3231,7 @@ static PyObject *_wrap_TupleListAction_perform(PyObject *, PyObject *args) {
     }
     {
         try {
-            (arg1)->perform(arg2,arg3,arg4,arg5);
+            (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;

@@ -91,7 +91,7 @@ template<class S,class T> class action {
 public:
     action() {}
     virtual ~action() {}
-    virtual void perform(S* string,int string_length,int remaining_distance,T data)=0;
+    virtual void perform(const S* string,int string_length,int remaining_distance,T data)=0;
     virtual T result()=0;
 };
 
@@ -99,7 +99,7 @@ template<class S,class T> class filter {
 public:
     filter() {}
     virtual ~filter() {}
-    virtual T perform(S* string,int string_length,int remaining_distance,T data)=0;
+    virtual T perform(const S* string,int string_length,int remaining_distance,T data)=0;
 };
 
 template<class T> class null_reader_writer {

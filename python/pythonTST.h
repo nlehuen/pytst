@@ -30,7 +30,7 @@ public:
     virtual ~CallableAction() {
     }
 
-    virtual void perform(char* string,int string_length,int remaining_distance,PythonReference data) {
+    virtual void perform(const char* string,int string_length,int remaining_distance,PythonReference data) {
         if(_perform.get()==Py_None) {
             return;
         }
@@ -59,7 +59,7 @@ public:
     virtual ~CallableFilter() {
     }
 
-    virtual PythonReference perform(char* string,int string_length,int remaining_distance,PythonReference data) {
+    virtual PythonReference perform(const char* string,int string_length,int remaining_distance,PythonReference data) {
         PythonReference tuple(Py_BuildValue("s#iO",string,string_length,remaining_distance,data.get()),0);
         return PythonReference(PyObject_CallObject(callable.get(),tuple.get()),0);
     }
@@ -76,7 +76,7 @@ public:
     virtual ~DictAction() {
     }
 
-    virtual void perform(char* string,int string_length,int remaining_distance,PythonReference data) {
+    virtual void perform(const char* string,int string_length,int remaining_distance,PythonReference data) {
         PythonReference key(Py_BuildValue("s#",string,string_length),0);
         
         PyObject* old_tuple=PyDict_GetItem(dict.get(),key.get());
@@ -107,7 +107,7 @@ public:
     virtual ~ListAction() {
     }
 
-    virtual void perform(char* string,int string_length,int remaining_distance,PythonReference data) {
+    virtual void perform(const char* string,int string_length,int remaining_distance,PythonReference data) {
         PyList_Append(list.get(),data.get());
     }
 
@@ -127,7 +127,7 @@ public:
     virtual ~TupleListAction() {
     }
 
-    virtual void perform(char* string,int string_length,int remaining_distance,PythonReference data) {
+    virtual void perform(const char* string,int string_length,int remaining_distance,PythonReference data) {
         PythonReference tuple(Py_BuildValue("s#iO",string,string_length,remaining_distance,data.get()),0);
         PyList_Append(list.get(),tuple.get());
     }

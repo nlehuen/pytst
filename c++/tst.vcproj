@@ -135,6 +135,12 @@
 				RelativePath="..\include\debug.h">
 			</File>
 			<File
+				RelativePath="..\include\fundamentals.h">
+			</File>
+			<File
+				RelativePath="..\include\memory_storage.h">
+			</File>
+			<File
 				RelativePath="..\include\tst.h">
 			</File>
 		</Filter>
