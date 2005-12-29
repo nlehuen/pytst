@@ -1,0 +1,282 @@
+# -*- coding: iso-8859-1 -*-
+
+import unittest
+import sys
+import random
+import string
+from time import time
+from itertools import izip
+
+from tst import *
+
+def random_string(length):
+    return ''.join([random.choice(string.letters) for x in xrange(length)])
+
+timers = {}
+
+def timer_start(name):
+    timers[name] = -time()
+
+def timer_end(name):
+    timers[name] += time() 
+
+class TestRefCount(unittest.TestCase):
+    def setUp(self):
+        self.a = 'toto'
+        self.rc_a = sys.getrefcount(self.a)
+        self.rc_None = sys.getrefcount(None)
+        self.tree=TST()
+        
+    def testSetup(self):
+        self.assertEqual(sys.getrefcount(None),self.rc_None+17)
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a)
+
+    def testStore(self):
+        self.tree[self.a]=self.a
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a+1)
+        
+    def testOverwrite(self):
+        self.tree[self.a]=self.a
+        a2 = self.tree.put(self.a,'coucou')
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a+1)
+        del(a2)
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a)
+    
+    def testWalkList(self):
+        l=self.tree.walk(None,ListAction())
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a)
+        self.tree[self.a]=self.a
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a+1)
+        l=self.tree.walk(None,ListAction())
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a+2)
+        del(l)
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a+1)
+
+    def testWalkDict(self):
+        self.tree[self.a]=self.a
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a+1)
+        d=self.tree.walk(None,DictAction())
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a+2)
+        del(d)
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a+1)
+        del self.tree[self.a]
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a)
+    
+    def testRemove(self):
+        del(self.tree)
+        self.assertEqual(sys.getrefcount(None),self.rc_None)
+        self.assertEqual(sys.getrefcount(self.a),self.rc_a)
+
+class TestBasics(unittest.TestCase):
+    def setUp(self):
+        self.tree = TST()
+        self.keys = dict([
+            (str(random.random()),random.random())
+            for x in xrange(4000)
+        ])
+        for k,v in self.keys.iteritems():
+            self.tree[k] = v
+        
+    def testGet(self):
+        for k,v in self.keys.iteritems():
+            self.assertEqual(self.tree[k],v)
+
+    def testWithRemove(self):
+        for k in random.sample(self.keys,len(self.keys)/8):
+            del self.keys[k]
+            del self.tree[k]
+        self.testGet()
+
+    def testWithUpdate(self):
+        for k in random.sample(self.keys,len(self.keys)/8):
+            v = self.keys[k]
+            nv = random.random()
+            self.keys[k] = nv
+            self.assertEqual(self.tree.put(k,nv),v)
+        self.testGet()
+
+class TestHighCapacity(unittest.TestCase):
+    def setUp(self):
+        tree = TST()
+        timer_start('build_big')
+        keys = map(str,xrange(1000000))
+        random.shuffle(keys)
+        timer_end('build_big')
+        timer_start('write_big')
+        for k in keys:
+            tree[k] = k
+        timer_end('write_big')
+
+        self.keys, self.tree = keys, tree
+    
+    def testGet(self):
+        timer_start('read_big')
+        for k in self.keys:
+            self.assertEqual(self.tree[k],k)
+        timer_end('read_big')
+
+    def testDelete(self):
+        timer_start('delete_big/10')
+        for k in self.keys[:len(self.keys)/10]:
+            del self.tree[k]
+        timer_end('delete_big/10')
+        timer_start('check_delete_big')
+        for k in self.keys[:len(self.keys)/10]:
+            self.assertEqual(self.tree[k],None)
+        for k in self.keys[len(self.keys)/10+1:]:
+            self.assertEqual(self.tree[k],k)
+        timer_end('check_delete_big')
+
+    def testUpdate(self):
+        timer_start('build_big/10')
+        old_keys = self.keys[:len(self.keys)/10]
+        new_keys = map(lambda x:str(int(x) + 1),old_keys) 
+        timer_end('build_big/10')
+        timer_start('update_big/10')
+        for k,kp in izip(old_keys,new_keys):
+            self.assertEqual(self.tree.put(k,kp),k)
+        timer_end('update_big/10')
+        timer_start('check_update_big')
+        for k,kp in izip(old_keys,new_keys):
+            self.assertEqual(self.tree[k],kp)
+        timer_end('check_update_big')
+
+class TestScan(unittest.TestCase):
+    def setUp(self):
+        self.tree = TST()
+        self.tree['Nicolas']='Nicolas'
+        self.tree['olaf']='olaf'
+        self.tree['lazlo']='lazlo'
+        self.tree['Nicolas-Antoinette']='Nicolas-Antoinette'
+        self.tree['Antoinette']='Antoinette'
+        self.tree['Antoine']='Antoine'
+        self.tree['astride']='astride'
+        self.tree['VICTOIRE']='VICTOIRE'
+        self.tree['IAN']='IAN'
+        self.tree['x']='x'
+        self.tree['V']='V'
+        self.tree['ROBERT']='ROBERT'
+        self.tree['A N']='A N'
+        self.tree['olaaf']='olaaf'
+        self.tree['laslo']='laslo'
+
+    def testScan0_1(self):
+        self.assertEqual(self.tree.scan('Nicolas',TupleListAction()),[('Nicolas', 7, 'Nicolas'),])
+    
+    def testScan0_2(self):
+        self.assertEqual(self.tree.scan(' Nicolas',TupleListAction()),[(' ',-1,None),('Nicolas', 7, 'Nicolas'),])
+    
+    def testScan0_3(self):
+        self.assertEqual(self.tree.scan('Nicolas ',TupleListAction()),[('Nicolas', 7, 'Nicolas'),(' ',-1,None),])
+    
+    def testScan0_4(self):
+        self.assertEqual(self.tree.scan(' Nicolas ',TupleListAction()),[(' ',-1,None),('Nicolas', 7, 'Nicolas'),(' ',-1,None),])
+    
+    def testScan0_5(self):
+        self.assertEqual(self.tree.scan(' ',TupleListAction()),[(' ',-1,None),])
+    
+    def testScan0_6(self):
+        self.assertEqual(self.tree.scan('la',TupleListAction()),[('la', -2, None)])
+    
+    def testScan0_7(self):
+        self.assertEqual(self.tree.scan('lazl',TupleListAction()),[('lazl', -4, None)])
+    
+    def testScan1(self):
+        self.assertEqual(self.tree.scan('lazlo',TupleListAction()),[('lazlo', 5, 'lazlo')])
+        self.assertEqual(self.tree.scan('Nicolazlo',TupleListAction()),[('Nico', -4, None), ('lazlo', 5, 'lazlo')])
+    
+    def testScan24(self):
+        self.assertEqual(self.tree.scan('A NicoNicoNicolasNicoNico',TupleListAction()),[('A N', 3, 'A N'), ('icoNico', -7, None), ('Nicolas', 7, 'Nicolas'), ('NicoNico', -8, None)])
+    
+    def testScan1_1(self):
+        self.assertEqual(self.tree.scan('hippocampe',TupleListAction()),[('hippocampe', -10, None)])
+    
+    def testScan2(self):
+        self.assertEqual(self.tree.scan('NicolaNicolaNicolaNicolaNicola',TupleListAction()),[('NicolaNicolaNicolaNicolaNicola', -30, None)])
+    
+    def testScan3(self):
+        self.assertEqual(self.tree.scan('Nicolasstupide',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('stupide', -7, None)])
+    
+    def testScan4(self):
+        self.assertEqual(self.tree.scan('Nicolast',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('t', -1, None)])
+    
+    def testScan5(self):
+        self.assertEqual(self.tree.scan('xxxNicolas',TupleListAction()),[('x', 1, 'x'), ('x', 1, 'x'), ('x', 1, 'x'), ('Nicolas', 7, 'Nicolas')])
+    
+    def testScan6(self):
+        self.assertEqual(self.tree.scan('xxx Nicolas',TupleListAction()),[('x', 1, 'x'), ('x', 1, 'x'), ('x', 1, 'x'), (' ', -1, None), ('Nicolas', 7, 'Nicolas')])
+    
+    def testScan7(self):
+        self.assertEqual(self.tree.scan('Antoinette Antoinette',TupleListAction()),[('Antoinette', 10, 'Antoinette'), (' ', -1, None), ('Antoinette', 10, 'Antoinette')])
+    
+    def testScan8(self):
+        self.assertEqual(self.tree.scan('Nicolas-Antoinette',TupleListAction()),[('Nicolas-Antoinette', 18, 'Nicolas-Antoinette')])
+    
+    def testScan9(self):
+        self.assertEqual(self.tree.scan('Nicolas-Antoine',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('-', -1, None), ('Antoine', 7, 'Antoine')])
+    
+    def testScan9_1(self):
+        self.assertEqual(self.tree.scan('Nicolas-Antoine-Antoine',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('-', -1, None), ('Antoine', 7, 'Antoine'), ('-', -1, None), ('Antoine', 7, 'Antoine')])
+    
+    def testScan9_2(self):
+        self.assertEqual(self.tree.scan('Nicolas-Antoine-Antoine-',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('-', -1, None), ('Antoine', 7, 'Antoine'), ('-', -1, None), ('Antoine', 7, 'Antoine'), ('-', -1, None)])
+    
+    def testScan10(self):
+        self.assertEqual(self.tree.scan('Nicolas-Antoinet',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('-', -1, None), ('Antoine', 7, 'Antoine'), ('t', -1, None)])
+    
+    def testScanWithStopChars1(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('Nicolas',' -',TupleListAction()),[('Nicolas', 7, 'Nicolas')])
+    
+    def testScanWithStopChars2(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('Nicolasstupide',' -',TupleListAction()),[('Nicolasstupide', -14, None)])
+    
+    def testScanWithStopChars25(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
+        self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
+        self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
+
+    def testScanWithStopChars3(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('Nicolast',' -',TupleListAction()),[('Nicolast', -8, None)])
+    
+    def testScanWithStopChars4(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('xxxNicolas',' -',TupleListAction()),[('xxxNicolas', -10, None)])
+    
+    def testScanWithStopChars5(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('xxx Nicolas',' -',TupleListAction()),[('xxx ', -4, None),('Nicolas', 7, 'Nicolas')])
+    
+    def testScanWithStopChars6(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('xxxAntoine Nicolas',' -',TupleListAction()),[('xxxAntoine ', -11, None),('Nicolas', 7, 'Nicolas')])
+    
+    def testScanWithStopChars8(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('Nicolas-Antoinette',' -',TupleListAction()),[('Nicolas-Antoinette', 18, 'Nicolas-Antoinette')])
+    
+    def testScanWithStopChars9(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('Nicolas-Antoine',' -',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('-', -1, None), ('Antoine', 7, 'Antoine')])
+    
+    def testScanWithStopChars10(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('Nicolas-Antoinet',' -',TupleListAction()),[('Nicolas', 7, 'Nicolas'), ('-Antoinet', -9, None)])
+    
+    def testScanVicieux(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('xxxAntoine A Nicolas',' -',TupleListAction()),[('xxxAntoine A ', -13, None),('Nicolas', 7, 'Nicolas')])
+    
+    def testScanVicieux2(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('Antoinette Antoinette',' -',TupleListAction()),[('Antoinette', 10, 'Antoinette'), (' ', -1, None), ('Antoinette', 10, 'Antoinette')])
+    
+    def testScanVicieux3(self):
+        self.assertEqual(self.tree.scan_with_stop_chars('nastride lazlo',' -',TupleListAction()),[('nastride ', -9, None), ('lazlo', 5, 'lazlo')])
+        self.assertEqual(self.tree.scan_with_stop_chars('VIAN ROBERT',' -',TupleListAction()),[('VIAN ', -5, None), ('ROBERT', 6, 'ROBERT')])
+
+if __name__ == '__main__':
+    try:
+        try:
+            if sys.argv[1] == 'fast':
+                del TestHighCapacity
+                del sys.argv[1]
+        except:
+            pass   
+
+        unittest.main()
+    finally:
+        print 'Timings for %s'%TST_VERSION
+        for name, timing in timers.iteritems():
+            print '%16s : %7.3f s'%(name,timing)
