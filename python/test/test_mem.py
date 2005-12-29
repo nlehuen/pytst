@@ -9,7 +9,7 @@ print ca1, ca2
 
 t=tst.TST()
 
-assert(sys.getrefcount(None)==ca2+1)
+# assert(sys.getrefcount(None)==ca2+1)
 
 assert(sys.getrefcount(a)==ca1)
 
@@ -43,7 +43,7 @@ assert(sys.getrefcount(a)==ca1+1)
 
 d=t.walk(None,tst.DictAction())
 
-assert(sys.getrefcount(a)==ca1+3)
+assert(sys.getrefcount(a)==ca1+2)
 
 del(d)
 

@@ -6,8 +6,8 @@ import time, sys
 
 filt = tst.CallableFilter(lambda k,d,o: o)
 
-t = tst.TST(8,None)
-u = tst.TST(8,0)
+t = tst.TST()
+u = tst.TST()
 
 print 'Loading file'
 start = time.time()
