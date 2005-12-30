@@ -133,6 +133,7 @@ class TestBasics(unittest.TestCase):
         for k in random.sample(self.keys,len(self.keys)/8):
             del self.keys[k]
             del self.tree[k]
+        self.tree.pack()
         self.testGet()
 
     def testWithUpdate(self):
@@ -194,6 +195,7 @@ class TestHighCapacity(unittest.TestCase):
         for k in self.keys[:len(self.keys)/10]:
             del self.tree[k]
         timer_end('delete_big/10',10)
+        self.tree.pack()
         timer_start('check_delete_big')
         for k in self.keys[:len(self.keys)/10]:
             self.assertEqual(self.tree[k],None)

@@ -21,9 +21,12 @@
 
 #include <vector>
 
-template<class S,class T> class memory_storage {
+template<typename S,typename T> class memory_storage {
 public:
-    memory_storage(int initial_size) : array(initial_size), next(0), empty(UNDEFINED_INDEX) {
+    typedef typename std::vector< tst_node<S,T> > array_type;
+    typedef typename array_type::iterator iterator_type;
+
+    memory_storage(int initial_size) : array(initial_size), empty(UNDEFINED_INDEX) {
     }
 
     ~memory_storage() {
@@ -42,11 +45,11 @@ public:
     void pack();
     
 protected:
-    std::vector< tst_node<S,T> > array;
-    int next,empty;
+    array_type array;
+    int empty;
 };
 
-template<class S,class T> void memory_storage<S,T>::new_node(node_info<S,T>* info) {
+template<typename S,typename T> void memory_storage<S,T>::new_node(node_info<S,T>* info) {
     if(empty!=UNDEFINED_INDEX) {
         // si on a un noeud vide on l'utilise.
         info->index=empty;
@@ -58,14 +61,67 @@ template<class S,class T> void memory_storage<S,T>::new_node(node_info<S,T>* inf
     }
     else {
         // on construit un noeud supplémentaire dans le tableau.
-        info->index = next++;
+        info->index = array.size();
         array.push_back(tst_node<S,T>());
         // array.resize(next); // moins rapide !
         info->node=get(info->index);
     }
 }
 
-template<class S,class T> void memory_storage<S,T>::pack() {
+template<typename S,typename T> void memory_storage<S,T>::pack() {
+    size_t last_index = array.size() - 1;
+    while(empty!=UNDEFINED_INDEX) {
+        int next_empty = get(empty)->next; 
+    
+        if(empty==last_index) {
+            // Le noeud vide est en dernière position
+            // On le sort de la chaîne des noeuds vides
+            empty = next_empty;
+            // Et on n'en a plus besoin
+            last_index--;
+        }
+        else if(next_empty==last_index) {
+            // Le noeud suivant est le dernier noeud
+            // Il est donc inutile de procéder à l'échange :
+            // On sort le suivant de la chaine des noeuds vide
+            get(empty)->next = get(next_empty)->next; 
+            // et on le supprime
+            last_index--;
+        }
+        else {
+            // On échange le noeud vide actuel
+            // avec le dernier noeud
+            array[empty] = array[last_index];
+            
+            // On réécrit tout le tableau
+            // Une seule réécriture suffit puisqu'un noeud n'a qu'un seul
+            // parent
+            for(iterator_type i=array.begin(),e=array.end();i!=e;i++) {
+                if(i->right == last_index) {
+                    i->right = empty;
+                    break;
+                }
+                else if(i->left == last_index) {
+                    i->left = empty;
+                    break;
+                }
+                else if(i->next == last_index) {
+                    i->next = empty;
+                    break;
+                }
+            }
+            
+            // On peut ensuite éliminer le dernier noeud
+            last_index--;
+            // Et passer au noeud vide suivant.
+            empty = next_empty;
+        }
+
+    }
+    if(last_index+1<array.size()) {
+        array.resize(last_index+1);
+    }
+
     std::vector< tst_node<S,T> >(array).swap(array);
 }
 
