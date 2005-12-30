@@ -2,8 +2,10 @@
 
 import unittest
 import sys
+import os
 import random
 import string
+import datetime
 from time import time
 from itertools import izip
 
@@ -18,13 +20,53 @@ from tcc.timer import Timer
 from tcc.util import levenshtein
 
 timers = {}
+
 def timer_start(name):
     timers.setdefault(name,Timer()).start()
+
 def timer_end(name,normalize=1.0):
     timers.setdefault(name,Timer()).stop(normalize)
-def print_timers():
-    for name in sorted(timers.keys()):
+
+def print_timers(comment):
+    keys = sorted(timers.keys())
+
+    for name in keys: 
         print '%16s : %s'%(name,timers[name])
+    
+    statsfilename = os.path.join(os.path.dirname(__file__),'stats.csv')
+    if os.path.isfile(statsfilename):
+        statsfile = file(statsfilename,'ab')
+    else:
+        statsfile = file(statsfilename,'wb')
+        header = [
+            'date',
+            'version',
+            'comment'
+        ]
+        for key in keys:
+            header.append('%s:min'%key)
+            header.append('%s:med'%key)
+            header.append('%s:avg'%key)
+            header.append('%s:max'%key)
+
+        statsfile.write(';'.join(header))
+        statsfile.write('\n')
+    
+    row = [
+        datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+        TST_VERSION,
+        comment,
+    ]
+    for key in keys:
+        timer = timers[key]
+        row.append(('%7.4f'%timer.min).replace('.',','))
+        row.append(('%7.4f'%timer.med).replace('.',','))
+        row.append(('%7.4f'%timer.avg).replace('.',','))
+        row.append(('%7.4f'%timer.max).replace('.',','))
+    
+    statsfile.write(';'.join(row))
+    statsfile.write('\n')
+        
 
 class TestRefCount(unittest.TestCase):
     def setUp(self):
@@ -131,7 +173,7 @@ class TestHighCapacity(unittest.TestCase):
     def setUp(self):
         tree = TST()
         timer_start('build_big')
-        keys = map(str,xrange(1000000))
+        keys = map(str,xrange(100000))
         random.shuffle(keys)
         timer_end('build_big')
         timer_start('write_big')
@@ -305,16 +347,15 @@ class TestScan(unittest.TestCase):
         self.assertEqual(self.tree.scan_with_stop_chars('VIAN ROBERT',' -',TupleListAction()),[('VIAN ', -5, None), ('ROBERT', 6, 'ROBERT')])
 
 if __name__ == '__main__':
-    try:
-        suite = unittest.TestSuite((
-            unittest.makeSuite(TestBasics),
-            unittest.makeSuite(TestRefCount),
-            unittest.makeSuite(TestHighCapacity),
-            unittest.makeSuite(TestScan),
-        ))
-        
-        for i in xrange(3):
-            unittest.TextTestRunner().run(suite)    
-    finally:
-        print 'Timings for %s'%TST_VERSION
-        print_timers()
+    comment = ' '.join(sys.argv[1:])
+
+    suite = unittest.TestSuite((
+        unittest.makeSuite(TestBasics),
+        unittest.makeSuite(TestHighCapacity),
+        unittest.makeSuite(TestScan),
+    ))
+    
+    for i in xrange(3):
+        unittest.TextTestRunner().run(suite)
+
+    print_timers(comment)

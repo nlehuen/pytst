@@ -19,23 +19,19 @@
 #ifndef __MEMORY_STORAGE__H_INCLUDED__
 #define __MEMORY_STORAGE__H_INCLUDED__
 
+#include <vector>
+
 template<class S,class T> class memory_storage {
 public:
-    memory_storage(int initial_size) {
-        array = new tst_node<S,T>[initial_size];
-        next = 0;
-        size = initial_size;
-        empty=UNDEFINED_INDEX;
+    memory_storage(int initial_size) : array(initial_size), next(0), empty(UNDEFINED_INDEX) {
     }
 
     ~memory_storage() {
-        delete[] array;
     }
 
     inline tst_node<S,T>* get(int index) {
-        return array+index;
+        return &(array[index]);
     }
-
 
     inline void delete_node(int index) {
         get(index)->next = empty;
@@ -46,8 +42,8 @@ public:
     void pack();
     
 protected:
-    tst_node<S,T>* array;
-    int next,size,empty;
+    std::vector< tst_node<S,T> > array;
+    int next,empty;
 };
 
 template<class S,class T> void memory_storage<S,T>::new_node(node_info<S,T>* info) {
@@ -61,30 +57,16 @@ template<class S,class T> void memory_storage<S,T>::new_node(node_info<S,T>* inf
         empty = get(empty)->next;
     }
     else {
-        if(next==size) {
-            int new_size = 1 + (size << 1);
-            tst_node<S,T>* new_array = new tst_node<S,T>[new_size];
-            for(int i=0;i<size;i++) {
-                new_array[i] = array[i];
-            }
-            delete[] array;
-            size = new_size;
-            array = new_array;
-        }
-
+        // on construit un noeud supplémentaire dans le tableau.
         info->index = next++;
+        array.push_back(tst_node<S,T>());
+        // array.resize(next); // moins rapide !
         info->node=get(info->index);
     }
 }
 
 template<class S,class T> void memory_storage<S,T>::pack() {
-    tst_node<S,T>* new_array = new tst_node<S,T>[next];
-    for(int i=0;i<next;i++) {
-        new_array[i] = array[i];
-    }
-    delete[] array;
-    size = next;
-    array = new_array;
+    std::vector< tst_node<S,T> >(array).swap(array);
 }
 
 #endif
