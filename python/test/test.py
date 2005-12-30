@@ -9,10 +9,13 @@ from itertools import izip
 
 from tst import *
 
+random.seed(0)
+
 def random_string(length):
     return ''.join([random.choice(string.letters) for x in xrange(length)])
 
 from tcc.timer import Timer
+from tcc.util import levenshtein
 
 timers = {}
 def timer_start(name):
@@ -108,12 +111,21 @@ class TestBasics(unittest.TestCase):
 
     def testWalkWithRoot(self):
         timer_start("walk_root")
-        for i in xrange(1000):
+        for i in xrange(100):
             d = self.tree.walk(None,DictAction(),'0.1')
         timer_end("walk_root")
         for k, v in d.iteritems():
             self.assertTrue(k.startswith('0.'))
-            self.assertEquals(self.tree[k],v[1])        
+            self.assertEquals(self.tree[k],v[1])
+    
+    def testCloseMatch(self):
+        value = self.keys.keys()[0]
+        timer_start("close_match")
+        for i in xrange(100):
+            d = self.tree.close_match(value,4,None,DictAction())
+        timer_end("close_match")
+        for k, v in d.iteritems():
+            self.assertEqual(levenshtein(k,value),v[0])
 
 class TestHighCapacity(unittest.TestCase):
     def setUp(self):
@@ -203,7 +215,7 @@ class TestScan(unittest.TestCase):
     
     def testScan1(self):
         timer_start("scan")
-        for i in xrange(100000):
+        for i in xrange(10000):
             self.assertEqual(self.tree.scan('lazlo',TupleListAction()),[('lazlo', 5, 'lazlo')])
             self.assertEqual(self.tree.scan('Nicolazlo',TupleListAction()),[('Nico', -4, None), ('lazlo', 5, 'lazlo')])
         timer_end("scan")
@@ -255,7 +267,7 @@ class TestScan(unittest.TestCase):
     
     def testScanWithStopChars25(self):
         timer_start("scan_stop_chars")
-        for i in xrange(100000):
+        for i in xrange(10000):
             self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
             self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
             self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
@@ -294,14 +306,15 @@ class TestScan(unittest.TestCase):
 
 if __name__ == '__main__':
     try:
-        try:
-            if sys.argv[1] == 'fast':
-                del TestHighCapacity
-                del sys.argv[1]
-        except:
-            pass   
-
-        unittest.main()
+        suite = unittest.TestSuite((
+            unittest.makeSuite(TestBasics),
+            unittest.makeSuite(TestRefCount),
+            unittest.makeSuite(TestHighCapacity),
+            unittest.makeSuite(TestScan),
+        ))
+        
+        for i in xrange(3):
+            unittest.TextTestRunner().run(suite)    
     finally:
         print 'Timings for %s'%TST_VERSION
         print_timers()
