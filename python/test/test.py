@@ -12,13 +12,16 @@ from tst import *
 def random_string(length):
     return ''.join([random.choice(string.letters) for x in xrange(length)])
 
+from tcc.timer import Timer
+
 timers = {}
-
 def timer_start(name):
-    timers[name] = -time()
-
-def timer_end(name):
-    timers[name] += time() 
+    timers.setdefault(name,Timer()).start()
+def timer_end(name,normalize=1.0):
+    timers.setdefault(name,Timer()).stop(normalize)
+def print_timers():
+    for name, timer in timers.iteritems():
+        print '%16s : %s'%(name,timer)
 
 class TestRefCount(unittest.TestCase):
     def setUp(self):
@@ -119,7 +122,7 @@ class TestHighCapacity(unittest.TestCase):
         timer_start('delete_big/10')
         for k in self.keys[:len(self.keys)/10]:
             del self.tree[k]
-        timer_end('delete_big/10')
+        timer_end('delete_big/10',10)
         timer_start('check_delete_big')
         for k in self.keys[:len(self.keys)/10]:
             self.assertEqual(self.tree[k],None)
@@ -131,11 +134,11 @@ class TestHighCapacity(unittest.TestCase):
         timer_start('build_big/10')
         old_keys = self.keys[:len(self.keys)/10]
         new_keys = map(lambda x:str(int(x) + 1),old_keys) 
-        timer_end('build_big/10')
+        timer_end('build_big/10',10)
         timer_start('update_big/10')
         for k,kp in izip(old_keys,new_keys):
             self.assertEqual(self.tree.put(k,kp),k)
-        timer_end('update_big/10')
+        timer_end('update_big/10',10)
         timer_start('check_update_big')
         for k,kp in izip(old_keys,new_keys):
             self.assertEqual(self.tree[k],kp)
@@ -278,5 +281,4 @@ if __name__ == '__main__':
         unittest.main()
     finally:
         print 'Timings for %s'%TST_VERSION
-        for name, timing in timers.iteritems():
-            print '%16s : %7.3f s'%(name,timing)
+        print_timers()
