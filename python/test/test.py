@@ -20,8 +20,8 @@ def timer_start(name):
 def timer_end(name,normalize=1.0):
     timers.setdefault(name,Timer()).stop(normalize)
 def print_timers():
-    for name, timer in timers.iteritems():
-        print '%16s : %s'%(name,timer)
+    for name in sorted(timers.keys()):
+        print '%16s : %s'%(name,timers[name])
 
 class TestRefCount(unittest.TestCase):
     def setUp(self):
@@ -97,6 +97,23 @@ class TestBasics(unittest.TestCase):
             self.keys[k] = nv
             self.assertEqual(self.tree.put(k,nv),v)
         self.testGet()
+        
+    def testWalk(self):
+        timer_start("walk")
+        for i in xrange(100):
+            d = self.tree.walk(None,DictAction())
+        timer_end("walk")
+        for k,v in d.iteritems():
+            self.assertEquals(self.tree[k],v[1])        
+
+    def testWalkWithRoot(self):
+        timer_start("walk_root")
+        for i in xrange(1000):
+            d = self.tree.walk(None,DictAction(),'0.1')
+        timer_end("walk_root")
+        for k, v in d.iteritems():
+            self.assertTrue(k.startswith('0.'))
+            self.assertEquals(self.tree[k],v[1])        
 
 class TestHighCapacity(unittest.TestCase):
     def setUp(self):
@@ -185,8 +202,11 @@ class TestScan(unittest.TestCase):
         self.assertEqual(self.tree.scan('lazl',TupleListAction()),[('lazl', -4, None)])
     
     def testScan1(self):
-        self.assertEqual(self.tree.scan('lazlo',TupleListAction()),[('lazlo', 5, 'lazlo')])
-        self.assertEqual(self.tree.scan('Nicolazlo',TupleListAction()),[('Nico', -4, None), ('lazlo', 5, 'lazlo')])
+        timer_start("scan")
+        for i in xrange(100000):
+            self.assertEqual(self.tree.scan('lazlo',TupleListAction()),[('lazlo', 5, 'lazlo')])
+            self.assertEqual(self.tree.scan('Nicolazlo',TupleListAction()),[('Nico', -4, None), ('lazlo', 5, 'lazlo')])
+        timer_end("scan")
     
     def testScan24(self):
         self.assertEqual(self.tree.scan('A NicoNicoNicolasNicoNico',TupleListAction()),[('A N', 3, 'A N'), ('icoNico', -7, None), ('Nicolas', 7, 'Nicolas'), ('NicoNico', -8, None)])
@@ -234,9 +254,12 @@ class TestScan(unittest.TestCase):
         self.assertEqual(self.tree.scan_with_stop_chars('Nicolasstupide',' -',TupleListAction()),[('Nicolasstupide', -14, None)])
     
     def testScanWithStopChars25(self):
-        self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
-        self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
-        self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
+        timer_start("scan_stop_chars")
+        for i in xrange(100000):
+            self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
+            self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
+            self.assertEqual(self.tree.scan_with_stop_chars('A Nico trlalaA Nico Nico Nico Nicolas Nico Nicol Nicol Nico',' ',TupleListAction()),[('A Nico trlalaA Nico Nico Nico ', -30, None), ('Nicolas', 7, 'Nicolas'), (' Nico Nicol Nicol Nico', -22, None)])
+        timer_end("scan_stop_chars")
 
     def testScanWithStopChars3(self):
         self.assertEqual(self.tree.scan_with_stop_chars('Nicolast',' -',TupleListAction()),[('Nicolast', -8, None)])
