@@ -41,7 +41,7 @@ template <class S, class T> class NullAction : public action<S,T>, public wrappe
 template <class S,class T> class DictAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
         void perform(const S* string,int string_length,int remaining_distance,T data) {
-            std::basic_string<S> s(string,string_length);
+            str s(string,string_length);
             object r = result_dict.get(s);
             if(!r || (r[0] > remaining_distance) ) {
                 result_dict[s] = make_tuple(remaining_distance,data);
@@ -59,7 +59,7 @@ template <class S,class T> class DictAction : public action<S,T>, public wrapper
 template <class S,class T> class TupleListAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
         void perform(const S* string,int string_length,int remaining_distance,T data) {
-            std::basic_string<S> s(string,string_length);
+            str s(string,string_length);
             result_list.append(make_tuple(s,remaining_distance,data));
         }        
         
@@ -74,7 +74,6 @@ template <class S,class T> class TupleListAction : public action<S,T>, public wr
 template <class S,class T> class ListAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
         void perform(const S* string,int string_length,int remaining_distance,T data) {
-            std::basic_string<S> s(string,string_length);
             result_list.append(data);
         }        
         
@@ -94,10 +93,8 @@ template <class S,class T> class CallableAction : public action<S,T>, public wra
         }
     
         void perform(const S* string,int string_length,int remaining_distance,T data) {
-            std::basic_string<S> s(string,string_length);
-            call<void,std::basic_string<S>,int,T>(
-                _perform.ptr(),
-                s,
+            _perform(
+                str(string,string_length),
                 remaining_distance,
                 data
             );
@@ -128,13 +125,7 @@ template <class S,class T> class CallableFilter : public filter<S,T>, public wra
         }
     
         T perform(const S* string,int string_length,int remaining_distance,T data) {
-            std::basic_string<S> s(string,string_length);
-            return call<T,std::basic_string<S>,int,T>(
-                _perform.ptr(),
-                s,
-                remaining_distance,
-                data
-            );
+        	return _perform(str(string,string_length),remaining_distance,data);
         }        
     
     private:
