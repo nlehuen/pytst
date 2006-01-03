@@ -169,6 +169,18 @@ class TestBasics(unittest.TestCase):
         timer_end("close_match")
         for k, v in d.iteritems():
             self.assertEqual(levenshtein(k,value),v[0])
+    
+    def testWriteRead(self):
+        f = file('test.tst','wb')
+        self.tree.write_to_file(f)
+        f.close()
+        
+        f = file('test.tst','rb')
+        self.tree = TST()
+        self.tree.read_from_file(f)
+        f.close()
+        
+        self.testGet()
 
 class TestHighCapacity(unittest.TestCase):
     def setUp(self):

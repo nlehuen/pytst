@@ -119,7 +119,7 @@ template <class S, class T, class M=memory_storage<S,T>, class RW=null_reader_wr
             return tst<S,T,M,RW>::put(string.c_str(),string.size(),value);
         }
 
-        T get(std::basic_string<S> string) {
+        T get(std::basic_string<S> string) const {
             return tst<S,T,M,RW>::get(string.c_str(),string.size());
         }
         
@@ -131,23 +131,23 @@ template <class S, class T, class M=memory_storage<S,T>, class RW=null_reader_wr
             tst<S,T,M,RW>::remove(string.c_str(),string.size());
         }
 
-        bool contains(std::basic_string<S> string) {
+        bool contains(std::basic_string<S> string) const {
             return tst<S,T,M,RW>::contains(string.c_str(),string.size());
         }
 
-        T walk1(filter<S,T> *filter,action<S,T> *to_perform) {
+        T walk1(filter<S,T> *filter,action<S,T> *to_perform) const {
             return tst<S,T,M,RW>::walk(filter,to_perform);
         }
 
-        T walk2(filter<S,T> *filter,action<S,T> *to_perform,std::basic_string<S> string) {
+        T walk2(filter<S,T> *filter,action<S,T> *to_perform,std::basic_string<S> string) const {
             return tst<S,T,M,RW>::walk(filter,to_perform,string.c_str(),string.size());
         }
         
-        T close_match(std::basic_string<S> string,int maximum_distance,filter<S,T> *filter,action<S,T> *to_perform) {
+        T close_match(std::basic_string<S> string,int maximum_distance,filter<S,T> *filter,action<S,T> *to_perform) const {
             return tst<S,T,M,RW>::close_match(string.c_str(),string.size(),maximum_distance,filter,to_perform);
         }
         
-        T prefix_match(std::basic_string<S> string,filter<S,T> *filter,action<S,T> *to_perform) {
+        T prefix_match(std::basic_string<S> string,filter<S,T> *filter,action<S,T> *to_perform) const {
             return tst<S,T,M,RW>::prefix_match(string.c_str(),string.size(),filter,to_perform);
         }
 

@@ -186,7 +186,7 @@ class TST : public string_tst<char,object,memory_storage<char,object>,ObjectSeri
         TST() : string_tst<char,object,memory_storage<char,object>,ObjectSerializer>(new memory_storage<char,object>(16),object()) {
         }
     
-        void write_to_file(object file) {
+        void write_to_file(object file) const {
             this->write(PyFile_AsFile(file.ptr()));
         }
     
