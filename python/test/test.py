@@ -66,7 +66,6 @@ def print_timers(comment):
     
     statsfile.write(';'.join(row))
     statsfile.write('\n')
-        
 
 class TestRefCount(unittest.TestCase):
     def setUp(self):
@@ -114,6 +113,30 @@ class TestRefCount(unittest.TestCase):
         del(self.tree)
         self.assertEqual(sys.getrefcount(None),self.rc_None)
         self.assertEqual(sys.getrefcount(self.a),self.rc_a)
+
+class TestCollectors(unittest.TestCase):
+    def setUp(self):
+        self.tree = TST()
+        self.keys = dict(
+            a = 1,
+            ab = 2,
+            abc = 3,
+            b = 4
+        )
+        for k,v in self.keys.iteritems():
+            self.tree[k] = v
+    
+    def testListAction(self):
+        l = self.tree.walk(None,ListAction())
+        self.assertEqual(l,[1,2,3,4])
+    
+    def testTupleListAction(self):
+        l = self.tree.walk(None,TupleListAction())
+        self.assertEqual(l,[('a',0,1),('ab',0,2),('abc',0,3),('b',0,4)])
+
+    def testDictAction(self):
+        l = self.tree.walk(None,DictAction())
+        self.assertEqual(l,dict(a=(0,1),ab=(0,2),abc=(0,3),b=(0,4)))
 
 class TestBasics(unittest.TestCase):
     def setUp(self):
@@ -364,10 +387,11 @@ if __name__ == '__main__':
     comment = ' '.join(sys.argv[1:])
 
     suite = unittest.TestSuite((
+        unittest.makeSuite(TestCollectors),
         unittest.makeSuite(TestBasics),
         unittest.makeSuite(TestHighCapacity),
         unittest.makeSuite(TestScan),
-    ))
+     ))
     
     for i in xrange(3):
         unittest.TextTestRunner().run(suite)
