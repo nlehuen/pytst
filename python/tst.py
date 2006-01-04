@@ -137,6 +137,13 @@ class _TST(_object):
         """read(self, file)"""
         return _tst._TST_read(*args)
 
+    def iterator(*args):
+        """
+        iterator(self) -> lexical_iterator<(char,PythonReference,MemoryStorage,ObjectSerializer)>
+        iterator(self, string) -> lexical_iterator<(char,PythonReference,MemoryStorage,ObjectSerializer)>
+        """
+        return _tst._TST_iterator(*args)
+
     def scan(*args):
         """scan(self, string, to_perform) -> PythonReference"""
         return _tst._TST_scan(*args)

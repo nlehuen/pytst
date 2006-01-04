@@ -190,8 +190,12 @@ class TestBasics(unittest.TestCase):
         for i in xrange(100):
             d = self.tree.close_match(value,4,None,DictAction())
         timer_end("close_match")
-        for k, v in d.iteritems():
-            self.assertEqual(levenshtein(k,value),v[0])
+        for k, v in self.keys.iteritems():
+            distance = levenshtein(k,value)
+            self.assertTrue(
+                (distance<=4 and k in d and d[k][0]==distance)
+                or (distance>4 and k not in d)
+            )
     
     def testWriteRead(self):
         f = file('test.tst','wb')

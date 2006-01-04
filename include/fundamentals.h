@@ -30,7 +30,7 @@ public:
     char* message;
 };
 
-template<class S,class T> class tst_node {
+template<typename S,typename T> class tst_node {
 public:
     tst_node() :
         c(0)
@@ -64,7 +64,7 @@ public:
     }
 };
 
-template<class S,class T> class node_info {
+template<typename S,typename T> class node_info {
 public:
     int index;
     tst_node<S,T>* node;
@@ -87,7 +87,7 @@ public:
     }
 };
 
-template<class S,class T> class action {
+template<typename S,typename T> class action {
 public:
     action() {}
     virtual ~action() {}
@@ -95,14 +95,14 @@ public:
     virtual T result()=0;
 };
 
-template<class S,class T> class filter {
+template<typename S,typename T> class filter {
 public:
     filter() {}
     virtual ~filter() {}
     virtual T perform(const S* string,int string_length,int remaining_distance,T data)=0;
 };
 
-template<class T> class null_reader_writer {
+template<typename T> class null_reader_writer {
     public:
         void write(FILE* file, T value) {
         }

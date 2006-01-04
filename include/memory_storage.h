@@ -61,7 +61,7 @@ template<typename S,typename T> void memory_storage<S,T>::new_node(node_info<S,T
     }
     else {
         // on construit un noeud supplémentaire dans le tableau.
-        info->index = array.size();
+        info->index = (int)array.size();
         array.push_back(tst_node<S,T>());
         // array.resize(next); // moins rapide !
         info->node=get(info->index);

@@ -109,7 +109,7 @@ int main(int argc,char** argv) {
     for(int i=0;i<ITERATIONS;i++) {
         char* line=(char*)malloc(10);
         sprintf(line,"%d\0",i);
-        linetst->put(line,strlen(line),line);
+        linetst->put(line,(int)strlen(line),line);
     }
 
     end = clock();
@@ -122,7 +122,7 @@ int main(int argc,char** argv) {
     for(int i=ITERATIONS-1;i>=0;i--) {
         char line[256];
         sprintf(line,"%d\0",i);
-        char *result=linetst->get(line,strlen(line));
+        char *result=linetst->get(line,(int)strlen(line));
         assert(result);
         assert(strcmp(line,result)==0);
     }
@@ -152,13 +152,24 @@ int main(int argc,char** argv) {
     for(int i=ITERATIONS-1;i>=0;i--) {
         char line[256];
         sprintf(line,"%d\0",i);
-        char *result=linetst->get(line,strlen(line));
+        char *result=linetst->get(line,(int)strlen(line));
         assert(result);
         assert(strcmp(line,result)==0);
     }
     end = clock();
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Read : %f\n",elapsed);
+
+    lexical_iterator<char,char*,memory_storage_char_string,stringserializer> fg = linetst->iterator("1",1);
+    while(true) {
+        lexical_iterator<char,char*,memory_storage_char_string,stringserializer>::valuetype v=fg.next();
+        if(v.second) {
+            printf("%s\n",v.first.c_str());
+        }
+        else {
+            break;
+        }
+    }
 
     getchar();
 
