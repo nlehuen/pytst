@@ -19,6 +19,7 @@
 #ifndef __ITERATORS__H_INCLUDED__
 #define __ITERATORS__H_INCLUDED__
 
+#include <string>
 #include <stack>
 
 enum state_enum {

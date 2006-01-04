@@ -181,21 +181,30 @@ class TestBasics(unittest.TestCase):
             d = self.tree.walk(None,DictAction(),'0.1')
         timer_end("walk_root")
         for k, v in d.iteritems():
-            self.assertTrue(k.startswith('0.'))
+            self.assert_(k.startswith('0.'))
             self.assertEquals(self.tree[k],v[1])
     
     def testCloseMatch(self):
-        value = self.keys.keys()[0]
-        timer_start("close_match")
-        for i in xrange(100):
-            d = self.tree.close_match(value,4,None,DictAction())
-        timer_end("close_match")
-        for k, v in self.keys.iteritems():
-            distance = levenshtein(k,value)
-            self.assertTrue(
-                (distance<=4 and k in d and d[k][0]==distance)
-                or (distance>4 and k not in d)
-            )
+        for k1 in self.keys.iterkeys():
+            timer_start("close_match")        
+            d = self.tree.close_match(k1,4,None,DictAction())
+            timer_end("close_match")
+            for k2 in self.keys.iterkeys():
+                distance = levenshtein(k1,k2)
+                if distance<=4:
+                    self.assert_(k2 in d and d[k2][0]==distance,"Mauvaise distance pour %s et %s : %i != %s"%(
+                        k1,
+                        k2,
+                        distance,
+                        d.get(k2)
+                    ))
+                else:
+                    self.assert_(k2 not in d,"Mauvaise distance pour %s et %s : %i > 4 mais trouvé %s"%(
+                        k1,
+                        k2,
+                        distance,
+                        d.get(k2)
+                    ))
     
     def testWriteRead(self):
         f = file('test.tst','wb')
@@ -388,6 +397,8 @@ class TestScan(unittest.TestCase):
         self.assertEqual(self.tree.scan_with_stop_chars('VIAN ROBERT',' -',TupleListAction()),[('VIAN ', -5, None), ('ROBERT', 6, 'ROBERT')])
 
 if __name__ == '__main__':
+    print "Testing pytst %s"%TST_VERSION
+
     comment = ' '.join(sys.argv[1:])
 
     suite = unittest.TestSuite((

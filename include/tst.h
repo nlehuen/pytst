@@ -79,7 +79,7 @@ public:
 
     lexical_iterator<S,T,M,RW> iterator(S* string,int string_length) const {
         int current_index=root,best_node=UNDEFINED_INDEX;
-        tst_node<S,T>* current_node=find_node(&current_index,&best_node,string,string_length);
+        find_node(&current_index,&best_node,string,string_length);
         return lexical_iterator<S,T,M,RW>(this,std::basic_string<S>(string,string_length-1),current_index);
     }
 

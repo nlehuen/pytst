@@ -69,7 +69,7 @@ template<typename S,typename T> void memory_storage<S,T>::new_node(node_info<S,T
 }
 
 template<typename S,typename T> void memory_storage<S,T>::pack() {
-    size_t last_index = array.size() - 1;
+    int last_index = (int)(array.size() - 1);
 
     // On va essayer de déplacer les noeuds en fin de vecteur vers
     // les noeuds vides, s'il y en a.
@@ -123,7 +123,7 @@ template<typename S,typename T> void memory_storage<S,T>::pack() {
     }
     
     
-    if(last_index+1<array.size()) {
+    if(last_index+1<(int)array.size()) {
         // On réduit le nombre d'éléments du vecteur si nécessaire
         array.resize(last_index+1);
     }

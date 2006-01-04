@@ -82,7 +82,7 @@ public:
         PyObject* old_tuple=PyDict_GetItem(dict.get(),key.get());
         if(old_tuple!=NULL) {
             long value=PyInt_AsLong(PyTuple_GetItem(old_tuple,0));
-            if(value>=remaining_distance) {
+            if(value<remaining_distance) {
                 return;
             }
         }
