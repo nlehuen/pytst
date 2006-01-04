@@ -162,7 +162,7 @@ int main(int argc,char** argv) {
 
     lexical_iterator<char,char*,memory_storage_char_string,stringserializer> fg = linetst->iterator("1",1);
     while(true) {
-        lexical_iterator<char,char*,memory_storage_char_string,stringserializer>::valuetype v=fg.next();
+        lexical_iterator<char,char*,memory_storage_char_string,stringserializer>::value_type v=fg.next();
         if(v.second) {
             printf("%s\n",v.first.c_str());
         }

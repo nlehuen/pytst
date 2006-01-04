@@ -22,32 +22,31 @@
 #include <string>
 #include <stack>
 
-enum state_enum {
-    state_left, state_current, state_next, state_right, state_end    
-};
-
-template <typename S> class state_type {
-    public:
-        state_type<S>(std::basic_string<S> k,state_enum s,int n,int d) : key(k), state(s), node(n), distance(d) {
-        }
-    
-        std::basic_string<S> key;
-        state_enum state;
-        int node;
-        int distance;               
-};
-
 template< typename S,typename T,typename M,typename RW > class lexical_iterator {
     public:
-        typedef std::pair< std::basic_string<S>, T* > valuetype;
+        enum state_enum {
+            state_left, state_current, state_next, state_right, state_end    
+        };
+
+        class state_type {
+            public:
+                state_type(std::basic_string<S> k,state_enum s,int n) : key(k), state(s), node(n) {
+                }
+            
+                std::basic_string<S> key;
+                state_enum state;
+                int node;
+        };
+
+        typedef std::pair< std::basic_string<S>, T* > value_type;
 
         lexical_iterator(const tst<S,T,M,RW> *t,std::basic_string<S> key,int root) : tree(t), stack() {
-            stack.push(state_type<S>(key,state_left,root,0));
+            stack.push(state_type(key,state_left,root));
         }
 
-        valuetype next() {
+        value_type next() {
             while(!stack.empty()) {
-                state_type<S>& state = stack.top();
+                state_type& state = stack.top();
 
                 if(state.node==UNDEFINED_INDEX) {
                     break;
@@ -59,7 +58,7 @@ template< typename S,typename T,typename M,typename RW > class lexical_iterator 
                     case state_left: {
                         state.state = state_current;
                         if(node->left!=UNDEFINED_INDEX) {
-                            stack.push(state_type<S>(state.key,state_left,node->left,0));
+                            stack.push(state_type(state.key,state_left,node->left));
                             break;
                         }
                     }
@@ -69,7 +68,7 @@ template< typename S,typename T,typename M,typename RW > class lexical_iterator 
                         if(node->data != tree->default_value) {
                             std::basic_string<S> new_key(state.key);
                             new_key += node->c;
-                            return valuetype(
+                            return value_type(
                                 new_key,
                                 &(node->data)
                             );
@@ -79,11 +78,10 @@ template< typename S,typename T,typename M,typename RW > class lexical_iterator 
                     case state_next: {
                         state.state = state_right;
                         if(node->next!=UNDEFINED_INDEX) {
-                            state_type<S> new_state = state_type<S>(
+                            state_type new_state = state_type(
                                 state.key,
                                 state_left,
-                                node->next,
-                                0
+                                node->next
                             );
                             new_state.key += node->c;
                             stack.push(new_state);
@@ -94,7 +92,7 @@ template< typename S,typename T,typename M,typename RW > class lexical_iterator 
                     case state_right: {
                         state.state = state_end;
                         if(node->right!=UNDEFINED_INDEX) {
-                            stack.push(state_type<S>(state.key,state_left,node->right,0));
+                            stack.push(state_type(state.key,state_left,node->right));
                             break;
                         }
                     }
@@ -105,88 +103,12 @@ template< typename S,typename T,typename M,typename RW > class lexical_iterator 
                     }
                 }
             }
-            return valuetype("",NULL);
+            return value_type("",NULL);
         }
                 
     private:
         const tst<S,T,M,RW> *tree;
-        std::stack< state_type<S> > stack;
-};
-
-template< typename S,typename T,typename M,typename RW > class distance_iterator {
-    public:
-        typedef std::pair< std::basic_string<S>, T* > valuetype;
-
-        distance_iterator(const tst<S,T,M,RW> *t,std::basic_string<S> key,int root,int distance) : tree(t), stack() {
-            stack.push(state_type<S>(key,state_left,root,distance));
-        }
-
-        valuetype next() {
-            while(!stack.empty()) {
-                state_type<S>& state = stack.top();
-
-                if(state.node==UNDEFINED_INDEX) {
-                    break;
-                }
-
-                tst_node<S,T>* node = tree->storage->get(state.node);
-            
-                switch(state.state) {
-                    case state_left: {
-                        state.state = state_current;
-                        if(node->left!=UNDEFINED_INDEX) {
-                            stack.push(state_type<S>(state.key,state_left,node->left,state.distance));
-                            break;
-                        }
-                    }
-                    
-                    case state_current: {
-                        state.state = state_next;
-                        if(node->data != tree->default_value) {
-                            std::basic_string<S> new_key(state.key);
-                            new_key += node->c;
-                            return valuetype(
-                                new_key,
-                                &(node->data)
-                            );
-                        }
-                    }
-                    
-                    case state_next: {
-                        state.state = state_right;
-                        if(node->next!=UNDEFINED_INDEX) {
-                            state_type<S> new_state = state_type<S>(
-                                state.key,
-                                state_left,
-                                node->next,
-                                state.distance
-                            );
-                            new_state.key += node->c;
-                            stack.push(new_state);
-                            break;
-                        }
-                    }
-                    
-                    case state_right: {
-                        state.state = state_end;
-                        if(node->right!=UNDEFINED_INDEX) {
-                            stack.push(state_type<S>(state.key,state_left,node->right,0));
-                            break;
-                        }
-                    }
-                    
-                    case state_end: {
-                        stack.pop();
-                        break;
-                    }
-                }
-            }
-            return valuetype("",NULL);
-        }
-                
-    private:
-        const tst<S,T,M,RW> *tree;
-        std::stack< state_type<S> > stack;
+        std::stack< state_type > stack;
 };
 
 #endif
