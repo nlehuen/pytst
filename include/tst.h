@@ -51,6 +51,7 @@ template< typename S,typename T,typename M,typename RW > class tst;
 template< typename S,typename T,typename M=memory_storage<S,T>,typename RW=null_reader_writer<T> > class tst {
 public:
     friend class lexical_iterator<S,T,M,RW>;
+    friend class match_iterator<S,T,M,RW>;
 
     tst(M* storage,T default_value);
 
@@ -81,6 +82,10 @@ public:
         int current_index=root,best_node=UNDEFINED_INDEX;
         find_node(&current_index,&best_node,string,string_length);
         return lexical_iterator<S,T,M,RW>(this,std::basic_string<S>(string,string_length-1),current_index);
+    }
+
+    match_iterator<S,T,M,RW> close_match_iterator(S* string,int string_length,int distance) const {
+        return match_iterator<S,T,M,RW>(this,std::basic_string<S>(string,string_length),0,root);
     }
 
 #ifdef SCANNER
