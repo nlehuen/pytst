@@ -149,7 +149,7 @@ template< typename S,typename T,typename M,typename RW > class match_iterator {
             
                 int diff = 0;
                 if(state.position>=(int)base.size() || base[state.position]!=node->c) {
-                    diff=1;
+                    diff = 1;
                 }
                 
                 switch(state.state) {
@@ -179,7 +179,15 @@ template< typename S,typename T,typename M,typename RW > class match_iterator {
                                 must_break = true;
                             }
 
+                            // Cas où la clé courante est plus courte que la clé recherchée
                             int diff2 = ((int)base.size())-((int)state.key.size())-1;
+                            if(diff2>0) {
+                                diff += diff2;
+                            }
+
+                            // Cas où la position actuelle dans la clé recherchée est moins avancée
+                            // que la clé courante (pourquoi pas +1 ?)
+                            diff2 = ((int)state.key.size())-state.position;
                             if(diff2>0) {
                                 diff += diff2;
                             }

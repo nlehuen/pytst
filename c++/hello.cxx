@@ -160,7 +160,7 @@ int main(int argc,char** argv) {
     elapsed = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Read : %f\n",elapsed);
 
-    {
+    /*{
 	    lexical_iterator<char,char*,memory_storage_char_string,stringserializer> fg = linetst->iterator("123",3);
         while(true) {
             lexical_iterator<char,char*,memory_storage_char_string,stringserializer>::value_type v=fg.next();
@@ -171,10 +171,10 @@ int main(int argc,char** argv) {
                 break;
             }
         }
-    }
+    }*/
 
     {
-        match_iterator<char,char*,memory_storage_char_string,stringserializer> fg = linetst->close_match_iterator("123",3,4);
+        match_iterator<char,char*,memory_storage_char_string,stringserializer> fg = linetst->close_match_iterator("12",2,2);
         while(true) {
             match_iterator<char,char*,memory_storage_char_string,stringserializer>::value_type v=fg.next();
             if(v.second) {
@@ -186,6 +186,7 @@ int main(int argc,char** argv) {
         }
     }
 
+    printf("OK !\n");
     getchar();
 
     return 0;

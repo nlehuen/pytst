@@ -85,7 +85,7 @@ public:
     }
 
     match_iterator<S,T,M,RW> close_match_iterator(S* string,int string_length,int distance) const {
-        return match_iterator<S,T,M,RW>(this,std::basic_string<S>(string,string_length),0,root);
+        return match_iterator<S,T,M,RW>(this,std::basic_string<S>(string,string_length),distance,root);
     }
 
 #ifdef SCANNER
