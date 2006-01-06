@@ -138,11 +138,15 @@ class TestCollectors(unittest.TestCase):
         l = self.tree.walk(None,DictAction())
         self.assertEqual(l,dict(a=(0,1),ab=(0,2),abc=(0,3),b=(0,4)))
 
+def skey():
+    format = '%%.%if'%random.randint(1,10)
+    return format%random.random()
+
 class TestBasics(unittest.TestCase):
     def setUp(self):
         self.tree = TST()
         self.keys = dict([
-            (str(random.random()),random.random())
+            (skey(),random.random())
             for x in xrange(250)
         ])
         for k,v in self.keys.iteritems():
@@ -186,17 +190,42 @@ class TestBasics(unittest.TestCase):
     
     def testCloseMatch(self):
         for k1 in self.keys.iterkeys():
+            if hasattr(self.tree,'close_match_from_iterator'):
+                timer_start("close_match_from_iterator")
+                d = self.tree.close_match_from_iterator(k1,4)
+                timer_end("close_match_from_iterator")
+                for k2 in self.keys.iterkeys():
+                    distance = levenshtein(k1,k2)
+                    if distance<=4:
+                        self.assert_(k2 in d,"Match manquant pour %s : %s (distance = %i)"%(
+                            k1,
+                            k2,
+                            distance,
+                        ))
+                    else:
+                        self.assert_(k2 not in d,"Faux match pour %s : %s (distance = %i > 4)"%(
+                            k1,
+                            k2,
+                            distance,
+                        ))
+
+        for k1 in self.keys.iterkeys():
             timer_start("close_match")        
             d = self.tree.close_match(k1,4,None,DictAction())
             timer_end("close_match")
             for k2 in self.keys.iterkeys():
                 distance = levenshtein(k1,k2)
                 if distance<=4:
+                    self.assert_(k2 in d,"Match manquant pour %s : %s (distance = %i)"%(
+                        k1,
+                        k2,
+                        distance,
+                    ))
                     self.assert_(k2 in d and d[k2][0]==distance,"Mauvaise distance pour %s et %s : %i != %s"%(
                         k1,
                         k2,
                         distance,
-                        d.get(k2)
+                        d.get(k2)[0]
                     ))
                 else:
                     self.assert_(k2 not in d,"Mauvaise distance pour %s et %s : %i > 4 mais trouvé %s"%(
@@ -205,27 +234,6 @@ class TestBasics(unittest.TestCase):
                         distance,
                         d.get(k2)
                     ))
-    
-    def testCloseMatch2(self):
-    	if hasattr(self.tree,'close_match_from_iterator'):
-	        for k1 in self.keys.iterkeys():
-	            timer_start("close_match_from_iterator")        
-	            d = self.tree.close_match_from_iterator(k1,4)
-	            timer_end("close_match_from_iterator")
-	            for k2 in self.keys.iterkeys():
-	                distance = levenshtein(k1,k2)
-	                if distance<=4:
-	                    self.assert_(k2 in d,"Match manquant pour %s : %s (distance = %i)"%(
-	                        k1,
-	                        k2,
-	                        distance,
-	                    ))
-	                else:
-	                    self.assert_(k2 not in d,"Faux match pour %s : %s (distance = %i > 4)"%(
-	                        k1,
-	                        k2,
-	                        distance,
-	                    ))
 
     def testWriteRead(self):
         f = file('test.tst','wb')

@@ -107,7 +107,7 @@ private:
     tst();
 
     void walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const;
-    void close_match_recurse(tst_node<S,T>* current_node,S* key, const int key_length,const S* string, const int string_length,const int position, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
+    void close_match_recurse(tst_node<S,T>* current_node,S* key, const int key_length,const S* string, const int string_length,const int position, const int distance, const int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
 
     int build_node(node_info<S,T>* current_node,const S* string,int string_length,int current_position);
     void remove_node(int* current_index,const S* string,int string_length);
@@ -260,7 +260,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::get_or_b
 template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::close_match(const S* string, int string_length, int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) const {
     S* current_key=(S*)tst_malloc((string_length+maximum_distance+2)*sizeof(S));
     *current_key='\0';
-    close_match_recurse(storage->get(root),current_key,0,string,string_length,0,maximum_distance,filter,to_perform);
+    close_match_recurse(storage->get(root),current_key,0,string,string_length,0,maximum_distance,maximum_distance,filter,to_perform);
     tst_free(current_key);
     if(to_perform) {
         return to_perform->result();
@@ -351,12 +351,12 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close_match_recurse(tst_node<S,T>* current_node,S* key,int key_length,const S* string,const int string_length, const int position, const int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close_match_recurse(tst_node<S,T>* current_node,S* key,int key_length,const S* string,const int string_length, const int position, const int distance, const int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform) const {
 
     // LEFT
     int other_index=current_node->left;
     if (other_index!=UNDEFINED_INDEX) {
-        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,remaining_distance,filter,to_perform);
+        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,distance,remaining_distance,filter,to_perform);
     }
 
     int diff=1;
@@ -379,10 +379,10 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
 
         if(new_remaining_distance>=0) {
             if(filter) {
-                data = filter->perform(key,key_length,new_remaining_distance,data);
+                data = filter->perform(key,key_length,distance-new_remaining_distance,data);
             }
             if(data!=default_value && to_perform) {
-                to_perform->perform(key,key_length,new_remaining_distance,data);
+                to_perform->perform(key,key_length,distance-new_remaining_distance,data);
             }
         }
     }
@@ -392,13 +392,13 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
     if (other_index!=UNDEFINED_INDEX) {
         int new_remaining_distance = remaining_distance - diff;
         if (new_remaining_distance>=0) {
-            close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,new_remaining_distance,filter,to_perform);
+            close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,distance,new_remaining_distance,filter,to_perform);
         }
     }
 
     // SKIP_INPUT
     if(other_index!=UNDEFINED_INDEX && remaining_distance>0) {
-        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,remaining_distance-1,filter,to_perform);
+        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,distance,remaining_distance-1,filter,to_perform);
     }
     
     // KEY--
@@ -406,13 +406,13 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
 
     // SKIP_BASE
     if(position<string_length && remaining_distance>0) {
-        close_match_recurse(current_node,key,key_length,string,string_length,position+1,remaining_distance-1,filter,to_perform);
+        close_match_recurse(current_node,key,key_length,string,string_length,position+1,distance,remaining_distance-1,filter,to_perform);
     }
 
     // RIGHT
     other_index = current_node->right;
     if(other_index!=UNDEFINED_INDEX) {
-        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,remaining_distance,filter,to_perform);
+        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,distance,remaining_distance,filter,to_perform);
     }
 }
 
