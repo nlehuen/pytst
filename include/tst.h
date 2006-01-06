@@ -371,18 +371,18 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
     // CURRENT
     T data = current_node->data;
     if(data!=default_value) {
-        int diff2=string_length - position - 1;
-        if(diff2<0) {
-            diff2 = 0;
+        int new_remaining_distance=string_length - position - 1;
+        if(new_remaining_distance<0) {
+            new_remaining_distance = 0;
         }
-        diff2 = remaining_distance - diff - diff2;
+        new_remaining_distance = remaining_distance - diff - new_remaining_distance;
 
-        if(diff2>=0) {
+        if(new_remaining_distance>=0) {
             if(filter) {
-                data = filter->perform(key,key_length,diff2,data);
+                data = filter->perform(key,key_length,new_remaining_distance,data);
             }
             if(data!=default_value && to_perform) {
-                to_perform->perform(key,key_length,diff2,data);
+                to_perform->perform(key,key_length,new_remaining_distance,data);
             }
         }
     }
@@ -390,24 +390,23 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
     // CURRENT, NEXT
     other_index=current_node->next;
     if (other_index!=UNDEFINED_INDEX) {
-        int diff2 = remaining_distance - diff;
-        if (diff2>=0) {
-            close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,diff2,filter,to_perform);
+        int new_remaining_distance = remaining_distance - diff;
+        if (new_remaining_distance>=0) {
+            close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,new_remaining_distance,filter,to_perform);
         }
     }
 
     // SKIP_INPUT
-    int diff2 = remaining_distance-1;
-    if(other_index!=UNDEFINED_INDEX && diff2>=0) {
-        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,diff2,filter,to_perform);
+    if(other_index!=UNDEFINED_INDEX && remaining_distance>0) {
+        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,remaining_distance-1,filter,to_perform);
     }
     
     // KEY--
     key_length--;
 
     // SKIP_BASE
-    if(position<string_length && diff2>=0) {
-        close_match_recurse(current_node,key,key_length,string,string_length,position+1,diff2,filter,to_perform);
+    if(position<string_length && remaining_distance>0) {
+        close_match_recurse(current_node,key,key_length,string,string_length,position+1,remaining_distance-1,filter,to_perform);
     }
 
     // RIGHT
