@@ -193,6 +193,23 @@ class TST : public string_tst<char,object,memory_storage<char,object>,ObjectSeri
         void read_from_file(object file) {
             this->read(PyFile_AsFile(file.ptr()));
         }
+        
+        dict close_match_from_iterator(std::basic_string<char> s,int distance) {
+            dict d;
+            
+            match_iterator<char,object,memory_storage<char,object>,ObjectSerializer> i = close_match_iterator(s.c_str(),s.size(),distance);
+            while(true) {
+                match_iterator<char,object,memory_storage<char,object>,ObjectSerializer>::value_type v = i.next();
+                if(v.second) {
+                    d[v.first] = *(v.second);
+                }
+                else {
+                    break;
+                }
+            }
+            
+            return d;         
+        }
 };
 
 BOOST_PYTHON_MODULE(tst)
@@ -231,6 +248,8 @@ BOOST_PYTHON_MODULE(tst)
 
         .def("close_match",&TST::close_match)
         .def("prefix_match",&TST::prefix_match)
+
+        .def("close_match_from_iterator",&TST::close_match_from_iterator)
 
         .def("pack",&TST::pack)
     ;

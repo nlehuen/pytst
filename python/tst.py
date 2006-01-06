@@ -144,6 +144,10 @@ class _TST(_object):
         """
         return _tst._TST_iterator(*args)
 
+    def close_match_iterator(*args):
+        """close_match_iterator(self, string, distance) -> match_iterator<(char,PythonReference,MemoryStorage,ObjectSerializer)>"""
+        return _tst._TST_close_match_iterator(*args)
+
     def scan(*args):
         """scan(self, string, to_perform) -> PythonReference"""
         return _tst._TST_scan(*args)

@@ -174,7 +174,7 @@ int main(int argc,char** argv) {
     }*/
 
     {
-        match_iterator<char,char*,memory_storage_char_string,stringserializer> fg = linetst->close_match_iterator("12",2,2);
+        match_iterator<char,char*,memory_storage_char_string,stringserializer> fg = linetst->close_match_iterator("1",1,2);
         while(true) {
             match_iterator<char,char*,memory_storage_char_string,stringserializer>::value_type v=fg.next();
             if(v.second) {

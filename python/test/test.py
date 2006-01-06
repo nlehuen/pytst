@@ -143,7 +143,7 @@ class TestBasics(unittest.TestCase):
         self.tree = TST()
         self.keys = dict([
             (str(random.random()),random.random())
-            for x in xrange(4000)
+            for x in xrange(250)
         ])
         for k,v in self.keys.iteritems():
             self.tree[k] = v
@@ -206,6 +206,27 @@ class TestBasics(unittest.TestCase):
                         d.get(k2)
                     ))
     
+    def testCloseMatch2(self):
+    	if hasattr(self.tree,'close_match_from_iterator'):
+	        for k1 in self.keys.iterkeys():
+	            timer_start("close_match_from_iterator")        
+	            d = self.tree.close_match_from_iterator(k1,4)
+	            timer_end("close_match_from_iterator")
+	            for k2 in self.keys.iterkeys():
+	                distance = levenshtein(k1,k2)
+	                if distance<=4:
+	                    self.assert_(k2 in d,"Match manquant pour %s : %s (distance = %i)"%(
+	                        k1,
+	                        k2,
+	                        distance,
+	                    ))
+	                else:
+	                    self.assert_(k2 not in d,"Faux match pour %s : %s (distance = %i > 4)"%(
+	                        k1,
+	                        k2,
+	                        distance,
+	                    ))
+
     def testWriteRead(self):
         f = file('test.tst','wb')
         self.tree.write_to_file(f)
