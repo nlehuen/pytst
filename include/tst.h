@@ -107,7 +107,7 @@ private:
     tst();
 
     void walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const;
-    void close_match_recurse(tst_node<S,T>* current_node,S* current_key, const int current_key_length,const S* string,const int current_index, const int string_length, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform,const int current_key_limit) const;
+    void close_match_recurse(tst_node<S,T>* current_node,S* key, const int key_length,const S* string, const int string_length,const int position, int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
 
     int build_node(node_info<S,T>* current_node,const S* string,int string_length,int current_position);
     void remove_node(int* current_index,const S* string,int string_length);
@@ -260,7 +260,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::get_or_b
 template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::close_match(const S* string, int string_length, int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) const {
     S* current_key=(S*)tst_malloc((string_length+maximum_distance+2)*sizeof(S));
     *current_key='\0';
-    close_match_recurse(storage->get(root),current_key,0,string,0,string_length,maximum_distance,filter,to_perform,string_length+maximum_distance+1);
+    close_match_recurse(storage->get(root),current_key,0,string,string_length,0,maximum_distance,filter,to_perform);
     tst_free(current_key);
     if(to_perform) {
         return to_perform->result();
@@ -351,27 +351,27 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close_match_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,const S* string, const int current_index, const int string_length, const int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform,const int current_key_limit) const {
-    int other_index;
-    int diff,diff2;
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close_match_recurse(tst_node<S,T>* current_node,S* key,int key_length,const S* string,const int string_length, const int position, const int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform) const {
 
-    other_index=current_node->left;
+    // LEFT
+    int other_index=current_node->left;
     if (other_index!=UNDEFINED_INDEX) {
-        close_match_recurse(storage->get(other_index),current_key,current_key_length,string,current_index,string_length,remaining_distance,filter,to_perform,current_key_limit);
+        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,remaining_distance,filter,to_perform);
     }
 
-    diff=1;
-    if(current_index<string_length && string[current_index]==current_node->c) {
+    int diff=1;
+    if(position<string_length && string[position]==current_node->c) {
         diff=0;
     }
 
-    assert(current_key_length < current_key_limit);
-    current_key[current_key_length]=current_node->c;
-    current_key_length++;
+    // KEY++
+    key[key_length]=current_node->c;
+    key_length++;
 
+    // CURRENT
     T data = current_node->data;
     if(data!=default_value) {
-        diff2=string_length - current_index - 1;
+        int diff2=string_length - position - 1;
         if(diff2<0) {
             diff2 = 0;
         }
@@ -379,36 +379,41 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
 
         if(diff2>=0) {
             if(filter) {
-                data = filter->perform(current_key,current_key_length,diff2,data);
+                data = filter->perform(key,key_length,diff2,data);
             }
             if(data!=default_value && to_perform) {
-                to_perform->perform(current_key,current_key_length,diff2,data);
+                to_perform->perform(key,key_length,diff2,data);
             }
         }
     }
 
+    // CURRENT, NEXT
     other_index=current_node->next;
     if (other_index!=UNDEFINED_INDEX) {
-        diff2 = remaining_distance - diff;
+        int diff2 = remaining_distance - diff;
         if (diff2>=0) {
-            close_match_recurse(storage->get(other_index),current_key,current_key_length,string,current_index+1,string_length,diff2,filter,to_perform,current_key_limit);
+            close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,diff2,filter,to_perform);
         }
     }
 
-    diff2 = remaining_distance-diff-1;
+    // SKIP_INPUT
+    int diff2 = remaining_distance-1;
     if(other_index!=UNDEFINED_INDEX && diff2>=0) {
-        close_match_recurse(storage->get(other_index),current_key,current_key_length,string,current_index,string_length,diff2,filter,to_perform,current_key_limit);
+        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,diff2,filter,to_perform);
+    }
+    
+    // KEY--
+    key_length--;
+
+    // SKIP_BASE
+    if(position<string_length && diff2>=0) {
+        close_match_recurse(current_node,key,key_length,string,string_length,position+1,diff2,filter,to_perform);
     }
 
-    current_key_length--;
-
-    if(current_index<string_length && diff2>=0) {
-        close_match_recurse(current_node,current_key,current_key_length,string,current_index+1,string_length,diff2,filter,to_perform,current_key_limit);
-    }
-
+    // RIGHT
     other_index = current_node->right;
     if(other_index!=UNDEFINED_INDEX) {
-        close_match_recurse(storage->get(other_index),current_key,current_key_length,string,current_index,string_length,remaining_distance,filter,to_perform,current_key_limit);
+        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,remaining_distance,filter,to_perform);
     }
 }
 
