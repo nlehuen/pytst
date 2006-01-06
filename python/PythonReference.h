@@ -44,6 +44,10 @@ public:
     int operator!=(const PythonReference& that) {
         return (ref!=that.ref);
     }
+
+    PythonReference getattr(char* name) {
+        return PythonReference(PyObject_GetAttrString(get(),name));
+    }
     
     PyObject* get() {
         return ref;

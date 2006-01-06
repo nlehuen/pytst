@@ -190,26 +190,6 @@ class TestBasics(unittest.TestCase):
     
     def testCloseMatch(self):
         for k1 in self.keys.iterkeys():
-            if hasattr(self.tree,'close_match_from_iterator'):
-                timer_start("close_match_from_iterator")
-                d = self.tree.close_match_from_iterator(k1,4)
-                timer_end("close_match_from_iterator")
-                for k2 in self.keys.iterkeys():
-                    distance = levenshtein(k1,k2)
-                    if distance<=4:
-                        self.assert_(k2 in d,"Match manquant pour %s : %s (distance = %i)"%(
-                            k1,
-                            k2,
-                            distance,
-                        ))
-                    else:
-                        self.assert_(k2 not in d,"Faux match pour %s : %s (distance = %i > 4)"%(
-                            k1,
-                            k2,
-                            distance,
-                        ))
-
-        for k1 in self.keys.iterkeys():
             timer_start("close_match")        
             d = self.tree.close_match(k1,4,None,DictAction())
             timer_end("close_match")
@@ -246,6 +226,52 @@ class TestBasics(unittest.TestCase):
         f.close()
         
         self.testGet()
+
+class TestIterators(unittest.TestCase):
+    def setUp(self):
+        self.tree = TST()
+        self.keys = dict(
+            titi = 1,
+            toto = 2,
+            tati = 3,
+            a    = 5
+        )
+        for k, v in self.keys.iteritems():
+            self.tree[k] = v
+            
+    def testLexical1(self):
+        d = {}
+        for k, v in self.tree:
+            d[k] = v
+        self.assertEqual(d,self.keys)
+        
+    def testLexical2(self):
+        d = {}
+        for k, v in self.tree.iterator('t'):
+            d[k] = v
+        self.keys.pop('a')
+        self.assertEqual(d,self.keys)
+
+    def testCloseMatch(self):
+        d = {}
+        for k, v in self.tree.close_match_iterator('t',1):
+            d[k] = v
+        self.assertEqual(d,dict(
+            a = 5
+        ))
+        d = {}
+        for k, v in self.tree.close_match_iterator('tito',1):
+            d[k] = v
+        self.assertEqual(d,dict(
+            titi = 1,
+            toto = 2
+        ))
+        d = {}
+        for k, v in self.tree.close_match_iterator('tuto',1):
+            d[k] = v
+        self.assertEqual(d,dict(
+            toto = 2
+        ))
 
 class TestHighCapacity(unittest.TestCase):
     def setUp(self):
@@ -435,6 +461,7 @@ if __name__ == '__main__':
         unittest.makeSuite(TestBasics),
         unittest.makeSuite(TestHighCapacity),
         unittest.makeSuite(TestScan),
+        unittest.makeSuite(TestIterators),
      ))
     
     for i in xrange(3):

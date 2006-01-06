@@ -48,6 +48,9 @@
 
 %include "pythonTST.h"
 
+%template(TSTLexicalIterator)    TSTIterator<lexical_iterator_type>;
+%template(TSTCloseMatchIterator) TSTIterator<close_match_iterator_type>;
+
 %{
 #include "pythonTST.h"
 %}

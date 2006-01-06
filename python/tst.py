@@ -484,6 +484,21 @@ class TST(_TST):
         """__contains__(self, string) -> PythonReference"""
         return _tst.TST___contains__(*args)
 
+    def iterator(*args):
+        """
+        iterator(self) -> TSTLexicalIterator
+        iterator(self, string) -> TSTLexicalIterator
+        """
+        return _tst.TST_iterator(*args)
+
+    def close_match_iterator(*args):
+        """close_match_iterator(self, string, distance) -> TSTCloseMatchIterator"""
+        return _tst.TST_close_match_iterator(*args)
+
+    def __iter__(*args):
+        """__iter__(self) -> TSTLexicalIterator"""
+        return _tst.TST___iter__(*args)
+
 
 class TSTPtr(TST):
     def __init__(self, this):
@@ -491,6 +506,68 @@ class TSTPtr(TST):
         if not hasattr(self,"thisown"): _swig_setattr(self, TST, 'thisown', 0)
         self.__class__ = TST
 _tst.TST_swigregister(TSTPtr)
+
+class TSTLexicalIterator(_object):
+    """Proxy of C++ TSTLexicalIterator class"""
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, TSTLexicalIterator, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, TSTLexicalIterator, name)
+    def __init__(self): raise RuntimeError, "No constructor defined"
+    def __repr__(self):
+        return "<%s.%s; proxy of C++ TSTIterator<lexical_iterator_type > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __iter__(*args):
+        """__iter__(self) -> TSTLexicalIterator"""
+        return _tst.TSTLexicalIterator___iter__(*args)
+
+    def next(*args):
+        """next(self) -> PyObject"""
+        return _tst.TSTLexicalIterator_next(*args)
+
+    def __del__(self, destroy=_tst.delete_TSTLexicalIterator):
+        """__del__(self)"""
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+
+
+class TSTLexicalIteratorPtr(TSTLexicalIterator):
+    def __init__(self, this):
+        _swig_setattr(self, TSTLexicalIterator, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, TSTLexicalIterator, 'thisown', 0)
+        self.__class__ = TSTLexicalIterator
+_tst.TSTLexicalIterator_swigregister(TSTLexicalIteratorPtr)
+
+class TSTCloseMatchIterator(_object):
+    """Proxy of C++ TSTCloseMatchIterator class"""
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, TSTCloseMatchIterator, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, TSTCloseMatchIterator, name)
+    def __init__(self): raise RuntimeError, "No constructor defined"
+    def __repr__(self):
+        return "<%s.%s; proxy of C++ TSTIterator<close_match_iterator_type > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
+    def __iter__(*args):
+        """__iter__(self) -> TSTCloseMatchIterator"""
+        return _tst.TSTCloseMatchIterator___iter__(*args)
+
+    def next(*args):
+        """next(self) -> PyObject"""
+        return _tst.TSTCloseMatchIterator_next(*args)
+
+    def __del__(self, destroy=_tst.delete_TSTCloseMatchIterator):
+        """__del__(self)"""
+        try:
+            if self.thisown: destroy(self)
+        except: pass
+
+
+class TSTCloseMatchIteratorPtr(TSTCloseMatchIterator):
+    def __init__(self, this):
+        _swig_setattr(self, TSTCloseMatchIterator, 'this', this)
+        if not hasattr(self,"thisown"): _swig_setattr(self, TSTCloseMatchIterator, 'thisown', 0)
+        self.__class__ = TSTCloseMatchIterator
+_tst.TSTCloseMatchIterator_swigregister(TSTCloseMatchIteratorPtr)
 
 
 

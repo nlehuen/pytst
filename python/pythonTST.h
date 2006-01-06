@@ -196,6 +196,42 @@ PythonReference ObjectSerializer::read_from_file(PythonReference file) {
 typedef memory_storage<char,PythonReference> MemoryStorage;
 typedef tst<char,PythonReference,MemoryStorage,ObjectSerializer> BaseTST;
 
+class TST;
+
+typedef lexical_iterator<char,PythonReference,MemoryStorage,ObjectSerializer> lexical_iterator_type;
+typedef match_iterator<char,PythonReference,MemoryStorage,ObjectSerializer> close_match_iterator_type;
+
+template <typename iterator_type> class TSTIterator {
+    public:
+        friend class TST;
+    
+        TSTIterator __iter__() {
+            return *this;
+        }
+    
+        PyObject* next() {
+            iterator_type::value_type v = iterator.next();
+            if(v.second) {
+                return Py_BuildValue("s#O",v.first.c_str(),v.first.size(),v.second->get());
+            }
+            else {
+                PythonReference exceptions(PyImport_ImportModule("exceptions"),0);
+                PythonReference stop_iteration = exceptions.getattr("StopIteration");
+                PyErr_SetNone(stop_iteration.get());
+                return NULL;
+            }
+        }
+    
+    private:
+        TSTIterator(iterator_type i) : iterator(i) {
+        }
+        
+        iterator_type iterator;
+};
+
+typedef TSTIterator<lexical_iterator_type> TSTLexicalIterator;
+typedef TSTIterator<close_match_iterator_type> TSTCloseMatchIterator;
+
 class TST : public BaseTST {
 public:
     TST() : BaseTST(new MemoryStorage(16),PythonReference()) {
@@ -239,5 +275,21 @@ public:
         else {
             return PythonReference(Py_True);
         }
+    }
+    
+    TSTLexicalIterator iterator() {
+        return TSTLexicalIterator(BaseTST::iterator());
+    }
+
+    TSTLexicalIterator iterator(char* string, int string_length) {
+        return TSTLexicalIterator(BaseTST::iterator(string,string_length));
+    }
+
+    TSTCloseMatchIterator close_match_iterator(char* string, int string_length, int distance) {
+        return TSTCloseMatchIterator(BaseTST::close_match_iterator(string,string_length,distance));
+    }
+
+    TSTLexicalIterator __iter__() {
+        return TSTLexicalIterator(BaseTST::iterator());
     }
 };
