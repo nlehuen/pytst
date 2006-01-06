@@ -2455,7 +2455,7 @@ static PyObject *_wrap__TST_iterator__SWIG_1(PyObject *, PyObject *args) {
     }
     {
         try {
-            result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->iterator(arg2,arg3);
+            result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->iterator((char const *)arg2,arg3);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;

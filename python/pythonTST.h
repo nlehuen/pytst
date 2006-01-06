@@ -198,9 +198,6 @@ typedef tst<char,PythonReference,MemoryStorage,ObjectSerializer> BaseTST;
 
 class TST;
 
-typedef lexical_iterator<char,PythonReference,MemoryStorage,ObjectSerializer> lexical_iterator_type;
-typedef match_iterator<char,PythonReference,MemoryStorage,ObjectSerializer> close_match_iterator_type;
-
 template <typename iterator_type> class TSTIterator {
     public:
         friend class TST;
@@ -210,7 +207,7 @@ template <typename iterator_type> class TSTIterator {
         }
     
         PyObject* next() {
-            iterator_type::value_type v = iterator.next();
+            typename iterator_type::value_type v(iterator.next());
             if(v.second) {
                 return Py_BuildValue("s#O",v.first.c_str(),v.first.size(),v.second->get());
             }
@@ -229,6 +226,8 @@ template <typename iterator_type> class TSTIterator {
         iterator_type iterator;
 };
 
+typedef lexical_iterator<char,PythonReference,MemoryStorage,ObjectSerializer> lexical_iterator_type;
+typedef match_iterator<char,PythonReference,MemoryStorage,ObjectSerializer> close_match_iterator_type;
 typedef TSTIterator<lexical_iterator_type> TSTLexicalIterator;
 typedef TSTIterator<close_match_iterator_type> TSTCloseMatchIterator;
 

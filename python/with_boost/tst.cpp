@@ -25,7 +25,7 @@ using namespace boost::python;
 #include <string>
 #include "tst.h"
 
-/********************* PYTHON SPECIFIC CODE ***********************************/
+/********************* ACTION & FILTER ***********************************/
 
 template <class S, class T> class NullAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
@@ -132,6 +132,8 @@ template <class S,class T> class CallableFilter : public filter<S,T>, public wra
         object _perform;
 };
 
+/********************* SERIALIZER ***********************************/
+
 class ObjectSerializer {
     public:
         ObjectSerializer();
@@ -147,7 +149,7 @@ class ObjectSerializer {
 };
 
 ObjectSerializer::ObjectSerializer() {
-    object cPickle(handle<>(PyImport_Import(str("cPickle").ptr())));
+    object cPickle(handle<>(PyImport_ImportModule("cPickle")));
     dumps = cPickle.attr("dumps");
     loads = cPickle.attr("loads");
 }
@@ -181,6 +183,50 @@ object ObjectSerializer::read_from_file(object file) {
     return read(PyFile_AsFile(file.ptr()));
 }
 
+/********************* ITERATOR ***********************************/
+
+class TST;
+
+template <typename iterator_type> class TSTIterator {
+    private:
+        friend class TST;
+        
+    public:
+        TSTIterator copy() {
+            return *this;
+        }
+    
+        tuple next() {
+            iterator_type::value_type v = iterator.next();
+            if(v.second) {
+                return make_tuple(v.first,*(v.second));
+            } else {
+                object exception(handle<>(
+                    PyImport_ImportModule("exceptions"))
+                );
+                exception = exception.attr("StopIteration");
+                PyErr_SetNone(exception.ptr());
+                throw_error_already_set();
+                
+                // ( this is never called, it's just to remove the warning )
+                return make_tuple();
+            }
+        }
+    
+    private:
+        TSTIterator(iterator_type i) : iterator(i) {
+        }
+        
+        iterator_type iterator;
+};
+
+typedef lexical_iterator<char,object,memory_storage<char,object>,ObjectSerializer> lexical_iterator_type;
+typedef match_iterator<char,object,memory_storage<char,object>,ObjectSerializer> close_match_iterator_type;
+typedef TSTIterator<lexical_iterator_type> TSTLexicalIterator;
+typedef TSTIterator<close_match_iterator_type> TSTCloseMatchIterator;
+
+/********************* TST ***********************************/
+
 class TST : public string_tst<char,object,memory_storage<char,object>,ObjectSerializer> {
     public:
         TST() : string_tst<char,object,memory_storage<char,object>,ObjectSerializer>(new memory_storage<char,object>(16),object()) {
@@ -193,22 +239,17 @@ class TST : public string_tst<char,object,memory_storage<char,object>,ObjectSeri
         void read_from_file(object file) {
             this->read(PyFile_AsFile(file.ptr()));
         }
+
+        TSTLexicalIterator iterator1() {
+            return TSTLexicalIterator(string_tst<char,object,memory_storage<char,object>,ObjectSerializer>::iterator());
+        }
         
-        dict close_match_from_iterator(std::basic_string<char> s,int distance) {
-            dict d;
-            
-            match_iterator<char,object,memory_storage<char,object>,ObjectSerializer> i = close_match_iterator(s.c_str(),s.size(),distance);
-            while(true) {
-                match_iterator<char,object,memory_storage<char,object>,ObjectSerializer>::value_type v = i.next();
-                if(v.second) {
-                    d[v.first] = *(v.second);
-                }
-                else {
-                    break;
-                }
-            }
-            
-            return d;         
+        TSTLexicalIterator iterator2(std::basic_string<char> s) {
+            return TSTLexicalIterator(string_tst<char,object,memory_storage<char,object>,ObjectSerializer>::iterator(s.c_str(),s.size()));
+        }
+        
+        TSTCloseMatchIterator close_match_iterator(std::basic_string<char> s, int distance) {
+            return TSTCloseMatchIterator(string_tst<char,object,memory_storage<char,object>,ObjectSerializer>::close_match_iterator(s.c_str(),s.size(),distance));
         }
 };
 
@@ -218,6 +259,18 @@ BOOST_PYTHON_MODULE(tst)
     action<char,object> *test2 = new NullAction<char,object>;
 
     scope().attr("TST_VERSION") = std::string(TST_VERSION)+"-Boost.Python";
+
+    class_< TSTLexicalIterator >("TSTLexicalIterator",no_init)
+        .def("__iter__",&TSTLexicalIterator::copy)
+        .def("copy",&TSTLexicalIterator::copy)
+        .def("next",&TSTLexicalIterator::next)
+    ;
+
+    class_< TSTCloseMatchIterator >("TSTCloseMatchIterator",no_init)
+        .def("__iter__",&TSTCloseMatchIterator::copy)
+        .def("copy",&TSTCloseMatchIterator::copy)
+        .def("next",&TSTCloseMatchIterator::next)
+    ;
 
     class_< TST >("TST")
         .def("put",&TST::put)
@@ -249,9 +302,12 @@ BOOST_PYTHON_MODULE(tst)
         .def("close_match",&TST::close_match)
         .def("prefix_match",&TST::prefix_match)
 
-        .def("close_match_from_iterator",&TST::close_match_from_iterator)
-
         .def("pack",&TST::pack)
+
+        .def("__iter__",&TST::iterator1)
+        .def("iterator",&TST::iterator1)
+        .def("iterator",&TST::iterator2)
+        .def("close_match_iterator",&TST::close_match_iterator)
     ;
     
     class_< NullAction<char,object>, boost::noncopyable >("NullAction")
