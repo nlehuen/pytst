@@ -28,13 +28,14 @@ template < class S, class T > class textindex : private filter< S, boost::shared
     public:
         typedef std::map< T, int > entries;
         typedef boost::shared_ptr< entries > p_entries; 
+        typedef string_tst < S, p_entries > tree_type;
     
         template < class S > class collector : public action< S, p_entries > {
             public:
                 collector() : _entries(new entries()), _first(true) {
                 }
             
-                virtual void perform(S* string, int string_length, int remaining_distance, p_entries data) {
+                virtual void perform(const S* string, int string_length, int remaining_distance, p_entries data) {
                     for(p_entries::element_type::iterator s(data->begin()),e(data->end());s != e;s++) {
                         (*_entries)[s->first] += s->second;
                     }
@@ -49,7 +50,7 @@ template < class S, class T > class textindex : private filter< S, boost::shared
                 p_entries _entries;
         };
 
-        textindex() : _tst(), _words("\\b\\w+\\b") {
+        textindex() : _tst(new tree_type::storage_type(16),tree_type::value_type()), _words("\\b\\w+\\b") {
         }
 
         int put_word(std::basic_string< S > word,T value) {
@@ -120,7 +121,7 @@ template < class S, class T > class textindex : private filter< S, boost::shared
             }
         }
 
-        virtual p_entries perform(S* string, int string_length, int remaining_distance, p_entries data) {
+        virtual p_entries perform(const S* string, int string_length, int remaining_distance, p_entries data) {
             return p_entries(new entries());
         }
         
@@ -129,6 +130,6 @@ template < class S, class T > class textindex : private filter< S, boost::shared
         }
 
     private:
-        memory_tst < S, p_entries > _tst;
+        tree_type _tst;
         boost::basic_regex < S > _words;
 };

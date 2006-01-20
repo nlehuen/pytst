@@ -35,6 +35,14 @@ template <class S, class T> class python_textindex : public textindex<S,T> {
             return to_list(textindex<S,T>::find_text(word,intersection));
         }
 
+        list __getitem__1(std::basic_string<S> word) {
+            return to_list(textindex<S,T>::find_text(word,true));
+        }
+
+        list __getitem__2(tuple item) {
+            return to_list(textindex<S,T>::find_text(extract<std::basic_string<S> >(item[0]),item[1]));
+        }
+
 protected:
         list to_list(p_entries entries) {
             list result;
@@ -52,8 +60,11 @@ BOOST_PYTHON_MODULE(textindex)
     class_< python_textindex<char,object> >("textindex")
         .def("put_word",&python_textindex<char,object>::put_word)
         .def("put_text",&python_textindex<char,object>::put_text)
+        .def("__setitem__",&python_textindex<char,object>::put_text)
         .def("find_word",&python_textindex<char,object>::find_word)
         .def("find_text",&python_textindex<char,object>::find_text)
+        .def("__getitem__",&python_textindex<char,object>::__getitem__1)
+        .def("__getitem__",&python_textindex<char,object>::__getitem__2)
         .def("pack",&python_textindex<char,object>::pack)
     ;
 }
