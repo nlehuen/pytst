@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "1.01";
+const char* const TST_VERSION = "1.02";
 
 #include "debug.h"
 
@@ -59,7 +59,10 @@ public:
         delete storage;
     }
 
-    void pack();
+    void pack() {
+        storage->pack();
+    }
+    
     T walk(filter<S,T>* filter,action<S,T>* to_perform) const;
     T walk(filter<S,T>* filter,action<S,T>* to_perform,const S* string, int string_length) const;
     T close_match(const S* string,int string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
@@ -70,7 +73,7 @@ public:
     T put(const S* string,int string_length,T data);
     void remove(const S* string,int string_length);
     bool contains(const S* string,int string_length) const;
-    int get_maximum_key_length() const;
+    int get_maximum_key_length() const { return maximum_key_length; }
     void write(FILE* file) const;
     void read(FILE* file);
 
@@ -103,8 +106,6 @@ private:
     M* storage;
     T default_value;
     int root,maximum_key_length;
-
-    tst();
 
     void walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const;
     void close_match_recurse(tst_node<S,T>* current_node,S* key, const int key_length,const S* string, const int string_length,const int position, const int distance, const int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
@@ -190,12 +191,7 @@ template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst(M* sto
     maximum_key_length=0;
 }
 
-template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst() {
-}
-
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::pack() {
-    storage->pack();
-}
+/*************************** high-level tree management ***********************/
 
 template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::get(const S* string,int string_length) const {
     int current_index=root,best_node=UNDEFINED_INDEX;
@@ -228,15 +224,6 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::put(cons
     return storage->get(node_index)->store(data);
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::remove(const S* string,int string_length) {
-    remove_node(&root,string,string_length);
-    if(root==UNDEFINED_INDEX) {
-        node_info<S,T> root_info;
-        storage->new_node(&root_info);
-        root = root_info.index;
-    }
-}
-
 template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::get_or_build(const S* string,int string_length,filter<S,T>* factory) {
     node_info<S,T> root_info;
     root_info.index=root;
@@ -257,230 +244,55 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::get_or_b
     }
 }
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::close_match(const S* string, int string_length, int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) const {
-    S* current_key=(S*)tst_malloc((string_length+maximum_distance+2)*sizeof(S));
-    *current_key='\0';
-    close_match_recurse(storage->get(root),current_key,0,string,string_length,0,maximum_distance,maximum_distance,filter,to_perform);
-    tst_free(current_key);
-    if(to_perform) {
-        return to_perform->result();
-    }
-    else {
-        return default_value;
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::remove(const S* string,int string_length) {
+    remove_node(&root,string,string_length);
+    if(root==UNDEFINED_INDEX) {
+        node_info<S,T> root_info;
+        storage->new_node(&root_info);
+        root = root_info.index;
     }
 }
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(filter<S,T>* filter,action<S,T>* to_perform) const {
-    S* key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
-    *key='\0';
-    walk_recurse(storage->get(root),key,0,maximum_key_length+1,filter,to_perform);
-    tst_free(key);
-    if(to_perform) {
-        return to_perform->result();
-    }
-    else {
-        return default_value;
-    }
-}
+/**************************** low-level tree management ***********************/
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(filter<S,T>* filter,action<S,T>* to_perform,const S* string, int string_length) const {
-    int index = root;
-    int best_node = UNDEFINED_INDEX;
-    tst_node<S,T>* start = find_node(&index,&best_node,string,string_length);
-
-    if(start) {
-        T data = start->data;
-        if(data!=default_value) {
-            if(filter) {
-                data = filter->perform(string,string_length,0,data);
-            }
-            if(to_perform) {
-                to_perform->perform(string,string_length,0,data);
-            }
-        }
-        
-        index = start->next; 
-        if(index!=UNDEFINED_INDEX) {
-            S* key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
-            memcpy(key,string,string_length*sizeof(S));
-            walk_recurse(storage->get(index),key,string_length,maximum_key_length+1,filter,to_perform);
-            tst_free(key);
-        }
-    }
-
-    if(to_perform) {
-        return to_perform->result();
-    }
-    else {
-        return default_value;
-    }
-}
-
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const {
-    int other_index;
-
-    other_index=current_node->left;
-    if(other_index!=UNDEFINED_INDEX) {
-        walk_recurse(storage->get(other_index),current_key,current_key_length,current_key_limit,filter,to_perform);
-    }
-
-    assert(current_key_length < current_key_limit);
-    current_key[current_key_length]=current_node->c;
-    current_key_length++;
-
-    T data = current_node->data;
-    if(data!=default_value) {
-        if(filter) {
-            data = filter->perform(current_key,current_key_length,0,data);
-        }
-        if(to_perform) {
-            to_perform->perform(current_key,current_key_length,0,data);
-        }
-    }
-
-    other_index=current_node->next;
-    if(other_index!=UNDEFINED_INDEX) {
-        walk_recurse(storage->get(other_index),current_key,current_key_length,current_key_limit,filter,to_perform);
-    }
-
-    current_key_length--;
-
-    other_index=current_node->right;
-    if(other_index!=UNDEFINED_INDEX) {
-        walk_recurse(storage->get(other_index),current_key,current_key_length,current_key_limit,filter,to_perform);
-    }
-}
-
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close_match_recurse(tst_node<S,T>* current_node,S* key,int key_length,const S* string,const int string_length, const int position, const int distance, const int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform) const {
-
-    // LEFT
-    int other_index=current_node->left;
-    if (other_index!=UNDEFINED_INDEX) {
-        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,distance,remaining_distance,filter,to_perform);
-    }
-
-    int diff=1;
-    if(position<string_length && string[position]==current_node->c) {
-        diff=0;
-    }
-
-    // KEY++
-    key[key_length]=current_node->c;
-    key_length++;
-
-    // CURRENT
-    T data = current_node->data;
-    if(data!=default_value) {
-        int new_remaining_distance=string_length - position - 1;
-        if(new_remaining_distance<0) {
-            new_remaining_distance = 0;
-        }
-        new_remaining_distance = remaining_distance - diff - new_remaining_distance;
-
-        if(new_remaining_distance>=0) {
-            if(filter) {
-                data = filter->perform(key,key_length,distance-new_remaining_distance,data);
-            }
-            if(data!=default_value && to_perform) {
-                to_perform->perform(key,key_length,distance-new_remaining_distance,data);
-            }
-        }
-    }
-
-    // CURRENT, NEXT
-    other_index=current_node->next;
-    if (other_index!=UNDEFINED_INDEX) {
-        int new_remaining_distance = remaining_distance - diff;
-        if (new_remaining_distance>=0) {
-            close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,distance,new_remaining_distance,filter,to_perform);
-        }
-    }
-
-    // SKIP_INPUT
-    if(other_index!=UNDEFINED_INDEX && remaining_distance>0) {
-        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,distance,remaining_distance-1,filter,to_perform);
-    }
-    
-    // KEY--
-    key_length--;
-
-    // SKIP_BASE
-    if(position<string_length && remaining_distance>0) {
-        close_match_recurse(current_node,key,key_length,string,string_length,position+1,distance,remaining_distance-1,filter,to_perform);
-    }
-
-    // RIGHT
-    other_index = current_node->right;
-    if(other_index!=UNDEFINED_INDEX) {
-        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,distance,remaining_distance,filter,to_perform);
-    }
-}
-
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::prefix_match(const S* string,int string_length,filter<S,T>* filter,action<S,T>* to_perform) const {
-    S* current_key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
-    int current_key_length=0;
-
-    T biggest=default_value;
-    int biggest_length=0;
-    int current_index=root;
+template<typename S,typename T,typename M,typename RW> tst_node<S,T>* tst<S,T,M,RW>::find_node(int* current_index,int* best_node,const S* string,int string_length) const {
     tst_node<S,T>* current_node;
     int diff;
-    S c;
 
-    while(string_length>0) {
-        c = *string;
-        string++;
-        string_length--;
+    while(*current_index!=UNDEFINED_INDEX) {
+        current_node=storage->get(*current_index);
 
-        assert(current_key_length<=maximum_key_length);
-        current_key[current_key_length]=c;
-        current_key_length++;
+        if(current_node->c==0) {
+            *current_index=UNDEFINED_INDEX;
+            return NULL;
+        }
+        else {
+            diff=(*string)-(current_node->c);
+        }
 
-        while(current_index!=UNDEFINED_INDEX) {
-            current_node=storage->get(current_index);
-            diff=c-current_node->c;
-            if(diff==0) {
-                if(current_node->data!=default_value) {
-                    biggest=current_node->data;
-                    biggest_length=current_key_length;
-                    if(filter) {
-                        biggest=filter->perform(current_key,biggest_length,0,biggest);
-                    }
-                }
-                if(*string) {
-                    current_index=current_node->next;
-                    break;
-                }
-                else {
-                    if(biggest!=default_value && to_perform) {
-                        to_perform->perform(current_key,biggest_length,0,biggest);
-                    }
-                    current_index=current_node->next;
-                    if(current_index!=UNDEFINED_INDEX) {
-                        walk_recurse(storage->get(current_index),current_key,current_key_length,maximum_key_length+2,filter,to_perform);
-                    }
-                    tst_free(current_key);
-                    return to_perform->result();
-                }
+        if(diff==0) {
+            if(current_node->data!=default_value) {
+                *best_node=*current_index;
             }
-            else if(diff>0) {
-                current_index=current_node->right;
+
+            string++;
+            string_length--;
+            if(string_length>0) {
+                *current_index = current_node->next;
             }
             else {
-                current_index=current_node->left;
+                return current_node;
             }
         }
-        if(current_index==UNDEFINED_INDEX) {
-            break;
+        else if(diff>0) {
+            *current_index=current_node->right;
+        }
+        else {
+            *current_index=current_node->left;
         }
     }
 
-    if(biggest!=default_value && to_perform) {
-        to_perform->perform(current_key,biggest_length,0,biggest);
-    }
-
-    tst_free(current_key);
-    return to_perform->result();
+    return NULL;
 }
 
 template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::build_node(node_info<S,T>* current_node_info,const S* string,int string_length,int current_position) {
@@ -674,68 +486,370 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::remov
     }
 }
 
-template<typename S,typename T,typename M,typename RW> tst_node<S,T>* tst<S,T,M,RW>::find_node(int* current_index,int* best_node,const S* string,int string_length) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::balance_node(node_info<S,T>* bal) {
+    if(bal->height==-1) {
+        compute_height_and_balance(bal);
+    }
+    bal->balance_performed=0;
+    if(bal->balance>1) {
+        if(bal->right_balance>0) {
+            rr(bal);
+        }
+        else {
+            rl(bal);
+        }
+        bal->balance_performed=1;
+    }
+    else if(bal->balance<-1) {
+        if(bal->left_balance<0) {
+            ll(bal);
+        }
+        else {
+            lr(bal);
+        }
+        bal->balance_performed=1;
+    }
+    
+    assert(abs(bal->balance)<2);
+    assert(abs(bal->right_balance)<2);
+    assert(abs(bal->left_balance)<2);
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::ll(node_info<S,T>* bal) {
+    int left_index=bal->node->left;
+    tst_node<S,T>* left_node=storage->get(left_index);
+    int left_right_index=left_node->right;
+    bal->node->left=left_right_index;
+    left_node->right=bal->index;
+    
+    bal->index=left_index;
+    bal->node=storage->get(left_index);
+    bal->height=bal->height-1;
+    bal->balance=0;
+    bal->right_balance=0;
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::rr(node_info<S,T>* bal) {
+    int right_index=bal->node->right;
+    tst_node<S,T>* right_node=storage->get(right_index);
+    int right_left_index=right_node->left;
+    bal->node->right=right_left_index;
+    right_node->left=bal->index;
+    
+    bal->index=right_index;
+    bal->node=storage->get(right_index);
+    bal->height=bal->height-1;
+    bal->balance=0;
+    bal->left_balance=0;
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::lr(node_info<S,T>* bal) {
+    node_info<S,T> left;
+    left.index = bal->node->left;
+    left.node = storage->get(left.index);
+    rr(&left);
+    bal->node->left=left.index;
+    ll(bal);
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::rl(node_info<S,T>* bal) {
+    node_info<S,T> right;
+    right.index = bal->node->right;
+    right.node = storage->get(right.index);
+    ll(&right);
+    bal->node->right=right.index;
+    rr(bal);
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compute_height_and_balance(node_info<S,T>* current_node_info) const {
+    int left = current_node_info->node->left;
+    int right = current_node_info->node->right;
+
+    if(right!=UNDEFINED_INDEX) {
+        node_info<S,T> right_balance;
+        right_balance.index=right;
+        right_balance.node=storage->get(right);
+        compute_height_and_balance(&right_balance);
+
+        if(left!=UNDEFINED_INDEX) {
+            node_info<S,T> left_balance;
+            left_balance.index=left;
+            left_balance.node=storage->get(left);
+            compute_height_and_balance(&left_balance);
+
+            if(left_balance.height > right_balance.height) {
+                current_node_info->height = left_balance.height+1;
+            }
+            else {
+                current_node_info->height = right_balance.height+1;
+            }
+            current_node_info->balance = right_balance.height-left_balance.height;
+            current_node_info->right_balance = right_balance.balance;
+            current_node_info->left_balance = left_balance.balance;
+        }
+        else {
+            current_node_info->height = right_balance.height + 1;
+            current_node_info->balance = right_balance.height;
+            current_node_info->right_balance = right_balance.balance;
+            current_node_info->left_balance = 0;
+        }
+    }
+    else {
+        if(left!=UNDEFINED_INDEX) {
+            node_info<S,T> left_balance;
+            left_balance.index=left;
+            left_balance.node=storage->get(left);
+            compute_height_and_balance(&left_balance);
+
+            current_node_info->height = left_balance.height + 1;
+            current_node_info->balance = -left_balance.height;
+            current_node_info->right_balance = 0;
+            current_node_info->left_balance = left_balance.balance;
+        }
+        else {
+            current_node_info->height = 0;
+            current_node_info->balance = 0;
+            current_node_info->right_balance = 0;
+            current_node_info->left_balance = 0;
+        }
+    }
+}
+
+/**************************** close_match *************************************/
+
+template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::close_match(const S* string, int string_length, int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) const {
+    S* current_key=(S*)tst_malloc((string_length+maximum_distance+2)*sizeof(S));
+    *current_key='\0';
+    close_match_recurse(storage->get(root),current_key,0,string,string_length,0,maximum_distance,maximum_distance,filter,to_perform);
+    tst_free(current_key);
+    if(to_perform) {
+        return to_perform->result();
+    }
+    else {
+        return default_value;
+    }
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close_match_recurse(tst_node<S,T>* current_node,S* key,int key_length,const S* string,const int string_length, const int position, const int distance, const int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform) const {
+
+    // LEFT
+    int other_index=current_node->left;
+    if (other_index!=UNDEFINED_INDEX) {
+        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,distance,remaining_distance,filter,to_perform);
+    }
+
+    int diff=1;
+    if(position<string_length && string[position]==current_node->c) {
+        diff=0;
+    }
+
+    // KEY++
+    key[key_length]=current_node->c;
+    key_length++;
+
+    // CURRENT
+    T data = current_node->data;
+    if(data!=default_value) {
+        int new_remaining_distance=string_length - position - 1;
+        if(new_remaining_distance<0) {
+            new_remaining_distance = 0;
+        }
+        new_remaining_distance = remaining_distance - diff - new_remaining_distance;
+
+        if(new_remaining_distance>=0) {
+            if(filter) {
+                data = filter->perform(key,key_length,distance-new_remaining_distance,data);
+            }
+            if(data!=default_value && to_perform) {
+                to_perform->perform(key,key_length,distance-new_remaining_distance,data);
+            }
+        }
+    }
+
+    // CURRENT, NEXT
+    other_index=current_node->next;
+    if (other_index!=UNDEFINED_INDEX) {
+        int new_remaining_distance = remaining_distance - diff;
+        if (new_remaining_distance>=0) {
+            close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,distance,new_remaining_distance,filter,to_perform);
+        }
+    }
+
+    // SKIP_INPUT
+    if(other_index!=UNDEFINED_INDEX && remaining_distance>0) {
+        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,distance,remaining_distance-1,filter,to_perform);
+    }
+    
+    // KEY--
+    key_length--;
+
+    // SKIP_BASE
+    if(position<string_length && remaining_distance>0) {
+        close_match_recurse(current_node,key,key_length,string,string_length,position+1,distance,remaining_distance-1,filter,to_perform);
+    }
+
+    // RIGHT
+    other_index = current_node->right;
+    if(other_index!=UNDEFINED_INDEX) {
+        close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,distance,remaining_distance,filter,to_perform);
+    }
+}
+
+/**************************** walk *************************************/
+
+template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(filter<S,T>* filter,action<S,T>* to_perform) const {
+    S* key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
+    *key='\0';
+    walk_recurse(storage->get(root),key,0,maximum_key_length+1,filter,to_perform);
+    tst_free(key);
+    if(to_perform) {
+        return to_perform->result();
+    }
+    else {
+        return default_value;
+    }
+}
+
+template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(filter<S,T>* filter,action<S,T>* to_perform,const S* string, int string_length) const {
+    int index = root;
+    int best_node = UNDEFINED_INDEX;
+    tst_node<S,T>* start = find_node(&index,&best_node,string,string_length);
+
+    if(start) {
+        T data = start->data;
+        if(data!=default_value) {
+            if(filter) {
+                data = filter->perform(string,string_length,0,data);
+            }
+            if(to_perform) {
+                to_perform->perform(string,string_length,0,data);
+            }
+        }
+        
+        index = start->next; 
+        if(index!=UNDEFINED_INDEX) {
+            S* key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
+            memcpy(key,string,string_length*sizeof(S));
+            walk_recurse(storage->get(index),key,string_length,maximum_key_length+1,filter,to_perform);
+            tst_free(key);
+        }
+    }
+
+    if(to_perform) {
+        return to_perform->result();
+    }
+    else {
+        return default_value;
+    }
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_recurse(tst_node<S,T>* current_node,S* current_key,int current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const {
+    int other_index;
+
+    other_index=current_node->left;
+    if(other_index!=UNDEFINED_INDEX) {
+        walk_recurse(storage->get(other_index),current_key,current_key_length,current_key_limit,filter,to_perform);
+    }
+
+    assert(current_key_length < current_key_limit);
+    current_key[current_key_length]=current_node->c;
+    current_key_length++;
+
+    T data = current_node->data;
+    if(data!=default_value) {
+        if(filter) {
+            data = filter->perform(current_key,current_key_length,0,data);
+        }
+        if(to_perform) {
+            to_perform->perform(current_key,current_key_length,0,data);
+        }
+    }
+
+    other_index=current_node->next;
+    if(other_index!=UNDEFINED_INDEX) {
+        walk_recurse(storage->get(other_index),current_key,current_key_length,current_key_limit,filter,to_perform);
+    }
+
+    current_key_length--;
+
+    other_index=current_node->right;
+    if(other_index!=UNDEFINED_INDEX) {
+        walk_recurse(storage->get(other_index),current_key,current_key_length,current_key_limit,filter,to_perform);
+    }
+}
+
+/**************************** prefix_match *************************************/
+
+template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::prefix_match(const S* string,int string_length,filter<S,T>* filter,action<S,T>* to_perform) const {
+    S* current_key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
+    int current_key_length=0;
+
+    T biggest=default_value;
+    int biggest_length=0;
+    int current_index=root;
     tst_node<S,T>* current_node;
     int diff;
+    S c;
 
-    while(*current_index!=UNDEFINED_INDEX) {
-        current_node=storage->get(*current_index);
+    while(string_length>0) {
+        c = *string;
+        string++;
+        string_length--;
 
-        if(current_node->c==0) {
-            *current_index=UNDEFINED_INDEX;
-            return NULL;
-        }
-        else {
-            diff=(*string)-(current_node->c);
-        }
+        assert(current_key_length<=maximum_key_length);
+        current_key[current_key_length]=c;
+        current_key_length++;
 
-        if(diff==0) {
-            if(current_node->data!=default_value) {
-                *best_node=*current_index;
+        while(current_index!=UNDEFINED_INDEX) {
+            current_node=storage->get(current_index);
+            diff=c-current_node->c;
+            if(diff==0) {
+                if(current_node->data!=default_value) {
+                    biggest=current_node->data;
+                    biggest_length=current_key_length;
+                    if(filter) {
+                        biggest=filter->perform(current_key,biggest_length,0,biggest);
+                    }
+                }
+                if(*string) {
+                    current_index=current_node->next;
+                    break;
+                }
+                else {
+                    if(biggest!=default_value && to_perform) {
+                        to_perform->perform(current_key,biggest_length,0,biggest);
+                    }
+                    current_index=current_node->next;
+                    if(current_index!=UNDEFINED_INDEX) {
+                        walk_recurse(storage->get(current_index),current_key,current_key_length,maximum_key_length+2,filter,to_perform);
+                    }
+                    tst_free(current_key);
+                    return to_perform->result();
+                }
             }
-
-            string++;
-            string_length--;
-            if(string_length>0) {
-                *current_index = current_node->next;
+            else if(diff>0) {
+                current_index=current_node->right;
             }
             else {
-                return current_node;
+                current_index=current_node->left;
             }
         }
-        else if(diff>0) {
-            *current_index=current_node->right;
-        }
-        else {
-            *current_index=current_node->left;
+        if(current_index==UNDEFINED_INDEX) {
+            break;
         }
     }
 
-    return NULL;
+    if(biggest!=default_value && to_perform) {
+        to_perform->perform(current_key,biggest_length,0,biggest);
+    }
+
+    tst_free(current_key);
+    return to_perform->result();
 }
+
+/**************************** scan *************************************/
 
 #ifdef SCANNER
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compute_backtrack(tst_node<S,T> *current_node,const S* string, int si_match_start, int si_match_end) {
-    if(current_node->backtrack==UNDEFINED_INDEX) {
-        while(si_match_start<si_match_end) {
-            current_node->backtrack=root;
-            current_node->backtrack_match_index=UNDEFINED_INDEX;
-            find_node(&(current_node->backtrack),&(current_node->backtrack_match_index),string+si_match_start,si_match_end-si_match_start);
-            if(current_node->backtrack==UNDEFINED_INDEX) {
-                si_match_start++;
-            }
-            else {
-                current_node->backtrack=(storage->get(current_node->backtrack))->next;
-                break;
-            }
-        }
-        if(current_node->backtrack==UNDEFINED_INDEX) {
-            current_node->backtrack=root;
-            current_node->backtrack_match_index=UNDEFINED_INDEX;
-        }
-    }
-}
-
 template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan(const S* string,int string_length,action<S,T>* to_perform) {
     // Le premier caractère de la chaine ne correspondant pas à un match
     int si_non_match_start=0;
@@ -882,6 +996,27 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan(con
     }
 
     return to_perform->result();
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compute_backtrack(tst_node<S,T> *current_node,const S* string, int si_match_start, int si_match_end) {
+    if(current_node->backtrack==UNDEFINED_INDEX) {
+        while(si_match_start<si_match_end) {
+            current_node->backtrack=root;
+            current_node->backtrack_match_index=UNDEFINED_INDEX;
+            find_node(&(current_node->backtrack),&(current_node->backtrack_match_index),string+si_match_start,si_match_end-si_match_start);
+            if(current_node->backtrack==UNDEFINED_INDEX) {
+                si_match_start++;
+            }
+            else {
+                current_node->backtrack=(storage->get(current_node->backtrack))->next;
+                break;
+            }
+        }
+        if(current_node->backtrack==UNDEFINED_INDEX) {
+            current_node->backtrack=root;
+            current_node->backtrack_match_index=UNDEFINED_INDEX;
+        }
+    }
 }
 
 template<typename S> inline int is_in(S c,const S* stop_chars,int stop_chars_length) {
@@ -1035,138 +1170,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
 }
 #endif
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::balance_node(node_info<S,T>* bal) {
-    if(bal->height==-1) {
-        compute_height_and_balance(bal);
-    }
-    bal->balance_performed=0;
-    if(bal->balance>1) {
-        if(bal->right_balance>0) {
-            rr(bal);
-        }
-        else {
-            rl(bal);
-        }
-        bal->balance_performed=1;
-    }
-    else if(bal->balance<-1) {
-        if(bal->left_balance<0) {
-            ll(bal);
-        }
-        else {
-            lr(bal);
-        }
-        bal->balance_performed=1;
-    }
-    
-    assert(abs(bal->balance)<2);
-    assert(abs(bal->right_balance)<2);
-    assert(abs(bal->left_balance)<2);
-}
-
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::ll(node_info<S,T>* bal) {
-    int left_index=bal->node->left;
-    tst_node<S,T>* left_node=storage->get(left_index);
-    int left_right_index=left_node->right;
-    bal->node->left=left_right_index;
-    left_node->right=bal->index;
-    
-    bal->index=left_index;
-    bal->node=storage->get(left_index);
-    bal->height=bal->height-1;
-    bal->balance=0;
-    bal->right_balance=0;
-}
-
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::rr(node_info<S,T>* bal) {
-    int right_index=bal->node->right;
-    tst_node<S,T>* right_node=storage->get(right_index);
-    int right_left_index=right_node->left;
-    bal->node->right=right_left_index;
-    right_node->left=bal->index;
-    
-    bal->index=right_index;
-    bal->node=storage->get(right_index);
-    bal->height=bal->height-1;
-    bal->balance=0;
-    bal->left_balance=0;
-}
-
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::lr(node_info<S,T>* bal) {
-    node_info<S,T> left;
-    left.index = bal->node->left;
-    left.node = storage->get(left.index);
-    rr(&left);
-    bal->node->left=left.index;
-    ll(bal);
-}
-
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::rl(node_info<S,T>* bal) {
-    node_info<S,T> right;
-    right.index = bal->node->right;
-    right.node = storage->get(right.index);
-    ll(&right);
-    bal->node->right=right.index;
-    rr(bal);
-}
-
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compute_height_and_balance(node_info<S,T>* current_node_info) const {
-    int left = current_node_info->node->left;
-    int right = current_node_info->node->right;
-
-    if(right!=UNDEFINED_INDEX) {
-        node_info<S,T> right_balance;
-        right_balance.index=right;
-        right_balance.node=storage->get(right);
-        compute_height_and_balance(&right_balance);
-
-        if(left!=UNDEFINED_INDEX) {
-            node_info<S,T> left_balance;
-            left_balance.index=left;
-            left_balance.node=storage->get(left);
-            compute_height_and_balance(&left_balance);
-
-            if(left_balance.height > right_balance.height) {
-                current_node_info->height = left_balance.height+1;
-            }
-            else {
-                current_node_info->height = right_balance.height+1;
-            }
-            current_node_info->balance = right_balance.height-left_balance.height;
-            current_node_info->right_balance = right_balance.balance;
-            current_node_info->left_balance = left_balance.balance;
-        }
-        else {
-            current_node_info->height = right_balance.height + 1;
-            current_node_info->balance = right_balance.height;
-            current_node_info->right_balance = right_balance.balance;
-            current_node_info->left_balance = 0;
-        }
-    }
-    else {
-        if(left!=UNDEFINED_INDEX) {
-            node_info<S,T> left_balance;
-            left_balance.index=left;
-            left_balance.node=storage->get(left);
-            compute_height_and_balance(&left_balance);
-
-            current_node_info->height = left_balance.height + 1;
-            current_node_info->balance = -left_balance.height;
-            current_node_info->right_balance = 0;
-            current_node_info->left_balance = left_balance.balance;
-        }
-        else {
-            current_node_info->height = 0;
-            current_node_info->balance = 0;
-            current_node_info->right_balance = 0;
-            current_node_info->left_balance = 0;
-        }
-    }
-}
-
-template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::get_maximum_key_length() const {
-    return maximum_key_length;
-}
+/**************************** file I/O *************************************/
 
 template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(FILE* file) {
     // We check the version number
