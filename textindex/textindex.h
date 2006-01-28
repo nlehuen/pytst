@@ -75,7 +75,7 @@ template < class S, class T > class textindex : private filter< S, boost::shared
         
         p_entries find_word(const std::basic_string< S > word) {
             collector<S> c;
-            _tst.walk(NULL,&c,const_cast<S*>(word.data()),word.size());
+            _tst.walk(NULL,&c,word.data(),word.size());
             return c.result();
         }
         

@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\projets\development\tst\include"
+				AdditionalIncludeDirectories="C:\projets\boost_1_33_1;..\..\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_ATTRIBUTES"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -37,6 +37,7 @@
 				IgnoreImportLibrary="TRUE"
 				OutputFile="$(OutDir)/tstlib.dll"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\projets\boost_1_33_1\bin\boost\libs\regex\build\libboost_regex.lib\vc-7_1\debug\threading-multi&quot;"
 				MergedIDLBaseFileName="_tstlib.idl"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
@@ -99,6 +100,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
+				AdditionalOptions="comsupp.lib"
 				OutputFile="$(OutDir)/tstlib.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;C:\projets\boost_1_33_1\bin\boost\libs\regex\build\libboost_regex.lib\vc-7_1\release\threading-multi&quot;"

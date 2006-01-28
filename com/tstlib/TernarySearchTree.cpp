@@ -10,16 +10,13 @@
 
 STDMETHODIMP CTernarySearchTree::Set(BSTR* key, BSTR* value, BSTR* result)
 {
-    CComBSTR _key(*key);
-    CComBSTR _value(*value);
-    *result = CComBSTR(_tst.put(_key.m_str,_key.Length(),_value));
+    *result = _tst.put(*key,SysStringLen(*key),_bstr_t(*value,true)).copy();
     return S_OK;
 }
 
 STDMETHODIMP CTernarySearchTree::Get(BSTR* key, BSTR* result)
 {
-    CComBSTR _key(*key);
-    *result = CComBSTR(_tst.get(_key.m_str,_key.Length()));
+    *result = _tst.get(*key,SysStringLen(*key)).copy();
     return S_OK;
 }
 

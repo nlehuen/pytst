@@ -3,6 +3,7 @@
 #pragma once
 #include "resource.h"       // symboles principaux
 
+#include "comutil.h"
 #include "../../textindex/textindex.h"
 
 // ITextIndex
@@ -38,7 +39,7 @@ class ATL_NO_VTABLE CTextIndex :
 	public ITextIndex
 {
 public:
-    typedef textindex<wchar_t,CComBSTR> index_type;
+    typedef textindex<wchar_t,_bstr_t> index_type;
 
 private:
     index_type _textindex;

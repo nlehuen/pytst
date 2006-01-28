@@ -4,6 +4,7 @@
 #include "resource.h"       // symboles principaux
 
 #include "tst.h"
+#include "comutil.h"
 
 // ITernarySearchTree
 [
@@ -35,8 +36,11 @@ __interface ITernarySearchTree : IDispatch
 class ATL_NO_VTABLE CTernarySearchTree : 
 	public ITernarySearchTree
 {
+private:
+    tst<wchar_t,_bstr_t> _tst;
+
 public:
-    CTernarySearchTree() : _tst(new tst<wchar_t,CComBSTR>::storage_type(16),CComBSTR())
+    CTernarySearchTree() : _tst()
 	{
 	}
 
@@ -53,13 +57,8 @@ public:
 	}
 
 public:
-
     STDMETHOD(Set)(BSTR* key, BSTR* value, BSTR* result);
     STDMETHOD(Get)(BSTR* key,BSTR* result);
-
-private:
-    tst<wchar_t,CComBSTR> _tst;
-public:
     STDMETHOD(Pack)(void);
 };
 

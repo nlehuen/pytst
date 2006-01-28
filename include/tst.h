@@ -56,6 +56,7 @@ public:
     typedef M storage_type;
     typedef T value_type;
 
+    tst();
     tst(M* storage,T default_value);
 
     virtual ~tst() {
@@ -184,6 +185,15 @@ template <typename S, typename T, typename M=memory_storage<S,T>, typename RW=nu
         }
 #endif
 };
+
+template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst() {
+    this->storage=new storage_type(16);
+    this->default_value=value_type();
+    node_info<S,T> root_info;
+    storage->new_node(&root_info);
+    root = root_info.index;
+    maximum_key_length=0;
+}
 
 template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst(M* storage,T default_value) {
     this->storage=storage;
