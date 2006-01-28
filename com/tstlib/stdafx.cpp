@@ -3,6 +3,3 @@
 // stdafx.obj contient les informations de type précompilées
 
 #include "stdafx.h"
-
-#define SCANNER
-#include "tst.h"
