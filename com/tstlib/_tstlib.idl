@@ -35,7 +35,7 @@ interface ITextIndex : IDispatch {
 	[id(2),helpstring("method AddText")] HRESULT  AddText([in] BSTR *text , [in] BSTR *document );
 	[id(3),helpstring("method Pack")] HRESULT  Pack();
 	[id(4),helpstring("method FindWord")] HRESULT  FindWord([in] BSTR *word );
-	[id(5),helpstring("method FindText")] HRESULT  FindTextA([in] BSTR *text , [in] USHORT intersect);
+	[id(5),helpstring("method FindText")] HRESULT  FindTextA([in] BSTR *text , [in] LONG intersect);
 };
 
 

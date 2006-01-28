@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Sat Jan 28 21:11:38 2006
+/* at Sat Jan 28 21:32:05 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -319,7 +319,7 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 /* 242 */	NdrFcLong( 0x0 ),	/* 0 */
 /* 246 */	NdrFcShort( 0xb ),	/* 11 */
 /* 248 */	NdrFcShort( 0x10 ),	/* x86 Stack size/offset = 16 */
-/* 250 */	NdrFcShort( 0x6 ),	/* 6 */
+/* 250 */	NdrFcShort( 0x8 ),	/* 8 */
 /* 252 */	NdrFcShort( 0x8 ),	/* 8 */
 /* 254 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
 			0x3,		/* 3 */
@@ -339,7 +339,7 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 
 /* 270 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
 /* 272 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
-/* 274 */	0x6,		/* FC_SHORT */
+/* 274 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
 	/* Return value */

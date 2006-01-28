@@ -37,11 +37,11 @@ STDMETHODIMP CTextIndex::FindWord(BSTR* word)
     return S_OK;
 }
 
-STDMETHODIMP CTextIndex::FindText(BSTR* text, USHORT intersect)
+STDMETHODIMP CTextIndex::FindText(BSTR* text, LONG intersect)
 {
     index_type::p_entries entries(_textindex.find_text(std::wstring(*text),intersect));
     for(index_type::p_entries::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
-        std::cout << s->first << "\n";
+        std::cout << s->first << " : " << s->second << "\n";
     }
     return S_OK;
 }

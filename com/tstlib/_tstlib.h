@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Sat Jan 28 21:11:38 2006
+/* at Sat Jan 28 21:32:05 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -307,7 +307,7 @@ EXTERN_C const IID IID_ITextIndex;
         
         virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE FindTextA( 
             /* [in] */ BSTR *text,
-            /* [in] */ USHORT intersect) = 0;
+            /* [in] */ LONG intersect) = 0;
         
     };
     
@@ -377,7 +377,7 @@ EXTERN_C const IID IID_ITextIndex;
         /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *FindTextA )( 
             ITextIndex * This,
             /* [in] */ BSTR *text,
-            /* [in] */ USHORT intersect);
+            /* [in] */ LONG intersect);
         
         END_INTERFACE
     } ITextIndexVtbl;
@@ -489,7 +489,7 @@ void __RPC_STUB ITextIndex_FindWord_Stub(
 /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_FindTextA_Proxy( 
     ITextIndex * This,
     /* [in] */ BSTR *text,
-    /* [in] */ USHORT intersect);
+    /* [in] */ LONG intersect);
 
 
 void __RPC_STUB ITextIndex_FindTextA_Stub(

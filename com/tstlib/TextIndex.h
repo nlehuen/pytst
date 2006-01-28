@@ -19,7 +19,7 @@ __interface ITextIndex : IDispatch
     [id(2), helpstring("method AddText")] HRESULT AddText([in] BSTR* text, [in] BSTR* document);
     [id(3), helpstring("method Pack")] HRESULT Pack(void);
     [id(4), helpstring("method FindWord")] HRESULT FindWord([in] BSTR* word);
-    [id(5), helpstring("method FindText")] HRESULT FindText([in] BSTR* text, [in] USHORT intersect);
+    [id(5), helpstring("method FindText")] HRESULT FindText([in] BSTR* text,[in] LONG intersect);
 };
 
 
@@ -67,6 +67,6 @@ public:
     STDMETHOD(AddText)(BSTR* text, BSTR* document);
     STDMETHOD(Pack)(void);
     STDMETHOD(FindWord)(BSTR* word);
-    STDMETHOD(FindText)(BSTR* text, USHORT intersect);
+    STDMETHOD(FindText)(BSTR* text, LONG intersect);
 };
 
