@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Sat Jan 28 12:16:33 2006
+/* at Sat Jan 28 12:21:56 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -74,6 +74,13 @@ extern const MIDL_STUB_DESC Object_StubDesc;
 
 extern const MIDL_SERVER_INFO ITernarySearchTree_ServerInfo;
 extern const MIDL_STUBLESS_PROXY_INFO ITernarySearchTree_ProxyInfo;
+
+
+extern const MIDL_STUB_DESC Object_StubDesc;
+
+
+extern const MIDL_SERVER_INFO ITextIndex_ServerInfo;
+extern const MIDL_STUBLESS_PROXY_INFO ITextIndex_ProxyInfo;
 
 
 extern const USER_MARSHAL_ROUTINE_QUADRUPLE UserMarshalRoutines[ WIRE_MARSHAL_TABLE_SIZE ];
@@ -322,6 +329,72 @@ CInterfaceStubVtbl _ITernarySearchTreeStubVtbl =
     CStdStubBuffer_DELEGATING_METHODS
 };
 
+
+/* Object interface: ITextIndex, ver. 0.0,
+   GUID={0x3DF00A4D,0x6253,0x4D65,{0xA5,0x86,0x6C,0xE5,0xE2,0x9B,0x89,0x80}} */
+
+#pragma code_seg(".orpc")
+static const unsigned short ITextIndex_FormatStringOffsetTable[] =
+    {
+    (unsigned short) -1,
+    (unsigned short) -1,
+    (unsigned short) -1,
+    (unsigned short) -1,
+    0
+    };
+
+static const MIDL_STUBLESS_PROXY_INFO ITextIndex_ProxyInfo =
+    {
+    &Object_StubDesc,
+    __MIDL_ProcFormatString.Format,
+    &ITextIndex_FormatStringOffsetTable[-3],
+    0,
+    0,
+    0
+    };
+
+
+static const MIDL_SERVER_INFO ITextIndex_ServerInfo = 
+    {
+    &Object_StubDesc,
+    0,
+    __MIDL_ProcFormatString.Format,
+    &ITextIndex_FormatStringOffsetTable[-3],
+    0,
+    0,
+    0,
+    0};
+CINTERFACE_PROXY_VTABLE(7) _ITextIndexProxyVtbl = 
+{
+    0,
+    &IID_ITextIndex,
+    IUnknown_QueryInterface_Proxy,
+    IUnknown_AddRef_Proxy,
+    IUnknown_Release_Proxy ,
+    0 /* (void *) (INT_PTR) -1 /* IDispatch::GetTypeInfoCount */ ,
+    0 /* (void *) (INT_PTR) -1 /* IDispatch::GetTypeInfo */ ,
+    0 /* (void *) (INT_PTR) -1 /* IDispatch::GetIDsOfNames */ ,
+    0 /* IDispatch_Invoke_Proxy */
+};
+
+
+static const PRPC_STUB_FUNCTION ITextIndex_table[] =
+{
+    STUB_FORWARDING_FUNCTION,
+    STUB_FORWARDING_FUNCTION,
+    STUB_FORWARDING_FUNCTION,
+    STUB_FORWARDING_FUNCTION
+};
+
+CInterfaceStubVtbl _ITextIndexStubVtbl =
+{
+    &IID_ITextIndex,
+    &ITextIndex_ServerInfo,
+    7,
+    &ITextIndex_table[-3],
+    CStdStubBuffer_DELEGATING_METHODS
+};
+
 static const MIDL_STUB_DESC Object_StubDesc = 
     {
     0,
@@ -348,24 +421,28 @@ static const MIDL_STUB_DESC Object_StubDesc =
 
 const CInterfaceProxyVtbl * __tstlib_ProxyVtblList[] = 
 {
+    ( CInterfaceProxyVtbl *) &_ITextIndexProxyVtbl,
     ( CInterfaceProxyVtbl *) &_ITernarySearchTreeProxyVtbl,
     0
 };
 
 const CInterfaceStubVtbl * __tstlib_StubVtblList[] = 
 {
+    ( CInterfaceStubVtbl *) &_ITextIndexStubVtbl,
     ( CInterfaceStubVtbl *) &_ITernarySearchTreeStubVtbl,
     0
 };
 
 PCInterfaceName const __tstlib_InterfaceNamesList[] = 
 {
+    "ITextIndex",
     "ITernarySearchTree",
     0
 };
 
 const IID *  __tstlib_BaseIIDList[] = 
 {
+    &IID_IDispatch,
     &IID_IDispatch,
     0
 };
@@ -375,14 +452,11 @@ const IID *  __tstlib_BaseIIDList[] =
 
 int __stdcall __tstlib_IID_Lookup( const IID * pIID, int * pIndex )
 {
-    
-    if(!__tstlib_CHECK_IID(0))
-        {
-        *pIndex = 0;
-        return 1;
-        }
+    IID_BS_LOOKUP_SETUP
 
-    return 0;
+    IID_BS_LOOKUP_INITIAL_TEST( __tstlib, 2, 1 )
+    IID_BS_LOOKUP_RETURN_RESULT( __tstlib, 2, *pIndex )
+    
 }
 
 const ExtendedProxyFileInfo _tstlib_ProxyFileInfo = 
@@ -392,7 +466,7 @@ const ExtendedProxyFileInfo _tstlib_ProxyFileInfo =
     (const PCInterfaceName * ) & __tstlib_InterfaceNamesList,
     (const IID ** ) & __tstlib_BaseIIDList,
     & __tstlib_IID_Lookup, 
-    1,
+    2,
     2,
     0, /* table of [async_uuid] interfaces */
     0, /* Filler1 */

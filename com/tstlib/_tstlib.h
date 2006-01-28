@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Sat Jan 28 12:16:33 2006
+/* at Sat Jan 28 12:21:56 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -51,6 +51,12 @@ typedef interface ITernarySearchTree ITernarySearchTree;
 #endif 	/* __ITernarySearchTree_FWD_DEFINED__ */
 
 
+#ifndef __ITextIndex_FWD_DEFINED__
+#define __ITextIndex_FWD_DEFINED__
+typedef interface ITextIndex ITextIndex;
+#endif 	/* __ITextIndex_FWD_DEFINED__ */
+
+
 #ifndef __CTernarySearchTree_FWD_DEFINED__
 #define __CTernarySearchTree_FWD_DEFINED__
 
@@ -61,6 +67,18 @@ typedef struct CTernarySearchTree CTernarySearchTree;
 #endif /* __cplusplus */
 
 #endif 	/* __CTernarySearchTree_FWD_DEFINED__ */
+
+
+#ifndef __CTextIndex_FWD_DEFINED__
+#define __CTextIndex_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class CTextIndex CTextIndex;
+#else
+typedef struct CTextIndex CTextIndex;
+#endif /* __cplusplus */
+
+#endif 	/* __CTextIndex_FWD_DEFINED__ */
 
 
 /* header files for imported files */
@@ -240,6 +258,116 @@ void __RPC_STUB ITernarySearchTree_Get_Stub(
 #endif 	/* __ITernarySearchTree_INTERFACE_DEFINED__ */
 
 
+#ifndef __ITextIndex_INTERFACE_DEFINED__
+#define __ITextIndex_INTERFACE_DEFINED__
+
+/* interface ITextIndex */
+/* [unique][helpstring][dual][uuid][object] */ 
+
+
+EXTERN_C const IID IID_ITextIndex;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("3DF00A4D-6253-4D65-A586-6CE5E29B8980")
+    ITextIndex : public IDispatch
+    {
+    public:
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct ITextIndexVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            ITextIndex * This,
+            /* [in] */ REFIID riid,
+            /* [iid_is][out] */ void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            ITextIndex * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            ITextIndex * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            ITextIndex * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            ITextIndex * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            ITextIndex * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            ITextIndex * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        END_INTERFACE
+    } ITextIndexVtbl;
+
+    interface ITextIndex
+    {
+        CONST_VTBL struct ITextIndexVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define ITextIndex_QueryInterface(This,riid,ppvObject)	\
+    (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
+
+#define ITextIndex_AddRef(This)	\
+    (This)->lpVtbl -> AddRef(This)
+
+#define ITextIndex_Release(This)	\
+    (This)->lpVtbl -> Release(This)
+
+
+#define ITextIndex_GetTypeInfoCount(This,pctinfo)	\
+    (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
+
+#define ITextIndex_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
+
+#define ITextIndex_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
+
+#define ITextIndex_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
+
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __ITextIndex_INTERFACE_DEFINED__ */
+
+
 
 #ifndef __tstlib_LIBRARY_DEFINED__
 #define __tstlib_LIBRARY_DEFINED__
@@ -256,6 +384,14 @@ EXTERN_C const CLSID CLSID_CTernarySearchTree;
 
 class DECLSPEC_UUID("01757CCD-8F45-498E-B8BF-4E4F95A07CE7")
 CTernarySearchTree;
+#endif
+
+EXTERN_C const CLSID CLSID_CTextIndex;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("8EC92961-CAB3-4CA6-A36E-46C39424E80B")
+CTextIndex;
 #endif
 #endif /* __tstlib_LIBRARY_DEFINED__ */
 

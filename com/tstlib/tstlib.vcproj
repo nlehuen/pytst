@@ -87,7 +87,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="c:\projets\boost_1_33_1\;..\..\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_ATTRIBUTES"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"
@@ -101,6 +101,7 @@
 				IgnoreImportLibrary="TRUE"
 				OutputFile="$(OutDir)/tstlib.dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;C:\projets\boost_1_33_1\bin\boost\libs\regex\build\libboost_regex.lib\vc-7_1\release\threading-multi&quot;"
 				MergedIDLBaseFileName="_tstlib.idl"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
@@ -170,6 +171,9 @@
 				RelativePath=".\TernarySearchTree.cpp">
 			</File>
 			<File
+				RelativePath=".\TextIndex.cpp">
+			</File>
+			<File
 				RelativePath=".\tstlib.cpp">
 			</File>
 		</Filter>
@@ -197,6 +201,9 @@
 			</File>
 			<File
 				RelativePath=".\TernarySearchTree.h">
+			</File>
+			<File
+				RelativePath=".\TextIndex.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tst.h">

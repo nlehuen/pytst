@@ -52,7 +52,7 @@ template < class S, class T > class textindex : private filter< S, boost::shared
                 p_entries _entries;
         };
 
-        textindex() : _tst(new tree_type::storage_type(16),tree_type::value_type()), _words("\\b\\w+\\b") {
+        textindex() : _tst(new tree_type::storage_type(16),tree_type::value_type()), _words(L"\\b\\w+\\b") {
         }
 
         int put_word(std::basic_string< S > word,T value) {

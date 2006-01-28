@@ -3,7 +3,7 @@
 #pragma once
 #include "resource.h"       // symboles principaux
 
-#include "../../include/tst.h"
+#include "tst.h"
 
 // ITernarySearchTree
 [

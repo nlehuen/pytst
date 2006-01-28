@@ -20,6 +20,17 @@ interface ITernarySearchTree : IDispatch {
 	[id(2),helpstring("method Get")] HRESULT  Get([in] BSTR *key , [out,retval] BSTR *result );
 };
 
+[
+	object,
+	uuid(3DF00A4D-6253-4D65-A586-6CE5E29B8980),
+	dual,
+	helpstring("Interface ITextIndex"),
+	pointer_default(unique)
+] 
+#line 15 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
+interface ITextIndex : IDispatch {
+};
+
 
 [ version(1.0), uuid(013A8F97-F0CA-4F8E-BA0E-75B1FEB9DF79), helpstring("Bibliothèque de types tstlib 1.0") ]
 library tstlib
@@ -35,6 +46,16 @@ library tstlib
 #line 34 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
 	coclass CTernarySearchTree {
 		interface ITernarySearchTree;
+	};
+
+	[
+		version(1.0),
+		uuid(8EC92961-CAB3-4CA6-A36E-46C39424E80B),
+		helpstring("TextIndex Class")
+	] 
+#line 32 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
+	coclass CTextIndex {
+		interface ITextIndex;
 	};
 
 }
