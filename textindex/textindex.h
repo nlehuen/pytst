@@ -16,6 +16,8 @@
  # License along with this library; if not, write to the Free Software
  # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#ifndef __TEXTINDEX__H_INCLUDED__
+#define __TEXTINDEX__H_INCLUDED__
 
 #include "tst.h"
 
@@ -133,3 +135,5 @@ template < class S, class T > class textindex : private filter< S, boost::shared
         tree_type _tst;
         boost::basic_regex < S > _words;
 };
+
+#endif
