@@ -53,6 +53,9 @@ public:
     friend class lexical_iterator<S,T,M,RW>;
     friend class match_iterator<S,T,M,RW>;
 
+    typedef M storage_type;
+    typedef T value_type;
+
     tst(M* storage,T default_value);
 
     virtual ~tst() {

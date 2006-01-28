@@ -1,0 +1,41 @@
+import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prsht.idl";
+import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\mshtml.idl";
+import "e:\program files\microsoft visual studio .net 2003\vc7\platformsdk\include\dimm.idl";
+import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\mshtmhst.idl";
+import "e:\program files\microsoft visual studio .net 2003\vc7\platformsdk\include\docobj.idl";
+import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\exdisp.idl";
+import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\objsafe.idl";
+
+[
+	object,
+	uuid(543BA9E0-60DF-42F8-9BDA-C573FB4EC091),
+	dual,
+	helpstring("Interface ITernarySearchTree"),
+	pointer_default(unique)
+] 
+#line 15 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
+interface ITernarySearchTree : IDispatch {
+#line 17 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
+	[id(1),helpstring("method Set")] HRESULT  Set([in] BSTR *key , [in] BSTR *value , [out,retval] BSTR *result );
+	[id(2),helpstring("method Get")] HRESULT  Get([in] BSTR *key , [out,retval] BSTR *result );
+};
+
+
+[ version(1.0), uuid(013A8F97-F0CA-4F8E-BA0E-75B1FEB9DF79), helpstring("Bibliothèque de types tstlib 1.0") ]
+library tstlib
+{
+	importlib("stdole2.tlb");
+	importlib("olepro32.dll");
+
+	[
+		version(1.0),
+		uuid(01757CCD-8F45-498E-B8BF-4E4F95A07CE7),
+		helpstring("TernarySearchTree Class")
+	] 
+#line 34 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
+	coclass CTernarySearchTree {
+		interface ITernarySearchTree;
+	};
+
+}
+
