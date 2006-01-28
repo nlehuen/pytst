@@ -31,6 +31,8 @@ template < class S, class T > class textindex : private filter< S, boost::shared
         typedef std::map< T, int > entries;
         typedef boost::shared_ptr< entries > p_entries; 
         typedef string_tst < S, p_entries > tree_type;
+        typedef boost::basic_regex < S > regex_type;
+        typedef boost::regex_iterator<typename std::basic_string<S>::const_iterator> regex_type_iterator;
     
         template < class S > class collector : public action< S, p_entries > {
             public:
@@ -55,14 +57,14 @@ template < class S, class T > class textindex : private filter< S, boost::shared
         textindex() : _tst(new tree_type::storage_type(16),tree_type::value_type()), _words(L"\\b\\w+\\b") {
         }
 
-        int put_word(std::basic_string< S > word,T value) {
+        int put_word(const std::basic_string< S > word,const T value) {
             p_entries entries = _tst.get_or_build(word,this);
             return ++((*entries)[value]);
         }
 
-        int put_text(std::basic_string< S > text,T value) {
-            boost::sregex_iterator word(text.begin(),text.end(),_words);
-            boost::sregex_iterator end;
+        int put_text(const std::basic_string< S > text,const T value) {
+            typename regex_type_iterator word(text.begin(),text.end(),_words);
+            typename regex_type_iterator end;
             int count = 0;
             while(word != end) {
                 count += put_word((*word)[0],value);
@@ -71,15 +73,15 @@ template < class S, class T > class textindex : private filter< S, boost::shared
             return count;
         }
         
-        p_entries find_word(std::basic_string< S > word) {
+        p_entries find_word(const std::basic_string< S > word) {
             collector<S> c;
             _tst.walk(NULL,&c,const_cast<S*>(word.data()),word.size());
             return c.result();
         }
         
-        p_entries find_text(std::basic_string< S > text,bool intersection) {
-            boost::sregex_iterator word(text.begin(),text.end(),_words);
-            boost::sregex_iterator end;
+        p_entries find_text(const std::basic_string< S > text,bool intersection) {
+            typename regex_type_iterator word(text.begin(),text.end(),_words);
+            typename regex_type_iterator end;
             if(word!=end) {
                 if(intersection) {
                     p_entries entries = find_word((*word)[0]);
@@ -133,7 +135,7 @@ template < class S, class T > class textindex : private filter< S, boost::shared
 
     private:
         tree_type _tst;
-        boost::basic_regex < S > _words;
+        regex_type _words;
 };
 
 #endif

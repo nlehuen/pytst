@@ -14,6 +14,11 @@
 ]
 __interface ITextIndex : IDispatch
 {
+    [id(1), helpstring("method AddWord")] HRESULT AddWord([in] BSTR* word, [in] BSTR* document);
+    [id(2), helpstring("method AddText")] HRESULT AddText([in] BSTR* text, [in] BSTR* document);
+    [id(3), helpstring("method Pack")] HRESULT Pack(void);
+    [id(4), helpstring("method FindWord")] HRESULT FindWord([in] BSTR* word);
+    [id(5), helpstring("method FindText")] HRESULT FindText([in] BSTR* text, [in] USHORT intersect);
 };
 
 
@@ -32,8 +37,11 @@ __interface ITextIndex : IDispatch
 class ATL_NO_VTABLE CTextIndex : 
 	public ITextIndex
 {
+public:
+    typedef textindex<wchar_t,CComBSTR> index_type;
+
 private:
-    textindex<wchar_t,CComBSTR> _textindex;
+    index_type _textindex;
 
 public:
     CTextIndex() : _textindex()
@@ -54,5 +62,10 @@ public:
 
 public:
 
+    STDMETHOD(AddWord)(BSTR* word, BSTR* document);
+    STDMETHOD(AddText)(BSTR* text, BSTR* document);
+    STDMETHOD(Pack)(void);
+    STDMETHOD(FindWord)(BSTR* word);
+    STDMETHOD(FindText)(BSTR* text, USHORT intersect);
 };
 

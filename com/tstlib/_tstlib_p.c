@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Sat Jan 28 12:21:56 2006
+/* at Sat Jan 28 14:57:26 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -44,7 +44,7 @@
 #include "_tstlib.h"
 
 #define TYPE_FORMAT_STRING_SIZE   61                                
-#define PROC_FORMAT_STRING_SIZE   91                                
+#define PROC_FORMAT_STRING_SIZE   283                               
 #define TRANSMIT_AS_TABLE_SIZE    0            
 #define WIRE_MARSHAL_TABLE_SIZE   1            
 
@@ -180,6 +180,175 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 /* 88 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
+	/* Procedure Pack */
+
+
+	/* Procedure Pack */
+
+/* 90 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 92 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 96 */	NdrFcShort( 0x9 ),	/* 9 */
+/* 98 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
+/* 100 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 102 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 104 */	0x44,		/* Oi2 Flags:  has return, has ext, */
+			0x1,		/* 1 */
+/* 106 */	0x8,		/* 8 */
+			0x1,		/* Ext Flags:  new corr desc, */
+/* 108 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 110 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 112 */	NdrFcShort( 0x0 ),	/* 0 */
+
+	/* Return value */
+
+
+	/* Return value */
+
+/* 114 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 116 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 118 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Procedure AddWord */
+
+/* 120 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 122 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 126 */	NdrFcShort( 0x7 ),	/* 7 */
+/* 128 */	NdrFcShort( 0x10 ),	/* x86 Stack size/offset = 16 */
+/* 130 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 132 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 134 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
+			0x3,		/* 3 */
+/* 136 */	0x8,		/* 8 */
+			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
+/* 138 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 140 */	NdrFcShort( 0x2 ),	/* 2 */
+/* 142 */	NdrFcShort( 0x0 ),	/* 0 */
+
+	/* Parameter word */
+
+/* 144 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 146 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 148 */	NdrFcShort( 0x20 ),	/* Type Offset=32 */
+
+	/* Parameter document */
+
+/* 150 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 152 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
+/* 154 */	NdrFcShort( 0x20 ),	/* Type Offset=32 */
+
+	/* Return value */
+
+/* 156 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 158 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 160 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Procedure AddText */
+
+/* 162 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 164 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 168 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 170 */	NdrFcShort( 0x10 ),	/* x86 Stack size/offset = 16 */
+/* 172 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 174 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 176 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
+			0x3,		/* 3 */
+/* 178 */	0x8,		/* 8 */
+			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
+/* 180 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 182 */	NdrFcShort( 0x2 ),	/* 2 */
+/* 184 */	NdrFcShort( 0x0 ),	/* 0 */
+
+	/* Parameter text */
+
+/* 186 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 188 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 190 */	NdrFcShort( 0x20 ),	/* Type Offset=32 */
+
+	/* Parameter document */
+
+/* 192 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 194 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
+/* 196 */	NdrFcShort( 0x20 ),	/* Type Offset=32 */
+
+	/* Return value */
+
+/* 198 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 200 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 202 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Procedure FindWord */
+
+/* 204 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 206 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 210 */	NdrFcShort( 0xa ),	/* 10 */
+/* 212 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 214 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 216 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 218 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
+			0x2,		/* 2 */
+/* 220 */	0x8,		/* 8 */
+			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
+/* 222 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 224 */	NdrFcShort( 0x1 ),	/* 1 */
+/* 226 */	NdrFcShort( 0x0 ),	/* 0 */
+
+	/* Parameter word */
+
+/* 228 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 230 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 232 */	NdrFcShort( 0x20 ),	/* Type Offset=32 */
+
+	/* Return value */
+
+/* 234 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 236 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
+/* 238 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Procedure FindTextA */
+
+/* 240 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 242 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 246 */	NdrFcShort( 0xb ),	/* 11 */
+/* 248 */	NdrFcShort( 0x10 ),	/* x86 Stack size/offset = 16 */
+/* 250 */	NdrFcShort( 0x6 ),	/* 6 */
+/* 252 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 254 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
+			0x3,		/* 3 */
+/* 256 */	0x8,		/* 8 */
+			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
+/* 258 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 260 */	NdrFcShort( 0x1 ),	/* 1 */
+/* 262 */	NdrFcShort( 0x0 ),	/* 0 */
+
+	/* Parameter text */
+
+/* 264 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 266 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 268 */	NdrFcShort( 0x20 ),	/* Type Offset=32 */
+
+	/* Parameter intersect */
+
+/* 270 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
+/* 272 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
+/* 274 */	0x6,		/* FC_SHORT */
+			0x0,		/* 0 */
+
+	/* Return value */
+
+/* 276 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 278 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 280 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
 			0x0
         }
     };
@@ -270,7 +439,8 @@ static const unsigned short ITernarySearchTree_FormatStringOffsetTable[] =
     (unsigned short) -1,
     (unsigned short) -1,
     0,
-    48
+    48,
+    90
     };
 
 static const MIDL_STUBLESS_PROXY_INFO ITernarySearchTree_ProxyInfo =
@@ -294,7 +464,7 @@ static const MIDL_SERVER_INFO ITernarySearchTree_ServerInfo =
     0,
     0,
     0};
-CINTERFACE_PROXY_VTABLE(9) _ITernarySearchTreeProxyVtbl = 
+CINTERFACE_PROXY_VTABLE(10) _ITernarySearchTreeProxyVtbl = 
 {
     &ITernarySearchTree_ProxyInfo,
     &IID_ITernarySearchTree,
@@ -306,7 +476,8 @@ CINTERFACE_PROXY_VTABLE(9) _ITernarySearchTreeProxyVtbl =
     0 /* (void *) (INT_PTR) -1 /* IDispatch::GetIDsOfNames */ ,
     0 /* IDispatch_Invoke_Proxy */ ,
     (void *) (INT_PTR) -1 /* ITernarySearchTree::Set */ ,
-    (void *) (INT_PTR) -1 /* ITernarySearchTree::Get */
+    (void *) (INT_PTR) -1 /* ITernarySearchTree::Get */ ,
+    (void *) (INT_PTR) -1 /* ITernarySearchTree::Pack */
 };
 
 
@@ -317,6 +488,7 @@ static const PRPC_STUB_FUNCTION ITernarySearchTree_table[] =
     STUB_FORWARDING_FUNCTION,
     STUB_FORWARDING_FUNCTION,
     NdrStubCall2,
+    NdrStubCall2,
     NdrStubCall2
 };
 
@@ -324,7 +496,7 @@ CInterfaceStubVtbl _ITernarySearchTreeStubVtbl =
 {
     &IID_ITernarySearchTree,
     &ITernarySearchTree_ServerInfo,
-    9,
+    10,
     &ITernarySearchTree_table[-3],
     CStdStubBuffer_DELEGATING_METHODS
 };
@@ -340,7 +512,11 @@ static const unsigned short ITextIndex_FormatStringOffsetTable[] =
     (unsigned short) -1,
     (unsigned short) -1,
     (unsigned short) -1,
-    0
+    120,
+    162,
+    90,
+    204,
+    240
     };
 
 static const MIDL_STUBLESS_PROXY_INFO ITextIndex_ProxyInfo =
@@ -364,9 +540,9 @@ static const MIDL_SERVER_INFO ITextIndex_ServerInfo =
     0,
     0,
     0};
-CINTERFACE_PROXY_VTABLE(7) _ITextIndexProxyVtbl = 
+CINTERFACE_PROXY_VTABLE(12) _ITextIndexProxyVtbl = 
 {
-    0,
+    &ITextIndex_ProxyInfo,
     &IID_ITextIndex,
     IUnknown_QueryInterface_Proxy,
     IUnknown_AddRef_Proxy,
@@ -374,7 +550,12 @@ CINTERFACE_PROXY_VTABLE(7) _ITextIndexProxyVtbl =
     0 /* (void *) (INT_PTR) -1 /* IDispatch::GetTypeInfoCount */ ,
     0 /* (void *) (INT_PTR) -1 /* IDispatch::GetTypeInfo */ ,
     0 /* (void *) (INT_PTR) -1 /* IDispatch::GetIDsOfNames */ ,
-    0 /* IDispatch_Invoke_Proxy */
+    0 /* IDispatch_Invoke_Proxy */ ,
+    (void *) (INT_PTR) -1 /* ITextIndex::AddWord */ ,
+    (void *) (INT_PTR) -1 /* ITextIndex::AddText */ ,
+    (void *) (INT_PTR) -1 /* ITextIndex::Pack */ ,
+    (void *) (INT_PTR) -1 /* ITextIndex::FindWord */ ,
+    (void *) (INT_PTR) -1 /* ITextIndex::FindTextA */
 };
 
 
@@ -383,14 +564,19 @@ static const PRPC_STUB_FUNCTION ITextIndex_table[] =
     STUB_FORWARDING_FUNCTION,
     STUB_FORWARDING_FUNCTION,
     STUB_FORWARDING_FUNCTION,
-    STUB_FORWARDING_FUNCTION
+    STUB_FORWARDING_FUNCTION,
+    NdrStubCall2,
+    NdrStubCall2,
+    NdrStubCall2,
+    NdrStubCall2,
+    NdrStubCall2
 };
 
 CInterfaceStubVtbl _ITextIndexStubVtbl =
 {
     &IID_ITextIndex,
     &ITextIndex_ServerInfo,
-    7,
+    12,
     &ITextIndex_table[-3],
     CStdStubBuffer_DELEGATING_METHODS
 };

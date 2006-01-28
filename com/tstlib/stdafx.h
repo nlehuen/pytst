@@ -41,5 +41,4 @@
 #include <atlctl.h>
 #include <atlhost.h>
 
-
 using namespace ATL;

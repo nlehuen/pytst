@@ -22,3 +22,9 @@ STDMETHODIMP CTernarySearchTree::Get(BSTR* key, BSTR* result)
     *result = CComBSTR(_tst.get(_key.m_str,_key.Length()));
     return S_OK;
 }
+
+STDMETHODIMP CTernarySearchTree::Pack(void)
+{
+    _tst.pack();
+    return S_OK;
+}

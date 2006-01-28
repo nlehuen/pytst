@@ -18,6 +18,7 @@ interface ITernarySearchTree : IDispatch {
 #line 17 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
 	[id(1),helpstring("method Set")] HRESULT  Set([in] BSTR *key , [in] BSTR *value , [out,retval] BSTR *result );
 	[id(2),helpstring("method Get")] HRESULT  Get([in] BSTR *key , [out,retval] BSTR *result );
+	[id(3),helpstring("method Pack")] HRESULT  Pack();
 };
 
 [
@@ -29,6 +30,12 @@ interface ITernarySearchTree : IDispatch {
 ] 
 #line 15 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
 interface ITextIndex : IDispatch {
+#line 17 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
+	[id(1),helpstring("method AddWord")] HRESULT  AddWord([in] BSTR *word , [in] BSTR *document );
+	[id(2),helpstring("method AddText")] HRESULT  AddText([in] BSTR *text , [in] BSTR *document );
+	[id(3),helpstring("method Pack")] HRESULT  Pack();
+	[id(4),helpstring("method FindWord")] HRESULT  FindWord([in] BSTR *word );
+	[id(5),helpstring("method FindText")] HRESULT  FindTextA([in] BSTR *text , [in] USHORT intersect);
 };
 
 
@@ -43,7 +50,7 @@ library tstlib
 		uuid(01757CCD-8F45-498E-B8BF-4E4F95A07CE7),
 		helpstring("TernarySearchTree Class")
 	] 
-#line 34 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
+#line 35 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
 	coclass CTernarySearchTree {
 		interface ITernarySearchTree;
 	};
@@ -53,7 +60,7 @@ library tstlib
 		uuid(8EC92961-CAB3-4CA6-A36E-46C39424E80B),
 		helpstring("TextIndex Class")
 	] 
-#line 32 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
+#line 37 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
 	coclass CTextIndex {
 		interface ITextIndex;
 	};

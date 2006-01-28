@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Sat Jan 28 12:21:56 2006
+/* at Sat Jan 28 14:57:26 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -119,6 +119,8 @@ EXTERN_C const IID IID_ITernarySearchTree;
             /* [in] */ BSTR *key,
             /* [retval][out] */ BSTR *result) = 0;
         
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Pack( void) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -178,6 +180,9 @@ EXTERN_C const IID IID_ITernarySearchTree;
             /* [in] */ BSTR *key,
             /* [retval][out] */ BSTR *result);
         
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *Pack )( 
+            ITernarySearchTree * This);
+        
         END_INTERFACE
     } ITernarySearchTreeVtbl;
 
@@ -220,6 +225,9 @@ EXTERN_C const IID IID_ITernarySearchTree;
 #define ITernarySearchTree_Get(This,key,result)	\
     (This)->lpVtbl -> Get(This,key,result)
 
+#define ITernarySearchTree_Pack(This)	\
+    (This)->lpVtbl -> Pack(This)
+
 #endif /* COBJMACROS */
 
 
@@ -254,6 +262,17 @@ void __RPC_STUB ITernarySearchTree_Get_Stub(
     DWORD *_pdwStubPhase);
 
 
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITernarySearchTree_Pack_Proxy( 
+    ITernarySearchTree * This);
+
+
+void __RPC_STUB ITernarySearchTree_Pack_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
 
 #endif 	/* __ITernarySearchTree_INTERFACE_DEFINED__ */
 
@@ -273,6 +292,23 @@ EXTERN_C const IID IID_ITextIndex;
     ITextIndex : public IDispatch
     {
     public:
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE AddWord( 
+            /* [in] */ BSTR *word,
+            /* [in] */ BSTR *document) = 0;
+        
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE AddText( 
+            /* [in] */ BSTR *text,
+            /* [in] */ BSTR *document) = 0;
+        
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Pack( void) = 0;
+        
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE FindWord( 
+            /* [in] */ BSTR *word) = 0;
+        
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE FindTextA( 
+            /* [in] */ BSTR *text,
+            /* [in] */ USHORT intersect) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -321,6 +357,28 @@ EXTERN_C const IID IID_ITextIndex;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *AddWord )( 
+            ITextIndex * This,
+            /* [in] */ BSTR *word,
+            /* [in] */ BSTR *document);
+        
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *AddText )( 
+            ITextIndex * This,
+            /* [in] */ BSTR *text,
+            /* [in] */ BSTR *document);
+        
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *Pack )( 
+            ITextIndex * This);
+        
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *FindWord )( 
+            ITextIndex * This,
+            /* [in] */ BSTR *word);
+        
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *FindTextA )( 
+            ITextIndex * This,
+            /* [in] */ BSTR *text,
+            /* [in] */ USHORT intersect);
+        
         END_INTERFACE
     } ITextIndexVtbl;
 
@@ -357,11 +415,88 @@ EXTERN_C const IID IID_ITextIndex;
     (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
 
 
+#define ITextIndex_AddWord(This,word,document)	\
+    (This)->lpVtbl -> AddWord(This,word,document)
+
+#define ITextIndex_AddText(This,text,document)	\
+    (This)->lpVtbl -> AddText(This,text,document)
+
+#define ITextIndex_Pack(This)	\
+    (This)->lpVtbl -> Pack(This)
+
+#define ITextIndex_FindWord(This,word)	\
+    (This)->lpVtbl -> FindWord(This,word)
+
+#define ITextIndex_FindTextA(This,text,intersect)	\
+    (This)->lpVtbl -> FindTextA(This,text,intersect)
+
 #endif /* COBJMACROS */
 
 
 #endif 	/* C style interface */
 
+
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_AddWord_Proxy( 
+    ITextIndex * This,
+    /* [in] */ BSTR *word,
+    /* [in] */ BSTR *document);
+
+
+void __RPC_STUB ITextIndex_AddWord_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_AddText_Proxy( 
+    ITextIndex * This,
+    /* [in] */ BSTR *text,
+    /* [in] */ BSTR *document);
+
+
+void __RPC_STUB ITextIndex_AddText_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_Pack_Proxy( 
+    ITextIndex * This);
+
+
+void __RPC_STUB ITextIndex_Pack_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_FindWord_Proxy( 
+    ITextIndex * This,
+    /* [in] */ BSTR *word);
+
+
+void __RPC_STUB ITextIndex_FindWord_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_FindTextA_Proxy( 
+    ITextIndex * This,
+    /* [in] */ BSTR *text,
+    /* [in] */ USHORT intersect);
+
+
+void __RPC_STUB ITextIndex_FindTextA_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
 
 
 
