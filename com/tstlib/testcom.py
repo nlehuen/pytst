@@ -10,10 +10,17 @@ try:
 
 		ti.AddText('bonjour, je suis nicolas','1')
 		ti.AddText('bonjour, je suis alfred','2')
-		ti.AddText('bonjour comment allez-vous ?','1')
+		ti.AddText('bonjour comment allez-vous ?','3')
 
-		ti.FindWord('bonjour')
-		ti.FindTextA('bonjour comment',0)
+		result = ti.FindWord('bonjour')
+		for i in range(result.Size+1):
+			print result.GetDocument(i), result.GetScore(i)
+		
+		print
+		
+		result = ti.FindTextA('bonjour comment alfred',0)
+		for i in range(result.Size+1):
+			print result.GetDocument(i), result.GetScore(i)
 	except:
 		traceback.print_exc()
 finally:

@@ -28,38 +28,43 @@
 
 template < class character_type, class document_type > class textindex : private filter< character_type, boost::shared_ptr< std::map< document_type, int > > > {
     public:
-        typedef std::map< document_type, int > documents_score;
-        typedef boost::shared_ptr< documents_score > documents_score_pointer; 
-        typedef string_tst < character_type, documents_score_pointer > tree_type;
+        typedef std::map< document_type, int > documents_score_map;
+        typedef boost::shared_ptr< documents_score_map > documents_score_map_pointer; 
+
+        typedef std::vector< std::pair<document_type, int> > documents_score_list;
+        typedef boost::shared_ptr< documents_score_list > documents_score_list_pointer; 
+        
+        typedef string_tst < character_type, documents_score_map_pointer > tree_type;
+        
         typedef boost::basic_regex < character_type > regex_type;
         typedef boost::regex_iterator<typename std::basic_string<character_type>::const_iterator> regex_type_iterator;
     
-        template < class character_type > class collector : public action< character_type, documents_score_pointer > {
+        template < class character_type > class collector : public action< character_type, documents_score_map_pointer > {
             public:
-                collector() : entries(new documents_score()), first(true) {
+                collector() : entries(new documents_score_map()), first(true) {
                 }
             
-                virtual void perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_pointer data) {
-                    for(documents_score_pointer::element_type::iterator s(data->begin()),e(data->end());s != e;s++) {
+                virtual void perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_map_pointer data) {
+                    for(documents_score_map_pointer::element_type::iterator s(data->begin()),e(data->end());s != e;s++) {
                         (*entries)[s->first] += s->second;
                     }
                 }
                 
-                virtual documents_score_pointer result() {
+                virtual documents_score_map_pointer result() {
                     return entries;
                 }
                 
             private:
                 bool first;
-                documents_score_pointer entries;
+                documents_score_map_pointer entries;
         };
 
         textindex() : tree(new tree_type::storage_type(16),tree_type::value_type()), tokenizer(L"\\b\\w+\\b") {
         }
 
         int put_word(const std::basic_string< character_type > word,const document_type value) {
-            documents_score_pointer documents_score = tree.get_or_build(word,this);
-            return ++((*documents_score)[value]);
+            documents_score_map_pointer documents_score_map = tree.get_or_build(word,this);
+            return ++((*documents_score_map)[value]);
         }
 
         int put_text(const std::basic_string< character_type > text,const document_type value) {
@@ -73,33 +78,33 @@ template < class character_type, class document_type > class textindex : private
             return count;
         }
         
-        documents_score_pointer find_word(const std::basic_string< character_type > word) {
+        documents_score_map_pointer find_word(const std::basic_string< character_type > word) {
             collector<character_type> c;
             tree.walk(NULL,&c,word.data(),word.size());
             return c.result();
         }
         
-        documents_score_pointer find_text(const std::basic_string< character_type > text,bool intersection) {
+        documents_score_map_pointer find_text(const std::basic_string< character_type > text,bool intersection) {
             typename regex_type_iterator token(text.begin(),text.end(),tokenizer);
             typename regex_type_iterator end;
             if(token!=end) {
                 if(intersection) {
-                    documents_score_pointer documents_score = find_word((*token)[0]);
+                    documents_score_map_pointer documents_score_map = find_word((*token)[0]);
                     token++;
                     while(token != end) {
-                        documents_score_pointer additional = find_word((*token)[0]);
+                        documents_score_map_pointer additional = find_word((*token)[0]);
 
-                        for(documents_score_pointer::element_type::iterator s(additional->begin()),e(additional->end());s != e;s++) {
-                            documents_score_pointer::element_type::iterator found(documents_score->find(s->first));
-                            if(found!=documents_score->end()) {
+                        for(documents_score_map_pointer::element_type::iterator s(additional->begin()),e(additional->end());s != e;s++) {
+                            documents_score_map_pointer::element_type::iterator found(documents_score_map->find(s->first));
+                            if(found!=documents_score_map->end()) {
                                 found->second += s->second;
                             }
                         }
 
-                        for(documents_score_pointer::element_type::iterator s(documents_score->begin()),e(documents_score->end());s != e;) {
-                            documents_score_pointer::element_type::iterator found(additional->find(s->first));
+                        for(documents_score_map_pointer::element_type::iterator s(documents_score_map->begin()),e(documents_score_map->end());s != e;) {
+                            documents_score_map_pointer::element_type::iterator found(additional->find(s->first));
                             if(found==additional->end()) {
-                                documents_score->erase((s++)->first);
+                                documents_score_map->erase((s++)->first);
                             }
                             else {
                                 s++;
@@ -108,7 +113,7 @@ template < class character_type, class document_type > class textindex : private
 
                         token++;
                     }
-                    return documents_score;
+                    return documents_score_map;
                 }
                 else {
                     collector<character_type> c;
@@ -121,12 +126,16 @@ template < class character_type, class document_type > class textindex : private
                 }
             }
             else {
-                return documents_score_pointer(new documents_score());
+                return documents_score_map_pointer(new documents_score_map());
             }
         }
 
-        virtual documents_score_pointer perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_pointer data) {
-            return documents_score_pointer(new documents_score());
+        documents_score_list_pointer convert(documents_score_map_pointer entries) {
+            return documents_score_list_pointer(new documents_score_list(entries->begin(),entries->end()));
+        }
+
+        virtual documents_score_map_pointer perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_map_pointer data) {
+            return documents_score_map_pointer(new documents_score_map());
         }
         
         void pack() {

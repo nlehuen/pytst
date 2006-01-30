@@ -6,6 +6,8 @@
 #include "comutil.h"
 #include "../../textindex/textindex.h"
 
+#include "DocumentsScore.h"
+
 // ITextIndex
 [
 	object,
@@ -18,8 +20,8 @@ __interface ITextIndex : IDispatch
     [id(1), helpstring("method AddWord")] HRESULT AddWord([in] BSTR* word, [in] BSTR* document);
     [id(2), helpstring("method AddText")] HRESULT AddText([in] BSTR* text, [in] BSTR* document);
     [id(3), helpstring("method Pack")] HRESULT Pack(void);
-    [id(4), helpstring("method FindWord")] HRESULT FindWord([in] BSTR* word);
-    [id(5), helpstring("method FindText")] HRESULT FindText([in] BSTR* text,[in] LONG intersect);
+    [id(4), helpstring("method FindWord")] HRESULT FindWord([in] BSTR* word,[out,retval] IDocumentsScore** result);
+    [id(5), helpstring("method FindText")] HRESULT FindText([in] BSTR* text,[in] LONG intersect,[out,retval] IDocumentsScore** result);
     [propget, id(6), helpstring("property Version")] HRESULT Version([out, retval] BSTR* pVal);
 };
 
@@ -67,8 +69,8 @@ public:
     STDMETHOD(AddWord)(BSTR* word, BSTR* document);
     STDMETHOD(AddText)(BSTR* text, BSTR* document);
     STDMETHOD(Pack)(void);
-    STDMETHOD(FindWord)(BSTR* word);
-    STDMETHOD(FindText)(BSTR* text, LONG intersect);
+    STDMETHOD(FindWord)(BSTR* word, IDocumentsScore** result);
+    STDMETHOD(FindText)(BSTR* text, LONG intersect, IDocumentsScore** result);
     STDMETHOD(get_Version)(BSTR* pVal);
 };
 

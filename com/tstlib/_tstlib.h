@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Mon Jan 30 12:17:08 2006
+/* at Mon Jan 30 14:18:24 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -51,6 +51,12 @@ typedef interface ITernarySearchTree ITernarySearchTree;
 #endif 	/* __ITernarySearchTree_FWD_DEFINED__ */
 
 
+#ifndef __IDocumentsScore_FWD_DEFINED__
+#define __IDocumentsScore_FWD_DEFINED__
+typedef interface IDocumentsScore IDocumentsScore;
+#endif 	/* __IDocumentsScore_FWD_DEFINED__ */
+
+
 #ifndef __ITextIndex_FWD_DEFINED__
 #define __ITextIndex_FWD_DEFINED__
 typedef interface ITextIndex ITextIndex;
@@ -67,6 +73,18 @@ typedef struct CTernarySearchTree CTernarySearchTree;
 #endif /* __cplusplus */
 
 #endif 	/* __CTernarySearchTree_FWD_DEFINED__ */
+
+
+#ifndef __CDocumentsScore_FWD_DEFINED__
+#define __CDocumentsScore_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class CDocumentsScore CDocumentsScore;
+#else
+typedef struct CDocumentsScore CDocumentsScore;
+#endif /* __cplusplus */
+
+#endif 	/* __CDocumentsScore_FWD_DEFINED__ */
 
 
 #ifndef __CTextIndex_FWD_DEFINED__
@@ -299,6 +317,188 @@ void __RPC_STUB ITernarySearchTree_get_Version_Stub(
 #endif 	/* __ITernarySearchTree_INTERFACE_DEFINED__ */
 
 
+#ifndef __IDocumentsScore_INTERFACE_DEFINED__
+#define __IDocumentsScore_INTERFACE_DEFINED__
+
+/* interface IDocumentsScore */
+/* [unique][helpstring][dual][uuid][object] */ 
+
+
+EXTERN_C const IID IID_IDocumentsScore;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1741BA73-3BC1-4CD0-BFF1-8CB5FA5C077A")
+    IDocumentsScore : public IDispatch
+    {
+    public:
+        virtual /* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Size( 
+            /* [retval][out] */ LONG *pVal) = 0;
+        
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE GetDocument( 
+            /* [in] */ LONG index,
+            /* [retval][out] */ BSTR *document) = 0;
+        
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE GetScore( 
+            /* [in] */ LONG index,
+            /* [retval][out] */ LONG *score) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDocumentsScoreVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDocumentsScore * This,
+            /* [in] */ REFIID riid,
+            /* [iid_is][out] */ void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDocumentsScore * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDocumentsScore * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDocumentsScore * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDocumentsScore * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDocumentsScore * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDocumentsScore * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Size )( 
+            IDocumentsScore * This,
+            /* [retval][out] */ LONG *pVal);
+        
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *GetDocument )( 
+            IDocumentsScore * This,
+            /* [in] */ LONG index,
+            /* [retval][out] */ BSTR *document);
+        
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *GetScore )( 
+            IDocumentsScore * This,
+            /* [in] */ LONG index,
+            /* [retval][out] */ LONG *score);
+        
+        END_INTERFACE
+    } IDocumentsScoreVtbl;
+
+    interface IDocumentsScore
+    {
+        CONST_VTBL struct IDocumentsScoreVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDocumentsScore_QueryInterface(This,riid,ppvObject)	\
+    (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
+
+#define IDocumentsScore_AddRef(This)	\
+    (This)->lpVtbl -> AddRef(This)
+
+#define IDocumentsScore_Release(This)	\
+    (This)->lpVtbl -> Release(This)
+
+
+#define IDocumentsScore_GetTypeInfoCount(This,pctinfo)	\
+    (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
+
+#define IDocumentsScore_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
+
+#define IDocumentsScore_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
+
+#define IDocumentsScore_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
+
+
+#define IDocumentsScore_get_Size(This,pVal)	\
+    (This)->lpVtbl -> get_Size(This,pVal)
+
+#define IDocumentsScore_GetDocument(This,index,document)	\
+    (This)->lpVtbl -> GetDocument(This,index,document)
+
+#define IDocumentsScore_GetScore(This,index,score)	\
+    (This)->lpVtbl -> GetScore(This,index,score)
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+/* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE IDocumentsScore_get_Size_Proxy( 
+    IDocumentsScore * This,
+    /* [retval][out] */ LONG *pVal);
+
+
+void __RPC_STUB IDocumentsScore_get_Size_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IDocumentsScore_GetDocument_Proxy( 
+    IDocumentsScore * This,
+    /* [in] */ LONG index,
+    /* [retval][out] */ BSTR *document);
+
+
+void __RPC_STUB IDocumentsScore_GetDocument_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IDocumentsScore_GetScore_Proxy( 
+    IDocumentsScore * This,
+    /* [in] */ LONG index,
+    /* [retval][out] */ LONG *score);
+
+
+void __RPC_STUB IDocumentsScore_GetScore_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+
+#endif 	/* __IDocumentsScore_INTERFACE_DEFINED__ */
+
+
 #ifndef __ITextIndex_INTERFACE_DEFINED__
 #define __ITextIndex_INTERFACE_DEFINED__
 
@@ -325,11 +525,13 @@ EXTERN_C const IID IID_ITextIndex;
         virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Pack( void) = 0;
         
         virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE FindWord( 
-            /* [in] */ BSTR *word) = 0;
+            /* [in] */ BSTR *word,
+            /* [retval][out] */ IDocumentsScore **result) = 0;
         
         virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE FindTextA( 
             /* [in] */ BSTR *text,
-            /* [in] */ LONG intersect) = 0;
+            /* [in] */ LONG intersect,
+            /* [retval][out] */ IDocumentsScore **result) = 0;
         
         virtual /* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Version( 
             /* [retval][out] */ BSTR *pVal) = 0;
@@ -397,12 +599,14 @@ EXTERN_C const IID IID_ITextIndex;
         
         /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *FindWord )( 
             ITextIndex * This,
-            /* [in] */ BSTR *word);
+            /* [in] */ BSTR *word,
+            /* [retval][out] */ IDocumentsScore **result);
         
         /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *FindTextA )( 
             ITextIndex * This,
             /* [in] */ BSTR *text,
-            /* [in] */ LONG intersect);
+            /* [in] */ LONG intersect,
+            /* [retval][out] */ IDocumentsScore **result);
         
         /* [helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Version )( 
             ITextIndex * This,
@@ -453,11 +657,11 @@ EXTERN_C const IID IID_ITextIndex;
 #define ITextIndex_Pack(This)	\
     (This)->lpVtbl -> Pack(This)
 
-#define ITextIndex_FindWord(This,word)	\
-    (This)->lpVtbl -> FindWord(This,word)
+#define ITextIndex_FindWord(This,word,result)	\
+    (This)->lpVtbl -> FindWord(This,word,result)
 
-#define ITextIndex_FindTextA(This,text,intersect)	\
-    (This)->lpVtbl -> FindTextA(This,text,intersect)
+#define ITextIndex_FindTextA(This,text,intersect,result)	\
+    (This)->lpVtbl -> FindTextA(This,text,intersect,result)
 
 #define ITextIndex_get_Version(This,pVal)	\
     (This)->lpVtbl -> get_Version(This,pVal)
@@ -508,7 +712,8 @@ void __RPC_STUB ITextIndex_Pack_Stub(
 
 /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_FindWord_Proxy( 
     ITextIndex * This,
-    /* [in] */ BSTR *word);
+    /* [in] */ BSTR *word,
+    /* [retval][out] */ IDocumentsScore **result);
 
 
 void __RPC_STUB ITextIndex_FindWord_Stub(
@@ -521,7 +726,8 @@ void __RPC_STUB ITextIndex_FindWord_Stub(
 /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_FindTextA_Proxy( 
     ITextIndex * This,
     /* [in] */ BSTR *text,
-    /* [in] */ LONG intersect);
+    /* [in] */ LONG intersect,
+    /* [retval][out] */ IDocumentsScore **result);
 
 
 void __RPC_STUB ITextIndex_FindTextA_Stub(
@@ -563,6 +769,14 @@ EXTERN_C const CLSID CLSID_CTernarySearchTree;
 
 class DECLSPEC_UUID("01757CCD-8F45-498E-B8BF-4E4F95A07CE7")
 CTernarySearchTree;
+#endif
+
+EXTERN_C const CLSID CLSID_CDocumentsScore;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("98F35214-F66B-4BBF-B039-1AA4CA344DCF")
+CDocumentsScore;
 #endif
 
 EXTERN_C const CLSID CLSID_CTextIndex;

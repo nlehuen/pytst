@@ -24,19 +24,34 @@ interface ITernarySearchTree : IDispatch {
 
 [
 	object,
+	uuid(1741BA73-3BC1-4CD0-BFF1-8CB5FA5C077A),
+	dual,
+	helpstring("Interface IDocumentsScore"),
+	pointer_default(unique)
+] 
+#line 16 "d:\\projets\\tst\\com\\tstlib\\documentsscore.h"
+interface IDocumentsScore : IDispatch {
+#line 18 "d:\\projets\\tst\\com\\tstlib\\documentsscore.h"
+	[propget,id(1),helpstring("property Size")] HRESULT  Size([out,retval] LONG *pVal);
+	[id(2),helpstring("method GetDocument")] HRESULT  GetDocument([in] LONG index, [out,retval] BSTR *document );
+	[id(3),helpstring("method GetScore")] HRESULT  GetScore([in] LONG index, [out,retval] LONG *score);
+};
+
+[
+	object,
 	uuid(3DF00A4D-6253-4D65-A586-6CE5E29B8980),
 	dual,
 	helpstring("Interface ITextIndex"),
 	pointer_default(unique)
 ] 
-#line 16 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
-interface ITextIndex : IDispatch {
 #line 18 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
+interface ITextIndex : IDispatch {
+#line 20 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
 	[id(1),helpstring("method AddWord")] HRESULT  AddWord([in] BSTR *word , [in] BSTR *document );
 	[id(2),helpstring("method AddText")] HRESULT  AddText([in] BSTR *text , [in] BSTR *document );
 	[id(3),helpstring("method Pack")] HRESULT  Pack();
-	[id(4),helpstring("method FindWord")] HRESULT  FindWord([in] BSTR *word );
-	[id(5),helpstring("method FindText")] HRESULT  FindTextA([in] BSTR *text , [in] LONG intersect);
+	[id(4),helpstring("method FindWord")] HRESULT  FindWord([in] BSTR *word , [out,retval] IDocumentsScore **result );
+	[id(5),helpstring("method FindText")] HRESULT  FindTextA([in] BSTR *text , [in] LONG intersect, [out,retval] IDocumentsScore **result );
 	[propget,id(6),helpstring("property Version")] HRESULT  Version([out,retval] BSTR *pVal );
 };
 
@@ -59,10 +74,20 @@ library tstlib
 
 	[
 		version(1.0),
+		uuid(98F35214-F66B-4BBF-B039-1AA4CA344DCF),
+		helpstring("DocumentsScore Class")
+	] 
+#line 36 "d:\\projets\\tst\\com\\tstlib\\documentsscore.h"
+	coclass CDocumentsScore {
+		interface IDocumentsScore;
+	};
+
+	[
+		version(1.0),
 		uuid(8EC92961-CAB3-4CA6-A36E-46C39424E80B),
 		helpstring("TextIndex Class")
 	] 
-#line 39 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
+#line 41 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
 	coclass CTextIndex {
 		interface ITextIndex;
 	};

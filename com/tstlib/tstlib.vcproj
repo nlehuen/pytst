@@ -155,6 +155,9 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath=".\DocumentsScore.cpp">
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -190,6 +193,9 @@
 				RelativePath="..\..\include\debug.h">
 			</File>
 			<File
+				RelativePath=".\DocumentsScore.h">
+			</File>
+			<File
 				RelativePath="..\..\include\fundamentals.h">
 			</File>
 			<File
@@ -208,10 +214,10 @@
 				RelativePath=".\TernarySearchTree.h">
 			</File>
 			<File
-				RelativePath=".\TextIndex.h">
+				RelativePath="..\..\textindex\textindex.h">
 			</File>
 			<File
-				RelativePath="..\..\textindex\textindex.h">
+				RelativePath=".\TextIndex.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tst.h">

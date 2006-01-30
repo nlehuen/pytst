@@ -28,21 +28,17 @@ STDMETHODIMP CTextIndex::Pack(void)
     return S_OK;
 }
 
-STDMETHODIMP CTextIndex::FindWord(BSTR* word)
+STDMETHODIMP CTextIndex::FindWord(BSTR* word,IDocumentsScore** result)
 {
-    index_type::documents_score_pointer entries(_textindex.find_word(std::wstring(*word)));
-    for(index_type::documents_score_pointer::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
-        std::cout << s->first << "\n";
-    }
+    CDocumentsScore::CreateInstance(result);
+    static_cast<CDocumentsScore*>(*result)->set_entries(_textindex.convert(_textindex.find_word(std::wstring(*word))));
     return S_OK;
 }
 
-STDMETHODIMP CTextIndex::FindText(BSTR* text, LONG intersect)
+STDMETHODIMP CTextIndex::FindText(BSTR* text, LONG intersect,IDocumentsScore** result)
 {
-    index_type::documents_score_pointer entries(_textindex.find_text(std::wstring(*text),intersect));
-    for(index_type::documents_score_pointer::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
-        std::cout << s->first << " : " << s->second << "\n";
-    }
+    CDocumentsScore::CreateInstance(result);
+    static_cast<CDocumentsScore*>(*result)->set_entries(_textindex.convert(_textindex.find_text(std::wstring(*text),intersect)));
     return S_OK;
 }
 
