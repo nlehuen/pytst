@@ -10,6 +10,7 @@ try:
 
 		ti.AddText('bonjour, je suis nicolas','1')
 		ti.AddText('bonjour, je suis alfred','2')
+		ti.AddText('alfred hitchcock','3')
 		ti.AddText('bonjour comment allez-vous ?','3')
 
 		result = ti.FindWord('bonjour')

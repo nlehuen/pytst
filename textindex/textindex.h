@@ -21,12 +21,17 @@
 
 #include "tst.h"
 
-#include <map>
+#include <hash_map>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/regex.hpp>
 
-template < class character_type, class document_type > class textindex : private filter< character_type, boost::shared_ptr< std::map< document_type, int > > > {
+template <class pair> bool invert_2nd_member(const pair& lhs, const pair& rhs)
+{
+    return lhs.second > rhs.second || lhs.first < rhs.first;
+}
+
+template < class character_type, class document_type > class textindex {
     public:
         typedef std::map< document_type, int > documents_score_map;
         typedef boost::shared_ptr< documents_score_map > documents_score_map_pointer; 
@@ -39,7 +44,7 @@ template < class character_type, class document_type > class textindex : private
         typedef boost::basic_regex < character_type > regex_type;
         typedef boost::regex_iterator<typename std::basic_string<character_type>::const_iterator> regex_type_iterator;
     
-        template < class character_type > class collector : public action< character_type, documents_score_map_pointer > {
+        class collector : public action< character_type, documents_score_map_pointer > {
             public:
                 collector() : entries(new documents_score_map()), first(true) {
                 }
@@ -58,12 +63,19 @@ template < class character_type, class document_type > class textindex : private
                 bool first;
                 documents_score_map_pointer entries;
         };
+        
+        class documents_score_map_factory : public filter< character_type, boost::shared_ptr< std::map< document_type, int > > > {
+            public:
+                virtual documents_score_map_pointer perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_map_pointer data) {
+                    return documents_score_map_pointer(new documents_score_map());
+                }
+        };
 
-        textindex() : tree(new tree_type::storage_type(16),tree_type::value_type()), tokenizer(L"\\b\\w+\\b") {
+        textindex() : tree(new tree_type::storage_type(16),tree_type::value_type()), tokenizer(L"\\b\\w+\\b"), factory() {
         }
 
         int put_word(const std::basic_string< character_type > word,const document_type value) {
-            documents_score_map_pointer documents_score_map = tree.get_or_build(word,this);
+            documents_score_map_pointer documents_score_map = tree.get_or_build(word,&factory);
             return ++((*documents_score_map)[value]);
         }
 
@@ -79,7 +91,7 @@ template < class character_type, class document_type > class textindex : private
         }
         
         documents_score_map_pointer find_word(const std::basic_string< character_type > word) {
-            collector<character_type> c;
+            collector c;
             tree.walk(NULL,&c,word.data(),word.size());
             return c.result();
         }
@@ -116,7 +128,7 @@ template < class character_type, class document_type > class textindex : private
                     return documents_score_map;
                 }
                 else {
-                    collector<character_type> c;
+                    collector c;
                     while(token != end) {
                         std::basic_string<character_type> w = (*token)[0];
                         tree.walk(NULL,&c,const_cast<character_type*>(w.data()),w.size());
@@ -130,14 +142,14 @@ template < class character_type, class document_type > class textindex : private
             }
         }
 
-        documents_score_list_pointer convert(documents_score_map_pointer entries) {
-            return documents_score_list_pointer(new documents_score_list(entries->begin(),entries->end()));
+        documents_score_list_pointer to_list(documents_score_map_pointer entries, bool sort) {
+            documents_score_list_pointer result(new documents_score_list(entries->begin(),entries->end()));
+            if(sort) {
+                std::sort(result->begin(),result->end(),invert_2nd_member<documents_score_list_pointer::element_type::iterator::value_type>);
+            }
+            return result;
         }
 
-        virtual documents_score_map_pointer perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_map_pointer data) {
-            return documents_score_map_pointer(new documents_score_map());
-        }
-        
         void pack() {
             tree.pack();
         }
@@ -145,6 +157,7 @@ template < class character_type, class document_type > class textindex : private
     private:
         tree_type tree;
         regex_type tokenizer;
+        documents_score_map_factory factory;
 };
 
 #endif

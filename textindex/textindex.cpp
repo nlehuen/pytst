@@ -43,10 +43,10 @@ template <class character_type, class document_type> class python_textindex : pu
             return to_list(textindex<character_type,document_type>::find_text(extract<std::basic_string<character_type> >(item[0]),item[1]));
         }
 
-protected:
-        list to_list(documents_score_pointer entries) {
+    protected:
+        list to_list(documents_score_map_pointer entries) {
             list result;
-            for(documents_score_pointer::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
+            for(documents_score_map_pointer::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
                 result.append(make_tuple(s->first,s->second));
             }
             return result;
