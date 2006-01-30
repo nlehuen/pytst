@@ -30,8 +30,8 @@ STDMETHODIMP CTextIndex::Pack(void)
 
 STDMETHODIMP CTextIndex::FindWord(BSTR* word)
 {
-    index_type::p_entries entries(_textindex.find_word(std::wstring(*word)));
-    for(index_type::p_entries::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
+    index_type::documents_score_pointer entries(_textindex.find_word(std::wstring(*word)));
+    for(index_type::documents_score_pointer::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
         std::cout << s->first << "\n";
     }
     return S_OK;
@@ -39,8 +39,8 @@ STDMETHODIMP CTextIndex::FindWord(BSTR* word)
 
 STDMETHODIMP CTextIndex::FindText(BSTR* text, LONG intersect)
 {
-    index_type::p_entries entries(_textindex.find_text(std::wstring(*text),intersect));
-    for(index_type::p_entries::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
+    index_type::documents_score_pointer entries(_textindex.find_text(std::wstring(*text),intersect));
+    for(index_type::documents_score_pointer::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
         std::cout << s->first << " : " << s->second << "\n";
     }
     return S_OK;

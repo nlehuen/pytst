@@ -25,28 +25,28 @@ using namespace boost::python;
 #define __PYTHON__BUILD__
 #include "textindex.h"
 
-template <class S, class T> class python_textindex : public textindex<S,T> {
+template <class character_type, class document_type> class python_textindex : public textindex<character_type,document_type> {
     public:
-        list find_word(std::basic_string<S> word) {
-            return to_list(textindex<S,T>::find_word(word));
+        list find_word(std::basic_string<character_type> word) {
+            return to_list(textindex<character_type,document_type>::find_word(word));
         }
 
-        list find_text(std::basic_string<S> word,bool intersection) {
-            return to_list(textindex<S,T>::find_text(word,intersection));
+        list find_text(std::basic_string<character_type> word,bool intersection) {
+            return to_list(textindex<character_type,document_type>::find_text(word,intersection));
         }
 
-        list __getitem__1(std::basic_string<S> word) {
-            return to_list(textindex<S,T>::find_text(word,true));
+        list __getitem__1(std::basic_string<character_type> word) {
+            return to_list(textindex<character_type,document_type>::find_text(word,true));
         }
 
         list __getitem__2(tuple item) {
-            return to_list(textindex<S,T>::find_text(extract<std::basic_string<S> >(item[0]),item[1]));
+            return to_list(textindex<character_type,document_type>::find_text(extract<std::basic_string<character_type> >(item[0]),item[1]));
         }
 
 protected:
-        list to_list(p_entries entries) {
+        list to_list(documents_score_pointer entries) {
             list result;
-            for(p_entries::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
+            for(documents_score_pointer::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
                 result.append(make_tuple(s->first,s->second));
             }
             return result;

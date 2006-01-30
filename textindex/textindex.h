@@ -26,43 +26,43 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/regex.hpp>
 
-template < class S, class T > class textindex : private filter< S, boost::shared_ptr< std::map< T, int > > > {
+template < class character_type, class document_type > class textindex : private filter< character_type, boost::shared_ptr< std::map< document_type, int > > > {
     public:
-        typedef std::map< T, int > entries;
-        typedef boost::shared_ptr< entries > p_entries; 
-        typedef string_tst < S, p_entries > tree_type;
-        typedef boost::basic_regex < S > regex_type;
-        typedef boost::regex_iterator<typename std::basic_string<S>::const_iterator> regex_type_iterator;
+        typedef std::map< document_type, int > documents_score;
+        typedef boost::shared_ptr< documents_score > documents_score_pointer; 
+        typedef string_tst < character_type, documents_score_pointer > tree_type;
+        typedef boost::basic_regex < character_type > regex_type;
+        typedef boost::regex_iterator<typename std::basic_string<character_type>::const_iterator> regex_type_iterator;
     
-        template < class S > class collector : public action< S, p_entries > {
+        template < class character_type > class collector : public action< character_type, documents_score_pointer > {
             public:
-                collector() : _entries(new entries()), _first(true) {
+                collector() : _entries(new documents_score()), _first(true) {
                 }
             
-                virtual void perform(const S* string, size_t string_length, int remaining_distance, p_entries data) {
-                    for(p_entries::element_type::iterator s(data->begin()),e(data->end());s != e;s++) {
+                virtual void perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_pointer data) {
+                    for(documents_score_pointer::element_type::iterator s(data->begin()),e(data->end());s != e;s++) {
                         (*_entries)[s->first] += s->second;
                     }
                 }
                 
-                virtual p_entries result() {
+                virtual documents_score_pointer result() {
                     return _entries;
                 }
                 
             private:
                 bool _first;
-                p_entries _entries;
+                documents_score_pointer _entries;
         };
 
         textindex() : _tst(new tree_type::storage_type(16),tree_type::value_type()), _words(L"\\b\\w+\\b") {
         }
 
-        int put_word(const std::basic_string< S > word,const T value) {
-            p_entries entries = _tst.get_or_build(word,this);
-            return ++((*entries)[value]);
+        int put_word(const std::basic_string< character_type > word,const document_type value) {
+            documents_score_pointer documents_score = _tst.get_or_build(word,this);
+            return ++((*documents_score)[value]);
         }
 
-        int put_text(const std::basic_string< S > text,const T value) {
+        int put_text(const std::basic_string< character_type > text,const document_type value) {
             typename regex_type_iterator word(text.begin(),text.end(),_words);
             typename regex_type_iterator end;
             int count = 0;
@@ -73,33 +73,33 @@ template < class S, class T > class textindex : private filter< S, boost::shared
             return count;
         }
         
-        p_entries find_word(const std::basic_string< S > word) {
-            collector<S> c;
+        documents_score_pointer find_word(const std::basic_string< character_type > word) {
+            collector<character_type> c;
             _tst.walk(NULL,&c,word.data(),word.size());
             return c.result();
         }
         
-        p_entries find_text(const std::basic_string< S > text,bool intersection) {
+        documents_score_pointer find_text(const std::basic_string< character_type > text,bool intersection) {
             typename regex_type_iterator word(text.begin(),text.end(),_words);
             typename regex_type_iterator end;
             if(word!=end) {
                 if(intersection) {
-                    p_entries entries = find_word((*word)[0]);
+                    documents_score_pointer documents_score = find_word((*word)[0]);
                     word++;
                     while(word != end) {
-                        p_entries additional = find_word((*word)[0]);
+                        documents_score_pointer additional = find_word((*word)[0]);
 
-                        for(p_entries::element_type::iterator s(additional->begin()),e(additional->end());s != e;s++) {
-                            p_entries::element_type::iterator found(entries->find(s->first));
-                            if(found!=entries->end()) {
+                        for(documents_score_pointer::element_type::iterator s(additional->begin()),e(additional->end());s != e;s++) {
+                            documents_score_pointer::element_type::iterator found(documents_score->find(s->first));
+                            if(found!=documents_score->end()) {
                                 found->second += s->second;
                             }
                         }
 
-                        for(p_entries::element_type::iterator s(entries->begin()),e(entries->end());s != e;) {
-                            p_entries::element_type::iterator found(additional->find(s->first));
+                        for(documents_score_pointer::element_type::iterator s(documents_score->begin()),e(documents_score->end());s != e;) {
+                            documents_score_pointer::element_type::iterator found(additional->find(s->first));
                             if(found==additional->end()) {
-                                entries->erase((s++)->first);
+                                documents_score->erase((s++)->first);
                             }
                             else {
                                 s++;
@@ -108,25 +108,25 @@ template < class S, class T > class textindex : private filter< S, boost::shared
 
                         word++;
                     }
-                    return entries;
+                    return documents_score;
                 }
                 else {
-                    collector<S> c;
+                    collector<character_type> c;
                     while(word != end) {
-                        std::basic_string<S> w = (*word)[0];
-                        _tst.walk(NULL,&c,const_cast<S*>(w.data()),w.size());
+                        std::basic_string<character_type> w = (*word)[0];
+                        _tst.walk(NULL,&c,const_cast<character_type*>(w.data()),w.size());
                         word++;
                     }
                     return c.result();
                 }
             }
             else {
-                return p_entries(new entries());
+                return documents_score_pointer(new documents_score());
             }
         }
 
-        virtual p_entries perform(const S* string, size_t string_length, int remaining_distance, p_entries data) {
-            return p_entries(new entries());
+        virtual documents_score_pointer perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_pointer data) {
+            return documents_score_pointer(new documents_score());
         }
         
         void pack() {
