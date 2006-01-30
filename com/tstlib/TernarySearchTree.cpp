@@ -25,3 +25,9 @@ STDMETHODIMP CTernarySearchTree::Pack(void)
     _tst.pack();
     return S_OK;
 }
+
+STDMETHODIMP CTernarySearchTree::get_Version(BSTR* pVal)
+{
+    *pVal = _bstr_t(TST_VERSION).Detach();
+    return S_OK;
+}

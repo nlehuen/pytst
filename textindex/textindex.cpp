@@ -57,14 +57,14 @@ BOOST_PYTHON_MODULE(textindex)
 {
     scope().attr("TST_VERSION") = std::string(TST_VERSION)+"-Boost.Python";
 
-    class_< python_textindex<char,object> >("textindex")
-        .def("put_word",&python_textindex<char,object>::put_word)
-        .def("put_text",&python_textindex<char,object>::put_text)
-        .def("__setitem__",&python_textindex<char,object>::put_text)
-        .def("find_word",&python_textindex<char,object>::find_word)
-        .def("find_text",&python_textindex<char,object>::find_text)
-        .def("__getitem__",&python_textindex<char,object>::__getitem__1)
-        .def("__getitem__",&python_textindex<char,object>::__getitem__2)
-        .def("pack",&python_textindex<char,object>::pack)
+    class_< python_textindex<wchar_t,object> >("textindex")
+        .def("put_word",&python_textindex<wchar_t,object>::put_word)
+        .def("put_text",&python_textindex<wchar_t,object>::put_text)
+        .def("__setitem__",&python_textindex<wchar_t,object>::put_text)
+        .def("find_word",&python_textindex<wchar_t,object>::find_word)
+        .def("find_text",&python_textindex<wchar_t,object>::find_text)
+        .def("__getitem__",&python_textindex<wchar_t,object>::__getitem__1)
+        .def("__getitem__",&python_textindex<wchar_t,object>::__getitem__2)
+        .def("pack",&python_textindex<wchar_t,object>::pack)
     ;
 }

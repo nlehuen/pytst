@@ -20,10 +20,10 @@
 
 %feature("autodoc", "0");
 
-%apply (char *STRING, int LENGTH) { (const char* string, int string_length) };
-%apply (char *STRING, int LENGTH) { (const char* stop_chars, int stop_chars_length) };
-%apply (char *STRING, int LENGTH) { (char* string, int string_length) };
-%apply (char *STRING, int LENGTH) { (char* stop_chars, int stop_chars_length) };
+%apply (char *STRING, int LENGTH) { (const char* string, size_t string_length) };
+%apply (char *STRING, int LENGTH) { (const char* stop_chars, size_t stop_chars_length) };
+%apply (char *STRING, int LENGTH) { (char* string, size_t string_length) };
+%apply (char *STRING, int LENGTH) { (char* stop_chars, size_t stop_chars_length) };
 
 %typemap(in) PythonReference {
    $1 = PythonReference($input);

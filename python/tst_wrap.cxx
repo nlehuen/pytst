@@ -1449,13 +1449,15 @@ SWIG_Python_SetModule(swig_module_info *swig_module) {
 #define SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t swig_types[15]
 #define SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t swig_types[16]
 #define SWIGTYPE_p_memory_storageTchar_PythonReference_t swig_types[17]
-#define SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t swig_types[18]
-#define SWIGTYPE_ptrdiff_t swig_types[19]
-#define SWIGTYPE_size_t swig_types[20]
-#define SWIGTYPE_std__ptrdiff_t swig_types[21]
-#define SWIGTYPE_std__size_t swig_types[22]
-static swig_type_info *swig_types[24];
-static swig_module_info swig_module = {swig_types, 23, 0, 0, 0, 0};
+#define SWIGTYPE_p_storage_type swig_types[18]
+#define SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t swig_types[19]
+#define SWIGTYPE_p_value_type swig_types[20]
+#define SWIGTYPE_ptrdiff_t swig_types[21]
+#define SWIGTYPE_size_t swig_types[22]
+#define SWIGTYPE_std__ptrdiff_t swig_types[23]
+#define SWIGTYPE_std__size_t swig_types[24]
+static swig_type_info *swig_types[26];
+static swig_module_info swig_module = {swig_types, 25, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1539,6 +1541,40 @@ SWIG_AsCharPtr(PyObject *obj, char **val)
 }
 
 
+SWIGINTERN int
+  SWIG_AsVal_unsigned_SS_long(PyObject *obj, unsigned long *val) 
+{
+  if (PyLong_Check(obj)) {
+    unsigned long v = PyLong_AsUnsignedLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return 1;
+    } else {
+      if (!val) PyErr_Clear();
+      return 0;
+    }
+  } 
+  if (PyInt_Check(obj)) {
+    long v = PyInt_AsLong(obj);
+    if (v >= 0) {
+      if (val) *val = v;
+      return 1;
+    }   
+  }
+  if (val) {
+    SWIG_type_error("unsigned long", obj);
+  }
+  return 0;
+}
+
+  
+SWIGINTERNINLINE int
+SWIG_Check_unsigned_SS_long(PyObject* obj)
+{
+  return SWIG_AsVal_unsigned_SS_long(obj, (unsigned long*)0);
+}
+
+
 #include <limits.h>
 
 
@@ -1618,13 +1654,6 @@ SWIGINTERNINLINE int
 }
 #endif
 
-  
-SWIGINTERNINLINE int
-SWIG_Check_int(PyObject* obj)
-{
-  return SWIG_AsVal_int(obj, (int*)0);
-}
-
 
 SWIGINTERNINLINE int
 SWIG_As_int(PyObject* obj)
@@ -1637,6 +1666,13 @@ SWIG_As_int(PyObject* obj)
     memset((void*)&v, 0, sizeof(int));
   }
   return v;
+}
+
+  
+SWIGINTERNINLINE int
+SWIG_Check_int(PyObject* obj)
+{
+  return SWIG_AsVal_int(obj, (int*)0);
 }
 
 
@@ -1786,7 +1822,27 @@ static PyObject * TSTException_swigregister(PyObject *, PyObject *args) {
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
-static PyObject *_wrap_new__TST(PyObject *, PyObject *args) {
+static PyObject *_wrap_new__TST__SWIG_0(PyObject *, PyObject *args) {
+    PyObject *resultobj = NULL;
+    tst<char,PythonReference,MemoryStorage,ObjectSerializer > *result;
+    
+    if(!PyArg_ParseTuple(args,(char *)":new__TST")) goto fail;
+    {
+        try {
+            result = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *)new tst<char,PythonReference,MemoryStorage,ObjectSerializer >();
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
+    resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 1);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_new__TST__SWIG_1(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     MemoryStorage *arg1 = (MemoryStorage *) 0 ;
     PythonReference arg2 ;
@@ -1811,6 +1867,50 @@ static PyObject *_wrap_new__TST(PyObject *, PyObject *args) {
     resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 1);
     return resultobj;
     fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_new__TST(PyObject *self, PyObject *args) {
+    int argc;
+    PyObject *argv[3];
+    int ii;
+    
+    argc = PyObject_Length(args);
+    for (ii = 0; (ii < argc) && (ii < 2); ii++) {
+        argv[ii] = PyTuple_GetItem(args,ii);
+    }
+    if (argc == 0) {
+        return _wrap_new__TST__SWIG_0(self,args);
+    }
+    if (argc == 2) {
+        int _v;
+        {
+            void *ptr;
+            if (SWIG_ConvertPtr(argv[0], &ptr, SWIGTYPE_p_memory_storageTchar_PythonReference_t, 0) == -1) {
+                _v = 0;
+                PyErr_Clear();
+            } else {
+                _v = 1;
+            }
+        }
+        if (_v) {
+            {
+                void *ptr = 0;
+                if (SWIG_ConvertPtr(argv[1], &ptr, SWIGTYPE_p_PythonReference, 0) == -1) {
+                    _v = 0;
+                    PyErr_Clear();
+                } else {
+                    _v = (ptr != 0);
+                }
+            }
+            if (_v) {
+                return _wrap_new__TST__SWIG_1(self,args);
+            }
+        }
+    }
+    
+    PyErr_SetString(PyExc_NotImplementedError,"No matching function for overloaded 'new__TST'");
     return NULL;
 }
 
@@ -1901,7 +2001,7 @@ static PyObject *_wrap__TST_walk__SWIG_1(PyObject *, PyObject *args) {
     filter<char,PythonReference > *arg2 = (filter<char,PythonReference > *) 0 ;
     action<char,PythonReference > *arg3 = (action<char,PythonReference > *) 0 ;
     char *arg4 = (char *) 0 ;
-    int arg5 ;
+    size_t arg5 ;
     PythonReference result;
     char *buf4 ;
     size_t size4 ;
@@ -1921,7 +2021,7 @@ static PyObject *_wrap__TST_walk__SWIG_1(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj3, &buf4, &size4);
         if (SWIG_arg_fail(4)) SWIG_fail;
         arg4 = (char *) buf4;
-        arg5 = (int) size4 - 1;
+        arg5 = (size_t) size4 - 1;
     }
     {
         try {
@@ -2023,7 +2123,7 @@ static PyObject *_wrap__TST_walk(PyObject *self, PyObject *args) {
                         if (argc <= 4) {
                             return _wrap__TST_walk__SWIG_1(self,args);
                         }
-                        _v = SWIG_Check_int(argv[4]);
+                        _v = SWIG_Check_unsigned_SS_long(argv[4]);
                         if (_v) {
                             return _wrap__TST_walk__SWIG_1(self,args);
                         }
@@ -2042,7 +2142,7 @@ static PyObject *_wrap__TST_close_match(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     int arg4 ;
     filter<char,PythonReference > *arg5 = (filter<char,PythonReference > *) 0 ;
     action<char,PythonReference > *arg6 = (action<char,PythonReference > *) 0 ;
@@ -2062,7 +2162,7 @@ static PyObject *_wrap__TST_close_match(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = static_cast<int >(SWIG_As_int(obj2)); 
@@ -2093,7 +2193,7 @@ static PyObject *_wrap__TST_prefix_match(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     filter<char,PythonReference > *arg4 = (filter<char,PythonReference > *) 0 ;
     action<char,PythonReference > *arg5 = (action<char,PythonReference > *) 0 ;
     PythonReference result;
@@ -2111,7 +2211,7 @@ static PyObject *_wrap__TST_prefix_match(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     SWIG_Python_ConvertPtr(obj2, (void **)&arg4, SWIGTYPE_p_filterTchar_PythonReference_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(4)) SWIG_fail;
@@ -2138,7 +2238,7 @@ static PyObject *_wrap__TST_get(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     PythonReference result;
     char *buf2 ;
     size_t size2 ;
@@ -2152,7 +2252,7 @@ static PyObject *_wrap__TST_get(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         try {
@@ -2175,7 +2275,7 @@ static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     filter<char,PythonReference > *arg4 = (filter<char,PythonReference > *) 0 ;
     PythonReference result;
     char *buf2 ;
@@ -2191,7 +2291,7 @@ static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     SWIG_Python_ConvertPtr(obj2, (void **)&arg4, SWIGTYPE_p_filterTchar_PythonReference_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(4)) SWIG_fail;
@@ -2216,7 +2316,7 @@ static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     PythonReference arg4 ;
     PythonReference result;
     char *buf2 ;
@@ -2232,7 +2332,7 @@ static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = PythonReference(obj2);
@@ -2258,7 +2358,7 @@ static PyObject *_wrap__TST_remove(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     char *buf2 ;
     size_t size2 ;
     PyObject * obj0 = 0 ;
@@ -2271,7 +2371,7 @@ static PyObject *_wrap__TST_remove(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         try {
@@ -2292,7 +2392,7 @@ static PyObject *_wrap__TST_contains(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     bool result;
     char *buf2 ;
     size_t size2 ;
@@ -2306,7 +2406,7 @@ static PyObject *_wrap__TST_contains(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         try {
@@ -2437,7 +2537,7 @@ static PyObject *_wrap__TST_iterator__SWIG_1(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     SwigValueWrapper<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > > result;
     char *buf2 ;
     size_t size2 ;
@@ -2451,7 +2551,7 @@ static PyObject *_wrap__TST_iterator__SWIG_1(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         try {
@@ -2513,7 +2613,7 @@ static PyObject *_wrap__TST_iterator(PyObject *self, PyObject *args) {
                 if (argc <= 2) {
                     return _wrap__TST_iterator__SWIG_1(self,args);
                 }
-                _v = SWIG_Check_int(argv[2]);
+                _v = SWIG_Check_unsigned_SS_long(argv[2]);
                 if (_v) {
                     return _wrap__TST_iterator__SWIG_1(self,args);
                 }
@@ -2530,7 +2630,7 @@ static PyObject *_wrap__TST_close_match_iterator(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     int arg4 ;
     SwigValueWrapper<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > > result;
     char *buf2 ;
@@ -2546,7 +2646,7 @@ static PyObject *_wrap__TST_close_match_iterator(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = static_cast<int >(SWIG_As_int(obj2)); 
@@ -2575,7 +2675,7 @@ static PyObject *_wrap__TST_scan(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     action<char,PythonReference > *arg4 = (action<char,PythonReference > *) 0 ;
     PythonReference result;
     char *buf2 ;
@@ -2591,7 +2691,7 @@ static PyObject *_wrap__TST_scan(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     SWIG_Python_ConvertPtr(obj2, (void **)&arg4, SWIGTYPE_p_actionTchar_PythonReference_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(4)) SWIG_fail;
@@ -2616,9 +2716,9 @@ static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     char *arg4 = (char *) 0 ;
-    int arg5 ;
+    size_t arg5 ;
     action<char,PythonReference > *arg6 = (action<char,PythonReference > *) 0 ;
     PythonReference result;
     char *buf2 ;
@@ -2637,13 +2737,13 @@ static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         SWIG_AsCharPtrAndSize(obj2, &buf4, &size4);
         if (SWIG_arg_fail(4)) SWIG_fail;
         arg4 = (char *) buf4;
-        arg5 = (int) size4 - 1;
+        arg5 = (size_t) size4 - 1;
     }
     SWIG_Python_ConvertPtr(obj3, (void **)&arg6, SWIGTYPE_p_actionTchar_PythonReference_t, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(6)) SWIG_fail;
@@ -2698,7 +2798,7 @@ static PyObject *_wrap__Action_perform(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     action<char,PythonReference > *arg1 = (action<char,PythonReference > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     int arg4 ;
     PythonReference arg5 ;
     char *buf2 ;
@@ -2715,7 +2815,7 @@ static PyObject *_wrap__Action_perform(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = static_cast<int >(SWIG_As_int(obj2)); 
@@ -2799,7 +2899,7 @@ static PyObject *_wrap__Filter_perform(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     filter<char,PythonReference > *arg1 = (filter<char,PythonReference > *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     int arg4 ;
     PythonReference arg5 ;
     PythonReference result;
@@ -2817,7 +2917,7 @@ static PyObject *_wrap__Filter_perform(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = static_cast<int >(SWIG_As_int(obj2)); 
@@ -2907,7 +3007,7 @@ static PyObject *_wrap_CallableAction_perform(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     CallableAction *arg1 = (CallableAction *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     int arg4 ;
     PythonReference arg5 ;
     char *buf2 ;
@@ -2924,7 +3024,7 @@ static PyObject *_wrap_CallableAction_perform(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = static_cast<int >(SWIG_As_int(obj2)); 
@@ -3033,7 +3133,7 @@ static PyObject *_wrap_CallableFilter_perform(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     CallableFilter *arg1 = (CallableFilter *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     int arg4 ;
     PythonReference arg5 ;
     PythonReference result;
@@ -3051,7 +3151,7 @@ static PyObject *_wrap_CallableFilter_perform(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = static_cast<int >(SWIG_As_int(obj2)); 
@@ -3131,7 +3231,7 @@ static PyObject *_wrap_DictAction_perform(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     DictAction *arg1 = (DictAction *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     int arg4 ;
     PythonReference arg5 ;
     char *buf2 ;
@@ -3148,7 +3248,7 @@ static PyObject *_wrap_DictAction_perform(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = static_cast<int >(SWIG_As_int(obj2)); 
@@ -3252,7 +3352,7 @@ static PyObject *_wrap_ListAction_perform(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     ListAction *arg1 = (ListAction *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     int arg4 ;
     PythonReference arg5 ;
     char *buf2 ;
@@ -3269,7 +3369,7 @@ static PyObject *_wrap_ListAction_perform(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = static_cast<int >(SWIG_As_int(obj2)); 
@@ -3373,7 +3473,7 @@ static PyObject *_wrap_TupleListAction_perform(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     TupleListAction *arg1 = (TupleListAction *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     int arg4 ;
     PythonReference arg5 ;
     char *buf2 ;
@@ -3390,7 +3490,7 @@ static PyObject *_wrap_TupleListAction_perform(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = static_cast<int >(SWIG_As_int(obj2)); 
@@ -3732,7 +3832,7 @@ static PyObject *_wrap_TST___getitem__(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     PythonReference result;
     char *buf2 ;
     size_t size2 ;
@@ -3746,7 +3846,7 @@ static PyObject *_wrap_TST___getitem__(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         try {
@@ -3769,7 +3869,7 @@ static PyObject *_wrap_TST___setitem__(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     PythonReference arg4 ;
     PythonReference result;
     char *buf2 ;
@@ -3785,7 +3885,7 @@ static PyObject *_wrap_TST___setitem__(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = PythonReference(obj2);
@@ -3811,7 +3911,7 @@ static PyObject *_wrap_TST___delitem__(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     char *buf2 ;
     size_t size2 ;
     PyObject * obj0 = 0 ;
@@ -3824,7 +3924,7 @@ static PyObject *_wrap_TST___delitem__(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         try {
@@ -3845,7 +3945,7 @@ static PyObject *_wrap_TST___contains__(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     PythonReference result;
     char *buf2 ;
     size_t size2 ;
@@ -3859,7 +3959,7 @@ static PyObject *_wrap_TST___contains__(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         try {
@@ -3910,7 +4010,7 @@ static PyObject *_wrap_TST_iterator__SWIG_1(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > > > result;
     char *buf2 ;
     size_t size2 ;
@@ -3924,7 +4024,7 @@ static PyObject *_wrap_TST_iterator__SWIG_1(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         try {
@@ -3986,7 +4086,7 @@ static PyObject *_wrap_TST_iterator(PyObject *self, PyObject *args) {
                 if (argc <= 2) {
                     return _wrap_TST_iterator__SWIG_1(self,args);
                 }
-                _v = SWIG_Check_int(argv[2]);
+                _v = SWIG_Check_unsigned_SS_long(argv[2]);
                 if (_v) {
                     return _wrap_TST_iterator__SWIG_1(self,args);
                 }
@@ -4003,7 +4103,7 @@ static PyObject *_wrap_TST_close_match_iterator(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
-    int arg3 ;
+    size_t arg3 ;
     int arg4 ;
     SwigValueWrapper<TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > > > result;
     char *buf2 ;
@@ -4019,7 +4119,7 @@ static PyObject *_wrap_TST_close_match_iterator(PyObject *, PyObject *args) {
         SWIG_AsCharPtrAndSize(obj1, &buf2, &size2);
         if (SWIG_arg_fail(2)) SWIG_fail;
         arg2 = (char *) buf2;
-        arg3 = (int) size2 - 1;
+        arg3 = (size_t) size2 - 1;
     }
     {
         arg4 = static_cast<int >(SWIG_As_int(obj2)); 
@@ -4368,7 +4468,9 @@ static swig_type_info _swigt__p_filterTchar_PythonReference_t = {"_p_filterTchar
 static swig_type_info _swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t = {"_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t", "lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > *|lexical_iterator_type *", 0, 0, 0};
 static swig_type_info _swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t = {"_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t", "match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > *|close_match_iterator_type *", 0, 0, 0};
 static swig_type_info _swigt__p_memory_storageTchar_PythonReference_t = {"_p_memory_storageTchar_PythonReference_t", "memory_storage<char,PythonReference > *|MemoryStorage *", 0, 0, 0};
+static swig_type_info _swigt__p_storage_type = {"_p_storage_type", "storage_type *", 0, 0, 0};
 static swig_type_info _swigt__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t = {"_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t", "tst<char,PythonReference,MemoryStorage,ObjectSerializer > *|BaseTST *", 0, 0, 0};
+static swig_type_info _swigt__p_value_type = {"_p_value_type", "value_type *", 0, 0, 0};
 static swig_type_info _swigt__ptrdiff_t = {"_ptrdiff_t", "ptrdiff_t", 0, 0, 0};
 static swig_type_info _swigt__size_t = {"_size_t", "size_t", 0, 0, 0};
 static swig_type_info _swigt__std__ptrdiff_t = {"_std__ptrdiff_t", "std::ptrdiff_t", 0, 0, 0};
@@ -4393,7 +4495,9 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t,
   &_swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t,
   &_swigt__p_memory_storageTchar_PythonReference_t,
+  &_swigt__p_storage_type,
   &_swigt__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t,
+  &_swigt__p_value_type,
   &_swigt__ptrdiff_t,
   &_swigt__size_t,
   &_swigt__std__ptrdiff_t,
@@ -4418,7 +4522,9 @@ static swig_cast_info _swigc__p_filterTchar_PythonReference_t[] = {  {&_swigt__p
 static swig_cast_info _swigc__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t[] = {  {&_swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t[] = {  {&_swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_memory_storageTchar_PythonReference_t[] = {  {&_swigt__p_memory_storageTchar_PythonReference_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_storage_type[] = {  {&_swigt__p_storage_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t[] = {  {&_swigt__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 0, 0, 0},  {&_swigt__p_TST, _p_TSTTo_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_value_type[] = {  {&_swigt__p_value_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__ptrdiff_t[] = {  {&_swigt__ptrdiff_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__size_t[] = {  {&_swigt__size_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__std__ptrdiff_t[] = {  {&_swigt__std__ptrdiff_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -4443,7 +4549,9 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t,
   _swigc__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t,
   _swigc__p_memory_storageTchar_PythonReference_t,
+  _swigc__p_storage_type,
   _swigc__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t,
+  _swigc__p_value_type,
   _swigc__ptrdiff_t,
   _swigc__size_t,
   _swigc__std__ptrdiff_t,

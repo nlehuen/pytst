@@ -39,7 +39,7 @@ template < class S, class T > class textindex : private filter< S, boost::shared
                 collector() : _entries(new entries()), _first(true) {
                 }
             
-                virtual void perform(const S* string, int string_length, int remaining_distance, p_entries data) {
+                virtual void perform(const S* string, size_t string_length, int remaining_distance, p_entries data) {
                     for(p_entries::element_type::iterator s(data->begin()),e(data->end());s != e;s++) {
                         (*_entries)[s->first] += s->second;
                     }
@@ -125,7 +125,7 @@ template < class S, class T > class textindex : private filter< S, boost::shared
             }
         }
 
-        virtual p_entries perform(const S* string, int string_length, int remaining_distance, p_entries data) {
+        virtual p_entries perform(const S* string, size_t string_length, int remaining_distance, p_entries data) {
             return p_entries(new entries());
         }
         

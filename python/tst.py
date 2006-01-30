@@ -77,7 +77,10 @@ class _TST(_object):
     def __repr__(self):
         return "<%s.%s; proxy of C++ tst<char,PythonReference,MemoryStorage,ObjectSerializer > instance at %s>" % (self.__class__.__module__, self.__class__.__name__, self.this,)
     def __init__(self, *args):
-        """__init__(self, storage, default_value) -> _TST"""
+        """
+        __init__(self) -> _TST
+        __init__(self, storage, default_value) -> _TST
+        """
         _swig_setattr(self, _TST, 'this', _tst.new__TST(*args))
         _swig_setattr(self, _TST, 'thisown', 1)
     def __del__(self, destroy=_tst.delete__TST):

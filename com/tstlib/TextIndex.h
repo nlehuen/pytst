@@ -20,6 +20,7 @@ __interface ITextIndex : IDispatch
     [id(3), helpstring("method Pack")] HRESULT Pack(void);
     [id(4), helpstring("method FindWord")] HRESULT FindWord([in] BSTR* word);
     [id(5), helpstring("method FindText")] HRESULT FindText([in] BSTR* text,[in] LONG intersect);
+    [propget, id(6), helpstring("property Version")] HRESULT Version([out, retval] BSTR* pVal);
 };
 
 
@@ -68,5 +69,6 @@ public:
     STDMETHOD(Pack)(void);
     STDMETHOD(FindWord)(BSTR* word);
     STDMETHOD(FindText)(BSTR* text, LONG intersect);
+    STDMETHOD(get_Version)(BSTR* pVal);
 };
 

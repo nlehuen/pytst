@@ -6,6 +6,8 @@ try:
 	try:
 		ti = Dispatch('tstlib.TextIndex')
 
+		print "Version :",ti.Version
+
 		ti.AddText('bonjour, je suis nicolas','1')
 		ti.AddText('bonjour, je suis alfred','2')
 		ti.AddText('bonjour comment allez-vous ?','1')

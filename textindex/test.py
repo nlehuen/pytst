@@ -14,7 +14,7 @@ if __name__ == "__main__":
         for linenumber, line in enumerate(file(f,'rb')):
             lines += 1
             line = line.strip()
-            ti.put_text(line.lower(),'%12s:%04i:%s'%(f,linenumber,line))
+            ti.put_text(line.lower().decode('iso-8859-1'),'%12s:%04i:%s'%(f,linenumber,line))
             if linenumber % 100 == 0:
                 sys.stdout.write('.')
         print 'OK'

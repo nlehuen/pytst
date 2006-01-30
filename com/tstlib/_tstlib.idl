@@ -1,10 +1,10 @@
-import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prsht.idl";
-import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\mshtml.idl";
-import "e:\program files\microsoft visual studio .net 2003\vc7\platformsdk\include\dimm.idl";
-import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\mshtmhst.idl";
-import "e:\program files\microsoft visual studio .net 2003\vc7\platformsdk\include\docobj.idl";
-import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\exdisp.idl";
-import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\objsafe.idl";
+import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prsht.idl";
+import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\mshtml.idl";
+import "c:\program files\microsoft visual studio .net 2003\vc7\platformsdk\include\dimm.idl";
+import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\mshtmhst.idl";
+import "c:\program files\microsoft visual studio .net 2003\vc7\platformsdk\include\docobj.idl";
+import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\exdisp.idl";
+import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\objsafe.idl";
 
 [
 	object,
@@ -13,12 +13,13 @@ import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\inclu
 	helpstring("Interface ITernarySearchTree"),
 	pointer_default(unique)
 ] 
-#line 16 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
+#line 16 "d:\\projets\\tst\\com\\tstlib\\ternarysearchtree.h"
 interface ITernarySearchTree : IDispatch {
-#line 18 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
+#line 18 "d:\\projets\\tst\\com\\tstlib\\ternarysearchtree.h"
 	[id(1),helpstring("method Set")] HRESULT  Set([in] BSTR *key , [in] BSTR *value , [out,retval] BSTR *result );
 	[id(2),helpstring("method Get")] HRESULT  Get([in] BSTR *key , [out,retval] BSTR *result );
 	[id(3),helpstring("method Pack")] HRESULT  Pack();
+	[propget,id(4),helpstring("property Version")] HRESULT  Version([out,retval] BSTR *pVal );
 };
 
 [
@@ -28,14 +29,15 @@ interface ITernarySearchTree : IDispatch {
 	helpstring("Interface ITextIndex"),
 	pointer_default(unique)
 ] 
-#line 16 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
+#line 16 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
 interface ITextIndex : IDispatch {
-#line 18 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
+#line 18 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
 	[id(1),helpstring("method AddWord")] HRESULT  AddWord([in] BSTR *word , [in] BSTR *document );
 	[id(2),helpstring("method AddText")] HRESULT  AddText([in] BSTR *text , [in] BSTR *document );
 	[id(3),helpstring("method Pack")] HRESULT  Pack();
 	[id(4),helpstring("method FindWord")] HRESULT  FindWord([in] BSTR *word );
 	[id(5),helpstring("method FindText")] HRESULT  FindTextA([in] BSTR *text , [in] LONG intersect);
+	[propget,id(6),helpstring("property Version")] HRESULT  Version([out,retval] BSTR *pVal );
 };
 
 
@@ -50,7 +52,7 @@ library tstlib
 		uuid(01757CCD-8F45-498E-B8BF-4E4F95A07CE7),
 		helpstring("TernarySearchTree Class")
 	] 
-#line 36 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
+#line 37 "d:\\projets\\tst\\com\\tstlib\\ternarysearchtree.h"
 	coclass CTernarySearchTree {
 		interface ITernarySearchTree;
 	};
@@ -60,7 +62,7 @@ library tstlib
 		uuid(8EC92961-CAB3-4CA6-A36E-46C39424E80B),
 		helpstring("TextIndex Class")
 	] 
-#line 38 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
+#line 39 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
 	coclass CTextIndex {
 		interface ITextIndex;
 	};

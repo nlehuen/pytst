@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Sat Jan 28 21:32:05 2006
+/* at Mon Jan 30 10:53:13 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -121,6 +121,9 @@ EXTERN_C const IID IID_ITernarySearchTree;
         
         virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Pack( void) = 0;
         
+        virtual /* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Version( 
+            /* [retval][out] */ BSTR *pVal) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -183,6 +186,10 @@ EXTERN_C const IID IID_ITernarySearchTree;
         /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *Pack )( 
             ITernarySearchTree * This);
         
+        /* [helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Version )( 
+            ITernarySearchTree * This,
+            /* [retval][out] */ BSTR *pVal);
+        
         END_INTERFACE
     } ITernarySearchTreeVtbl;
 
@@ -227,6 +234,9 @@ EXTERN_C const IID IID_ITernarySearchTree;
 
 #define ITernarySearchTree_Pack(This)	\
     (This)->lpVtbl -> Pack(This)
+
+#define ITernarySearchTree_get_Version(This,pVal)	\
+    (This)->lpVtbl -> get_Version(This,pVal)
 
 #endif /* COBJMACROS */
 
@@ -273,6 +283,18 @@ void __RPC_STUB ITernarySearchTree_Pack_Stub(
     DWORD *_pdwStubPhase);
 
 
+/* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE ITernarySearchTree_get_Version_Proxy( 
+    ITernarySearchTree * This,
+    /* [retval][out] */ BSTR *pVal);
+
+
+void __RPC_STUB ITernarySearchTree_get_Version_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
 
 #endif 	/* __ITernarySearchTree_INTERFACE_DEFINED__ */
 
@@ -308,6 +330,9 @@ EXTERN_C const IID IID_ITextIndex;
         virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE FindTextA( 
             /* [in] */ BSTR *text,
             /* [in] */ LONG intersect) = 0;
+        
+        virtual /* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Version( 
+            /* [retval][out] */ BSTR *pVal) = 0;
         
     };
     
@@ -379,6 +404,10 @@ EXTERN_C const IID IID_ITextIndex;
             /* [in] */ BSTR *text,
             /* [in] */ LONG intersect);
         
+        /* [helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Version )( 
+            ITextIndex * This,
+            /* [retval][out] */ BSTR *pVal);
+        
         END_INTERFACE
     } ITextIndexVtbl;
 
@@ -429,6 +458,9 @@ EXTERN_C const IID IID_ITextIndex;
 
 #define ITextIndex_FindTextA(This,text,intersect)	\
     (This)->lpVtbl -> FindTextA(This,text,intersect)
+
+#define ITextIndex_get_Version(This,pVal)	\
+    (This)->lpVtbl -> get_Version(This,pVal)
 
 #endif /* COBJMACROS */
 
@@ -493,6 +525,18 @@ void __RPC_STUB ITextIndex_FindWord_Stub(
 
 
 void __RPC_STUB ITextIndex_FindTextA_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE ITextIndex_get_Version_Proxy( 
+    ITextIndex * This,
+    /* [retval][out] */ BSTR *pVal);
+
+
+void __RPC_STUB ITextIndex_get_Version_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,

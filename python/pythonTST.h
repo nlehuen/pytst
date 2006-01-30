@@ -30,7 +30,7 @@ public:
     virtual ~CallableAction() {
     }
 
-    virtual void perform(const char* string,int string_length,int remaining_distance,PythonReference data) {
+    virtual void perform(const char* string,size_t string_length,int remaining_distance,PythonReference data) {
         if(_perform.get()==Py_None) {
             return;
         }
@@ -59,7 +59,7 @@ public:
     virtual ~CallableFilter() {
     }
 
-    virtual PythonReference perform(const char* string,int string_length,int remaining_distance,PythonReference data) {
+    virtual PythonReference perform(const char* string,size_t string_length,int remaining_distance,PythonReference data) {
         PythonReference tuple(Py_BuildValue("s#iO",string,string_length,remaining_distance,data.get()),0);
         return PythonReference(PyObject_CallObject(callable.get(),tuple.get()),0);
     }
@@ -76,7 +76,7 @@ public:
     virtual ~DictAction() {
     }
 
-    virtual void perform(const char* string,int string_length,int remaining_distance,PythonReference data) {
+    virtual void perform(const char* string,size_t string_length,int remaining_distance,PythonReference data) {
         PythonReference key(Py_BuildValue("s#",string,string_length),0);
         
         PyObject* old_tuple=PyDict_GetItem(dict.get(),key.get());
@@ -107,7 +107,7 @@ public:
     virtual ~ListAction() {
     }
 
-    virtual void perform(const char* string,int string_length,int remaining_distance,PythonReference data) {
+    virtual void perform(const char* string,size_t string_length,int remaining_distance,PythonReference data) {
         PyList_Append(list.get(),data.get());
     }
 
@@ -127,7 +127,7 @@ public:
     virtual ~TupleListAction() {
     }
 
-    virtual void perform(const char* string,int string_length,int remaining_distance,PythonReference data) {
+    virtual void perform(const char* string,size_t string_length,int remaining_distance,PythonReference data) {
         PythonReference tuple(Py_BuildValue("s#iO",string,string_length,remaining_distance,data.get()),0);
         PyList_Append(list.get(),tuple.get());
     }
@@ -255,19 +255,19 @@ public:
         return PythonReference();
     }
 
-    PythonReference __getitem__(char* string,int string_length) {
+    PythonReference __getitem__(char* string,size_t string_length) {
         return get(string,string_length);
     }
 
-    PythonReference __setitem__(char* string,int string_length,PythonReference data) {
+    PythonReference __setitem__(char* string,size_t string_length,PythonReference data) {
         return put(string,string_length,data);
     }
 
-    void __delitem__(char* string,int string_length) {
+    void __delitem__(char* string,size_t string_length) {
         remove(string,string_length);
     }
 
-    PythonReference __contains__(char* string,int string_length) {
+    PythonReference __contains__(char* string,size_t string_length) {
         if(contains(string,string_length)) {
             return PythonReference(Py_False);
         }
@@ -280,11 +280,11 @@ public:
         return TSTLexicalIterator(BaseTST::iterator());
     }
 
-    TSTLexicalIterator iterator(char* string, int string_length) {
+    TSTLexicalIterator iterator(char* string, size_t string_length) {
         return TSTLexicalIterator(BaseTST::iterator(string,string_length));
     }
 
-    TSTCloseMatchIterator close_match_iterator(char* string, int string_length, int distance) {
+    TSTCloseMatchIterator close_match_iterator(char* string, size_t string_length, int distance) {
         return TSTCloseMatchIterator(BaseTST::close_match_iterator(string,string_length,distance));
     }
 

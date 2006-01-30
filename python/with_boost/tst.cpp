@@ -29,7 +29,7 @@ using namespace boost::python;
 
 template <class S, class T> class NullAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
-        void perform(const S* string,int string_length,int remaining_distance,T data) {
+        void perform(const S* string,size_t string_length,int remaining_distance,T data) {
         }
         
         T result() {
@@ -40,7 +40,7 @@ template <class S, class T> class NullAction : public action<S,T>, public wrappe
 
 template <class S,class T> class DictAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
-        void perform(const S* string,int string_length,int remaining_distance,T data) {
+        void perform(const S* string,size_t string_length,int remaining_distance,T data) {
             str s(string,string_length);
             object r = result_dict.get(s);
             if(!r || (r[0] > remaining_distance) ) {
@@ -58,7 +58,7 @@ template <class S,class T> class DictAction : public action<S,T>, public wrapper
 
 template <class S,class T> class TupleListAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
-        void perform(const S* string,int string_length,int remaining_distance,T data) {
+        void perform(const S* string,size_t string_length,int remaining_distance,T data) {
             str s(string,string_length);
             result_list.append(make_tuple(s,remaining_distance,data));
         }        
@@ -73,7 +73,7 @@ template <class S,class T> class TupleListAction : public action<S,T>, public wr
 
 template <class S,class T> class ListAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
-        void perform(const S* string,int string_length,int remaining_distance,T data) {
+        void perform(const S* string,size_t string_length,int remaining_distance,T data) {
             result_list.append(data);
         }        
         
@@ -92,7 +92,7 @@ template <class S,class T> class CallableAction : public action<S,T>, public wra
             _result(result) {
         }
     
-        void perform(const S* string,int string_length,int remaining_distance,T data) {
+        void perform(const S* string,size_t string_length,int remaining_distance,T data) {
             _perform(
                 str(string,string_length),
                 remaining_distance,
@@ -113,7 +113,7 @@ template <class S,class T> class CallableAction : public action<S,T>, public wra
 
 template <class S, class T> class NullFilter : public filter<S,T>, public wrapper< filter<S,T> > {
     public:
-        T perform(const S* string,int string_length,int remaining_distance,T data) {
+        T perform(const S* string,size_t string_length,int remaining_distance,T data) {
             return data;
         }
 };
@@ -124,7 +124,7 @@ template <class S,class T> class CallableFilter : public filter<S,T>, public wra
             _perform(perform) {
         }
     
-        T perform(const S* string,int string_length,int remaining_distance,T data) {
+        T perform(const S* string,size_t string_length,int remaining_distance,T data) {
         	return _perform(str(string,string_length),remaining_distance,data);
         }        
     

@@ -45,3 +45,9 @@ STDMETHODIMP CTextIndex::FindText(BSTR* text, LONG intersect)
     }
     return S_OK;
 }
+
+STDMETHODIMP CTextIndex::get_Version(BSTR* pVal)
+{
+    *pVal = _bstr_t(TST_VERSION).Detach();
+    return S_OK;
+}

@@ -18,6 +18,7 @@ __interface ITernarySearchTree : IDispatch
     [id(1), helpstring("method Set")] HRESULT Set([in] BSTR* key, [in] BSTR* value, [out,retval] BSTR* result);
     [id(2), helpstring("method Get")] HRESULT Get([in] BSTR* key, [out,retval] BSTR* result);
     [id(3), helpstring("method Pack")] HRESULT Pack(void);
+    [propget, id(4), helpstring("property Version")] HRESULT Version([out, retval] BSTR* pVal);
 };
 
 
@@ -60,5 +61,6 @@ public:
     STDMETHOD(Set)(BSTR* key, BSTR* value, BSTR* result);
     STDMETHOD(Get)(BSTR* key,BSTR* result);
     STDMETHOD(Pack)(void);
+    STDMETHOD(get_Version)(BSTR* pVal);
 };
 
