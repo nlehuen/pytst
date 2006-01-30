@@ -56,7 +56,7 @@ interface ITextIndex : IDispatch {
 };
 
 
-[ version(1.0), uuid(013A8F97-F0CA-4F8E-BA0E-75B1FEB9DF79), helpstring("Bibliothèque de types tstlib 1.0") ]
+[ version(1.0), uuid(013A8F97-F0CA-4F8E-BA0E-75B1FEB9DF79), helpstring("Bibliotheque de types tstlib 1.0") ]
 library tstlib
 {
 	importlib("stdole2.tlb");

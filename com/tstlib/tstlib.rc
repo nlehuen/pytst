@@ -1,41 +1,52 @@
-// Script de ressources généré par Microsoft Visual C++.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 //
-// Généré à partir de la ressource TEXTINCLUDE 2.
+// Generated from the TEXTINCLUDE 2 resource.
 //
 #include "winres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
+/////////////////////////////////////////////////////////////////////////////
+// Français (France) resources
+
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
-LANGUAGE 12, 1
+#ifdef _WIN32
+LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
 #pragma code_page(1252)
+#endif //_WIN32
+
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE  
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE  
+2 TEXTINCLUDE 
 BEGIN
     "#include ""winres.h""\r\n"
     "\0"
 END
 
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
 
 #endif    // APSTUDIO_INVOKED
 
-#ifndef _MAC
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -58,42 +69,52 @@ BEGIN
     BEGIN
         BLOCK "040c04e4"
         BEGIN
-            VALUE "CompanyName", "TODO : <Nom de la société>"
-            VALUE "FileDescription", "TODO : <Description de fichier>"
+            VALUE "CompanyName", "Yoono"
+            VALUE "FileDescription", "Yoono Ternary Search Tree Library"
             VALUE "FileVersion", "1.0.0.1"
-            VALUE "LegalCopyright", "TODO : (c) <Nom de la société>. Tous droits réservés."
             VALUE "InternalName", "tstlib.dll"
+            VALUE "LegalCopyright", "(c) Yoono. Tous droits réservés."
             VALUE "OriginalFilename", "tstlib.dll"
-            VALUE "ProductName", "TODO : <Nom du produit>"
+            VALUE "ProductName", "Yoono Companion"
             VALUE "ProductVersion", "1.0.0.1"
-            VALUE "OLESelfRegister", ""
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-		VALUE "Translation", 0x040c, 1252
+        VALUE "Translation", 0x40c, 1252
     END
 END
 
-#endif    // !_MAC
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Table de chaînes
+// REGISTRY
 //
 
-STRINGTABLE  
+IDR_TSTLIB              REGISTRY                "tstlib.rgs"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
 BEGIN
-	IDS_PROJNAME					"tstlib"
+    IDS_PROJNAME            "tstlib"
 END
 
-IDR_TSTLIB REGISTRY "tstlib.rgs"
-////////////////////////////////////////////////////////////////////////////
+#endif    // Français (France) resources
+/////////////////////////////////////////////////////////////////////////////
 
 
-#endif
 
 #ifndef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
-#endif    // non APSTUDIO_INVOKED
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
 
