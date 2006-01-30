@@ -36,58 +36,58 @@ template < class character_type, class document_type > class textindex : private
     
         template < class character_type > class collector : public action< character_type, documents_score_pointer > {
             public:
-                collector() : _entries(new documents_score()), _first(true) {
+                collector() : entries(new documents_score()), first(true) {
                 }
             
                 virtual void perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_pointer data) {
                     for(documents_score_pointer::element_type::iterator s(data->begin()),e(data->end());s != e;s++) {
-                        (*_entries)[s->first] += s->second;
+                        (*entries)[s->first] += s->second;
                     }
                 }
                 
                 virtual documents_score_pointer result() {
-                    return _entries;
+                    return entries;
                 }
                 
             private:
-                bool _first;
-                documents_score_pointer _entries;
+                bool first;
+                documents_score_pointer entries;
         };
 
-        textindex() : _tst(new tree_type::storage_type(16),tree_type::value_type()), _words(L"\\b\\w+\\b") {
+        textindex() : tree(new tree_type::storage_type(16),tree_type::value_type()), tokenizer(L"\\b\\w+\\b") {
         }
 
         int put_word(const std::basic_string< character_type > word,const document_type value) {
-            documents_score_pointer documents_score = _tst.get_or_build(word,this);
+            documents_score_pointer documents_score = tree.get_or_build(word,this);
             return ++((*documents_score)[value]);
         }
 
         int put_text(const std::basic_string< character_type > text,const document_type value) {
-            typename regex_type_iterator word(text.begin(),text.end(),_words);
+            typename regex_type_iterator token(text.begin(),text.end(),tokenizer);
             typename regex_type_iterator end;
             int count = 0;
-            while(word != end) {
-                count += put_word((*word)[0],value);
-                word++;
+            while(token != end) {
+                count += put_word((*token)[0],value);
+                token++;
             }
             return count;
         }
         
         documents_score_pointer find_word(const std::basic_string< character_type > word) {
             collector<character_type> c;
-            _tst.walk(NULL,&c,word.data(),word.size());
+            tree.walk(NULL,&c,word.data(),word.size());
             return c.result();
         }
         
         documents_score_pointer find_text(const std::basic_string< character_type > text,bool intersection) {
-            typename regex_type_iterator word(text.begin(),text.end(),_words);
+            typename regex_type_iterator token(text.begin(),text.end(),tokenizer);
             typename regex_type_iterator end;
-            if(word!=end) {
+            if(token!=end) {
                 if(intersection) {
-                    documents_score_pointer documents_score = find_word((*word)[0]);
-                    word++;
-                    while(word != end) {
-                        documents_score_pointer additional = find_word((*word)[0]);
+                    documents_score_pointer documents_score = find_word((*token)[0]);
+                    token++;
+                    while(token != end) {
+                        documents_score_pointer additional = find_word((*token)[0]);
 
                         for(documents_score_pointer::element_type::iterator s(additional->begin()),e(additional->end());s != e;s++) {
                             documents_score_pointer::element_type::iterator found(documents_score->find(s->first));
@@ -106,16 +106,16 @@ template < class character_type, class document_type > class textindex : private
                             }
                         }
 
-                        word++;
+                        token++;
                     }
                     return documents_score;
                 }
                 else {
                     collector<character_type> c;
-                    while(word != end) {
-                        std::basic_string<character_type> w = (*word)[0];
-                        _tst.walk(NULL,&c,const_cast<character_type*>(w.data()),w.size());
-                        word++;
+                    while(token != end) {
+                        std::basic_string<character_type> w = (*token)[0];
+                        tree.walk(NULL,&c,const_cast<character_type*>(w.data()),w.size());
+                        token++;
                     }
                     return c.result();
                 }
@@ -130,12 +130,12 @@ template < class character_type, class document_type > class textindex : private
         }
         
         void pack() {
-            _tst.pack();
+            tree.pack();
         }
 
     private:
-        tree_type _tst;
-        regex_type _words;
+        tree_type tree;
+        regex_type tokenizer;
 };
 
 #endif
