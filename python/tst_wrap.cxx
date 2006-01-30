@@ -1445,19 +1445,21 @@ SWIG_Python_SetModule(swig_module_info *swig_module) {
 #define SWIGTYPE_p_TupleListAction swig_types[11]
 #define SWIGTYPE_p_actionTchar_PythonReference_t swig_types[12]
 #define SWIGTYPE_p_char swig_types[13]
-#define SWIGTYPE_p_filterTchar_PythonReference_t swig_types[14]
-#define SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t swig_types[15]
-#define SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t swig_types[16]
-#define SWIGTYPE_p_memory_storageTchar_PythonReference_t swig_types[17]
-#define SWIGTYPE_p_storage_type swig_types[18]
-#define SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t swig_types[19]
-#define SWIGTYPE_p_value_type swig_types[20]
-#define SWIGTYPE_ptrdiff_t swig_types[21]
-#define SWIGTYPE_size_t swig_types[22]
-#define SWIGTYPE_std__ptrdiff_t swig_types[23]
-#define SWIGTYPE_std__size_t swig_types[24]
-static swig_type_info *swig_types[26];
-static swig_module_info swig_module = {swig_types, 25, 0, 0, 0, 0};
+#define SWIGTYPE_p_character_type swig_types[14]
+#define SWIGTYPE_p_filterTchar_PythonReference_t swig_types[15]
+#define SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t swig_types[16]
+#define SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t swig_types[17]
+#define SWIGTYPE_p_memory_storageTchar_PythonReference_t swig_types[18]
+#define SWIGTYPE_p_serializer_type swig_types[19]
+#define SWIGTYPE_p_storage_type swig_types[20]
+#define SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t swig_types[21]
+#define SWIGTYPE_p_value_type swig_types[22]
+#define SWIGTYPE_ptrdiff_t swig_types[23]
+#define SWIGTYPE_size_t swig_types[24]
+#define SWIGTYPE_std__ptrdiff_t swig_types[25]
+#define SWIGTYPE_std__size_t swig_types[26]
+static swig_type_info *swig_types[28];
+static swig_module_info swig_module = {swig_types, 27, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -4464,10 +4466,12 @@ static swig_type_info _swigt__p_TSTIteratorTmatch_iteratorTchar_PythonReference_
 static swig_type_info _swigt__p_TupleListAction = {"_p_TupleListAction", "TupleListAction *", 0, 0, 0};
 static swig_type_info _swigt__p_actionTchar_PythonReference_t = {"_p_actionTchar_PythonReference_t", "action<char,PythonReference > *", 0, 0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, 0};
+static swig_type_info _swigt__p_character_type = {"_p_character_type", "character_type *", 0, 0, 0};
 static swig_type_info _swigt__p_filterTchar_PythonReference_t = {"_p_filterTchar_PythonReference_t", "filter<char,PythonReference > *", 0, 0, 0};
 static swig_type_info _swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t = {"_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t", "lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > *|lexical_iterator_type *", 0, 0, 0};
 static swig_type_info _swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t = {"_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t", "match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > *|close_match_iterator_type *", 0, 0, 0};
 static swig_type_info _swigt__p_memory_storageTchar_PythonReference_t = {"_p_memory_storageTchar_PythonReference_t", "memory_storage<char,PythonReference > *|MemoryStorage *", 0, 0, 0};
+static swig_type_info _swigt__p_serializer_type = {"_p_serializer_type", "serializer_type *", 0, 0, 0};
 static swig_type_info _swigt__p_storage_type = {"_p_storage_type", "storage_type *", 0, 0, 0};
 static swig_type_info _swigt__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t = {"_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t", "tst<char,PythonReference,MemoryStorage,ObjectSerializer > *|BaseTST *", 0, 0, 0};
 static swig_type_info _swigt__p_value_type = {"_p_value_type", "value_type *", 0, 0, 0};
@@ -4491,10 +4495,12 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_TupleListAction,
   &_swigt__p_actionTchar_PythonReference_t,
   &_swigt__p_char,
+  &_swigt__p_character_type,
   &_swigt__p_filterTchar_PythonReference_t,
   &_swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t,
   &_swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t,
   &_swigt__p_memory_storageTchar_PythonReference_t,
+  &_swigt__p_serializer_type,
   &_swigt__p_storage_type,
   &_swigt__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t,
   &_swigt__p_value_type,
@@ -4518,10 +4524,12 @@ static swig_cast_info _swigc__p_TSTIteratorTmatch_iteratorTchar_PythonReference_
 static swig_cast_info _swigc__p_TupleListAction[] = {  {&_swigt__p_TupleListAction, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_actionTchar_PythonReference_t[] = {  {&_swigt__p_actionTchar_PythonReference_t, 0, 0, 0},  {&_swigt__p_DictAction, _p_DictActionTo_p_actionTchar_PythonReference_t, 0, 0},  {&_swigt__p_ListAction, _p_ListActionTo_p_actionTchar_PythonReference_t, 0, 0},  {&_swigt__p_TupleListAction, _p_TupleListActionTo_p_actionTchar_PythonReference_t, 0, 0},  {&_swigt__p_CallableAction, _p_CallableActionTo_p_actionTchar_PythonReference_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_character_type[] = {  {&_swigt__p_character_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_filterTchar_PythonReference_t[] = {  {&_swigt__p_filterTchar_PythonReference_t, 0, 0, 0},  {&_swigt__p_CallableFilter, _p_CallableFilterTo_p_filterTchar_PythonReference_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t[] = {  {&_swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t[] = {  {&_swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_memory_storageTchar_PythonReference_t[] = {  {&_swigt__p_memory_storageTchar_PythonReference_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_serializer_type[] = {  {&_swigt__p_serializer_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_storage_type[] = {  {&_swigt__p_storage_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t[] = {  {&_swigt__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 0, 0, 0},  {&_swigt__p_TST, _p_TSTTo_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_value_type[] = {  {&_swigt__p_value_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -4545,10 +4553,12 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_TupleListAction,
   _swigc__p_actionTchar_PythonReference_t,
   _swigc__p_char,
+  _swigc__p_character_type,
   _swigc__p_filterTchar_PythonReference_t,
   _swigc__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t,
   _swigc__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t,
   _swigc__p_memory_storageTchar_PythonReference_t,
+  _swigc__p_serializer_type,
   _swigc__p_storage_type,
   _swigc__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t,
   _swigc__p_value_type,
