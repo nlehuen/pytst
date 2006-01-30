@@ -14,13 +14,13 @@ try:
 		ti.AddText('bonjour comment allez-vous ?','3')
 
 		result = ti.FindWord('bonjour')
-		for i in range(result.Size+1):
+		for i in range(result.Size):
 			print result.GetDocument(i), result.GetScore(i)
 		
 		print
 		
 		result = ti.FindTextA('bonjour comment alfred',0)
-		for i in range(result.Size+1):
+		for i in range(result.Size):
 			print result.GetDocument(i), result.GetScore(i)
 	except:
 		traceback.print_exc()
