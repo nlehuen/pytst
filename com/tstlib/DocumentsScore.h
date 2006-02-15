@@ -6,6 +6,19 @@
 #include "comutil.h"
 #include "../../textindex/textindex.h"
 
+class _bstr_t_reader_writer {
+    public:
+        void write(FILE* file, _bstr_t value) {
+            int length=value.length();
+            fwrite(&length,sizeof(int),1,file);
+            fwrite(static_cast<wchar_t*>(value),sizeof(wchar_t),length,file);
+        }
+        
+        _bstr_t read(FILE* file) {
+            return _bstr_t();
+        }
+};
+
 // IDocumentsScore
 [
 	object,
@@ -54,9 +67,9 @@ public:
 	}
 
 public:
-    textindex<wchar_t,_bstr_t>::documents_score_list_pointer entries;
+    textindex<wchar_t,_bstr_t,_bstr_t_reader_writer>::documents_score_list_pointer entries;
 
-    void set_entries(textindex<wchar_t,_bstr_t>::documents_score_list_pointer _entries);
+    void set_entries(textindex<wchar_t,_bstr_t,_bstr_t_reader_writer>::documents_score_list_pointer _entries);
 
     STDMETHOD(get_Size)(LONG* pVal);
     STDMETHOD(GetDocument)(LONG index, BSTR* document);

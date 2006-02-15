@@ -31,7 +31,7 @@ template <class pair> bool invert_2nd_member(const pair& lhs, const pair& rhs)
     return lhs.second > rhs.second || lhs.first < rhs.first;
 }
 
-template < class character_type, class document_type > class textindex {
+template < typename character_type, typename document_type, typename reader_writer > class textindex {
     public:
         typedef std::map< document_type, int > documents_score_map;
         typedef boost::shared_ptr< documents_score_map > documents_score_map_pointer; 
@@ -39,7 +39,7 @@ template < class character_type, class document_type > class textindex {
         typedef std::vector< std::pair<document_type, int> > documents_score_list;
         typedef boost::shared_ptr< documents_score_list > documents_score_list_pointer; 
         
-        typedef string_tst < character_type, documents_score_map_pointer > tree_type;
+        typedef string_tst < character_type, documents_score_map_pointer, memory_storage<character_type,documents_score_map_pointer>, reader_writer> tree_type;
         
         typedef boost::basic_regex < character_type > regex_type;
         typedef boost::regex_iterator<typename std::basic_string<character_type>::const_iterator> regex_type_iterator;
