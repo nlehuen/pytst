@@ -154,6 +154,10 @@ template < typename character_type, typename document_type, typename reader_writ
             tree.pack();
         }
 
+        void write(FILE* file) {
+            tree.write(file);
+        }
+
     private:
         tree_type tree;
         regex_type tokenizer;

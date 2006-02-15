@@ -47,3 +47,15 @@ STDMETHODIMP CTextIndex::get_Version(BSTR* pVal)
     *pVal = _bstr_t(TST_VERSION).Detach();
     return S_OK;
 }
+STDMETHODIMP CTextIndex::Load(BSTR* filename)
+{
+    return S_OK;
+}
+
+STDMETHODIMP CTextIndex::Save(BSTR* filename)
+{
+    FILE* file = _wfopen(*filename,L"wb");
+    _textindex.write(file);
+    fclose(file);
+    return S_OK;
+}

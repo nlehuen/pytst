@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Wed Feb 15 21:56:33 2006
+/* at Wed Feb 15 22:08:28 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -44,7 +44,7 @@
 #include "_tstlib.h"
 
 #define TYPE_FORMAT_STRING_SIZE   87                                
-#define PROC_FORMAT_STRING_SIZE   487                               
+#define PROC_FORMAT_STRING_SIZE   559                               
 #define TRANSMIT_AS_TABLE_SIZE    0            
 #define WIRE_MARSHAL_TABLE_SIZE   1            
 
@@ -534,6 +534,66 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 /* 484 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
+	/* Procedure Load */
+
+/* 486 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 488 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 492 */	NdrFcShort( 0xd ),	/* 13 */
+/* 494 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 496 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 498 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 500 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
+			0x2,		/* 2 */
+/* 502 */	0x8,		/* 8 */
+			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
+/* 504 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 506 */	NdrFcShort( 0x1 ),	/* 1 */
+/* 508 */	NdrFcShort( 0x0 ),	/* 0 */
+
+	/* Parameter filename */
+
+/* 510 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 512 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 514 */	NdrFcShort( 0x36 ),	/* Type Offset=54 */
+
+	/* Return value */
+
+/* 516 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 518 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
+/* 520 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Procedure Save */
+
+/* 522 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 524 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 528 */	NdrFcShort( 0xe ),	/* 14 */
+/* 530 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 532 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 534 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 536 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
+			0x2,		/* 2 */
+/* 538 */	0x8,		/* 8 */
+			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
+/* 540 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 542 */	NdrFcShort( 0x1 ),	/* 1 */
+/* 544 */	NdrFcShort( 0x0 ),	/* 0 */
+
+	/* Parameter filename */
+
+/* 546 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 548 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 550 */	NdrFcShort( 0x36 ),	/* Type Offset=54 */
+
+	/* Return value */
+
+/* 552 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 554 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
+/* 556 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
 			0x0
         }
     };
@@ -800,7 +860,9 @@ static const unsigned short ITextIndex_FormatStringOffsetTable[] =
     210,
     360,
     402,
-    450
+    450,
+    486,
+    522
     };
 
 static const MIDL_STUBLESS_PROXY_INFO ITextIndex_ProxyInfo =
@@ -824,7 +886,7 @@ static const MIDL_SERVER_INFO ITextIndex_ServerInfo =
     0,
     0,
     0};
-CINTERFACE_PROXY_VTABLE(13) _ITextIndexProxyVtbl = 
+CINTERFACE_PROXY_VTABLE(15) _ITextIndexProxyVtbl = 
 {
     &ITextIndex_ProxyInfo,
     &IID_ITextIndex,
@@ -840,7 +902,9 @@ CINTERFACE_PROXY_VTABLE(13) _ITextIndexProxyVtbl =
     (void *) (INT_PTR) -1 /* ITextIndex::Pack */ ,
     (void *) (INT_PTR) -1 /* ITextIndex::FindWord */ ,
     (void *) (INT_PTR) -1 /* ITextIndex::FindTextA */ ,
-    (void *) (INT_PTR) -1 /* ITextIndex::get_Version */
+    (void *) (INT_PTR) -1 /* ITextIndex::get_Version */ ,
+    (void *) (INT_PTR) -1 /* ITextIndex::Load */ ,
+    (void *) (INT_PTR) -1 /* ITextIndex::Save */
 };
 
 
@@ -855,6 +919,8 @@ static const PRPC_STUB_FUNCTION ITextIndex_table[] =
     NdrStubCall2,
     NdrStubCall2,
     NdrStubCall2,
+    NdrStubCall2,
+    NdrStubCall2,
     NdrStubCall2
 };
 
@@ -862,7 +928,7 @@ CInterfaceStubVtbl _ITextIndexStubVtbl =
 {
     &IID_ITextIndex,
     &ITextIndex_ServerInfo,
-    13,
+    15,
     &ITextIndex_table[-3],
     CStdStubBuffer_DELEGATING_METHODS
 };

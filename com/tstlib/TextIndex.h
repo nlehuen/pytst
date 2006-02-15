@@ -23,6 +23,8 @@ __interface ITextIndex : IDispatch
     [id(4), helpstring("method FindWord")] HRESULT FindWord([in] BSTR* word,[out,retval] IDocumentsScore** result);
     [id(5), helpstring("method FindText")] HRESULT FindText([in] BSTR* text,[in] LONG intersect,[out,retval] IDocumentsScore** result);
     [propget, id(6), helpstring("property Version")] HRESULT Version([out, retval] BSTR* pVal);
+    [id(7), helpstring("method Load")] HRESULT Load([in] BSTR* filename);
+    [id(8), helpstring("method Save")] HRESULT Save([in] BSTR* filename);
 };
 
 
@@ -73,5 +75,7 @@ public:
     STDMETHOD(FindWord)(BSTR* word, IDocumentsScore** result);
     STDMETHOD(FindText)(BSTR* text, LONG intersect, IDocumentsScore** result);
     STDMETHOD(get_Version)(BSTR* pVal);
+    STDMETHOD(Load)(BSTR* filename);
+    STDMETHOD(Save)(BSTR* filename);
 };
 

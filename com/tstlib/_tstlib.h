@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Wed Feb 15 21:56:33 2006
+/* at Wed Feb 15 22:08:28 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -536,6 +536,12 @@ EXTERN_C const IID IID_ITextIndex;
         virtual /* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Version( 
             /* [retval][out] */ BSTR *pVal) = 0;
         
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Load( 
+            /* [in] */ BSTR *filename) = 0;
+        
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Save( 
+            /* [in] */ BSTR *filename) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -612,6 +618,14 @@ EXTERN_C const IID IID_ITextIndex;
             ITextIndex * This,
             /* [retval][out] */ BSTR *pVal);
         
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
+            ITextIndex * This,
+            /* [in] */ BSTR *filename);
+        
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *Save )( 
+            ITextIndex * This,
+            /* [in] */ BSTR *filename);
+        
         END_INTERFACE
     } ITextIndexVtbl;
 
@@ -665,6 +679,12 @@ EXTERN_C const IID IID_ITextIndex;
 
 #define ITextIndex_get_Version(This,pVal)	\
     (This)->lpVtbl -> get_Version(This,pVal)
+
+#define ITextIndex_Load(This,filename)	\
+    (This)->lpVtbl -> Load(This,filename)
+
+#define ITextIndex_Save(This,filename)	\
+    (This)->lpVtbl -> Save(This,filename)
 
 #endif /* COBJMACROS */
 
@@ -743,6 +763,30 @@ void __RPC_STUB ITextIndex_FindTextA_Stub(
 
 
 void __RPC_STUB ITextIndex_get_Version_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_Load_Proxy( 
+    ITextIndex * This,
+    /* [in] */ BSTR *filename);
+
+
+void __RPC_STUB ITextIndex_Load_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_Save_Proxy( 
+    ITextIndex * This,
+    /* [in] */ BSTR *filename);
+
+
+void __RPC_STUB ITextIndex_Save_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,

@@ -15,7 +15,13 @@ class _bstr_t_reader_writer {
         }
         
         _bstr_t read(FILE* file) {
-            return _bstr_t();
+            int length;
+            fread(&length,sizeof(int),1,file);
+            wchar_t* buffer=static_cast<wchar_t*>(tst_malloc(length*sizeof(wchar_t)));
+            fread(buffer,sizeof(wchar_t),length,file);
+            BSTR result = SysAllocStringLen(buffer,length);
+            tst_free(buffer);
+            return _bstr_t(result,false);
         }
 };
 
