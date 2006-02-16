@@ -35,11 +35,43 @@ template < typename character_type, typename document_type, typename reader_writ
     public:
         typedef std::map< document_type, int > documents_score_map;
         typedef boost::shared_ptr< documents_score_map > documents_score_map_pointer; 
-
         typedef std::vector< std::pair<document_type, int> > documents_score_list;
         typedef boost::shared_ptr< documents_score_list > documents_score_list_pointer; 
         
-        typedef string_tst < character_type, documents_score_map_pointer, memory_storage<character_type,documents_score_map_pointer>, reader_writer> tree_type;
+    private:
+        class serializer {
+            public:
+                void write(FILE* file, documents_score_map_pointer value) {
+                    documents_score_map* map = value.get();
+                    size_t size = map->size();
+                    fwrite(&size,sizeof(size_t),1,file);
+                    for(documents_score_map::iterator iterator(map->begin()),end(map->end());iterator!=end;++iterator) {
+                        rw.write(file,iterator->first);                        
+                        fwrite(&(iterator->second),sizeof(int),1,file);
+                    }
+                }
+                
+                documents_score_map_pointer read(FILE* file) {
+                    documents_score_map* result = new documents_score_map();
+
+                    size_t size;
+                    fread(&size,sizeof(size_t),1,file);
+                    for(size_t i=0;i<size;++i) {
+                        document_type doc(rw.read(file));
+                        int score;
+                        fread(&score,sizeof(int),1,file);
+                        (*result)[doc] = score;
+                    }
+
+                    return documents_score_map_pointer(result);
+                }
+
+            private:
+                typename reader_writer rw;
+        };
+
+    public:
+        typedef string_tst < character_type, documents_score_map_pointer, memory_storage<character_type,documents_score_map_pointer>, serializer> tree_type;
         
         typedef boost::basic_regex < character_type > regex_type;
         typedef boost::regex_iterator<typename std::basic_string<character_type>::const_iterator> regex_type_iterator;
@@ -156,6 +188,10 @@ template < typename character_type, typename document_type, typename reader_writ
 
         void write(FILE* file) {
             tree.write(file);
+        }
+
+        void read(FILE* file) {
+            tree.read(file);
         }
 
     private:

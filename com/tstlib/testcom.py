@@ -22,6 +22,17 @@ try:
 		result = ti.FindTextA('bonjour comment alfred',0)
 		for i in range(result.Size):
 			print result.GetDocument(i), result.GetScore(i)
+			
+		print "Saved %s !"%ti.Save(r'c:\temp\test.ti')
+
+		ti = Dispatch('tstlib.TextIndex')
+		print "Loaded %s !"%ti.Load(r'c:\temp\test.ti')
+
+		print
+		
+		result = ti.FindTextA('bonjour comment alfred',0)
+		for i in range(result.Size):
+			print result.GetDocument(i), result.GetScore(i)
 	except:
 		traceback.print_exc()
 finally:

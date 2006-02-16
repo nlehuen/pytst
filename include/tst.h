@@ -1190,7 +1190,9 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
 template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(FILE* file) {
     // We check the version number
     int version_length;
-    fread(&version_length,sizeof(size_t),1,file);
+    if(fread(&version_length,sizeof(size_t),1,file)!=sizeof(size_t)) {
+        throw TSTException("Bad version length");
+    }
     char* version=(char*)tst_malloc(version_length+1);
     version[version_length]=0;
     assert(version);

@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Wed Feb 15 22:08:28 2006
+/* at Thu Feb 16 09:53:19 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -537,10 +537,12 @@ EXTERN_C const IID IID_ITextIndex;
             /* [retval][out] */ BSTR *pVal) = 0;
         
         virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Load( 
-            /* [in] */ BSTR *filename) = 0;
+            /* [in] */ BSTR *filename,
+            /* [retval][out] */ LONG *result) = 0;
         
         virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Save( 
-            /* [in] */ BSTR *filename) = 0;
+            /* [in] */ BSTR *filename,
+            /* [retval][out] */ LONG *result) = 0;
         
     };
     
@@ -620,11 +622,13 @@ EXTERN_C const IID IID_ITextIndex;
         
         /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             ITextIndex * This,
-            /* [in] */ BSTR *filename);
+            /* [in] */ BSTR *filename,
+            /* [retval][out] */ LONG *result);
         
         /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *Save )( 
             ITextIndex * This,
-            /* [in] */ BSTR *filename);
+            /* [in] */ BSTR *filename,
+            /* [retval][out] */ LONG *result);
         
         END_INTERFACE
     } ITextIndexVtbl;
@@ -680,11 +684,11 @@ EXTERN_C const IID IID_ITextIndex;
 #define ITextIndex_get_Version(This,pVal)	\
     (This)->lpVtbl -> get_Version(This,pVal)
 
-#define ITextIndex_Load(This,filename)	\
-    (This)->lpVtbl -> Load(This,filename)
+#define ITextIndex_Load(This,filename,result)	\
+    (This)->lpVtbl -> Load(This,filename,result)
 
-#define ITextIndex_Save(This,filename)	\
-    (This)->lpVtbl -> Save(This,filename)
+#define ITextIndex_Save(This,filename,result)	\
+    (This)->lpVtbl -> Save(This,filename,result)
 
 #endif /* COBJMACROS */
 
@@ -771,7 +775,8 @@ void __RPC_STUB ITextIndex_get_Version_Stub(
 
 /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_Load_Proxy( 
     ITextIndex * This,
-    /* [in] */ BSTR *filename);
+    /* [in] */ BSTR *filename,
+    /* [retval][out] */ LONG *result);
 
 
 void __RPC_STUB ITextIndex_Load_Stub(
@@ -783,7 +788,8 @@ void __RPC_STUB ITextIndex_Load_Stub(
 
 /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_Save_Proxy( 
     ITextIndex * This,
-    /* [in] */ BSTR *filename);
+    /* [in] */ BSTR *filename,
+    /* [retval][out] */ LONG *result);
 
 
 void __RPC_STUB ITextIndex_Save_Stub(

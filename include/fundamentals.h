@@ -21,13 +21,18 @@
 
 const int UNDEFINED_INDEX=-1;
 
-class TSTException {
+class TSTException : public exception {
 public:
-    TSTException(char* _message) {
+    TSTException(const char* _message) {
         message=_message;
     }
 
-    char* message;
+    virtual const char* what() {
+        return message;
+    }
+
+private:
+    const char* message;
 };
 
 template<typename S,typename T> class tst_node {

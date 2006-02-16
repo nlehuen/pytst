@@ -6,7 +6,7 @@
 # one containing a subdirectory called "boost/" and a sub-subdirectory
 # "boost/python/" full of .hpp files).  Absolute paths work, too.
 #
-path-global BOOST_ROOT : c:/projets/boost_1_33_1 ;
+path-global BOOST_ROOT : d:/projets/boost_1_33_1 ;
 
 # Boost.Python configuration variables, as described in
 # http://www.boost.org/libs/python/doc/building.html#configuration.

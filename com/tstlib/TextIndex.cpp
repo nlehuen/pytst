@@ -47,15 +47,43 @@ STDMETHODIMP CTextIndex::get_Version(BSTR* pVal)
     *pVal = _bstr_t(TST_VERSION).Detach();
     return S_OK;
 }
-STDMETHODIMP CTextIndex::Load(BSTR* filename)
+STDMETHODIMP CTextIndex::Load(BSTR* filename,LONG* result)
 {
+    *result = 0;
+    FILE* file = _wfopen(*filename,L"wb");
+    if(file == NULL) {
+        *result = 0;
+    }
+    else {
+        try {
+            _textindex.read(file);
+            fclose(file);
+            *result = 1;
+        }
+        catch(...) {
+            *result = 0;
+        }
+    }
     return S_OK;
 }
 
-STDMETHODIMP CTextIndex::Save(BSTR* filename)
+STDMETHODIMP CTextIndex::Save(BSTR* filename,LONG* result)
 {
+    _textindex.pack();
     FILE* file = _wfopen(*filename,L"wb");
-    _textindex.write(file);
-    fclose(file);
+    if(file == NULL) {
+        *result = 0;
+    }
+    else {
+        try {
+            _textindex.write(file);
+            fclose(file);
+            *result = 1;
+        }
+        catch(exception &e) {
+            printf("%s\n",e.what());
+            *result = 0;
+        }
+    }
     return S_OK;
 }

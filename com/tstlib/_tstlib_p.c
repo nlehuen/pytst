@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Wed Feb 15 22:08:28 2006
+/* at Thu Feb 16 09:53:19 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -44,7 +44,7 @@
 #include "_tstlib.h"
 
 #define TYPE_FORMAT_STRING_SIZE   87                                
-#define PROC_FORMAT_STRING_SIZE   559                               
+#define PROC_FORMAT_STRING_SIZE   571                               
 #define TRANSMIT_AS_TABLE_SIZE    0            
 #define WIRE_MARSHAL_TABLE_SIZE   1            
 
@@ -540,11 +540,11 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 			0x6c,		/* Old Flags:  object, Oi2 */
 /* 488 */	NdrFcLong( 0x0 ),	/* 0 */
 /* 492 */	NdrFcShort( 0xd ),	/* 13 */
-/* 494 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 494 */	NdrFcShort( 0x10 ),	/* x86 Stack size/offset = 16 */
 /* 496 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 498 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 498 */	NdrFcShort( 0x24 ),	/* 36 */
 /* 500 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
-			0x2,		/* 2 */
+			0x3,		/* 3 */
 /* 502 */	0x8,		/* 8 */
 			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
 /* 504 */	NdrFcShort( 0x0 ),	/* 0 */
@@ -557,41 +557,55 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 /* 512 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
 /* 514 */	NdrFcShort( 0x36 ),	/* Type Offset=54 */
 
-	/* Return value */
+	/* Parameter result */
 
-/* 516 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 516 */	NdrFcShort( 0x2150 ),	/* Flags:  out, base type, simple ref, srv alloc size=8 */
 /* 518 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
 /* 520 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
+	/* Return value */
+
+/* 522 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 524 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 526 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
 	/* Procedure Save */
 
-/* 522 */	0x33,		/* FC_AUTO_HANDLE */
+/* 528 */	0x33,		/* FC_AUTO_HANDLE */
 			0x6c,		/* Old Flags:  object, Oi2 */
-/* 524 */	NdrFcLong( 0x0 ),	/* 0 */
-/* 528 */	NdrFcShort( 0xe ),	/* 14 */
-/* 530 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
-/* 532 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 534 */	NdrFcShort( 0x8 ),	/* 8 */
-/* 536 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
-			0x2,		/* 2 */
-/* 538 */	0x8,		/* 8 */
+/* 530 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 534 */	NdrFcShort( 0xe ),	/* 14 */
+/* 536 */	NdrFcShort( 0x10 ),	/* x86 Stack size/offset = 16 */
+/* 538 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 540 */	NdrFcShort( 0x24 ),	/* 36 */
+/* 542 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
+			0x3,		/* 3 */
+/* 544 */	0x8,		/* 8 */
 			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
-/* 540 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 542 */	NdrFcShort( 0x1 ),	/* 1 */
-/* 544 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 546 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 548 */	NdrFcShort( 0x1 ),	/* 1 */
+/* 550 */	NdrFcShort( 0x0 ),	/* 0 */
 
 	/* Parameter filename */
 
-/* 546 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
-/* 548 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
-/* 550 */	NdrFcShort( 0x36 ),	/* Type Offset=54 */
+/* 552 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 554 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 556 */	NdrFcShort( 0x36 ),	/* Type Offset=54 */
+
+	/* Parameter result */
+
+/* 558 */	NdrFcShort( 0x2150 ),	/* Flags:  out, base type, simple ref, srv alloc size=8 */
+/* 560 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
+/* 562 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
 
 	/* Return value */
 
-/* 552 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
-/* 554 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
-/* 556 */	0x8,		/* FC_LONG */
+/* 564 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 566 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 568 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
 			0x0
@@ -862,7 +876,7 @@ static const unsigned short ITextIndex_FormatStringOffsetTable[] =
     402,
     450,
     486,
-    522
+    528
     };
 
 static const MIDL_STUBLESS_PROXY_INFO ITextIndex_ProxyInfo =

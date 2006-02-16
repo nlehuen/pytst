@@ -3,4 +3,4 @@
 
 # Edit this path to point at the tools/build/v1 subdirectory of your
 # Boost installation.  Absolute paths work, too.
-boost-build c:/projets/boost_1_33_1/tools/build/v1 ;
+boost-build d:/projets/boost_1_33_1/tools/build/v1 ;
