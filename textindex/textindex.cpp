@@ -83,9 +83,11 @@ template <typename character_type> class python_textindex : public textindex<cha
 
     protected:
         list to_list(documents_score_map_pointer entries) {
+            int size = entries->size();
             list result;
-            for(documents_score_map_pointer::element_type::iterator s(entries->begin()),e(entries->end());s != e;s++) {
-                result.append(make_tuple(s->first,s->second));
+            for(int i=0;i<size;i++) {
+                const documents_score_map_pointer::element_type::pair_type* entry=&(entries->get_entry(i));
+                result.append(make_tuple(entry->first,entry->second));
             }
             return result;
         }
@@ -106,7 +108,7 @@ BOOST_PYTHON_MODULE(textindex)
         .def("pack",&python_textindex<wchar_t>::pack)
     ;
 
-    class_< documents_scores<std::basic_string<wchar_t> > >("documents_scores")
+    /*class_< documents_scores<std::basic_string<wchar_t> > >("documents_scores")
         .def("add_document",&documents_scores<std::basic_string<wchar_t> >::add_document)
 
         .def("merge_with",&documents_scores<std::basic_string<wchar_t> >::merge_with)
@@ -115,5 +117,5 @@ BOOST_PYTHON_MODULE(textindex)
         .def("size",&documents_scores<std::basic_string<wchar_t> >::size)
         .def("get_document",&documents_scores<std::basic_string<wchar_t> >::get_document)
         .def("get_score",&documents_scores<std::basic_string<wchar_t> >::get_score)
-    ;
+    ;*/
 }

@@ -63,10 +63,6 @@ template <typename document_type> class documents_scores {
             return (documents[doc] += score);
         }
 
-        void remove_document(const document_type &doc, const int score) {
-            documents.remove(doc);
-        }
-
         void merge_with(const documents_scores &other) {
             if(documents_list) {
                 delete documents_list;
@@ -132,8 +128,8 @@ template <typename document_type> class documents_scores {
         const pair_type& get_entry(int index) const {
             if(documents_list==0) {
                 documents_list = new typename list_type(documents.begin(),documents.end());
+                std::sort(documents_list->begin(),documents_list->end(),sort_by_score<pair_type>);
             }
-
             return (*documents_list)[index];
         }
 
@@ -145,13 +141,13 @@ template <typename document_type> class documents_scores {
             return get_entry(index).second;
         }
 
-        iterator begin() {
+        /*iterator begin() {
             return documents.begin();
         }
 
         iterator end() {
             return documents.end();
-        }
+        }*/
 
     template <typename reader_writer> class serializer {
         public:
