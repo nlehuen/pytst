@@ -141,14 +141,6 @@ template <typename document_type> class documents_scores {
             return get_entry(index).second;
         }
 
-        /*iterator begin() {
-            return documents.begin();
-        }
-
-        iterator end() {
-            return documents.end();
-        }*/
-
     template <typename reader_writer> class serializer {
         public:
             void write(FILE* file, shared_ptr value) {
