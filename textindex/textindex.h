@@ -39,61 +39,73 @@ template <class pair> inline bool sort_by_score(const pair& lhs, const pair& rhs
 template <typename document_type> class documents_scores {
     public:
         typedef std::pair<typename document_type,int> pair_type;
-        typedef std::vector<typename pair_type> storage_type;
+        typedef std::map<typename document_type,int> storage_type;
+        typedef std::vector<pair_type> list_type;
         typedef typename storage_type::iterator iterator;
         typedef boost::shared_ptr< typename documents_scores > shared_ptr; 
 
-        documents_scores(typename storage_type::size_type size = 0) : documents(size) {
+        documents_scores(typename storage_type::size_type size = 0) : documents(), documents_list(0) {
+        }
+        
+        ~documents_scores() {
+            if(documents_list) {
+                delete documents_list;
+            }
         }
 
+
         int add_document(const document_type &doc, const int score) {
-            if(documents.size()==0) {
-                documents.push_back(pair_type(doc,score));
-                return score;
+            if(documents_list) {
+                delete documents_list;
+                documents_list = 0;
             }
-            else {
-                storage_type::iterator place(std::lower_bound(documents.begin(),documents.end(),pair_type(doc,0),sort_by_document<pair_type>));
-                if(place == documents.end()) {
-                    documents.push_back(pair_type(doc,score));
-                    return score;
-                }
-                else if(place->first == doc) {
-                    place->second += score;
-                    return place->second;
-                }
-                else {
-                    documents.insert(place,pair_type(doc,score));
-                    return score;
-                }
-            }
+
+            return (documents[doc] += score);
+        }
+
+        void remove_document(const document_type &doc, const int score) {
+            documents.remove(doc);
         }
 
         void merge_with(const documents_scores &other) {
+            if(documents_list) {
+                delete documents_list;
+                documents_list = 0;
+            }
+
             storage_type::iterator lhs(documents.begin()),lhe(documents.end());
             storage_type::const_iterator rhs(other.documents.begin()),rhe(other.documents.end());
-            
+            storage_type result;
+
             while(lhs!=lhe && rhs!=rhe) {
                 if(lhs->first < rhs->first) {
                     ++lhs;
                 }
                 else if(lhs->first == rhs->first) {
-                    lhs->second += rhs->second;
+                    result.insert(pair_type(lhs->first,lhs->second+rhs->second));
                     ++lhs;
                     ++rhs;
                 }
                 else {
-                    lhs = documents.insert(lhs,*rhs) + 1;
+                    result.insert(*rhs);
                     ++rhs;
                 }
             }
 
             while(rhs!=rhe) {
-                documents.push_back(*rhs);
+                result.insert(*rhs);
                 ++rhs;
             }
+
+            documents.swap(result);
         }
 
         void intersect_with(const documents_scores &other) {
+            if(documents_list) {
+                delete documents_list;
+                documents_list = 0;
+            }
+
             storage_type::iterator lhs(documents.begin());
             storage_type::const_iterator rhs(other.documents.begin());
             
@@ -118,15 +130,19 @@ template <typename document_type> class documents_scores {
         }
 
         const pair_type& get_entry(int index) const {
-            return documents[index];
+            if(documents_list==0) {
+                documents_list = new typename list_type(documents.begin(),documents.end());
+            }
+
+            return (*documents_list)[index];
         }
 
         const document_type get_document(int index) const {
-            return documents[index].first;
+            return get_entry(index).first;
         }
 
         const int get_score(int index) const {
-            return documents[index].second;
+            return get_entry(index).second;
         }
 
         iterator begin() {
@@ -163,7 +179,7 @@ template <typename document_type> class documents_scores {
                     document_type doc(rw.read(file));
                     int score;
                     fread(&score,sizeof(int),1,file);
-                    result->documents.push_back(pair_type(doc,score));
+                    result->documents.insert(pair_type(doc,score));
                 }
 
                 return shared_ptr(result);
@@ -175,6 +191,7 @@ template <typename document_type> class documents_scores {
 
     private:
         storage_type documents;
+        mutable list_type* documents_list;
 };
 
 
