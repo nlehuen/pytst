@@ -94,10 +94,10 @@ template <typename document_type> class documents_scores {
         }
 
         void intersect_with(const documents_scores &other) {
-            storage_type::iterator lhs(documents.begin()),lhe(documents.end());
-            storage_type::const_iterator rhs(other.documents.begin()),rhe(other.documents.end());
+            storage_type::iterator lhs(documents.begin());
+            storage_type::const_iterator rhs(other.documents.begin());
             
-            while(lhs!=lhe && rhs!=rhe) {
+            while(lhs!=documents.end() && rhs!=other.documents.end()) {
                 if(lhs->first < rhs->first) {
                     lhs = documents.erase(lhs);
                 }
@@ -110,6 +110,7 @@ template <typename document_type> class documents_scores {
                     ++rhs;
                 }
             }
+            documents.erase(lhs,documents.end());
         }
 
         const typename storage_type::size_type size() const {
