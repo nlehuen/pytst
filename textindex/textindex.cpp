@@ -105,4 +105,15 @@ BOOST_PYTHON_MODULE(textindex)
         .def("__getitem__",&python_textindex<wchar_t>::__getitem__2)
         .def("pack",&python_textindex<wchar_t>::pack)
     ;
+
+    class_< documents_scores<std::basic_string<wchar_t> > >("documents_scores")
+        .def("add_document",&documents_scores<std::basic_string<wchar_t> >::add_document)
+
+        .def("merge_with",&documents_scores<std::basic_string<wchar_t> >::merge_with)
+        .def("intersect_with",&documents_scores<std::basic_string<wchar_t> >::intersect_with)
+
+        .def("size",&documents_scores<std::basic_string<wchar_t> >::size)
+        .def("get_document",&documents_scores<std::basic_string<wchar_t> >::get_document)
+        .def("get_score",&documents_scores<std::basic_string<wchar_t> >::get_score)
+    ;
 }

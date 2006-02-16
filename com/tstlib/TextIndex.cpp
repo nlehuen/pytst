@@ -31,14 +31,14 @@ STDMETHODIMP CTextIndex::Pack(void)
 STDMETHODIMP CTextIndex::FindWord(BSTR* word,IDocumentsScore** result)
 {
     CDocumentsScore::CreateInstance(result);
-    static_cast<CDocumentsScore*>(*result)->set_entries(_textindex.to_list(_textindex.find_word(std::wstring(*word)),true));
+    static_cast<CDocumentsScore*>(*result)->set_entries(_textindex.find_word(std::wstring(*word)));
     return S_OK;
 }
 
 STDMETHODIMP CTextIndex::FindText(BSTR* text, LONG intersect,IDocumentsScore** result)
 {
     CDocumentsScore::CreateInstance(result);
-    static_cast<CDocumentsScore*>(*result)->set_entries(_textindex.to_list(_textindex.find_text(std::wstring(*text),intersect),true));
+    static_cast<CDocumentsScore*>(*result)->set_entries(_textindex.find_text(std::wstring(*text),intersect));
     return S_OK;
 }
 

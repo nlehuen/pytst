@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Thu Feb 16 14:39:07 2006
+/* at Thu Feb 16 16:55:37 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)

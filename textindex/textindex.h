@@ -26,71 +26,176 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/regex.hpp>
 
-template <class pair> bool invert_2nd_member(const pair& lhs, const pair& rhs)
+template <class pair> inline bool sort_by_document(const pair& lhs, const pair& rhs)
+{
+    return lhs.first < rhs.first;
+}
+
+template <class pair> inline bool sort_by_score(const pair& lhs, const pair& rhs)
 {
     return lhs.second > rhs.second || lhs.first < rhs.first;
 }
 
+template <typename document_type> class documents_scores {
+    public:
+        typedef std::pair<typename document_type,int> pair_type;
+        typedef std::vector<typename pair_type> storage_type;
+        typedef typename storage_type::iterator iterator;
+        typedef boost::shared_ptr< typename documents_scores > shared_ptr; 
+
+        documents_scores(typename storage_type::size_type size = 0) : documents(size) {
+        }
+
+        int add_document(const document_type &doc, const int score) {
+            if(documents.size()==0) {
+                documents.push_back(pair_type(doc,score));
+                return score;
+            }
+            else {
+                storage_type::iterator place(std::lower_bound(documents.begin(),documents.end(),pair_type(doc,0),sort_by_document<pair_type>));
+                if(place == documents.end()) {
+                    documents.push_back(pair_type(doc,score));
+                    return score;
+                }
+                else if(place->first == doc) {
+                    place->second += score;
+                    return place->second;
+                }
+                else {
+                    documents.insert(place,pair_type(doc,score));
+                    return score;
+                }
+            }
+        }
+
+        void merge_with(const documents_scores &other) {
+            storage_type::iterator lhs(documents.begin()),lhe(documents.end());
+            storage_type::const_iterator rhs(other.documents.begin()),rhe(other.documents.end());
+            
+            while(lhs!=lhe && rhs!=rhe) {
+                if(lhs->first < rhs->first) {
+                    ++lhs;
+                }
+                else if(lhs->first == rhs->first) {
+                    lhs->second += rhs->second;
+                    ++lhs;
+                    ++rhs;
+                }
+                else {
+                    lhs = documents.insert(lhs,*rhs) + 1;
+                    ++rhs;
+                }
+            }
+
+            while(rhs!=rhe) {
+                documents.push_back(*rhs);
+                ++rhs;
+            }
+        }
+
+        void intersect_with(const documents_scores &other) {
+            storage_type::iterator lhs(documents.begin()),lhe(documents.end());
+            storage_type::const_iterator rhs(other.documents.begin()),rhe(other.documents.end());
+            
+            while(lhs!=lhe && rhs!=rhe) {
+                if(lhs->first < rhs->first) {
+                    lhs = documents.erase(lhs);
+                }
+                else if(lhs->first == rhs->first) {
+                    lhs->second += rhs->second;
+                    ++lhs;
+                    ++rhs;
+                }
+                else {
+                    ++rhs;
+                }
+            }
+        }
+
+        const typename storage_type::size_type size() const {
+            return documents.size();
+        }
+
+        const pair_type& get_entry(int index) const {
+            return documents[index];
+        }
+
+        const document_type get_document(int index) const {
+            return documents[index].first;
+        }
+
+        const int get_score(int index) const {
+            return documents[index].second;
+        }
+
+        iterator begin() {
+            return documents.begin();
+        }
+
+        iterator end() {
+            return documents.end();
+        }
+
+    template <typename reader_writer> class serializer {
+        public:
+            void write(FILE* file, shared_ptr value) {
+                documents_scores* map = value.get();
+                if(map!=NULL) {
+                    size_t size = map->size();
+                    fwrite(&size,sizeof(size_t),1,file);
+                    for(storage_type::iterator iterator(map->documents.begin()),end(map->documents.end());iterator!=end;++iterator) {
+                        rw.write(file,iterator->first);                        
+                        fwrite(&(iterator->second),sizeof(int),1,file);
+                    }
+                }
+                else {
+                    size_t size=0;
+                    fwrite(&size,sizeof(size_t),1,file);
+                }
+            }
+            
+            shared_ptr read(FILE* file) {
+                size_t size;
+                fread(&size,sizeof(size_t),1,file);
+                documents_scores* result = new documents_scores(size);
+                for(size_t i=0;i<size;++i) {
+                    document_type doc(rw.read(file));
+                    int score;
+                    fread(&score,sizeof(int),1,file);
+                    result->documents.push_back(pair_type(doc,score));
+                }
+
+                return shared_ptr(result);
+            }
+
+        private:
+            typename reader_writer rw;
+    };
+
+    private:
+        storage_type documents;
+};
+
+
 template < typename character_type, typename document_type, typename reader_writer > class textindex {
     public:
-        typedef std::map< document_type, int > documents_score_map;
-        typedef boost::shared_ptr< documents_score_map > documents_score_map_pointer; 
-        typedef std::vector< std::pair<document_type, int> > documents_score_list;
-        typedef boost::shared_ptr< documents_score_list > documents_score_list_pointer; 
+        typedef documents_scores< typename document_type > documents_score_map;
+        typedef typename documents_score_map::serializer<typename reader_writer> serializer;
+        typedef boost::shared_ptr< typename documents_score_map > documents_score_map_pointer; 
         
-    private:
-        class serializer {
-            public:
-                void write(FILE* file, documents_score_map_pointer value) {
-                    documents_score_map* map = value.get();
-                    if(map!=NULL) {
-                        size_t size = map->size();
-                        fwrite(&size,sizeof(size_t),1,file);
-                        for(documents_score_map::iterator iterator(map->begin()),end(map->end());iterator!=end;++iterator) {
-                            rw.write(file,iterator->first);                        
-                            fwrite(&(iterator->second),sizeof(int),1,file);
-                        }
-                    }
-                    else {
-                        size_t size=0;
-                        fwrite(&size,sizeof(size_t),1,file);
-                    }
-                }
-                
-                documents_score_map_pointer read(FILE* file) {
-                    documents_score_map* result = new documents_score_map();
-
-                    size_t size;
-                    fread(&size,sizeof(size_t),1,file);
-                    for(size_t i=0;i<size;++i) {
-                        document_type doc(rw.read(file));
-                        int score;
-                        fread(&score,sizeof(int),1,file);
-                        (*result)[doc] = score;
-                    }
-
-                    return documents_score_map_pointer(result);
-                }
-
-            private:
-                typename reader_writer rw;
-        };
-
     public:
-        typedef string_tst < character_type, documents_score_map_pointer, memory_storage<character_type,documents_score_map_pointer>, serializer> tree_type;
+        typedef string_tst < character_type, documents_score_map_pointer, memory_storage<character_type,documents_score_map_pointer>, serializer > tree_type;
         
         typedef boost::basic_regex < character_type > regex_type;
         typedef boost::regex_iterator<typename std::basic_string<character_type>::const_iterator> regex_type_iterator;
     
         class collector : public action< character_type, documents_score_map_pointer > {
             public:
-                collector() : entries(new documents_score_map()), first(true) {
+                collector() : entries(new documents_score_map(0)), first(true) {
                 }
             
                 virtual void perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_map_pointer data) {
-                    for(documents_score_map_pointer::element_type::iterator s(data->begin()),e(data->end());s != e;s++) {
-                        (*entries)[s->first] += s->second;
-                    }
+                    entries->merge_with(*data);
                 }
                 
                 virtual documents_score_map_pointer result() {
@@ -102,10 +207,10 @@ template < typename character_type, typename document_type, typename reader_writ
                 documents_score_map_pointer entries;
         };
         
-        class documents_score_map_factory : public filter< character_type, boost::shared_ptr< std::map< document_type, int > > > {
+        class documents_score_map_factory : public filter< character_type, documents_score_map_pointer > {
             public:
                 virtual documents_score_map_pointer perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_map_pointer data) {
-                    return documents_score_map_pointer(new documents_score_map());
+                    return documents_score_map_pointer(new documents_score_map(0));
                 }
         };
 
@@ -114,7 +219,7 @@ template < typename character_type, typename document_type, typename reader_writ
 
         int put_word(const std::basic_string< character_type > word,const document_type value) {
             documents_score_map_pointer documents_score_map = tree.get_or_build(word,&factory);
-            return ++((*documents_score_map)[value]);
+            return documents_score_map->add_document(value,1);
         }
 
         int put_text(const std::basic_string< character_type > text,const document_type value) {
@@ -139,31 +244,14 @@ template < typename character_type, typename document_type, typename reader_writ
             typename regex_type_iterator end;
             if(token!=end) {
                 if(intersection) {
-                    documents_score_map_pointer documents_score_map = find_word((*token)[0]);
+                    documents_score_map_pointer result = find_word((*token)[0]);
                     token++;
                     while(token != end) {
-                        documents_score_map_pointer additional = find_word((*token)[0]);
-
-                        for(documents_score_map_pointer::element_type::iterator s(additional->begin()),e(additional->end());s != e;s++) {
-                            documents_score_map_pointer::element_type::iterator found(documents_score_map->find(s->first));
-                            if(found!=documents_score_map->end()) {
-                                found->second += s->second;
-                            }
-                        }
-
-                        for(documents_score_map_pointer::element_type::iterator s(documents_score_map->begin()),e(documents_score_map->end());s != e;) {
-                            documents_score_map_pointer::element_type::iterator found(additional->find(s->first));
-                            if(found==additional->end()) {
-                                documents_score_map->erase((s++)->first);
-                            }
-                            else {
-                                s++;
-                            }
-                        }
-
+                        const documents_score_map_pointer additional = find_word((*token)[0]);
+                        result->intersect_with(*additional);
                         token++;
                     }
-                    return documents_score_map;
+                    return result;
                 }
                 else {
                     collector c;
@@ -176,16 +264,8 @@ template < typename character_type, typename document_type, typename reader_writ
                 }
             }
             else {
-                return documents_score_map_pointer(new documents_score_map());
+                return documents_score_map_pointer(new documents_score_map(0));
             }
-        }
-
-        documents_score_list_pointer to_list(documents_score_map_pointer entries, bool sort) {
-            documents_score_list_pointer result(new documents_score_list(entries->begin(),entries->end()));
-            if(sort) {
-                std::sort(result->begin(),result->end(),invert_2nd_member<documents_score_list_pointer::element_type::iterator::value_type>);
-            }
-            return result;
         }
 
         void pack() {

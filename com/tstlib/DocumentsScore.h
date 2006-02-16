@@ -73,9 +73,9 @@ public:
 	}
 
 public:
-    textindex<wchar_t,_bstr_t,_bstr_t_reader_writer>::documents_score_list_pointer entries;
+    textindex<wchar_t,_bstr_t,_bstr_t_reader_writer>::documents_score_map_pointer entries;
 
-    void set_entries(textindex<wchar_t,_bstr_t,_bstr_t_reader_writer>::documents_score_list_pointer _entries);
+    void set_entries(textindex<wchar_t,_bstr_t,_bstr_t_reader_writer>::documents_score_map_pointer _entries);
 
     STDMETHOD(get_Size)(LONG* pVal);
     STDMETHOD(GetDocument)(LONG index, BSTR* document);
