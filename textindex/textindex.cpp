@@ -25,22 +25,60 @@ using namespace boost::python;
 #define __PYTHON__BUILD__
 #include "textindex.h"
 
-template <class character_type, class document_type> class python_textindex : public textindex<character_type,document_type> {
+class object_serializer {
+    public:
+        object_serializer();
+        
+        void write(FILE* file,object data);
+        object object_serializer::read(FILE* file);
+    
+    private:
+        object dumps,loads;
+};
+
+object_serializer::object_serializer() {
+    object cPickle(handle<>(PyImport_ImportModule("cPickle")));
+    dumps = cPickle.attr("dumps");
+    loads = cPickle.attr("loads");
+}
+
+void object_serializer::write(FILE* file,object data) {
+    str result = (str)dumps(data,2);
+    char *string;
+    int length;
+    PyString_AsStringAndSize(result.ptr(),&string,&length);
+    fwrite(&length,sizeof(int),1,file);
+    fwrite(string,sizeof(char),length,file);
+}
+
+object object_serializer::read(FILE* file) {
+    int length;
+    fread(&length,sizeof(int),1,file);
+    char* string=(char*)tst_malloc(length);
+    fread(string,sizeof(char),length,file);
+    
+    str dumped(string,length);
+    object result = loads(dumped);
+    tst_free(string);
+    return result;
+}
+
+template <typename character_type> class python_textindex : public textindex<character_type,object,object_serializer> {
     public:
         list find_word(std::basic_string<character_type> word) {
-            return to_list(textindex<character_type,document_type>::find_word(word));
+            return to_list(textindex<character_type,object,object_serializer>::find_word(word));
         }
 
         list find_text(std::basic_string<character_type> word,bool intersection) {
-            return to_list(textindex<character_type,document_type>::find_text(word,intersection));
+            return to_list(textindex<character_type,object,object_serializer>::find_text(word,intersection));
         }
 
         list __getitem__1(std::basic_string<character_type> word) {
-            return to_list(textindex<character_type,document_type>::find_text(word,true));
+            return to_list(textindex<character_type,object,object_serializer>::find_text(word,true));
         }
 
         list __getitem__2(tuple item) {
-            return to_list(textindex<character_type,document_type>::find_text(extract<std::basic_string<character_type> >(item[0]),item[1]));
+            return to_list(textindex<character_type,object,object_serializer>::find_text(extract<std::basic_string<character_type> >(item[0]),item[1]));
         }
 
     protected:
@@ -57,14 +95,14 @@ BOOST_PYTHON_MODULE(textindex)
 {
     scope().attr("TST_VERSION") = std::string(TST_VERSION)+"-Boost.Python";
 
-    class_< python_textindex<wchar_t,object> >("textindex")
-        .def("put_word",&python_textindex<wchar_t,object>::put_word)
-        .def("put_text",&python_textindex<wchar_t,object>::put_text)
-        .def("__setitem__",&python_textindex<wchar_t,object>::put_text)
-        .def("find_word",&python_textindex<wchar_t,object>::find_word)
-        .def("find_text",&python_textindex<wchar_t,object>::find_text)
-        .def("__getitem__",&python_textindex<wchar_t,object>::__getitem__1)
-        .def("__getitem__",&python_textindex<wchar_t,object>::__getitem__2)
-        .def("pack",&python_textindex<wchar_t,object>::pack)
+    class_< python_textindex<wchar_t> >("textindex")
+        .def("put_word",&python_textindex<wchar_t>::put_word)
+        .def("put_text",&python_textindex<wchar_t>::put_text)
+        .def("__setitem__",&python_textindex<wchar_t>::put_text)
+        .def("find_word",&python_textindex<wchar_t>::find_word)
+        .def("find_text",&python_textindex<wchar_t>::find_text)
+        .def("__getitem__",&python_textindex<wchar_t>::__getitem__1)
+        .def("__getitem__",&python_textindex<wchar_t>::__getitem__2)
+        .def("pack",&python_textindex<wchar_t>::pack)
     ;
 }
