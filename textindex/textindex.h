@@ -43,11 +43,17 @@ template < typename character_type, typename document_type, typename reader_writ
             public:
                 void write(FILE* file, documents_score_map_pointer value) {
                     documents_score_map* map = value.get();
-                    size_t size = map->size();
-                    fwrite(&size,sizeof(size_t),1,file);
-                    for(documents_score_map::iterator iterator(map->begin()),end(map->end());iterator!=end;++iterator) {
-                        rw.write(file,iterator->first);                        
-                        fwrite(&(iterator->second),sizeof(int),1,file);
+                    if(map!=NULL) {
+                        size_t size = map->size();
+                        fwrite(&size,sizeof(size_t),1,file);
+                        for(documents_score_map::iterator iterator(map->begin()),end(map->end());iterator!=end;++iterator) {
+                            rw.write(file,iterator->first);                        
+                            fwrite(&(iterator->second),sizeof(int),1,file);
+                        }
+                    }
+                    else {
+                        size_t size=0;
+                        fwrite(&size,sizeof(size_t),1,file);
                     }
                 }
                 

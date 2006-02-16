@@ -50,7 +50,7 @@ STDMETHODIMP CTextIndex::get_Version(BSTR* pVal)
 STDMETHODIMP CTextIndex::Load(BSTR* filename,LONG* result)
 {
     *result = 0;
-    FILE* file = _wfopen(*filename,L"wb");
+    FILE* file = _wfopen(*filename,L"rb");
     if(file == NULL) {
         *result = 0;
     }
@@ -60,7 +60,7 @@ STDMETHODIMP CTextIndex::Load(BSTR* filename,LONG* result)
             fclose(file);
             *result = 1;
         }
-        catch(...) {
+        catch(exception) {
             *result = 0;
         }
     }
@@ -77,11 +77,11 @@ STDMETHODIMP CTextIndex::Save(BSTR* filename,LONG* result)
     else {
         try {
             _textindex.write(file);
+            fflush(file);
             fclose(file);
             *result = 1;
         }
-        catch(exception &e) {
-            printf("%s\n",e.what());
+        catch(exception) {
             *result = 0;
         }
     }

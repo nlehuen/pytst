@@ -35,6 +35,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="TRUE"
+				AdditionalOptions="comsupp.lib"
 				OutputFile="$(OutDir)/tstlib.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;D:\projets\boost_1_33_1\bin\boost\libs\regex\build\libboost_regex.lib\vc-7_1\debug\threading-multi&quot;"
@@ -214,10 +215,10 @@
 				RelativePath=".\TernarySearchTree.h">
 			</File>
 			<File
-				RelativePath="..\..\textindex\textindex.h">
+				RelativePath=".\TextIndex.h">
 			</File>
 			<File
-				RelativePath=".\TextIndex.h">
+				RelativePath="..\..\textindex\textindex.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tst.h">

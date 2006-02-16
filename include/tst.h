@@ -1190,7 +1190,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
 template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(FILE* file) {
     // We check the version number
     int version_length;
-    if(fread(&version_length,sizeof(size_t),1,file)!=sizeof(size_t)) {
+    if(fread(&version_length,sizeof(size_t),1,file)!=1) {
         throw TSTException("Bad version length");
     }
     char* version=(char*)tst_malloc(version_length+1);
@@ -1216,8 +1216,8 @@ template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::read_n
     if(fgetc(file)) {
         node_info<S,T> node_info;
         storage->new_node(&node_info);
-
-        node_info.node->c = fgetc(file);
+        
+        fread(&(node_info.node->c),sizeof(S),1,file);
         if(fgetc(file)) {
             node_info.node->store(reader->read(file));
         }
@@ -1266,13 +1266,13 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write
     else {
         tst_node<S,T>* node = storage->get(index);
         fputc(1,file);
-        fputc(node->c,file);
+        fwrite(&(node->c),sizeof(S),1,file);
         if(node->data!=default_value) {
-            fputc('\1',file);
+            fputc(1,file);
             writer->write(file,node->data);
         }
         else {
-            fputc('\0',file);
+            fputc(0,file);
         }
 #ifdef SCANNER
         fwrite(&(node->position),sizeof(int),1,file);
