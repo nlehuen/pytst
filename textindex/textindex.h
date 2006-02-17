@@ -271,19 +271,17 @@ template < typename character_type, typename document_type, typename reader_writ
                     std::vector< regex_type_iterator::value_type >::const_iterator tokens_iterator(tokens.begin());
 
                     collector c;
+                    // Le mot le plus long doit faire au moins 3 caractères.
                     if(tokens_iterator->begin()->length()>2) {
                         std::basic_string<character_type> word = tokens_iterator->begin()->str();
-                        // wprintf(L"--->%s\n",word.c_str());
                         tree.walk2(NULL,&c,word);
                         ++tokens_iterator;
                         while(tokens_iterator != tokens.end()) {
+                            // on se fiche de la longueur des autres mots
                             word = tokens_iterator->begin()->str();
-                            //if(word.size()>1) {
-                                // wprintf(L"%s\n",word.c_str());
-                                collector c2(&c);
-                                tree.walk2(NULL,&c2,word);
-                                c.intersect_with(c2);
-                            //}
+                            collector c2(&c);
+                            tree.walk2(NULL,&c2,word);
+                            c.intersect_with(c2);
                             ++tokens_iterator;
                         }
                     }
