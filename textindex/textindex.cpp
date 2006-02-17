@@ -82,11 +82,11 @@ template <typename character_type> class python_textindex : public textindex<cha
         }
 
     protected:
-        list to_list(documents_score_map_pointer entries) {
+        list to_list(documents_scores_pointer entries) {
             int size = entries->size();
             list result;
             for(int i=0;i<size;i++) {
-                const documents_score_map_pointer::element_type::pair_type* entry=&(entries->get_entry(i));
+                const documents_scores_pointer::element_type::pair_type* entry=&(entries->get_entry(i));
                 result.append(make_tuple(entry->first,entry->second));
             }
             return result;

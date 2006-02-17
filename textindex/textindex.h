@@ -144,11 +144,11 @@ template <typename document_type> class documents_scores {
     template <typename reader_writer> class serializer {
         public:
             void write(FILE* file, shared_ptr value) {
-                documents_scores* map = value.get();
-                if(map!=NULL) {
-                    size_t size = map->size();
+                documents_scores* ds = value.get();
+                if(ds!=NULL) {
+                    size_t size = ds->size();
                     fwrite(&size,sizeof(size_t),1,file);
-                    for(storage_type::iterator iterator(map->documents.begin()),end(map->documents.end());iterator!=end;++iterator) {
+                    for(storage_type::iterator iterator(ds->documents.begin()),end(ds->documents.end());iterator!=end;++iterator) {
                         rw.write(file,iterator->first);                        
                         fwrite(&(iterator->second),sizeof(int),1,file);
                     }
@@ -185,38 +185,36 @@ template <typename document_type> class documents_scores {
 
 template < typename character_type, typename document_type, typename reader_writer > class textindex {
     public:
-        typedef documents_scores< typename document_type > documents_score_map;
-        typedef typename documents_score_map::serializer<typename reader_writer> serializer;
-        typedef boost::shared_ptr< typename documents_score_map > documents_score_map_pointer; 
-        
-    public:
-        typedef string_tst < character_type, documents_score_map_pointer, memory_storage<character_type,documents_score_map_pointer>, serializer > tree_type;
-        
+        typedef documents_scores< typename document_type > documents_scores_type;
+        typedef boost::shared_ptr< typename documents_scores_type > documents_scores_pointer; 
+        typedef typename documents_scores_type::serializer<typename reader_writer> serializer;
+        typedef string_tst < character_type, documents_scores_pointer, memory_storage<character_type,documents_scores_pointer>, serializer > tree_type;
+
         typedef boost::basic_regex < character_type > regex_type;
         typedef boost::regex_iterator<typename std::basic_string<character_type>::const_iterator> regex_type_iterator;
     
-        class collector : public action< character_type, documents_score_map_pointer > {
+        class collector : public action< character_type, documents_scores_pointer > {
             public:
-                collector() : entries(new documents_score_map(0)), first(true) {
+                collector() : entries(new documents_scores_type(0)), first(true) {
                 }
             
-                virtual void perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_map_pointer data) {
+                virtual void perform(const character_type* string, size_t string_length, int remaining_distance, documents_scores_pointer data) {
                     entries->merge_with(*data);
                 }
                 
-                virtual documents_score_map_pointer result() {
+                virtual documents_scores_pointer result() {
                     return entries;
                 }
                 
             private:
                 bool first;
-                documents_score_map_pointer entries;
+                documents_scores_pointer entries;
         };
         
-        class documents_score_map_factory : public filter< character_type, documents_score_map_pointer > {
+        class documents_scores_type_factory : public filter< character_type, documents_scores_pointer > {
             public:
-                virtual documents_score_map_pointer perform(const character_type* string, size_t string_length, int remaining_distance, documents_score_map_pointer data) {
-                    return documents_score_map_pointer(new documents_score_map(0));
+                virtual documents_scores_pointer perform(const character_type* string, size_t string_length, int remaining_distance, documents_scores_pointer data) {
+                    return documents_scores_pointer(new documents_scores_type(0));
                 }
         };
 
@@ -224,8 +222,8 @@ template < typename character_type, typename document_type, typename reader_writ
         }
 
         int put_word(const std::basic_string< character_type > word,const document_type value) {
-            documents_score_map_pointer documents_score_map = tree.get_or_build(word,&factory);
-            return documents_score_map->add_document(value,1);
+            documents_scores_pointer documents_scores_type = tree.get_or_build(word,&factory);
+            return documents_scores_type->add_document(value,1);
         }
 
         int put_text(const std::basic_string< character_type > text,const document_type value) {
@@ -239,21 +237,21 @@ template < typename character_type, typename document_type, typename reader_writ
             return count;
         }
         
-        documents_score_map_pointer find_word(const std::basic_string< character_type > word) {
+        documents_scores_pointer find_word(const std::basic_string< character_type > word) {
             collector c;
             tree.walk(NULL,&c,word.data(),word.size());
             return c.result();
         }
         
-        documents_score_map_pointer find_text(const std::basic_string< character_type > text,bool intersection) {
+        documents_scores_pointer find_text(const std::basic_string< character_type > text,bool intersection) {
             typename regex_type_iterator token(text.begin(),text.end(),tokenizer);
             typename regex_type_iterator end;
             if(token!=end) {
                 if(intersection) {
-                    documents_score_map_pointer result = find_word((*token)[0]);
+                    documents_scores_pointer result = find_word((*token)[0]);
                     token++;
                     while(token != end) {
-                        const documents_score_map_pointer additional = find_word((*token)[0]);
+                        const documents_scores_pointer additional = find_word((*token)[0]);
                         result->intersect_with(*additional);
                         token++;
                     }
@@ -270,7 +268,7 @@ template < typename character_type, typename document_type, typename reader_writ
                 }
             }
             else {
-                return documents_score_map_pointer(new documents_score_map(0));
+                return documents_scores_pointer(new documents_scores_type(0));
             }
         }
 
@@ -289,7 +287,7 @@ template < typename character_type, typename document_type, typename reader_writ
     private:
         tree_type tree;
         regex_type tokenizer;
-        documents_score_map_factory factory;
+        documents_scores_type_factory factory;
 };
 
 #endif

@@ -14,7 +14,7 @@ STDMETHODIMP CDocumentsScore::get_Size(LONG* pVal)
     return S_OK;
 }
 
-void CDocumentsScore::set_entries(textindex<wchar_t,_bstr_t,_bstr_t_reader_writer>::documents_score_map_pointer _entries) {
+void CDocumentsScore::set_entries(textindex<wchar_t,_bstr_t,_bstr_t_reader_writer>::documents_scores_pointer _entries) {
     entries = _entries;
 }
 
