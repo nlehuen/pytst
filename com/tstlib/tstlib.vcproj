@@ -175,9 +175,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\TernarySearchTree.cpp">
-			</File>
-			<File
 				RelativePath=".\testcom.py">
 			</File>
 			<File
@@ -213,13 +210,10 @@
 				RelativePath=".\stdafx.h">
 			</File>
 			<File
-				RelativePath=".\TernarySearchTree.h">
+				RelativePath=".\TextIndex.h">
 			</File>
 			<File
 				RelativePath="..\..\textindex\textindex.h">
-			</File>
-			<File
-				RelativePath=".\TextIndex.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tst.h">

@@ -23,22 +23,6 @@ interface IDocumentsScore : IDispatch {
 
 [
 	object,
-	uuid(543BA9E0-60DF-42F8-9BDA-C573FB4EC091),
-	dual,
-	helpstring("Interface ITernarySearchTree"),
-	pointer_default(unique)
-] 
-#line 16 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
-interface ITernarySearchTree : IDispatch {
-#line 18 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
-	[id(1),helpstring("method Set")] HRESULT  Set([in] BSTR *key , [in] BSTR *value , [out,retval] BSTR *result );
-	[id(2),helpstring("method Get")] HRESULT  Get([in] BSTR *key , [out,retval] BSTR *result );
-	[id(3),helpstring("method Pack")] HRESULT  Pack();
-	[propget,id(4),helpstring("property Version")] HRESULT  Version([out,retval] BSTR *pVal );
-};
-
-[
-	object,
 	uuid(3DF00A4D-6253-4D65-A586-6CE5E29B8980),
 	dual,
 	helpstring("Interface ITextIndex"),
@@ -72,16 +56,6 @@ library tstlib
 #line 55 "c:\\projets\\development\\tst\\com\\tstlib\\documentsscore.h"
 	coclass CDocumentsScore {
 		interface IDocumentsScore;
-	};
-
-	[
-		version(1.0),
-		uuid(01757CCD-8F45-498E-B8BF-4E4F95A07CE7),
-		helpstring("TernarySearchTree Class")
-	] 
-#line 37 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
-	coclass CTernarySearchTree {
-		interface ITernarySearchTree;
 	};
 
 	[

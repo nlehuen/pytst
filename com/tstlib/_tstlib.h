@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Fri Feb 17 23:14:28 2006
+/* at Fri Feb 17 23:30:41 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -51,12 +51,6 @@ typedef interface IDocumentsScore IDocumentsScore;
 #endif 	/* __IDocumentsScore_FWD_DEFINED__ */
 
 
-#ifndef __ITernarySearchTree_FWD_DEFINED__
-#define __ITernarySearchTree_FWD_DEFINED__
-typedef interface ITernarySearchTree ITernarySearchTree;
-#endif 	/* __ITernarySearchTree_FWD_DEFINED__ */
-
-
 #ifndef __ITextIndex_FWD_DEFINED__
 #define __ITextIndex_FWD_DEFINED__
 typedef interface ITextIndex ITextIndex;
@@ -73,18 +67,6 @@ typedef struct CDocumentsScore CDocumentsScore;
 #endif /* __cplusplus */
 
 #endif 	/* __CDocumentsScore_FWD_DEFINED__ */
-
-
-#ifndef __CTernarySearchTree_FWD_DEFINED__
-#define __CTernarySearchTree_FWD_DEFINED__
-
-#ifdef __cplusplus
-typedef class CTernarySearchTree CTernarySearchTree;
-#else
-typedef struct CTernarySearchTree CTernarySearchTree;
-#endif /* __cplusplus */
-
-#endif 	/* __CTernarySearchTree_FWD_DEFINED__ */
 
 
 #ifndef __CTextIndex_FWD_DEFINED__
@@ -293,210 +275,6 @@ void __RPC_STUB IDocumentsScore_GetScore_Stub(
 
 
 #endif 	/* __IDocumentsScore_INTERFACE_DEFINED__ */
-
-
-#ifndef __ITernarySearchTree_INTERFACE_DEFINED__
-#define __ITernarySearchTree_INTERFACE_DEFINED__
-
-/* interface ITernarySearchTree */
-/* [unique][helpstring][dual][uuid][object] */ 
-
-
-EXTERN_C const IID IID_ITernarySearchTree;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("543BA9E0-60DF-42F8-9BDA-C573FB4EC091")
-    ITernarySearchTree : public IDispatch
-    {
-    public:
-        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Set( 
-            /* [in] */ BSTR *key,
-            /* [in] */ BSTR *value,
-            /* [retval][out] */ BSTR *result) = 0;
-        
-        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Get( 
-            /* [in] */ BSTR *key,
-            /* [retval][out] */ BSTR *result) = 0;
-        
-        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Pack( void) = 0;
-        
-        virtual /* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE get_Version( 
-            /* [retval][out] */ BSTR *pVal) = 0;
-        
-    };
-    
-#else 	/* C style interface */
-
-    typedef struct ITernarySearchTreeVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            ITernarySearchTree * This,
-            /* [in] */ REFIID riid,
-            /* [iid_is][out] */ void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            ITernarySearchTree * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            ITernarySearchTree * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            ITernarySearchTree * This,
-            /* [out] */ UINT *pctinfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            ITernarySearchTree * This,
-            /* [in] */ UINT iTInfo,
-            /* [in] */ LCID lcid,
-            /* [out] */ ITypeInfo **ppTInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            ITernarySearchTree * This,
-            /* [in] */ REFIID riid,
-            /* [size_is][in] */ LPOLESTR *rgszNames,
-            /* [in] */ UINT cNames,
-            /* [in] */ LCID lcid,
-            /* [size_is][out] */ DISPID *rgDispId);
-        
-        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            ITernarySearchTree * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
-        
-        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *Set )( 
-            ITernarySearchTree * This,
-            /* [in] */ BSTR *key,
-            /* [in] */ BSTR *value,
-            /* [retval][out] */ BSTR *result);
-        
-        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *Get )( 
-            ITernarySearchTree * This,
-            /* [in] */ BSTR *key,
-            /* [retval][out] */ BSTR *result);
-        
-        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *Pack )( 
-            ITernarySearchTree * This);
-        
-        /* [helpstring][id][propget] */ HRESULT ( STDMETHODCALLTYPE *get_Version )( 
-            ITernarySearchTree * This,
-            /* [retval][out] */ BSTR *pVal);
-        
-        END_INTERFACE
-    } ITernarySearchTreeVtbl;
-
-    interface ITernarySearchTree
-    {
-        CONST_VTBL struct ITernarySearchTreeVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define ITernarySearchTree_QueryInterface(This,riid,ppvObject)	\
-    (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
-
-#define ITernarySearchTree_AddRef(This)	\
-    (This)->lpVtbl -> AddRef(This)
-
-#define ITernarySearchTree_Release(This)	\
-    (This)->lpVtbl -> Release(This)
-
-
-#define ITernarySearchTree_GetTypeInfoCount(This,pctinfo)	\
-    (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
-
-#define ITernarySearchTree_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
-    (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
-
-#define ITernarySearchTree_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
-    (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
-
-#define ITernarySearchTree_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
-    (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
-
-
-#define ITernarySearchTree_Set(This,key,value,result)	\
-    (This)->lpVtbl -> Set(This,key,value,result)
-
-#define ITernarySearchTree_Get(This,key,result)	\
-    (This)->lpVtbl -> Get(This,key,result)
-
-#define ITernarySearchTree_Pack(This)	\
-    (This)->lpVtbl -> Pack(This)
-
-#define ITernarySearchTree_get_Version(This,pVal)	\
-    (This)->lpVtbl -> get_Version(This,pVal)
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITernarySearchTree_Set_Proxy( 
-    ITernarySearchTree * This,
-    /* [in] */ BSTR *key,
-    /* [in] */ BSTR *value,
-    /* [retval][out] */ BSTR *result);
-
-
-void __RPC_STUB ITernarySearchTree_Set_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITernarySearchTree_Get_Proxy( 
-    ITernarySearchTree * This,
-    /* [in] */ BSTR *key,
-    /* [retval][out] */ BSTR *result);
-
-
-void __RPC_STUB ITernarySearchTree_Get_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITernarySearchTree_Pack_Proxy( 
-    ITernarySearchTree * This);
-
-
-void __RPC_STUB ITernarySearchTree_Pack_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE ITernarySearchTree_get_Version_Proxy( 
-    ITernarySearchTree * This,
-    /* [retval][out] */ BSTR *pVal);
-
-
-void __RPC_STUB ITernarySearchTree_get_Version_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-
-#endif 	/* __ITernarySearchTree_INTERFACE_DEFINED__ */
 
 
 #ifndef __ITextIndex_INTERFACE_DEFINED__
@@ -819,14 +597,6 @@ EXTERN_C const CLSID CLSID_CDocumentsScore;
 
 class DECLSPEC_UUID("98F35214-F66B-4BBF-B039-1AA4CA344DCF")
 CDocumentsScore;
-#endif
-
-EXTERN_C const CLSID CLSID_CTernarySearchTree;
-
-#ifdef __cplusplus
-
-class DECLSPEC_UUID("01757CCD-8F45-498E-B8BF-4E4F95A07CE7")
-CTernarySearchTree;
 #endif
 
 EXTERN_C const CLSID CLSID_CTextIndex;
