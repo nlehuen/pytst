@@ -5,6 +5,7 @@ if __name__ == "__main__":
     import glob
     from textindex import textindex
     import traceback
+    import linecache
 
     ti = textindex()
     
@@ -22,7 +23,7 @@ if __name__ == "__main__":
             for linenumber, line in enumerate(file(f,'rb')):
                 lines += 1
                 line = line.strip()
-                ti.put_text(line.lower().decode('iso-8859-1'),'%12s:%04i:%s'%(f,linenumber,line))
+                ti.put_text(line.lower().decode('iso-8859-1'),'%12s:%04i'%(f,linenumber))
                 if linenumber % 100 == 0:
                     sys.stdout.write('.')
             print 'OK'
@@ -74,9 +75,14 @@ if __name__ == "__main__":
                 # result.sort(key=lambda i : -i[1])
                 elapsed = time() - start
                 for ln, r in result[:100]:
-                    self.list.insert(END,'%02i:%s'%(
+                    i = ln.rindex(':')
+                    d = ln[:i].strip()
+                    l = int(ln[i+1:])
+                    self.list.insert(END,'%02i:%s:%i:%s'%(
                         r,
-                        ln,
+                        d,
+                        l,
+                        linecache.getline(d,l+1).strip()
                     ))
                 self.label.config(text = '%i lines in %.2fs'%(
                     len(result),
