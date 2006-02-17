@@ -48,7 +48,7 @@ public:
             return data;
         }
         else {
-            return NULL;
+            return 0;
         }
     }
 };
@@ -56,7 +56,7 @@ public:
 class donothing : public action<char,char*> {
     public:
         virtual void perform(const char* string,int string_length,int remaining_distance,char* data) {}
-        virtual char* result() { return NULL; }
+        virtual char* result() { return 0; }
 };
 
 class printer : public donothing {
@@ -77,8 +77,8 @@ class tester : public donothing {
 
         virtual void perform(const char* string,int string_length,int remaining_distance,char* data) {
             donothing* dn = new donothing();
-            mytst->close_match(string,string_length,3,NULL,dn);
-            mytst->prefix_match(string,string_length,NULL,dn);
+            mytst->close_match(string,string_length,3,0,dn);
+            mytst->prefix_match(string,string_length,0,dn);
             delete dn;
         }
 
@@ -90,7 +90,7 @@ class tester : public donothing {
 
 int main(int argc,char** argv) {
     memory_storage_char_string* storage = new memory_storage_char_string(8);
-    stringtst* linetst=new stringtst(storage,NULL);
+    stringtst* linetst=new stringtst(storage,0);
 
     clock_t start, end;
     double elapsed;
@@ -139,7 +139,7 @@ int main(int argc,char** argv) {
     printf("Wrote to disk : %f\n",elapsed);
 
     memory_storage_char_string* storage2 = new memory_storage_char_string(1);
-    stringtst* linetst2=new stringtst(storage2,NULL);
+    stringtst* linetst2=new stringtst(storage2,0);
     start = clock();
     FILE* input=fopen("test.dump","rb");
     linetst2->read(input);

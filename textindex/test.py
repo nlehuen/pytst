@@ -61,7 +61,7 @@ if __name__ == "__main__":
                 self.list.delete(0,END)
                 start = time()
                 result = ti.find_text(self.entry.get().lower(),True)
-                result.sort(key=lambda i : -i[1])
+                # result.sort(key=lambda i : -i[1])
                 elapsed = time() - start
                 for ln, r in result[:100]:
                     self.list.insert(END,'%02i:%s'%(

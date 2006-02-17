@@ -279,7 +279,7 @@ template<typename S,typename T,typename M,typename RW> tst_node<S,T>* tst<S,T,M,
 
         if(current_node->c==0) {
             *current_index=UNDEFINED_INDEX;
-            return NULL;
+            return 0;
         }
         else {
             diff=(*string)-(current_node->c);
@@ -307,7 +307,7 @@ template<typename S,typename T,typename M,typename RW> tst_node<S,T>* tst<S,T,M,
         }
     }
 
-    return NULL;
+    return 0;
 }
 
 template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::build_node(node_info<S,T>* current_node_info,const S* string,size_t string_length,int current_position) {

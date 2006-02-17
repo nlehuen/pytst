@@ -31,21 +31,21 @@ public:
         int i;
         tst_node<jchar,jobject>* node;
         for(i=0,node=array;i<next;i++,node++) {
-            store_data(node,NULL);
+            store_data(node,0);
         }
     }
 
     jobject store_data(tst_node<jchar,jobject>* node,jobject data) {
         jobject old_data = node->data;
-        if(old_data!=NULL) {
+        if(old_data!=0) {
             jenv->DeleteGlobalRef(old_data);
         }
-        if(data!=NULL) {
+        if(data!=0) {
             data = jenv->NewGlobalRef(data);
             node->data = data;
         }
         else {
-            node->data = NULL;
+            node->data = 0;
         }
         return old_data;
     }
@@ -114,7 +114,7 @@ public:
             return result;
         }
         else {
-            return NULL;
+            return 0;
         }
     }
 
@@ -146,7 +146,7 @@ public:
     }
 
     virtual jobject perform(jchar* string,int string_length,int remaining_distance,jobject data) {
-        jobject result=NULL;
+        jobject result=0;
 
         if(performID) {
             jstring key_string = jenv->NewString(string,string_length);
@@ -170,7 +170,7 @@ public:
     }
 
     virtual jobject read(FILE* file) {
-        return NULL;
+        return 0;
     }
 };
 
@@ -223,7 +223,7 @@ public:
             return result;
         }
         else {
-            return NULL;
+            return 0;
         }
     }
 
@@ -255,7 +255,7 @@ public:
     }
 
     virtual jlong perform(jchar* string,int string_length,int remaining_distance,jlong data) {
-        jlong result = NULL;
+        jlong result = 0;
 
         if(performID) {
             jstring key_string = jenv->NewString(string,string_length);

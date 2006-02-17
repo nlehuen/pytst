@@ -82,7 +82,7 @@ public:
 
     node_info() :
         index(UNDEFINED_INDEX)
-        ,node(NULL)
+        ,node(0)
         ,height(0)
         ,balance(0)
         ,right_balance(0)

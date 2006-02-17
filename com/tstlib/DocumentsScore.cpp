@@ -35,7 +35,7 @@ STDMETHODIMP CDocumentsScore::GetScore(LONG index, LONG* score)
         *score = entries->get_score(index);
     }
     else {
-        *score = 0;
+        *score = -1;
     }
     return S_OK;
 }

@@ -32,7 +32,7 @@ template <class pair> inline bool sort_by_document(const pair& lhs, const pair& 
 
 template <class pair> inline bool sort_by_score(const pair& lhs, const pair& rhs)
 {
-    return lhs.second > rhs.second || lhs.first < rhs.first;
+    return lhs.second > rhs.second;
 }
 
 template <class item> inline bool sort_by_first_item_length_desc(const item& lhs, const item& rhs) {
@@ -132,16 +132,16 @@ template <typename document_type> class documents_scores {
         const list_type& get_sorted_list() const {
             if(documents_list==0) {
                 documents_list = new typename list_type(documents.begin(),documents.end());
-                std::sort(documents_list->begin(),documents_list->end(),sort_by_score<pair_type>);
+                std::stable_sort(documents_list->begin(),documents_list->end(),sort_by_score<pair_type>);
             }
             return *documents_list;
         }
 
-        const document_type get_document(int index) const {
+        const document_type get_document(const int index) const {
             return get_sorted_list()[index].first;
         }
 
-        const int get_score(int index) const {
+        const int get_score(const int index) const {
             return get_sorted_list()[index].second;
         }
 
@@ -149,7 +149,7 @@ template <typename document_type> class documents_scores {
         public:
             void write(FILE* file, shared_ptr value) {
                 documents_scores* ds = value.get();
-                if(ds!=NULL) {
+                if(ds!=0) {
                     size_t size = ds->size();
                     fwrite(&size,sizeof(size_t),1,file);
                     for(storage_type::iterator iterator(ds->documents.begin()),end(ds->documents.end());iterator!=end;++iterator) {
@@ -255,7 +255,7 @@ template < typename character_type, typename document_type, typename reader_writ
         
         documents_scores_pointer find_word(const std::basic_string< character_type > word) {
             collector c;
-            tree.walk2(NULL,&c,word);
+            tree.walk2(0,&c,word);
             return c.result();
         }
         
@@ -274,13 +274,13 @@ template < typename character_type, typename document_type, typename reader_writ
                     // Le mot le plus long doit faire au moins 3 caractères.
                     if(tokens_iterator->begin()->length()>2) {
                         std::basic_string<character_type> word = tokens_iterator->begin()->str();
-                        tree.walk2(NULL,&c,word);
+                        tree.walk2(0,&c,word);
                         ++tokens_iterator;
                         while(tokens_iterator != tokens.end()) {
                             // on se fiche de la longueur des autres mots
                             word = tokens_iterator->begin()->str();
                             collector c2(&c);
-                            tree.walk2(NULL,&c2,word);
+                            tree.walk2(0,&c2,word);
                             c.intersect_with(c2);
                             ++tokens_iterator;
                         }
@@ -292,7 +292,7 @@ template < typename character_type, typename document_type, typename reader_writ
                     collector c;
                     while(token != end) {
                         std::basic_string<character_type> word = token->begin()->str();
-                        tree.walk2(NULL,&c,word);
+                        tree.walk2(0,&c,word);
                         ++token;
                     }
                     return c.result();

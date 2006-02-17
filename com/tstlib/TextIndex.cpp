@@ -51,7 +51,7 @@ STDMETHODIMP CTextIndex::Load(BSTR* filename,LONG* result)
 {
     *result = 0;
     FILE* file = _wfopen(*filename,L"rb");
-    if(file == NULL) {
+    if(file == 0) {
         *result = 0;
     }
     else {
@@ -71,7 +71,7 @@ STDMETHODIMP CTextIndex::Save(BSTR* filename,LONG* result)
 {
     _textindex.pack();
     FILE* file = _wfopen(*filename,L"wb");
-    if(file == NULL) {
+    if(file == 0) {
         *result = 0;
     }
     else {

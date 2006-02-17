@@ -10,7 +10,7 @@ public:
     }
     
     explicit PythonReference(PyObject *object, int borrow=1) : ref(object) {
-        if(ref==NULL) {
+        if(ref==0) {
             throw TSTException("Cannot reference NULL");
         }
         if(borrow) {

@@ -43,7 +43,7 @@ public:
             return PythonReference();
         }
         else {
-            return PythonReference(PyObject_CallObject(_result.get(),NULL),0);
+            return PythonReference(PyObject_CallObject(_result.get(),0),0);
         }
     }
 
@@ -80,7 +80,7 @@ public:
         PythonReference key(Py_BuildValue("s#",string,string_length),0);
         
         PyObject* old_tuple=PyDict_GetItem(dict.get(),key.get());
-        if(old_tuple!=NULL) {
+        if(old_tuple!=0) {
             long value=PyInt_AsLong(PyTuple_GetItem(old_tuple,0));
             if(value<remaining_distance) {
                 return;
@@ -215,7 +215,7 @@ template <typename iterator_type> class TSTIterator {
                 PythonReference exceptions(PyImport_ImportModule("exceptions"),0);
                 PythonReference stop_iteration = exceptions.getattr("StopIteration");
                 PyErr_SetNone(stop_iteration.get());
-                return NULL;
+                return 0;
             }
         }
     

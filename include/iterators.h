@@ -105,7 +105,7 @@ template< typename S,typename T,typename M,typename RW > class lexical_iterator 
                     }
                 }
             }
-            return value_type("",NULL);
+            return value_type("",0);
         }
                 
     private:
@@ -249,7 +249,7 @@ template< typename S,typename T,typename M,typename RW > class match_iterator {
                     }
                 }
             }
-            return value_type("",NULL);
+            return value_type("",0);
         }
                 
     private:
