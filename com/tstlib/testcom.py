@@ -51,8 +51,8 @@ try:
         dump(ti,'bonjour comment alfred',1)
 
         print "Saved %s !"%ti.Save(r'c:\temp\test.ti')
-        # ti = Dispatch('tstlib.TextIndex')
-        # print "Loaded %s !"%ti.Load(r'c:\temp\test.ti')
+        ti = Dispatch('tstlib.TextIndex')
+        print "Loaded %s !"%ti.Load(r'c:\temp\test.ti')
         print
         
         dump(ti,'bonjour')
@@ -66,7 +66,7 @@ try:
         
         ti = Dispatch('tstlib.TextIndex')
         from glob import glob
-        for input_filename in glob(r'D:\projets\tst\textindex\*.txt'):
+        for input_filename in glob(r'..\..\textindex\*.txt'):
             print input_filename
             for linenumber, line in enumerate(file(input_filename,'rb')):
                 content = line.decode('iso-8859-1').lower()
@@ -75,12 +75,12 @@ try:
                 #    words.add(word)
                 #    ti.AddWord(word,"%s:%i"%(input_filename,linenumber))
         print 'Saving...',
-        ti.Save(r'D:\projets\tst\textindex\complete.ti')
+        ti.Save(r'..\..\textindex\\complete.ti')
         print 'OK !'
         
         ti = Dispatch('tstlib.TextIndex')
         print 'Loading...',
-        ti.Load(r'D:\projets\tst\textindex\complete.ti')
+        ti.Load(r'..\..\textindex\complete.ti')
         print 'OK !'
         
         dump(ti,'bonj sole',0)
