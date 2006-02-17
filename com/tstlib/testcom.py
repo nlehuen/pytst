@@ -51,8 +51,8 @@ try:
         dump(ti,'bonjour comment alfred',1)
 
         print "Saved %s !"%ti.Save(r'c:\temp\test.ti')
-        ti = Dispatch('tstlib.TextIndex')
-        print "Loaded %s !"%ti.Load(r'c:\temp\test.ti')
+        # ti = Dispatch('tstlib.TextIndex')
+        # print "Loaded %s !"%ti.Load(r'c:\temp\test.ti')
         print
         
         dump(ti,'bonjour')

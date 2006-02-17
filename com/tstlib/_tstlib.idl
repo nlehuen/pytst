@@ -1,10 +1,10 @@
-import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prsht.idl";
-import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\mshtml.idl";
-import "c:\program files\microsoft visual studio .net 2003\vc7\platformsdk\include\dimm.idl";
-import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\mshtmhst.idl";
-import "c:\program files\microsoft visual studio .net 2003\vc7\platformsdk\include\docobj.idl";
-import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\exdisp.idl";
-import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\objsafe.idl";
+import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prsht.idl";
+import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\mshtml.idl";
+import "e:\program files\microsoft visual studio .net 2003\vc7\platformsdk\include\dimm.idl";
+import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\mshtmhst.idl";
+import "e:\program files\microsoft visual studio .net 2003\vc7\platformsdk\include\docobj.idl";
+import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\exdisp.idl";
+import "E:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\objsafe.idl";
 
 [
 	object,
@@ -13,9 +13,9 @@ import "C:\Program Files\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\inclu
 	helpstring("Interface IDocumentsScore"),
 	pointer_default(unique)
 ] 
-#line 35 "d:\\projets\\tst\\com\\tstlib\\documentsscore.h"
+#line 35 "c:\\projets\\development\\tst\\com\\tstlib\\documentsscore.h"
 interface IDocumentsScore : IDispatch {
-#line 37 "d:\\projets\\tst\\com\\tstlib\\documentsscore.h"
+#line 37 "c:\\projets\\development\\tst\\com\\tstlib\\documentsscore.h"
 	[propget,id(1),helpstring("property Size")] HRESULT  Size([out,retval] LONG *pVal);
 	[id(2),helpstring("method GetDocument")] HRESULT  GetDocument([in] LONG index, [out,retval] BSTR *document );
 	[id(3),helpstring("method GetScore")] HRESULT  GetScore([in] LONG index, [out,retval] LONG *score);
@@ -28,9 +28,9 @@ interface IDocumentsScore : IDispatch {
 	helpstring("Interface ITernarySearchTree"),
 	pointer_default(unique)
 ] 
-#line 16 "d:\\projets\\tst\\com\\tstlib\\ternarysearchtree.h"
+#line 16 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
 interface ITernarySearchTree : IDispatch {
-#line 18 "d:\\projets\\tst\\com\\tstlib\\ternarysearchtree.h"
+#line 18 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
 	[id(1),helpstring("method Set")] HRESULT  Set([in] BSTR *key , [in] BSTR *value , [out,retval] BSTR *result );
 	[id(2),helpstring("method Get")] HRESULT  Get([in] BSTR *key , [out,retval] BSTR *result );
 	[id(3),helpstring("method Pack")] HRESULT  Pack();
@@ -44,9 +44,9 @@ interface ITernarySearchTree : IDispatch {
 	helpstring("Interface ITextIndex"),
 	pointer_default(unique)
 ] 
-#line 18 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
+#line 18 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
 interface ITextIndex : IDispatch {
-#line 20 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
+#line 20 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
 	[id(1),helpstring("method AddWord")] HRESULT  AddWord([in] BSTR *word , [in] BSTR *document );
 	[id(2),helpstring("method AddText")] HRESULT  AddText([in] BSTR *text , [in] BSTR *document );
 	[id(3),helpstring("method Pack")] HRESULT  Pack();
@@ -69,7 +69,7 @@ library tstlib
 		uuid(98F35214-F66B-4BBF-B039-1AA4CA344DCF),
 		helpstring("DocumentsScore Class")
 	] 
-#line 55 "d:\\projets\\tst\\com\\tstlib\\documentsscore.h"
+#line 55 "c:\\projets\\development\\tst\\com\\tstlib\\documentsscore.h"
 	coclass CDocumentsScore {
 		interface IDocumentsScore;
 	};
@@ -79,7 +79,7 @@ library tstlib
 		uuid(01757CCD-8F45-498E-B8BF-4E4F95A07CE7),
 		helpstring("TernarySearchTree Class")
 	] 
-#line 37 "d:\\projets\\tst\\com\\tstlib\\ternarysearchtree.h"
+#line 37 "c:\\projets\\development\\tst\\com\\tstlib\\ternarysearchtree.h"
 	coclass CTernarySearchTree {
 		interface ITernarySearchTree;
 	};
@@ -89,7 +89,7 @@ library tstlib
 		uuid(8EC92961-CAB3-4CA6-A36E-46C39424E80B),
 		helpstring("TextIndex Class")
 	] 
-#line 44 "d:\\projets\\tst\\com\\tstlib\\textindex.h"
+#line 44 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
 	coclass CTextIndex {
 		interface ITextIndex;
 	};

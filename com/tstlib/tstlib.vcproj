@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="tstlib"
 	ProjectGUID="{9109E041-F4CC-4EBC-9DC7-4C662BF0CBDC}"
+	RootNamespace="tstlib"
 	Keyword="AtlProj">
 	<Platforms>
 		<Platform
@@ -89,7 +90,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="d:\projets\boost_1_33_1\;..\..\include"
+				AdditionalIncludeDirectories="c:\projets\boost_1_33_1\;..\..\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_ATTRIBUTES"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"
@@ -104,7 +105,7 @@
 				AdditionalOptions="comsupp.lib"
 				OutputFile="$(OutDir)/tstlib.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;d:\projets\boost_1_33_1\bin\boost\libs\regex\build\libboost_regex.lib\vc-7_1\release\threading-multi&quot;"
+				AdditionalLibraryDirectories="&quot;c:\projets\boost_1_33_1\bin\boost\libs\regex\build\libboost_regex.lib\vc-7_1\release\threading-multi&quot;"
 				MergedIDLBaseFileName="_tstlib.idl"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
@@ -215,10 +216,10 @@
 				RelativePath=".\TernarySearchTree.h">
 			</File>
 			<File
-				RelativePath=".\TextIndex.h">
+				RelativePath="..\..\textindex\textindex.h">
 			</File>
 			<File
-				RelativePath="..\..\textindex\textindex.h">
+				RelativePath=".\TextIndex.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tst.h">

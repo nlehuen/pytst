@@ -90,12 +90,10 @@ template <typename character_type> class python_textindex : public textindex<cha
         }
 
     protected:
-        list to_list(documents_scores_pointer entries) {
-            int size = entries->size();
+        list to_list(result_pointer entries) {
             list result;
-            for(int i=0;i<size;i++) {
-                const documents_scores_pointer::element_type::pair_type* entry=&(entries->get_sorted_list()[i]);
-                result.append(make_tuple(entry->first,entry->second));
+            for(result_pointer::element_type::iterator item(entries->begin()),end(entries->end());item!=end;++item) {
+                result.append(make_tuple(item->first,item->second));
             }
             return result;
         }

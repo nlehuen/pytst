@@ -14,14 +14,14 @@ STDMETHODIMP CDocumentsScore::get_Size(LONG* pVal)
     return S_OK;
 }
 
-void CDocumentsScore::set_entries(textindex<wchar_t,_bstr_t,_bstr_t_reader_writer>::documents_scores_pointer _entries) {
+void CDocumentsScore::set_entries(textindex<wchar_t,_bstr_t,_bstr_t_reader_writer>::result_pointer _entries) {
     entries = _entries;
 }
 
 STDMETHODIMP CDocumentsScore::GetDocument(LONG index, BSTR* document)
 {
     if(index>=0 && static_cast<size_t>(index)<entries->size()) {
-        *document = entries->get_document(index).copy();
+        *document = (*entries)[index].first.copy();
     }
     else {
         *document = _bstr_t("???");
@@ -32,7 +32,7 @@ STDMETHODIMP CDocumentsScore::GetDocument(LONG index, BSTR* document)
 STDMETHODIMP CDocumentsScore::GetScore(LONG index, LONG* score)
 {
     if(index>=0 && static_cast<size_t>(index)<entries->size()) {
-        *score = entries->get_score(index);
+        *score = (*entries)[index].second;
     }
     else {
         *score = -1;
