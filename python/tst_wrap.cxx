@@ -1734,7 +1734,7 @@ static PyObject *_wrap_new_TSTException(PyObject *, PyObject *args) {
     }
     {
         try {
-            result = (TSTException *)new TSTException(arg1);
+            result = (TSTException *)new TSTException((char const *)arg1);
         }
         catch (TSTException e) {
             PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
@@ -1747,46 +1747,23 @@ static PyObject *_wrap_new_TSTException(PyObject *, PyObject *args) {
 }
 
 
-static PyObject *_wrap_TSTException_message_set(PyObject *, PyObject *args) {
-    PyObject *resultobj = NULL;
-    TSTException *arg1 = (TSTException *) 0 ;
-    char *arg2 = (char *) 0 ;
-    PyObject * obj0 = 0 ;
-    PyObject * obj1 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OO:TSTException_message_set",&obj0,&obj1)) goto fail;
-    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TSTException, SWIG_POINTER_EXCEPTION | 0);
-    if (SWIG_arg_fail(1)) SWIG_fail;
-    if (!SWIG_AsCharPtr(obj1, (char**)&arg2)) {
-        SWIG_arg_fail(2);SWIG_fail;
-    }
-    {
-        if (arg1->message) delete [] arg1->message;
-        if (arg2) {
-            arg1->message = (char *) (new char[strlen(arg2)+1]);
-            strcpy((char *) arg1->message,arg2);
-        } else {
-            arg1->message = 0;
-        }
-    }
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_TSTException_message_get(PyObject *, PyObject *args) {
+static PyObject *_wrap_TSTException_what(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     TSTException *arg1 = (TSTException *) 0 ;
     char *result;
     PyObject * obj0 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"O:TSTException_message_get",&obj0)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"O:TSTException_what",&obj0)) goto fail;
     SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_TSTException, SWIG_POINTER_EXCEPTION | 0);
     if (SWIG_arg_fail(1)) SWIG_fail;
-    result = (char *) ((arg1)->message);
-    
+    {
+        try {
+            result = (char *)(arg1)->what();
+        }
+        catch (TSTException e) {
+            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+        }
+    }
     resultobj = SWIG_FromCharPtr(result);
     return resultobj;
     fail:
@@ -4347,8 +4324,7 @@ static PyObject * TSTCloseMatchIterator_swigregister(PyObject *, PyObject *args)
 }
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_TSTException", _wrap_new_TSTException, METH_VARARGS, NULL},
-	 { (char *)"TSTException_message_set", _wrap_TSTException_message_set, METH_VARARGS, NULL},
-	 { (char *)"TSTException_message_get", _wrap_TSTException_message_get, METH_VARARGS, NULL},
+	 { (char *)"TSTException_what", _wrap_TSTException_what, METH_VARARGS, NULL},
 	 { (char *)"delete_TSTException", _wrap_delete_TSTException, METH_VARARGS, NULL},
 	 { (char *)"TSTException_swigregister", TSTException_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new__TST", _wrap_new__TST, METH_VARARGS, NULL},

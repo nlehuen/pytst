@@ -21,7 +21,7 @@ void CDocumentsScore::set_entries(textindex<wchar_t,_bstr_t,_bstr_t_reader_write
 STDMETHODIMP CDocumentsScore::GetDocument(LONG index, BSTR* document)
 {
     if(index>=0 && static_cast<size_t>(index)<entries->size()) {
-        *document = entries->get_entry(index).first.copy();
+        *document = entries->get_document(index).copy();
     }
     else {
         *document = _bstr_t("???");
@@ -32,7 +32,7 @@ STDMETHODIMP CDocumentsScore::GetDocument(LONG index, BSTR* document)
 STDMETHODIMP CDocumentsScore::GetScore(LONG index, LONG* score)
 {
     if(index>=0 && static_cast<size_t>(index)<entries->size()) {
-        *score = entries->get_entry(index).second;
+        *score = entries->get_score(index);
     }
     else {
         *score = 0;

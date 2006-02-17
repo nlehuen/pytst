@@ -1,59 +1,90 @@
+# -*- coding: iso-8859-1 -*-
+
 from win32com.client.gencache import EnsureDispatch as Dispatch
 from win32com.client import Dispatch
 import traceback
+from time import clock
+import linecache
+import re
+
+words_re = re.compile(r"\b[a-zA-Zéèâêôàçù]+\b")
+
+def dump(ti,words,intersect=0,method="text"):
+    print "Requesting %r..."%words,
+
+    repeat = 100
+    start = clock()
+    if method=="text":
+        for i in xrange(repeat):
+           result = ti.FindTextA(words,intersect)
+    else:
+        for i in xrange(repeat):
+           result = ti.FindWord(words)
+    end = clock()
+    print '%.2f ms per search'%(1000*(end-start)/repeat)
+       
+    for i in range(result.Size):
+        document = result.GetDocument(i)
+        try:
+            sep = document.rindex(':')
+            line = int(document[sep+1:])
+            document = document[:sep]
+            print document, line, result.GetScore(i), linecache.getline(document,line+1).decode('iso-8859-1'),
+        except ValueError:
+            print document, result.GetScore(i)
 
 try:
-	try:
-		ti = Dispatch('tstlib.TextIndex')
+    try:
+        ti = Dispatch('tstlib.TextIndex')
 
-		print "Version :",ti.Version
+        print "Version :",ti.Version
 
-		ti.AddText('bonjour, je suis nicolas','1')
-		ti.AddText('bonjour, je suis alfred','2')
-		ti.AddText('alfred hitchcock','3')
-		ti.AddText('bonjour comment allez-vous ?','3')
+        # ---------------- petit test sans conséquence
+        
+        ti.AddText('bonjour, je suis nicolas','1')
+        ti.AddText('bonjour, je suis alfred','2')
+        ti.AddText('alfred hitchcock','3')
+        ti.AddText('bonjour comment allez-vous ?','3')
+        
+        dump(ti,'bonjour')
+        dump(ti,'bonjour comment alfred',0)
+        dump(ti,'bonjour comment alfred',1)
 
-		result = ti.FindWord('bonjour')
-		for i in range(result.Size):
-			print result.GetDocument(i), result.GetScore(i)
-		
-		print
-		
-		result = ti.FindTextA('bonjour comment alfred',0)
-		for i in range(result.Size):
-			print result.GetDocument(i), result.GetScore(i)
-			
-		print "Saved %s !"%ti.Save(r'c:\temp\test.ti')
+        print "Saved %s !"%ti.Save(r'c:\temp\test.ti')
+        ti = Dispatch('tstlib.TextIndex')
+        print "Loaded %s !"%ti.Load(r'c:\temp\test.ti')
+        print
+        
+        dump(ti,'bonjour')
+        dump(ti,'bonjour comment alfred',0)
+        dump(ti,'bonjour comment alfred',1)
 
-		ti = Dispatch('tstlib.TextIndex')
-		print "Loaded %s !"%ti.Load(r'c:\temp\test.ti')
-
-		print
-		
-		result = ti.FindTextA('bonjour comment alfred',0)
-		for i in range(result.Size):
-			print result.GetDocument(i), result.GetScore(i)
-			
-		ti = Dispatch('tstlib.TextIndex')
-		from glob import glob
-		for input_filename in glob(r'D:\projets\tst\textindex\*.txt'):
-			print input_filename
-			for linenumber, line in enumerate(file(input_filename,'rb')):
-				content = line.decode('iso-8859-1')
-				ti.AddText(content,"%s:%i"%(input_filename,linenumber))
-		print 'Saving...',
-		ti.Save(r'D:\projets\tst\textindex\complete.ti')
-		print 'OK !'
-		
-		ti = Dispatch('tstlib.TextIndex')
-		print 'Loading...',
-		ti.Load(r'D:\projets\tst\textindex\complete.ti')
-		print 'OK !'
-		result = ti.FindTextA('bonj sole',0)
-		for i in range(result.Size):
-			print result.GetDocument(i), result.GetScore(i)
-	except:
-		traceback.print_exc()
+        # ---------- Vrai test
+            
+            
+        words = set()
+        
+        ti = Dispatch('tstlib.TextIndex')
+        from glob import glob
+        for input_filename in glob(r'D:\projets\tst\textindex\*.txt'):
+            print input_filename
+            for linenumber, line in enumerate(file(input_filename,'rb')):
+                content = line.decode('iso-8859-1').lower()
+                for word in words_re.findall(content):
+                    words.add(word)
+                    ti.AddWord(word,"%s:%i"%(input_filename,linenumber))
+        print 'Saving...',
+        ti.Save(r'D:\projets\tst\textindex\complete.ti')
+        print 'OK !'
+        
+        ti = Dispatch('tstlib.TextIndex')
+        print 'Loading...',
+        ti.Load(r'D:\projets\tst\textindex\complete.ti')
+        print 'OK !'
+        
+        dump(ti,'bonj sole',0)
+    except:
+        traceback.print_exc()
 finally:
-	raw_input('Press enter...')
-	
+    raw_input('Press enter...')
+    

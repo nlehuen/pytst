@@ -69,31 +69,28 @@ template <typename document_type> class documents_scores {
                 documents_list = 0;
             }
 
-            storage_type::iterator lhs(documents.begin()),lhe(documents.end());
-            storage_type::const_iterator rhs(other.documents.begin()),rhe(other.documents.end());
-            storage_type result;
+            storage_type::iterator lhs(documents.begin());
+            storage_type::const_iterator rhs(other.documents.begin());
 
-            while(lhs!=lhe && rhs!=rhe) {
+            while(lhs!=documents.end() && rhs!=other.documents.end()) {
                 if(lhs->first < rhs->first) {
                     ++lhs;
                 }
                 else if(lhs->first == rhs->first) {
-                    result.insert(pair_type(lhs->first,lhs->second+rhs->second));
+                    lhs->second += rhs->second;
                     ++lhs;
                     ++rhs;
                 }
                 else {
-                    result.insert(*rhs);
+                    documents.insert(*rhs);
                     ++rhs;
                 }
             }
 
-            while(rhs!=rhe) {
-                result.insert(*rhs);
+            while(rhs!=other.documents.end()) {
+                documents.insert(*rhs);
                 ++rhs;
             }
-
-            documents.swap(result);
         }
 
         void intersect_with(const documents_scores &other) {
@@ -125,20 +122,20 @@ template <typename document_type> class documents_scores {
             return documents.size();
         }
 
-        const pair_type& get_entry(int index) const {
+        const list_type& get_sorted_list() const {
             if(documents_list==0) {
                 documents_list = new typename list_type(documents.begin(),documents.end());
                 std::sort(documents_list->begin(),documents_list->end(),sort_by_score<pair_type>);
             }
-            return (*documents_list)[index];
+            return *documents_list;
         }
 
         const document_type get_document(int index) const {
-            return get_entry(index).first;
+            return get_sorted_list()[index].first;
         }
 
         const int get_score(int index) const {
-            return get_entry(index).second;
+            return get_sorted_list()[index].second;
         }
 
     template <typename reader_writer> class serializer {
@@ -239,7 +236,7 @@ template < typename character_type, typename document_type, typename reader_writ
         
         documents_scores_pointer find_word(const std::basic_string< character_type > word) {
             collector c;
-            tree.walk(NULL,&c,word.data(),word.size());
+            tree.walk2(NULL,&c,word);
             return c.result();
         }
         
@@ -261,7 +258,7 @@ template < typename character_type, typename document_type, typename reader_writ
                     collector c;
                     while(token != end) {
                         std::basic_string<character_type> w = (*token)[0];
-                        tree.walk(NULL,&c,const_cast<character_type*>(w.data()),w.size());
+                        tree.walk2(NULL,&c,w);
                         token++;
                     }
                     return c.result();

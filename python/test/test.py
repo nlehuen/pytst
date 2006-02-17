@@ -180,12 +180,18 @@ class TestBasics(unittest.TestCase):
             self.assertEquals(self.tree[k],v[1])        
 
     def testWalkWithRoot(self):
+        ref = self.tree.walk(None,DictAction())
+
         timer_start("walk_root")
         for i in xrange(100):
             d = self.tree.walk(None,DictAction(),'0.1')
         timer_end("walk_root")
+        for k, v in ref.iteritems():
+            if k.startswith('0.1'):
+                self.assert_(k in d)
+                self.assertEquals(v,d[k])
         for k, v in d.iteritems():
-            self.assert_(k.startswith('0.'))
+            self.assert_(k.startswith('0.1'))
             self.assertEquals(self.tree[k],v[1])
     
     def testCloseMatch(self):

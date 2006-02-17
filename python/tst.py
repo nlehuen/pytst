@@ -48,9 +48,10 @@ class TSTException(_object):
         """__init__(self, _message) -> TSTException"""
         _swig_setattr(self, TSTException, 'this', _tst.new_TSTException(*args))
         _swig_setattr(self, TSTException, 'thisown', 1)
-    __swig_setmethods__["message"] = _tst.TSTException_message_set
-    __swig_getmethods__["message"] = _tst.TSTException_message_get
-    if _newclass:message = property(_tst.TSTException_message_get, _tst.TSTException_message_set)
+    def what(*args):
+        """what(self) -> char"""
+        return _tst.TSTException_what(*args)
+
     def __del__(self, destroy=_tst.delete_TSTException):
         """__del__(self)"""
         try:
