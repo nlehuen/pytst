@@ -295,7 +295,7 @@ template < typename character_type, typename document_type, typename reader_writ
             tree.pack();
         }
 
-        void write(FILE* file) {
+        void write(FILE* file) const {
             // On écrit l'arbre
             tree.write(file);
             
@@ -308,7 +308,7 @@ template < typename character_type, typename document_type, typename reader_writ
             
             // On écrit le lexique
             reader_writer rw;
-            for(documents_ids_type::iterator item(ids.begin()),end(ids.end());item!=end;item++) {
+            for(documents_ids_type::const_iterator item(ids.begin()),end(ids.end());item!=end;item++) {
                 rw.write(file,item->first);
                 fwrite(&(item->second),sizeof(document_id_type),1,file);
             }
@@ -357,7 +357,7 @@ template < typename character_type, typename document_type, typename reader_writ
             }
         }
 
-        document_type get_document(const document_id_type& document_id) {
+        const document_type get_document(const document_id_type& document_id) const {
             reversed_documents_ids_type::const_iterator document(reversed_ids.find(document_id));
             if(document == reversed_ids.end()) {
                 return document_type();
@@ -367,7 +367,7 @@ template < typename character_type, typename document_type, typename reader_writ
             }
         }
 
-        result_pointer convert_to_result(collector& to_convert) {
+        const result_pointer convert_to_result(collector& to_convert) const {
             documents_scores_type* scores(to_convert.result().get());
             result_type* p_result = new result_type();
             result_pointer result(p_result);
@@ -387,7 +387,9 @@ template < typename character_type, typename document_type, typename reader_writ
         
         // Données transitoires
         reversed_documents_ids_type reversed_ids;
-        regex_type tokenizer;
+        
+        // Utilitaires
+        const regex_type tokenizer;
         documents_scores_type_factory factory;
 };
 

@@ -65,7 +65,7 @@ public:
         delete storage;
     }
 
-    void pack() {
+    void pack() const {
         storage->pack();
     }
     
