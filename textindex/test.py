@@ -4,22 +4,32 @@ if __name__ == "__main__":
     import linecache
     import glob
     from textindex import textindex
+    import traceback
 
     ti = textindex()
     
-    start = time()
-    lines = 0
-    for f in glob.glob('*.txt'):
-        print f,
-        for linenumber, line in enumerate(file(f,'rb')):
-            lines += 1
-            line = line.strip()
-            ti.put_text(line.lower().decode('iso-8859-1'),'%12s:%04i:%s'%(f,linenumber,line))
-            if linenumber % 100 == 0:
-                sys.stdout.write('.')
-        print 'OK'
-    ti.pack()
-    print 'Indexing time : %.2fs for %i lines'%(time()-start,lines)
+    try:
+        start = time()
+        ti.read(file('text.ti','rb'))
+        print 'Loading time : %.2fs'%(time()-start)
+    except:
+        traceback.print_exc()
+        
+        start = time()
+        lines = 0
+        for f in glob.glob('*.txt'):
+            print f,
+            for linenumber, line in enumerate(file(f,'rb')):
+                lines += 1
+                line = line.strip()
+                ti.put_text(line.lower().decode('iso-8859-1'),'%12s:%04i:%s'%(f,linenumber,line))
+                if linenumber % 100 == 0:
+                    sys.stdout.write('.')
+            print 'OK'
+        ti.pack()
+        print 'Indexing time : %.2fs for %i lines'%(time()-start,lines)
+
+        ti.write(file('text.ti','wb'))
     
     def lines(text,intersection=True):
         for ln, r in ti.find_text(text.lower(),intersection):

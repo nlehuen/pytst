@@ -80,6 +80,14 @@ template <typename character_type> class python_textindex : public textindex<cha
         list __getitem__2(tuple item) {
             return to_list(textindex<character_type,object,object_serializer>::find_text(extract<std::basic_string<character_type> >(item[0]),item[1]));
         }
+        
+        void write_to_file(object file) {
+            return write(PyFile_AsFile(file.ptr()));
+        }
+        
+        void read_from_file(object file) {
+            return read(PyFile_AsFile(file.ptr()));
+        }
 
     protected:
         list to_list(documents_scores_pointer entries) {
@@ -106,6 +114,8 @@ BOOST_PYTHON_MODULE(textindex)
         .def("__getitem__",&python_textindex<wchar_t>::__getitem__1)
         .def("__getitem__",&python_textindex<wchar_t>::__getitem__2)
         .def("pack",&python_textindex<wchar_t>::pack)
+        .def("write",&python_textindex<wchar_t>::write_to_file)
+        .def("read",&python_textindex<wchar_t>::read_from_file)
     ;
 
     /*class_< documents_scores<std::basic_string<wchar_t> > >("documents_scores")

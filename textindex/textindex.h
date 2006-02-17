@@ -36,7 +36,7 @@ template <class pair> inline bool sort_by_score(const pair& lhs, const pair& rhs
 }
 
 template <class item> inline bool sort_by_first_item_length_desc(const item& lhs, const item& rhs) {
-    return lhs[0].length() > rhs[0].length();
+    return lhs.begin()->length() > rhs.begin()->length();
 }
 
 template <typename document_type> class documents_scores {
@@ -237,29 +237,34 @@ template < typename character_type, typename document_type, typename reader_writ
         textindex() : tree(new tree_type::storage_type(16),tree_type::value_type()), tokenizer(L"\\b\\w+\\b"), factory() {
         }
 
-        int put_word(const std::basic_string< character_type > word,const document_type value) {
-            documents_scores_pointer documents_scores_type = tree.get_or_build(word,&factory);
-            return documents_scores_type->add_document(value,1);
+        int put_word(const std::basic_string< character_type >& word,const document_type& value) {
+            if(word.size()>2) {
+                documents_scores_pointer documents_scores_type = tree.get_or_build(word,&factory);
+                return documents_scores_type->add_document(value,1);
+            }
+            else {
+                return 0;
+            }
         }
 
-        int put_text(const std::basic_string< character_type > text,const document_type value) {
+        int put_text(const std::basic_string< character_type >& text,const document_type& value) {
             typename regex_type_iterator token(text.begin(),text.end(),tokenizer);
             typename regex_type_iterator end;
             int count = 0;
             while(token != end) {
-                count += put_word((*token)[0],value);
+                count += put_word(token->begin()->str(),value);
                 ++token;
             }
             return count;
         }
         
-        documents_scores_pointer find_word(const std::basic_string< character_type > word) {
+        documents_scores_pointer find_word(const std::basic_string< character_type >& word) {
             collector c;
             tree.walk2(0,&c,word);
             return c.result();
         }
         
-        documents_scores_pointer find_text(const std::basic_string< character_type > text,bool intersection) {
+        documents_scores_pointer find_text(const std::basic_string< character_type >& text,bool intersection) {
             typename regex_type_iterator token(text.begin(),text.end(),tokenizer);
             typename regex_type_iterator end;
             if(token!=end) {
@@ -273,14 +278,12 @@ template < typename character_type, typename document_type, typename reader_writ
                     collector c;
                     // Le mot le plus long doit faire au moins 3 caractères.
                     if(tokens_iterator->begin()->length()>2) {
-                        std::basic_string<character_type> word = tokens_iterator->begin()->str();
-                        tree.walk2(0,&c,word);
+                        tree.walk2(0,&c,tokens_iterator->begin()->str());
                         ++tokens_iterator;
                         while(tokens_iterator != tokens.end()) {
                             // on se fiche de la longueur des autres mots
-                            word = tokens_iterator->begin()->str();
                             collector c2(&c);
-                            tree.walk2(0,&c2,word);
+                            tree.walk2(0,&c2,tokens_iterator->begin()->str());
                             c.intersect_with(c2);
                             ++tokens_iterator;
                         }
