@@ -22,7 +22,6 @@
 #include "tst.h"
 
 #include <hash_map>
-
 #include <boost/shared_ptr.hpp>
 #include <boost/regex.hpp>
 
@@ -34,6 +33,10 @@ template <class pair> inline bool sort_by_document(const pair& lhs, const pair& 
 template <class pair> inline bool sort_by_score(const pair& lhs, const pair& rhs)
 {
     return lhs.second > rhs.second || lhs.first < rhs.first;
+}
+
+template <class item> inline bool sort_by_first_item_length_desc(const item& lhs, const item& rhs) {
+    return lhs[0].length() > rhs[0].length();
 }
 
 template <typename document_type> class documents_scores {
@@ -63,7 +66,7 @@ template <typename document_type> class documents_scores {
             return (documents[doc] += score);
         }
 
-        void merge_with(const documents_scores &other) {
+        void merge_with(const documents_scores &other,const documents_scores* intersect=0) {
             if(documents_list) {
                 delete documents_list;
                 documents_list = 0;
@@ -82,13 +85,17 @@ template <typename document_type> class documents_scores {
                     ++rhs;
                 }
                 else {
-                    documents.insert(*rhs);
+                    if(intersect==0 || intersect->documents.find(rhs->first)!=intersect->documents.end()) {
+                        documents.insert(*rhs);
+                    }
                     ++rhs;
                 }
             }
 
             while(rhs!=other.documents.end()) {
-                documents.insert(*rhs);
+                if(intersect==0 || intersect->documents.find(rhs->first)!=intersect->documents.end()) {
+                    documents.insert(*rhs);
+                }
                 ++rhs;
             }
         }
@@ -192,19 +199,31 @@ template < typename character_type, typename document_type, typename reader_writ
     
         class collector : public action< character_type, documents_scores_pointer > {
             public:
-                collector() : entries(new documents_scores_type(0)), first(true) {
+                collector(collector* _intersect=0) : intersect(_intersect), entries(new documents_scores_type(0)) {
                 }
             
                 virtual void perform(const character_type* string, size_t string_length, int remaining_distance, documents_scores_pointer data) {
-                    entries->merge_with(*data);
+                    entries->merge_with(*data,intersect ? intersect->entries.get() : 0);
                 }
                 
                 virtual documents_scores_pointer result() {
                     return entries;
                 }
                 
-            private:
-                bool first;
+                void set_intersect(bool _intersect) {
+                    intersect = _intersect;
+                }
+
+                void merge_with(collector& c) {
+                    entries->merge_with(*(c.entries),intersect ? intersect->entries.get() : 0);
+                }
+
+                void intersect_with(collector& c) {
+                    entries->intersect_with(*(c.entries));
+                }
+
+        private:
+                collector* intersect;
                 documents_scores_pointer entries;
         };
         
@@ -229,7 +248,7 @@ template < typename character_type, typename document_type, typename reader_writ
             int count = 0;
             while(token != end) {
                 count += put_word((*token)[0],value);
-                token++;
+                ++token;
             }
             return count;
         }
@@ -245,21 +264,38 @@ template < typename character_type, typename document_type, typename reader_writ
             typename regex_type_iterator end;
             if(token!=end) {
                 if(intersection) {
-                    documents_scores_pointer result = find_word((*token)[0]);
-                    token++;
-                    while(token != end) {
-                        const documents_scores_pointer additional = find_word((*token)[0]);
-                        result->intersect_with(*additional);
-                        token++;
+                    // On va trier les tokens par ordre décroissant de longueur afin
+                    // de mettre le plus limitant en premier
+                    std::vector< regex_type_iterator::value_type > tokens(token,end);
+                    std::sort(tokens.begin(),tokens.end(),sort_by_first_item_length_desc<regex_type_iterator::value_type>);
+                    std::vector< regex_type_iterator::value_type >::const_iterator tokens_iterator(tokens.begin());
+
+                    collector c;
+                    if(tokens_iterator->begin()->length()>2) {
+                        std::basic_string<character_type> word = tokens_iterator->begin()->str();
+                        // wprintf(L"--->%s\n",word.c_str());
+                        tree.walk2(NULL,&c,word);
+                        ++tokens_iterator;
+                        while(tokens_iterator != tokens.end()) {
+                            word = tokens_iterator->begin()->str();
+                            //if(word.size()>1) {
+                                // wprintf(L"%s\n",word.c_str());
+                                collector c2(&c);
+                                tree.walk2(NULL,&c2,word);
+                                c.intersect_with(c2);
+                            //}
+                            ++tokens_iterator;
+                        }
                     }
-                    return result;
+
+                    return c.result();
                 }
                 else {
                     collector c;
                     while(token != end) {
-                        std::basic_string<character_type> w = (*token)[0];
-                        tree.walk2(NULL,&c,w);
-                        token++;
+                        std::basic_string<character_type> word = token->begin()->str();
+                        tree.walk2(NULL,&c,word);
+                        ++token;
                     }
                     return c.result();
                 }

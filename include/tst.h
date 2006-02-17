@@ -290,8 +290,8 @@ template<typename S,typename T,typename M,typename RW> tst_node<S,T>* tst<S,T,M,
                 *best_node=*current_index;
             }
 
-            string++;
-            string_length--;
+            ++string;
+            --string_length;
             if(string_length>0) {
                 *current_index = current_node->next;
             }
@@ -328,9 +328,9 @@ template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::build_
     current_node_info->balance_performed=0;
 
     if(diff==0) {
-        string++;
-        current_position++;
-        string_length--;
+        ++string;
+        ++current_position;
+        --string_length;
 
         if(current_position>maximum_key_length) {
             maximum_key_length=current_position;
@@ -457,8 +457,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::remov
     }
 
     if(diff==0) {
-        string++;
-        string_length--;
+        ++string;
+        --string_length;
         if(string_length>0) {
             next_index = &(current_node->next);
             if(*next_index!=UNDEFINED_INDEX) {
@@ -658,9 +658,9 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
         diff=0;
     }
 
-    // KEY++
+    // ++KEY
     key[key_length]=current_node->c;
-    key_length++;
+    ++key_length;
 
     // CURRENT
     T data = current_node->data;
@@ -768,7 +768,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_
 
     assert(current_key_length < current_key_limit);
     current_key[current_key_length]=current_node->c;
-    current_key_length++;
+    ++current_key_length;
 
     T data = current_node->data;
     if(data!=default_value) {
@@ -808,12 +808,12 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::prefix_m
 
     while(string_length>0) {
         c = *string;
-        string++;
-        string_length--;
+        ++string;
+        --string_length;
 
         assert(current_key_length<=maximum_key_length);
         current_key[current_key_length]=c;
-        current_key_length++;
+        ++current_key_length;
 
         while(current_index!=UNDEFINED_INDEX) {
             current_node=storage->get(current_index);
@@ -905,7 +905,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan(con
                     ni_best_match=ni_current;
                 }
 
-                si_current++;
+                ++si_current;
                 if(si_current<string_length) {
                     // Si on peut avancer, on avance
                     ni_current=n_current->next;
@@ -987,7 +987,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan(con
                 // le caractère courant n'est pas accepté et on n'avait pas de match en cours
                 if(si_current<string_length) {
                     // si on peut avancer d'un caractère on le fait
-                    si_current++;
+                    ++si_current;
                     // on revient à la racine
                     ni_current = root;
                 }
@@ -1020,7 +1020,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compu
             current_node->backtrack_match_index=UNDEFINED_INDEX;
             find_node(&(current_node->backtrack),&(current_node->backtrack_match_index),string+si_match_start,si_match_end-si_match_start);
             if(current_node->backtrack==UNDEFINED_INDEX) {
-                si_match_start++;
+                ++si_match_start;
             }
             else {
                 current_node->backtrack=(storage->get(current_node->backtrack))->next;
@@ -1035,7 +1035,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compu
 }
 
 template<typename S> inline int is_in(S c,const S* stop_chars,size_t stop_chars_length) {
-    for(size_t i=0;i<stop_chars_length;i++,stop_chars++) {
+    for(size_t i=0;i<stop_chars_length;++i,++stop_chars) {
         if(c==*stop_chars) {
             return 1;
         }
@@ -1080,7 +1080,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
                     }
                     else {
                         // non, on passe à la suite
-                        si_current++;
+                        ++si_current;
                     }
                 }
                 
@@ -1093,7 +1093,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
                         ni_best_match = ni_current;
                     }
 
-                    si_current++;
+                    ++si_current;
                     if(si_current<string_length) {
                         // Si on peut avancer, on avance
                         ni_current = n_current->next;
@@ -1158,7 +1158,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
                 // le caractère courant n'est pas accepté et on n'avait pas de match en cours
                 if(si_current<string_length) {
                     // si on peut avancer d'un caractère on le fait
-                    si_current++;
+                    ++si_current;
                     // on revient à la racine
                     ni_current = root;
                 }
