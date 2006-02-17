@@ -53,8 +53,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 1,0,5,0
+ PRODUCTVERSION 1,0,5,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -71,12 +71,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Yoono"
             VALUE "FileDescription", "Yoono Ternary Search Tree Library"
-            VALUE "FileVersion", "1.0.0.1"
+            VALUE "FileVersion", "1.0.5.0"
             VALUE "InternalName", "tstlib.dll"
             VALUE "LegalCopyright", "(c) Yoono. Tous droits réservés."
             VALUE "OriginalFilename", "tstlib.dll"
             VALUE "ProductName", "Yoono Companion"
-            VALUE "ProductVersion", "1.0.0.1"
+            VALUE "ProductVersion", "1.0.5.0"
         END
     END
     BLOCK "VarFileInfo"
