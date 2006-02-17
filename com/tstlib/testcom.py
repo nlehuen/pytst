@@ -70,7 +70,7 @@ try:
             print input_filename
             for linenumber, line in enumerate(file(input_filename,'rb')):
                 content = line.decode('iso-8859-1').lower()
-                ti.AddText(content,"%s:%i"%(input_filename,linenumber))
+                ti.AddText(content,input_filename) #"%s:%i"%(input_filename,linenumber))
                 #for word in words_re.findall(content):
                 #    words.add(word)
                 #    ti.AddWord(word,"%s:%i"%(input_filename,linenumber))
