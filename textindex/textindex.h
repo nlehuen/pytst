@@ -53,9 +53,8 @@ template <typename document_id_type, typename score_type> class documents_scores
             return (documents[document] += score);
         }
 
-        int remove_document(const document_id_type &document) {
-            documents.remove(document);
-            return documents.size();
+        typename storage_type::size_type remove_document(const document_id_type &document) {
+            return documents.erase(document);
         }
 
         void merge_with(const documents_scores &other,const documents_scores* intersect=0) {
@@ -264,7 +263,7 @@ template < typename character_type, typename document_type, typename reader_writ
         }
         
         void remove_document(const document_type& document) {
-            documents_ids_type::const_iterator document_position(ids.find(document));
+            documents_ids_type::iterator document_position(ids.find(document));
             if(document_position != ids.end()) {
                 document_id_type document_id(document_position->second);
                 ids.erase(document_position);

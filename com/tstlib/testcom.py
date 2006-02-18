@@ -84,6 +84,14 @@ try:
         print 'OK !'
         
         dump(ti,'bonj sole',0)
+        
+
+        print "Suppression de tous les documents"        
+        for input_filename in glob(r'..\..\textindex\*.txt'):
+	        ti.RemoveDocument(input_filename)
+        ti.Save(r'..\..\textindex\empty.ti')
+   
+        dump(ti,'bonj sole',0)
     except:
         traceback.print_exc()
 finally:

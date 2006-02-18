@@ -45,7 +45,7 @@ public:
     void pack();
 
     void erase() {
-        array.swap(array_type());
+        array_type().swap(array);
     };
     
 protected:

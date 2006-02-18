@@ -39,6 +39,7 @@ interface ITextIndex : IDispatch {
 	[propget,id(6),helpstring("property Version")] HRESULT  Version([out,retval] BSTR *pVal );
 	[id(7),helpstring("method Load")] HRESULT  Load([in] BSTR *filename , [out,retval] LONG *result);
 	[id(8),helpstring("method Save")] HRESULT  Save([in] BSTR *filename , [out,retval] LONG *result);
+	[id(9),helpstring("method RemoveDocument")] HRESULT  RemoveDocument([in] BSTR *document );
 };
 
 
@@ -63,7 +64,7 @@ library tstlib
 		uuid(8EC92961-CAB3-4CA6-A36E-46C39424E80B),
 		helpstring("TextIndex Class")
 	] 
-#line 44 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
+#line 45 "c:\\projets\\development\\tst\\com\\tstlib\\textindex.h"
 	coclass CTextIndex {
 		interface ITextIndex;
 	};

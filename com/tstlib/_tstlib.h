@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Sat Feb 18 11:13:27 2006
+/* at Sat Feb 18 11:59:23 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -322,6 +322,9 @@ EXTERN_C const IID IID_ITextIndex;
             /* [in] */ BSTR *filename,
             /* [retval][out] */ LONG *result) = 0;
         
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE RemoveDocument( 
+            /* [in] */ BSTR *document) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -408,6 +411,10 @@ EXTERN_C const IID IID_ITextIndex;
             /* [in] */ BSTR *filename,
             /* [retval][out] */ LONG *result);
         
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE *RemoveDocument )( 
+            ITextIndex * This,
+            /* [in] */ BSTR *document);
+        
         END_INTERFACE
     } ITextIndexVtbl;
 
@@ -467,6 +474,9 @@ EXTERN_C const IID IID_ITextIndex;
 
 #define ITextIndex_Save(This,filename,result)	\
     (This)->lpVtbl -> Save(This,filename,result)
+
+#define ITextIndex_RemoveDocument(This,document)	\
+    (This)->lpVtbl -> RemoveDocument(This,document)
 
 #endif /* COBJMACROS */
 
@@ -571,6 +581,18 @@ void __RPC_STUB ITextIndex_Load_Stub(
 
 
 void __RPC_STUB ITextIndex_Save_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
+
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE ITextIndex_RemoveDocument_Proxy( 
+    ITextIndex * This,
+    /* [in] */ BSTR *document);
+
+
+void __RPC_STUB ITextIndex_RemoveDocument_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,

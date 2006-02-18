@@ -87,3 +87,9 @@ STDMETHODIMP CTextIndex::Save(BSTR* filename,LONG* result)
     }
     return S_OK;
 }
+
+STDMETHODIMP CTextIndex::RemoveDocument(BSTR* document)
+{
+    _textindex.remove_document(_bstr_t(*document,true));
+    return S_OK;
+}

@@ -25,6 +25,7 @@ __interface ITextIndex : IDispatch
     [propget, id(6), helpstring("property Version")] HRESULT Version([out, retval] BSTR* pVal);
     [id(7), helpstring("method Load")] HRESULT Load([in] BSTR* filename,[out,retval] LONG* result);
     [id(8), helpstring("method Save")] HRESULT Save([in] BSTR* filename,[out,retval] LONG* result);
+    [id(9), helpstring("method RemoveDocument")] HRESULT RemoveDocument([in] BSTR* document);
 };
 
 
@@ -77,5 +78,6 @@ public:
     STDMETHOD(get_Version)(BSTR* pVal);
     STDMETHOD(Load)(BSTR* filename,LONG* result);
     STDMETHOD(Save)(BSTR* filename,LONG* result);
+    STDMETHOD(RemoveDocument)(BSTR* document);
 };
 

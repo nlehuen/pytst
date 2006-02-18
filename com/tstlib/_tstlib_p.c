@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Sat Feb 18 11:13:27 2006
+/* at Sat Feb 18 11:59:23 2006
  */
 /* Compiler settings for _tstlib.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -44,7 +44,7 @@
 #include "_tstlib.h"
 
 #define TYPE_FORMAT_STRING_SIZE   87                                
-#define PROC_FORMAT_STRING_SIZE   445                               
+#define PROC_FORMAT_STRING_SIZE   481                               
 #define TRANSMIT_AS_TABLE_SIZE    0            
 #define WIRE_MARSHAL_TABLE_SIZE   1            
 
@@ -487,6 +487,36 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 /* 442 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
+	/* Procedure RemoveDocument */
+
+/* 444 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 446 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 450 */	NdrFcShort( 0xf ),	/* 15 */
+/* 452 */	NdrFcShort( 0xc ),	/* x86 Stack size/offset = 12 */
+/* 454 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 456 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 458 */	0x46,		/* Oi2 Flags:  clt must size, has return, has ext, */
+			0x2,		/* 2 */
+/* 460 */	0x8,		/* 8 */
+			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
+/* 462 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 464 */	NdrFcShort( 0x1 ),	/* 1 */
+/* 466 */	NdrFcShort( 0x0 ),	/* 0 */
+
+	/* Parameter document */
+
+/* 468 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 470 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 472 */	NdrFcShort( 0x36 ),	/* Type Offset=54 */
+
+	/* Return value */
+
+/* 474 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 476 */	NdrFcShort( 0x8 ),	/* x86 Stack size/offset = 8 */
+/* 478 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
 			0x0
         }
     };
@@ -678,7 +708,8 @@ static const unsigned short ITextIndex_FormatStringOffsetTable[] =
     276,
     324,
     360,
-    402
+    402,
+    444
     };
 
 static const MIDL_STUBLESS_PROXY_INFO ITextIndex_ProxyInfo =
@@ -702,7 +733,7 @@ static const MIDL_SERVER_INFO ITextIndex_ServerInfo =
     0,
     0,
     0};
-CINTERFACE_PROXY_VTABLE(15) _ITextIndexProxyVtbl = 
+CINTERFACE_PROXY_VTABLE(16) _ITextIndexProxyVtbl = 
 {
     &ITextIndex_ProxyInfo,
     &IID_ITextIndex,
@@ -720,7 +751,8 @@ CINTERFACE_PROXY_VTABLE(15) _ITextIndexProxyVtbl =
     (void *) (INT_PTR) -1 /* ITextIndex::FindTextA */ ,
     (void *) (INT_PTR) -1 /* ITextIndex::get_Version */ ,
     (void *) (INT_PTR) -1 /* ITextIndex::Load */ ,
-    (void *) (INT_PTR) -1 /* ITextIndex::Save */
+    (void *) (INT_PTR) -1 /* ITextIndex::Save */ ,
+    (void *) (INT_PTR) -1 /* ITextIndex::RemoveDocument */
 };
 
 
@@ -737,6 +769,7 @@ static const PRPC_STUB_FUNCTION ITextIndex_table[] =
     NdrStubCall2,
     NdrStubCall2,
     NdrStubCall2,
+    NdrStubCall2,
     NdrStubCall2
 };
 
@@ -744,7 +777,7 @@ CInterfaceStubVtbl _ITextIndexStubVtbl =
 {
     &IID_ITextIndex,
     &ITextIndex_ServerInfo,
-    15,
+    16,
     &ITextIndex_table[-3],
     CStdStubBuffer_DELEGATING_METHODS
 };
