@@ -75,6 +75,7 @@ try:
                 #for word in words_re.findall(content):
                 #    words.add(word)
                 #    ti.AddWord(word,"%s:%i"%(input_filename,linenumber))
+                break
         print 'Index construit en %.2f'%(clock()-start)
         print 'Saving...',
         ti.Save(r'..\..\textindex\\complete.ti')
@@ -88,12 +89,17 @@ try:
         dump(ti,'bonj sole',0)
         
 
-#         print "Suppression de tous les documents"        
-#         for input_filename in glob(r'..\..\textindex\*.txt'):
-# 	        ti.RemoveDocument(input_filename)
-#         ti.Save(r'..\..\textindex\empty.ti')
-#    
-#         dump(ti,'bonj sole',0)
+        print "Suppression de tous les documents"        
+        for input_filename in glob(r'..\..\textindex\*.txt')[:-1]:
+            ti.RemoveDocument(input_filename)
+        print "Pack..."
+        start = clock()
+        ti.Pack()
+        print 'Pack en %.2f'%(clock()-start)
+        print "Enregistrement..."
+        ti.Save(r'..\..\textindex\empty.ti')
+    
+        dump(ti,'bonj sole',0)
     except:
         traceback.print_exc()
 finally:

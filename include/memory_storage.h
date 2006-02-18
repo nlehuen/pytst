@@ -25,6 +25,7 @@ template<typename S,typename T> class memory_storage {
 public:
     typedef typename std::vector< tst_node<S,T> > array_type;
     typedef typename array_type::iterator iterator_type;
+    typedef typename array_type::reverse_iterator reverse_iterator_type;
 
     memory_storage(int initial_size) : array(initial_size), empty(UNDEFINED_INDEX) {
     }
@@ -42,12 +43,16 @@ public:
     }
 
     void new_node(node_info<S,T>* info);
-    void pack();
+    void pack(int& root);
 
     void erase() {
         array_type().swap(array);
     };
-    
+
+    typename array_type::size_type size() {
+        return array.size();
+    }
+
 protected:
     array_type array;
     int empty;
@@ -72,7 +77,10 @@ template<typename S,typename T> void memory_storage<S,T>::new_node(node_info<S,T
     }
 }
 
-template<typename S,typename T> void memory_storage<S,T>::pack() {
+template<typename S,typename T> void memory_storage<S,T>::pack(int& root) {
+    // TODO : que faire quand on doit packer intégralement le vecteur ?
+    // Un raccourci serait bien pratique...
+
     int last_index = (int)(array.size() - 1);
 
     // On va essayer de déplacer les noeuds en fin de vecteur vers
@@ -103,7 +111,7 @@ template<typename S,typename T> void memory_storage<S,T>::pack() {
             // On réécrit tout le tableau
             // Une seule réécriture suffit puisqu'un noeud n'a qu'un seul
             // parent
-            for(iterator_type i=array.begin(),e=array.end();i!=e;i++) {
+            for(iterator_type i=array.begin(),e=array.end();i!=e;++i) {
                 if(i->right == last_index) {
                     i->right = empty;
                     break;
@@ -117,6 +125,12 @@ template<typename S,typename T> void memory_storage<S,T>::pack() {
                     break;
                 }
             }
+
+            // Si c'est la racine de l'arbre qui est déplacée
+            // on la met à jour.
+            if(root==last_index) {
+                root = empty;
+            }
             
             // On peut ensuite éliminer le dernier noeud
             last_index--;
@@ -126,14 +140,13 @@ template<typename S,typename T> void memory_storage<S,T>::pack() {
 
     }
     
-    
     if(last_index+1<(int)array.size()) {
         // On réduit le nombre d'éléments du vecteur si nécessaire
         array.resize(last_index+1);
     }
 
     // On réduit la taille des réservations du vecteur.
-    std::vector< tst_node<S,T> >(array).swap(array);
+    array_type(array).swap(array);
 }
 
 #endif

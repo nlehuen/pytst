@@ -63,8 +63,8 @@ public:
         delete storage;
     }
 
-    void pack() const {
-        storage->pack();
+    void pack() {
+        storage->pack(root);
     }
     
     T walk(filter<S,T>* filter,action<S,T>* to_perform) const;

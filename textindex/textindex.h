@@ -226,6 +226,31 @@ template < typename character_type, typename document_type, typename reader_writ
                 document_id_type document_id;
         };
 
+        class cleaner : public action< typename character_type, typename documents_scores_pointer > {
+            public:
+                typedef boost::shared_ptr< std::vector< std::basic_string< typename character_type > > > result_type;
+
+                cleaner() : empty_words(new std::vector< std::basic_string< character_type > >() ) {
+                }
+            
+                virtual void perform(const character_type* string, size_t string_length, int remaining_distance, typename documents_scores_pointer data) {
+                    if(data->size()==0) {
+                        empty_words->push_back(std::basic_string< typename character_type >(string,string_length));
+                    }
+                }
+                
+                virtual typename documents_scores_pointer result() {
+                    return documents_scores_pointer();
+                }
+                
+                typename result_type get_empty_words() {
+                    return empty_words;
+                }
+
+            private:
+                typename result_type empty_words;
+        };
+
         class documents_scores_type_factory : public filter< character_type, documents_scores_pointer > {
             public:
                 virtual documents_scores_pointer perform(const character_type* string, size_t string_length, int remaining_distance, typename documents_scores_pointer data) {
@@ -325,6 +350,12 @@ template < typename character_type, typename document_type, typename reader_writ
         }
 
         void pack() {
+            cleaner c;
+            tree.walk1(NULL,&c);
+            cleaner::result_type result(c.get_empty_words());
+            for(cleaner::result_type::element_type::const_iterator item(result->begin()),end(result->end());item!=end;++item) {
+                tree.remove(*item);
+            }
             tree.pack();
         }
 
