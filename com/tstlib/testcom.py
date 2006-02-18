@@ -67,7 +67,7 @@ try:
         ti = Dispatch('tstlib.TextIndex')
         from glob import glob
         start = clock()
-        for input_filename in glob(r'..\..\textindex\*.txt'):
+        for input_filename in glob(r'..\..\textindex\*.txt')[0:2]:
             print input_filename
             for linenumber, line in enumerate(file(input_filename,'rb')):
                 content = line.decode('iso-8859-1').lower()
@@ -75,7 +75,6 @@ try:
                 #for word in words_re.findall(content):
                 #    words.add(word)
                 #    ti.AddWord(word,"%s:%i"%(input_filename,linenumber))
-                break
         print 'Index construit en %.2f'%(clock()-start)
         print 'Saving...',
         ti.Save(r'..\..\textindex\\complete.ti')

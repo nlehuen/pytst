@@ -108,10 +108,16 @@ template<typename S,typename T> void memory_storage<S,T>::pack(int& root) {
             // avec le dernier noeud
             array[empty] = array[last_index];
             
+            // Si c'est la racine de l'arbre qui est déplacée
+            // on la met à jour.
+            if(root == last_index) {
+                root = empty;
+            }
+
             // On réécrit tout le tableau
             // Une seule réécriture suffit puisqu'un noeud n'a qu'un seul
             // parent
-            for(iterator_type i=array.begin(),e=array.end();i!=e;++i) {
+            for(iterator_type i=array.begin(),e=i+last_index;i!=e;++i) {
                 if(i->right == last_index) {
                     i->right = empty;
                     break;
@@ -126,12 +132,6 @@ template<typename S,typename T> void memory_storage<S,T>::pack(int& root) {
                 }
             }
 
-            // Si c'est la racine de l'arbre qui est déplacée
-            // on la met à jour.
-            if(root==last_index) {
-                root = empty;
-            }
-            
             // On peut ensuite éliminer le dernier noeud
             last_index--;
             // Et passer au noeud vide suivant.
