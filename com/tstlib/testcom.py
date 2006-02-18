@@ -66,6 +66,7 @@ try:
         
         ti = Dispatch('tstlib.TextIndex')
         from glob import glob
+        start = clock()
         for input_filename in glob(r'..\..\textindex\*.txt'):
             print input_filename
             for linenumber, line in enumerate(file(input_filename,'rb')):
@@ -74,6 +75,7 @@ try:
                 #for word in words_re.findall(content):
                 #    words.add(word)
                 #    ti.AddWord(word,"%s:%i"%(input_filename,linenumber))
+        print 'Index construit en %.2f'%(clock()-start)
         print 'Saving...',
         ti.Save(r'..\..\textindex\\complete.ti')
         print 'OK !'
@@ -86,12 +88,12 @@ try:
         dump(ti,'bonj sole',0)
         
 
-        print "Suppression de tous les documents"        
-        for input_filename in glob(r'..\..\textindex\*.txt'):
-	        ti.RemoveDocument(input_filename)
-        ti.Save(r'..\..\textindex\empty.ti')
-   
-        dump(ti,'bonj sole',0)
+#         print "Suppression de tous les documents"        
+#         for input_filename in glob(r'..\..\textindex\*.txt'):
+# 	        ti.RemoveDocument(input_filename)
+#         ti.Save(r'..\..\textindex\empty.ti')
+#    
+#         dump(ti,'bonj sole',0)
     except:
         traceback.print_exc()
 finally:

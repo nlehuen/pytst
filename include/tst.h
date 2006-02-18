@@ -23,7 +23,6 @@ const char* const TST_VERSION = "1.06";
 
 #include "debug.h"
 
-#include <new>
 #include <vector>
 
 #ifdef __PYTHON__BUILD__
