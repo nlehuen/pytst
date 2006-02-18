@@ -53,6 +53,11 @@ template <typename document_id_type, typename score_type> class documents_scores
             return (documents[document] += score);
         }
 
+        int remove_document(const document_id_type &document) {
+            documents.remove(document);
+            return documents.size();
+        }
+
         void merge_with(const documents_scores &other,const documents_scores* intersect=0) {
             storage_type::iterator lhs(documents.begin());
             storage_type::const_iterator rhs(other.documents.begin());
@@ -205,6 +210,23 @@ template < typename character_type, typename document_type, typename reader_writ
                 documents_scores_pointer entries;
         };
         
+        class eraser : public action< typename character_type, typename documents_scores_pointer > {
+            public:
+                eraser(document_id_type _document_id) : document_id(_document_id) {
+                }
+            
+                virtual void perform(const character_type* string, size_t string_length, int remaining_distance, typename documents_scores_pointer data) {
+                    data->remove_document(document_id);
+                }
+                
+                virtual typename documents_scores_pointer result() {
+                    return documents_scores_pointer();
+                }
+                    
+            private:
+                document_id_type document_id;
+        };
+
         class documents_scores_type_factory : public filter< character_type, documents_scores_pointer > {
             public:
                 virtual documents_scores_pointer perform(const character_type* string, size_t string_length, int remaining_distance, typename documents_scores_pointer data) {
@@ -241,6 +263,18 @@ template < typename character_type, typename document_type, typename reader_writ
             return count;
         }
         
+        void remove_document(const document_type& document) {
+            documents_ids_type::const_iterator document_position(ids.find(document));
+            if(document_position != ids.end()) {
+                document_id_type document_id(document_position->second);
+                ids.erase(document_position);
+                reversed_ids.erase(document_id);
+
+                eraser e(document_id);
+                tree.walk1(0,&e);
+            }
+        }
+
         result_pointer find_word(const std::basic_string< character_type >& word) {
             collector c;
             tree.walk2(0,&c,word);
