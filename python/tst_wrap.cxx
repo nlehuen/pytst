@@ -306,7 +306,7 @@ SWIG_TypePrettyName(const swig_type_info *type) {
      type, separated by vertical-bar characters.  We choose
      to print the last name, as it is often (?) the most
      specific. */
-  if (type->str != 0) {
+  if (type->str != NULL) {
     const char *last_name = type->str;
     const char *s;
     for (s = type->str; *s; s++)
@@ -478,7 +478,7 @@ SWIG_PackVoidPtr(char *buff, void *ptr, const char *name, size_t bsz) {
 SWIGRUNTIME const char *
 SWIG_UnpackVoidPtr(const char *c, void **ptr, const char *name) {
   if (*c != '_') {
-    if (strcmp(c,"0") == 0) {
+    if (strcmp(c,"NULL") == 0) {
       *ptr = (void *) 0;
       return name;
     } else {
@@ -506,7 +506,7 @@ SWIG_PackDataName(char *buff, void *ptr, size_t sz, const char *name, size_t bsz
 SWIGRUNTIME const char *
 SWIG_UnpackDataName(const char *c, void *ptr, size_t sz, const char *name) {
   if (*c != '_') {
-    if (strcmp(c,"0") == 0) {
+    if (strcmp(c,"NULL") == 0) {
       memset(ptr,0,sz);
       return name;
     } else {
@@ -717,7 +717,7 @@ PySwigObject_long(PySwigObject *v)
 SWIGRUNTIME PyObject *
 PySwigObject_format(const char* fmt, PySwigObject *v)
 {
-  PyObject *res = 0;
+  PyObject *res = NULL;
   PyObject *args = PyTuple_New(1);
   if (args && (PyTuple_SetItem(args, 0, PySwigObject_long(v)) == 0)) {
     PyObject *ofmt = PyString_FromString(fmt);
@@ -1013,8 +1013,8 @@ SWIGRUNTIME PyObject *
 PySwigPacked_FromDataAndDesc(void *ptr, size_t size, const char *desc)
 {
   PySwigPacked *self = PyObject_NEW(PySwigPacked, PySwigPacked_type());
-  if (self == 0) {
-    return 0;
+  if (self == NULL) {
+    return NULL;
   } else {
     void *pack = malloc(size);
     if (pack) {
@@ -1024,7 +1024,7 @@ PySwigPacked_FromDataAndDesc(void *ptr, size_t size, const char *desc)
       self->size = size;
       return (PyObject *) self;
     }
-    return 0;
+    return NULL;
   }
 }
 
@@ -1057,7 +1057,7 @@ PySwigPacked_Check(PyObject *op) {
 #define PySwigObject_GetDesc(obj)	           PyCObject_GetDesc(obj)
 #define PySwigObject_Check(obj)	           PyCObject_Check(obj)
 #define PySwigObject_AsVoidPtr(obj)	   PyCObject_AsVoidPtr(obj)
-#define PySwigObject_FromVoidPtrAndDesc(p, d)  PyCObject_FromVoidPtrAndDesc(p, d, 0)
+#define PySwigObject_FromVoidPtrAndDesc(p, d)  PyCObject_FromVoidPtrAndDesc(p, d, NULL)
 
 #endif
 
@@ -1394,12 +1394,12 @@ PyModule_AddObject(PyObject *m, char *name, PyObject *o)
   }
   if (!o) {
     PyErr_SetString(PyExc_TypeError,
-		    "PyModule_AddObject() needs non-0 value");
+		    "PyModule_AddObject() needs non-NULL value");
     return -1;
   }
   
   dict = PyModule_GetDict(m);
-  if (dict == 0) {
+  if (dict == NULL) {
     /* Internal error -- modules must have a dict! */
     PyErr_Format(PyExc_SystemError, "module '%s' has no __dict__",
 		 PyModule_GetName(m));
@@ -1414,11 +1414,11 @@ PyModule_AddObject(PyObject *m, char *name, PyObject *o)
 
 SWIGRUNTIME void
 SWIG_Python_SetModule(swig_module_info *swig_module) {
-  static PyMethodDef swig_empty_runtime_method_table[] = { {0, 0, 0, 0} };/* Sentinel */
+  static PyMethodDef swig_empty_runtime_method_table[] = { {NULL, NULL, 0, NULL} };/* Sentinel */
 
   PyObject *module = Py_InitModule((char*)"swig_runtime_data" SWIG_RUNTIME_VERSION,
 				   swig_empty_runtime_method_table);
-  PyObject *pointer = PyCObject_FromVoidPtr((void *) swig_module, 0);
+  PyObject *pointer = PyCObject_FromVoidPtr((void *) swig_module, NULL);
   if (pointer && module) {
     PyModule_AddObject(module, (char*)"type_pointer" SWIG_TYPE_TABLE_NAME, pointer);
   }
@@ -1494,7 +1494,7 @@ SWIG_FromCharPtr(const char* cptr)
 }
 
 
-  /*@C:\\swigwin-1.3.27\\Lib\\python\\pymacros.swg,72,SWIG_define@*/
+  /*@E:\\SWIG-1.3.27\\Lib\\python\\pymacros.swg,72,SWIG_define@*/
 #define SWIG_From_int PyInt_FromLong
 /*@@*/
 
@@ -1699,7 +1699,7 @@ static int _wrap_TST_VERSION_set(PyObject *) {
 
 
 static PyObject *_wrap_TST_VERSION_get(void) {
-    PyObject *pyobj = 0;
+    PyObject *pyobj = NULL;
     
     pyobj = SWIG_FromCharPtr(TST_VERSION);
     return pyobj;
@@ -1713,7 +1713,7 @@ static int _wrap_UNDEFINED_INDEX_set(PyObject *) {
 
 
 static PyObject *_wrap_UNDEFINED_INDEX_get(void) {
-    PyObject *pyobj = 0;
+    PyObject *pyobj = NULL;
     
     {
         pyobj = SWIG_From_int(static_cast<int >(UNDEFINED_INDEX)); 
@@ -1723,7 +1723,7 @@ static PyObject *_wrap_UNDEFINED_INDEX_get(void) {
 
 
 static PyObject *_wrap_new_TSTException(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     char *arg1 = (char *) 0 ;
     TSTException *result;
     PyObject * obj0 = 0 ;
@@ -1737,18 +1737,18 @@ static PyObject *_wrap_new_TSTException(PyObject *, PyObject *args) {
             result = (TSTException *)new TSTException((char const *)arg1);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_TSTException, 1);
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TSTException_what(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TSTException *arg1 = (TSTException *) 0 ;
     char *result;
     PyObject * obj0 = 0 ;
@@ -1761,18 +1761,18 @@ static PyObject *_wrap_TSTException_what(PyObject *, PyObject *args) {
             result = (char *)(arg1)->what();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = SWIG_FromCharPtr(result);
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete_TSTException(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TSTException *arg1 = (TSTException *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -1784,25 +1784,25 @@ static PyObject *_wrap_delete_TSTException(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * TSTException_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_TSTException, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
-static PyObject *_wrap_new__TST__SWIG_0(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+static PyObject *_wrap_new__TST(PyObject *, PyObject *args) {
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *result;
     
     if(!PyArg_ParseTuple(args,(char *)":new__TST")) goto fail;
@@ -1811,91 +1811,18 @@ static PyObject *_wrap_new__TST__SWIG_0(PyObject *, PyObject *args) {
             result = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *)new tst<char,PythonReference,MemoryStorage,ObjectSerializer >();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 1);
     return resultobj;
     fail:
-    return 0;
-}
-
-
-static PyObject *_wrap_new__TST__SWIG_1(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
-    MemoryStorage *arg1 = (MemoryStorage *) 0 ;
-    PythonReference arg2 ;
-    tst<char,PythonReference,MemoryStorage,ObjectSerializer > *result;
-    PyObject * obj0 = 0 ;
-    PyObject * obj1 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OO:new__TST",&obj0,&obj1)) goto fail;
-    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_memory_storageTchar_PythonReference_t, SWIG_POINTER_EXCEPTION | 0);
-    if (SWIG_arg_fail(1)) SWIG_fail;
-    {
-        arg2 = PythonReference(obj1);
-    }
-    {
-        try {
-            result = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *)new tst<char,PythonReference,MemoryStorage,ObjectSerializer >(arg1,arg2);
-        }
-        catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
-        }
-    }
-    resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 1);
-    return resultobj;
-    fail:
-    return 0;
-}
-
-
-static PyObject *_wrap_new__TST(PyObject *self, PyObject *args) {
-    int argc;
-    PyObject *argv[3];
-    int ii;
-    
-    argc = PyObject_Length(args);
-    for (ii = 0; (ii < argc) && (ii < 2); ii++) {
-        argv[ii] = PyTuple_GetItem(args,ii);
-    }
-    if (argc == 0) {
-        return _wrap_new__TST__SWIG_0(self,args);
-    }
-    if (argc == 2) {
-        int _v;
-        {
-            void *ptr;
-            if (SWIG_ConvertPtr(argv[0], &ptr, SWIGTYPE_p_memory_storageTchar_PythonReference_t, 0) == -1) {
-                _v = 0;
-                PyErr_Clear();
-            } else {
-                _v = 1;
-            }
-        }
-        if (_v) {
-            {
-                void *ptr = 0;
-                if (SWIG_ConvertPtr(argv[1], &ptr, SWIGTYPE_p_PythonReference, 0) == -1) {
-                    _v = 0;
-                    PyErr_Clear();
-                } else {
-                    _v = (ptr != 0);
-                }
-            }
-            if (_v) {
-                return _wrap_new__TST__SWIG_1(self,args);
-            }
-        }
-    }
-    
-    PyErr_SetString(PyExc_NotImplementedError,"No matching function for overloaded 'new__TST'");
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete__TST(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -1907,18 +1834,18 @@ static PyObject *_wrap_delete__TST(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_pack(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -1927,21 +1854,21 @@ static PyObject *_wrap__TST_pack(PyObject *, PyObject *args) {
     if (SWIG_arg_fail(1)) SWIG_fail;
     {
         try {
-            (arg1)->pack();
+            ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->pack();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_walk__SWIG_0(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     filter<char,PythonReference > *arg2 = (filter<char,PythonReference > *) 0 ;
     action<char,PythonReference > *arg3 = (action<char,PythonReference > *) 0 ;
@@ -1962,7 +1889,7 @@ static PyObject *_wrap__TST_walk__SWIG_0(PyObject *, PyObject *args) {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->walk(arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -1970,12 +1897,12 @@ static PyObject *_wrap__TST_walk__SWIG_0(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_walk__SWIG_1(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     filter<char,PythonReference > *arg2 = (filter<char,PythonReference > *) 0 ;
     action<char,PythonReference > *arg3 = (action<char,PythonReference > *) 0 ;
@@ -2007,7 +1934,7 @@ static PyObject *_wrap__TST_walk__SWIG_1(PyObject *, PyObject *args) {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->walk(arg2,arg3,(char const *)arg4,arg5);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2015,7 +1942,7 @@ static PyObject *_wrap__TST_walk__SWIG_1(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
@@ -2113,12 +2040,12 @@ static PyObject *_wrap__TST_walk(PyObject *self, PyObject *args) {
     }
     
     PyErr_SetString(PyExc_NotImplementedError,"No matching function for overloaded '_TST_walk'");
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_close_match(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2156,7 +2083,7 @@ static PyObject *_wrap__TST_close_match(PyObject *, PyObject *args) {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->close_match((char const *)arg2,arg3,arg4,arg5,arg6);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2164,12 +2091,12 @@ static PyObject *_wrap__TST_close_match(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_prefix_match(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2201,7 +2128,7 @@ static PyObject *_wrap__TST_prefix_match(PyObject *, PyObject *args) {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->prefix_match((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2209,12 +2136,12 @@ static PyObject *_wrap__TST_prefix_match(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_get(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2238,7 +2165,7 @@ static PyObject *_wrap__TST_get(PyObject *, PyObject *args) {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->get((char const *)arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2246,12 +2173,12 @@ static PyObject *_wrap__TST_get(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2279,7 +2206,7 @@ static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
             result = (arg1)->get_or_build((char const *)arg2,arg3,arg4);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2287,12 +2214,12 @@ static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2321,7 +2248,7 @@ static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
             result = (arg1)->put((char const *)arg2,arg3,arg4);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2329,12 +2256,12 @@ static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_remove(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2357,18 +2284,18 @@ static PyObject *_wrap__TST_remove(PyObject *, PyObject *args) {
             (arg1)->remove((char const *)arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_contains(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2392,7 +2319,7 @@ static PyObject *_wrap__TST_contains(PyObject *, PyObject *args) {
             result = (bool)((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->contains((char const *)arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2400,12 +2327,12 @@ static PyObject *_wrap__TST_contains(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_get_maximum_key_length(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     int result;
     PyObject * obj0 = 0 ;
@@ -2418,7 +2345,7 @@ static PyObject *_wrap__TST_get_maximum_key_length(PyObject *, PyObject *args) {
             result = (int)((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->get_maximum_key_length();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2426,12 +2353,12 @@ static PyObject *_wrap__TST_get_maximum_key_length(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_write(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     FILE *arg2 = (FILE *) 0 ;
     PyObject * obj0 = 0 ;
@@ -2447,18 +2374,18 @@ static PyObject *_wrap__TST_write(PyObject *, PyObject *args) {
             ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->write(arg2);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_read(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     FILE *arg2 = (FILE *) 0 ;
     PyObject * obj0 = 0 ;
@@ -2474,18 +2401,18 @@ static PyObject *_wrap__TST_read(PyObject *, PyObject *args) {
             (arg1)->read(arg2);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_iterator__SWIG_0(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     SwigValueWrapper<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > > result;
     PyObject * obj0 = 0 ;
@@ -2498,7 +2425,7 @@ static PyObject *_wrap__TST_iterator__SWIG_0(PyObject *, PyObject *args) {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->iterator();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2508,12 +2435,12 @@ static PyObject *_wrap__TST_iterator__SWIG_0(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_iterator__SWIG_1(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2537,7 +2464,7 @@ static PyObject *_wrap__TST_iterator__SWIG_1(PyObject *, PyObject *args) {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->iterator((char const *)arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2547,7 +2474,7 @@ static PyObject *_wrap__TST_iterator__SWIG_1(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
@@ -2601,12 +2528,12 @@ static PyObject *_wrap__TST_iterator(PyObject *self, PyObject *args) {
     }
     
     PyErr_SetString(PyExc_NotImplementedError,"No matching function for overloaded '_TST_iterator'");
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_close_match_iterator(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2636,7 +2563,7 @@ static PyObject *_wrap__TST_close_match_iterator(PyObject *, PyObject *args) {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->close_match_iterator((char const *)arg2,arg3,arg4);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2646,12 +2573,12 @@ static PyObject *_wrap__TST_close_match_iterator(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_scan(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2679,7 +2606,7 @@ static PyObject *_wrap__TST_scan(PyObject *, PyObject *args) {
             result = (arg1)->scan((char const *)arg2,arg3,arg4);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2687,12 +2614,12 @@ static PyObject *_wrap__TST_scan(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2731,7 +2658,7 @@ static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->scan_with_stop_chars((char const *)arg2,arg3,(char const *)arg4,arg5,arg6);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2739,19 +2666,19 @@ static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * _TST_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_delete__Action(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     action<char,PythonReference > *arg1 = (action<char,PythonReference > *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -2763,18 +2690,18 @@ static PyObject *_wrap_delete__Action(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__Action_perform(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     action<char,PythonReference > *arg1 = (action<char,PythonReference > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2808,18 +2735,18 @@ static PyObject *_wrap__Action_perform(PyObject *, PyObject *args) {
             (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__Action_result(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     action<char,PythonReference > *arg1 = (action<char,PythonReference > *) 0 ;
     PythonReference result;
     PyObject * obj0 = 0 ;
@@ -2832,7 +2759,7 @@ static PyObject *_wrap__Action_result(PyObject *, PyObject *args) {
             result = (arg1)->result();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2840,19 +2767,19 @@ static PyObject *_wrap__Action_result(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * _Action_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_actionTchar_PythonReference_t, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_delete__Filter(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     filter<char,PythonReference > *arg1 = (filter<char,PythonReference > *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -2864,18 +2791,18 @@ static PyObject *_wrap_delete__Filter(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap__Filter_perform(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     filter<char,PythonReference > *arg1 = (filter<char,PythonReference > *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -2910,7 +2837,7 @@ static PyObject *_wrap__Filter_perform(PyObject *, PyObject *args) {
             result = (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -2918,19 +2845,19 @@ static PyObject *_wrap__Filter_perform(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * _Filter_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_filterTchar_PythonReference_t, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_new_CallableAction(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     PythonReference arg1 ;
     PythonReference arg2 ;
     CallableAction *result;
@@ -2949,18 +2876,18 @@ static PyObject *_wrap_new_CallableAction(PyObject *, PyObject *args) {
             result = (CallableAction *)new CallableAction(arg1,arg2);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_CallableAction, 1);
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete_CallableAction(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     CallableAction *arg1 = (CallableAction *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -2972,18 +2899,18 @@ static PyObject *_wrap_delete_CallableAction(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_CallableAction_perform(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     CallableAction *arg1 = (CallableAction *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -3017,18 +2944,18 @@ static PyObject *_wrap_CallableAction_perform(PyObject *, PyObject *args) {
             (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_CallableAction_result(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     CallableAction *arg1 = (CallableAction *) 0 ;
     PythonReference result;
     PyObject * obj0 = 0 ;
@@ -3041,7 +2968,7 @@ static PyObject *_wrap_CallableAction_result(PyObject *, PyObject *args) {
             result = (arg1)->result();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3049,19 +2976,19 @@ static PyObject *_wrap_CallableAction_result(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * CallableAction_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_CallableAction, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_new_CallableFilter(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     PythonReference arg1 ;
     CallableFilter *result;
     PyObject * obj0 = 0 ;
@@ -3075,18 +3002,18 @@ static PyObject *_wrap_new_CallableFilter(PyObject *, PyObject *args) {
             result = (CallableFilter *)new CallableFilter(arg1);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_CallableFilter, 1);
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete_CallableFilter(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     CallableFilter *arg1 = (CallableFilter *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -3098,18 +3025,18 @@ static PyObject *_wrap_delete_CallableFilter(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_CallableFilter_perform(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     CallableFilter *arg1 = (CallableFilter *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -3144,7 +3071,7 @@ static PyObject *_wrap_CallableFilter_perform(PyObject *, PyObject *args) {
             result = (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3152,19 +3079,19 @@ static PyObject *_wrap_CallableFilter_perform(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * CallableFilter_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_CallableFilter, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_new_DictAction(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     DictAction *result;
     
     if(!PyArg_ParseTuple(args,(char *)":new_DictAction")) goto fail;
@@ -3173,18 +3100,18 @@ static PyObject *_wrap_new_DictAction(PyObject *, PyObject *args) {
             result = (DictAction *)new DictAction();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_DictAction, 1);
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete_DictAction(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     DictAction *arg1 = (DictAction *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -3196,18 +3123,18 @@ static PyObject *_wrap_delete_DictAction(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_DictAction_perform(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     DictAction *arg1 = (DictAction *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -3241,18 +3168,18 @@ static PyObject *_wrap_DictAction_perform(PyObject *, PyObject *args) {
             (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_DictAction_result(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     DictAction *arg1 = (DictAction *) 0 ;
     PythonReference result;
     PyObject * obj0 = 0 ;
@@ -3265,7 +3192,7 @@ static PyObject *_wrap_DictAction_result(PyObject *, PyObject *args) {
             result = (arg1)->result();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3273,19 +3200,19 @@ static PyObject *_wrap_DictAction_result(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * DictAction_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_DictAction, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_new_ListAction(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     ListAction *result;
     
     if(!PyArg_ParseTuple(args,(char *)":new_ListAction")) goto fail;
@@ -3294,18 +3221,18 @@ static PyObject *_wrap_new_ListAction(PyObject *, PyObject *args) {
             result = (ListAction *)new ListAction();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_ListAction, 1);
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete_ListAction(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     ListAction *arg1 = (ListAction *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -3317,18 +3244,18 @@ static PyObject *_wrap_delete_ListAction(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_ListAction_perform(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     ListAction *arg1 = (ListAction *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -3362,18 +3289,18 @@ static PyObject *_wrap_ListAction_perform(PyObject *, PyObject *args) {
             (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_ListAction_result(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     ListAction *arg1 = (ListAction *) 0 ;
     PythonReference result;
     PyObject * obj0 = 0 ;
@@ -3386,7 +3313,7 @@ static PyObject *_wrap_ListAction_result(PyObject *, PyObject *args) {
             result = (arg1)->result();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3394,19 +3321,19 @@ static PyObject *_wrap_ListAction_result(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * ListAction_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_ListAction, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_new_TupleListAction(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TupleListAction *result;
     
     if(!PyArg_ParseTuple(args,(char *)":new_TupleListAction")) goto fail;
@@ -3415,18 +3342,18 @@ static PyObject *_wrap_new_TupleListAction(PyObject *, PyObject *args) {
             result = (TupleListAction *)new TupleListAction();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_TupleListAction, 1);
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete_TupleListAction(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TupleListAction *arg1 = (TupleListAction *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -3438,18 +3365,18 @@ static PyObject *_wrap_delete_TupleListAction(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TupleListAction_perform(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TupleListAction *arg1 = (TupleListAction *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -3483,18 +3410,18 @@ static PyObject *_wrap_TupleListAction_perform(PyObject *, PyObject *args) {
             (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TupleListAction_result(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TupleListAction *arg1 = (TupleListAction *) 0 ;
     PythonReference result;
     PyObject * obj0 = 0 ;
@@ -3507,7 +3434,7 @@ static PyObject *_wrap_TupleListAction_result(PyObject *, PyObject *args) {
             result = (arg1)->result();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3515,19 +3442,19 @@ static PyObject *_wrap_TupleListAction_result(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * TupleListAction_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_TupleListAction, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_new_ObjectSerializer(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     ObjectSerializer *result;
     
     if(!PyArg_ParseTuple(args,(char *)":new_ObjectSerializer")) goto fail;
@@ -3536,18 +3463,18 @@ static PyObject *_wrap_new_ObjectSerializer(PyObject *, PyObject *args) {
             result = (ObjectSerializer *)new ObjectSerializer();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_ObjectSerializer, 1);
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_ObjectSerializer_write(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     ObjectSerializer *arg1 = (ObjectSerializer *) 0 ;
     FILE *arg2 = (FILE *) 0 ;
     PythonReference arg3 ;
@@ -3568,18 +3495,18 @@ static PyObject *_wrap_ObjectSerializer_write(PyObject *, PyObject *args) {
             (arg1)->write(arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_ObjectSerializer_read(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     ObjectSerializer *arg1 = (ObjectSerializer *) 0 ;
     FILE *arg2 = (FILE *) 0 ;
     PythonReference result;
@@ -3596,7 +3523,7 @@ static PyObject *_wrap_ObjectSerializer_read(PyObject *, PyObject *args) {
             result = (arg1)->read(arg2);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3604,12 +3531,12 @@ static PyObject *_wrap_ObjectSerializer_read(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_ObjectSerializer_write_to_file(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     ObjectSerializer *arg1 = (ObjectSerializer *) 0 ;
     PythonReference arg2 ;
     PythonReference arg3 ;
@@ -3631,18 +3558,18 @@ static PyObject *_wrap_ObjectSerializer_write_to_file(PyObject *, PyObject *args
             (arg1)->write_to_file(arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_ObjectSerializer_read_from_file(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     ObjectSerializer *arg1 = (ObjectSerializer *) 0 ;
     PythonReference arg2 ;
     PythonReference result;
@@ -3660,7 +3587,7 @@ static PyObject *_wrap_ObjectSerializer_read_from_file(PyObject *, PyObject *arg
             result = (arg1)->read_from_file(arg2);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3668,12 +3595,12 @@ static PyObject *_wrap_ObjectSerializer_read_from_file(PyObject *, PyObject *arg
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete_ObjectSerializer(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     ObjectSerializer *arg1 = (ObjectSerializer *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -3685,25 +3612,25 @@ static PyObject *_wrap_delete_ObjectSerializer(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * ObjectSerializer_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_ObjectSerializer, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_new_TST(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *result;
     
     if(!PyArg_ParseTuple(args,(char *)":new_TST")) goto fail;
@@ -3712,18 +3639,18 @@ static PyObject *_wrap_new_TST(PyObject *, PyObject *args) {
             result = (TST *)new TST();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = SWIG_NewPointerObj((void*)(result), SWIGTYPE_p_TST, 1);
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete_TST(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -3735,18 +3662,18 @@ static PyObject *_wrap_delete_TST(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TST_write_to_file(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     PythonReference arg2 ;
     PythonReference result;
@@ -3764,7 +3691,7 @@ static PyObject *_wrap_TST_write_to_file(PyObject *, PyObject *args) {
             result = (arg1)->write_to_file(arg2);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3772,12 +3699,12 @@ static PyObject *_wrap_TST_write_to_file(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TST_read_from_file(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     PythonReference arg2 ;
     PythonReference result;
@@ -3795,7 +3722,7 @@ static PyObject *_wrap_TST_read_from_file(PyObject *, PyObject *args) {
             result = (arg1)->read_from_file(arg2);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3803,12 +3730,12 @@ static PyObject *_wrap_TST_read_from_file(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TST___getitem__(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -3832,7 +3759,7 @@ static PyObject *_wrap_TST___getitem__(PyObject *, PyObject *args) {
             result = (arg1)->__getitem__(arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3840,12 +3767,12 @@ static PyObject *_wrap_TST___getitem__(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TST___setitem__(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -3874,7 +3801,7 @@ static PyObject *_wrap_TST___setitem__(PyObject *, PyObject *args) {
             result = (arg1)->__setitem__(arg2,arg3,arg4);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3882,12 +3809,12 @@ static PyObject *_wrap_TST___setitem__(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TST___delitem__(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -3910,18 +3837,18 @@ static PyObject *_wrap_TST___delitem__(PyObject *, PyObject *args) {
             (arg1)->__delitem__(arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TST___contains__(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -3945,7 +3872,7 @@ static PyObject *_wrap_TST___contains__(PyObject *, PyObject *args) {
             result = (arg1)->__contains__(arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3953,12 +3880,12 @@ static PyObject *_wrap_TST___contains__(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TST_iterator__SWIG_0(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > > > result;
     PyObject * obj0 = 0 ;
@@ -3971,7 +3898,7 @@ static PyObject *_wrap_TST_iterator__SWIG_0(PyObject *, PyObject *args) {
             result = (arg1)->iterator();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -3981,12 +3908,12 @@ static PyObject *_wrap_TST_iterator__SWIG_0(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TST_iterator__SWIG_1(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -4010,7 +3937,7 @@ static PyObject *_wrap_TST_iterator__SWIG_1(PyObject *, PyObject *args) {
             result = (arg1)->iterator(arg2,arg3);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -4020,7 +3947,7 @@ static PyObject *_wrap_TST_iterator__SWIG_1(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
@@ -4074,12 +4001,12 @@ static PyObject *_wrap_TST_iterator(PyObject *self, PyObject *args) {
     }
     
     PyErr_SetString(PyExc_NotImplementedError,"No matching function for overloaded 'TST_iterator'");
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TST_close_match_iterator(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     char *arg2 = (char *) 0 ;
     size_t arg3 ;
@@ -4109,7 +4036,7 @@ static PyObject *_wrap_TST_close_match_iterator(PyObject *, PyObject *args) {
             result = (arg1)->close_match_iterator(arg2,arg3,arg4);
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -4119,12 +4046,12 @@ static PyObject *_wrap_TST_close_match_iterator(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TST___iter__(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TST *arg1 = (TST *) 0 ;
     SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > > > result;
     PyObject * obj0 = 0 ;
@@ -4137,7 +4064,7 @@ static PyObject *_wrap_TST___iter__(PyObject *, PyObject *args) {
             result = (arg1)->__iter__();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -4147,19 +4074,19 @@ static PyObject *_wrap_TST___iter__(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * TST_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_TST, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_TSTLexicalIterator___iter__(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TSTIterator<lexical_iterator_type > *arg1 = (TSTIterator<lexical_iterator_type > *) 0 ;
     SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > > > result;
     PyObject * obj0 = 0 ;
@@ -4172,7 +4099,7 @@ static PyObject *_wrap_TSTLexicalIterator___iter__(PyObject *, PyObject *args) {
             result = (arg1)->__iter__();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -4182,12 +4109,12 @@ static PyObject *_wrap_TSTLexicalIterator___iter__(PyObject *, PyObject *args) {
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TSTLexicalIterator_next(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TSTIterator<lexical_iterator_type > *arg1 = (TSTIterator<lexical_iterator_type > *) 0 ;
     PyObject *result;
     PyObject * obj0 = 0 ;
@@ -4200,18 +4127,18 @@ static PyObject *_wrap_TSTLexicalIterator_next(PyObject *, PyObject *args) {
             result = (PyObject *)(arg1)->next();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = result;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete_TSTLexicalIterator(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TSTIterator<lexical_iterator_type > *arg1 = (TSTIterator<lexical_iterator_type > *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -4223,25 +4150,25 @@ static PyObject *_wrap_delete_TSTLexicalIterator(PyObject *, PyObject *args) {
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * TSTLexicalIterator_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_TSTIteratorTlexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t_t, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyObject *_wrap_TSTCloseMatchIterator___iter__(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TSTIterator<close_match_iterator_type > *arg1 = (TSTIterator<close_match_iterator_type > *) 0 ;
     SwigValueWrapper<TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > > > result;
     PyObject * obj0 = 0 ;
@@ -4254,7 +4181,7 @@ static PyObject *_wrap_TSTCloseMatchIterator___iter__(PyObject *, PyObject *args
             result = (arg1)->__iter__();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     {
@@ -4264,12 +4191,12 @@ static PyObject *_wrap_TSTCloseMatchIterator___iter__(PyObject *, PyObject *args
     }
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_TSTCloseMatchIterator_next(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TSTIterator<close_match_iterator_type > *arg1 = (TSTIterator<close_match_iterator_type > *) 0 ;
     PyObject *result;
     PyObject * obj0 = 0 ;
@@ -4282,18 +4209,18 @@ static PyObject *_wrap_TSTCloseMatchIterator_next(PyObject *, PyObject *args) {
             result = (PyObject *)(arg1)->next();
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     resultobj = result;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject *_wrap_delete_TSTCloseMatchIterator(PyObject *, PyObject *args) {
-    PyObject *resultobj = 0;
+    PyObject *resultobj = NULL;
     TSTIterator<close_match_iterator_type > *arg1 = (TSTIterator<close_match_iterator_type > *) 0 ;
     PyObject * obj0 = 0 ;
     
@@ -4305,106 +4232,106 @@ static PyObject *_wrap_delete_TSTCloseMatchIterator(PyObject *, PyObject *args) 
             delete arg1;
         }
         catch (TSTException e) {
-            PyErr_SetString(PyExc_RuntimeError,e.message); SWIG_fail;
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
-    return 0;
+    return NULL;
 }
 
 
 static PyObject * TSTCloseMatchIterator_swigregister(PyObject *, PyObject *args) {
     PyObject *obj;
-    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return 0;
+    if (!PyArg_ParseTuple(args,(char*)"O", &obj)) return NULL;
     SWIG_TypeClientData(SWIGTYPE_p_TSTIteratorTmatch_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t_t, obj);
     Py_INCREF(obj);
     return Py_BuildValue((char *)"");
 }
 static PyMethodDef SwigMethods[] = {
-	 { (char *)"new_TSTException", _wrap_new_TSTException, METH_VARARGS, 0},
-	 { (char *)"TSTException_what", _wrap_TSTException_what, METH_VARARGS, 0},
-	 { (char *)"delete_TSTException", _wrap_delete_TSTException, METH_VARARGS, 0},
-	 { (char *)"TSTException_swigregister", TSTException_swigregister, METH_VARARGS, 0},
-	 { (char *)"new__TST", _wrap_new__TST, METH_VARARGS, 0},
-	 { (char *)"delete__TST", _wrap_delete__TST, METH_VARARGS, 0},
-	 { (char *)"_TST_pack", _wrap__TST_pack, METH_VARARGS, 0},
-	 { (char *)"_TST_walk", _wrap__TST_walk, METH_VARARGS, 0},
-	 { (char *)"_TST_close_match", _wrap__TST_close_match, METH_VARARGS, 0},
-	 { (char *)"_TST_prefix_match", _wrap__TST_prefix_match, METH_VARARGS, 0},
-	 { (char *)"_TST_get", _wrap__TST_get, METH_VARARGS, 0},
-	 { (char *)"_TST_get_or_build", _wrap__TST_get_or_build, METH_VARARGS, 0},
-	 { (char *)"_TST_put", _wrap__TST_put, METH_VARARGS, 0},
-	 { (char *)"_TST_remove", _wrap__TST_remove, METH_VARARGS, 0},
-	 { (char *)"_TST_contains", _wrap__TST_contains, METH_VARARGS, 0},
-	 { (char *)"_TST_get_maximum_key_length", _wrap__TST_get_maximum_key_length, METH_VARARGS, 0},
-	 { (char *)"_TST_write", _wrap__TST_write, METH_VARARGS, 0},
-	 { (char *)"_TST_read", _wrap__TST_read, METH_VARARGS, 0},
-	 { (char *)"_TST_iterator", _wrap__TST_iterator, METH_VARARGS, 0},
-	 { (char *)"_TST_close_match_iterator", _wrap__TST_close_match_iterator, METH_VARARGS, 0},
-	 { (char *)"_TST_scan", _wrap__TST_scan, METH_VARARGS, 0},
-	 { (char *)"_TST_scan_with_stop_chars", _wrap__TST_scan_with_stop_chars, METH_VARARGS, 0},
-	 { (char *)"_TST_swigregister", _TST_swigregister, METH_VARARGS, 0},
-	 { (char *)"delete__Action", _wrap_delete__Action, METH_VARARGS, 0},
-	 { (char *)"_Action_perform", _wrap__Action_perform, METH_VARARGS, 0},
-	 { (char *)"_Action_result", _wrap__Action_result, METH_VARARGS, 0},
-	 { (char *)"_Action_swigregister", _Action_swigregister, METH_VARARGS, 0},
-	 { (char *)"delete__Filter", _wrap_delete__Filter, METH_VARARGS, 0},
-	 { (char *)"_Filter_perform", _wrap__Filter_perform, METH_VARARGS, 0},
-	 { (char *)"_Filter_swigregister", _Filter_swigregister, METH_VARARGS, 0},
-	 { (char *)"new_CallableAction", _wrap_new_CallableAction, METH_VARARGS, 0},
-	 { (char *)"delete_CallableAction", _wrap_delete_CallableAction, METH_VARARGS, 0},
-	 { (char *)"CallableAction_perform", _wrap_CallableAction_perform, METH_VARARGS, 0},
-	 { (char *)"CallableAction_result", _wrap_CallableAction_result, METH_VARARGS, 0},
-	 { (char *)"CallableAction_swigregister", CallableAction_swigregister, METH_VARARGS, 0},
-	 { (char *)"new_CallableFilter", _wrap_new_CallableFilter, METH_VARARGS, 0},
-	 { (char *)"delete_CallableFilter", _wrap_delete_CallableFilter, METH_VARARGS, 0},
-	 { (char *)"CallableFilter_perform", _wrap_CallableFilter_perform, METH_VARARGS, 0},
-	 { (char *)"CallableFilter_swigregister", CallableFilter_swigregister, METH_VARARGS, 0},
-	 { (char *)"new_DictAction", _wrap_new_DictAction, METH_VARARGS, 0},
-	 { (char *)"delete_DictAction", _wrap_delete_DictAction, METH_VARARGS, 0},
-	 { (char *)"DictAction_perform", _wrap_DictAction_perform, METH_VARARGS, 0},
-	 { (char *)"DictAction_result", _wrap_DictAction_result, METH_VARARGS, 0},
-	 { (char *)"DictAction_swigregister", DictAction_swigregister, METH_VARARGS, 0},
-	 { (char *)"new_ListAction", _wrap_new_ListAction, METH_VARARGS, 0},
-	 { (char *)"delete_ListAction", _wrap_delete_ListAction, METH_VARARGS, 0},
-	 { (char *)"ListAction_perform", _wrap_ListAction_perform, METH_VARARGS, 0},
-	 { (char *)"ListAction_result", _wrap_ListAction_result, METH_VARARGS, 0},
-	 { (char *)"ListAction_swigregister", ListAction_swigregister, METH_VARARGS, 0},
-	 { (char *)"new_TupleListAction", _wrap_new_TupleListAction, METH_VARARGS, 0},
-	 { (char *)"delete_TupleListAction", _wrap_delete_TupleListAction, METH_VARARGS, 0},
-	 { (char *)"TupleListAction_perform", _wrap_TupleListAction_perform, METH_VARARGS, 0},
-	 { (char *)"TupleListAction_result", _wrap_TupleListAction_result, METH_VARARGS, 0},
-	 { (char *)"TupleListAction_swigregister", TupleListAction_swigregister, METH_VARARGS, 0},
-	 { (char *)"new_ObjectSerializer", _wrap_new_ObjectSerializer, METH_VARARGS, 0},
-	 { (char *)"ObjectSerializer_write", _wrap_ObjectSerializer_write, METH_VARARGS, 0},
-	 { (char *)"ObjectSerializer_read", _wrap_ObjectSerializer_read, METH_VARARGS, 0},
-	 { (char *)"ObjectSerializer_write_to_file", _wrap_ObjectSerializer_write_to_file, METH_VARARGS, 0},
-	 { (char *)"ObjectSerializer_read_from_file", _wrap_ObjectSerializer_read_from_file, METH_VARARGS, 0},
-	 { (char *)"delete_ObjectSerializer", _wrap_delete_ObjectSerializer, METH_VARARGS, 0},
-	 { (char *)"ObjectSerializer_swigregister", ObjectSerializer_swigregister, METH_VARARGS, 0},
-	 { (char *)"new_TST", _wrap_new_TST, METH_VARARGS, 0},
-	 { (char *)"delete_TST", _wrap_delete_TST, METH_VARARGS, 0},
-	 { (char *)"TST_write_to_file", _wrap_TST_write_to_file, METH_VARARGS, 0},
-	 { (char *)"TST_read_from_file", _wrap_TST_read_from_file, METH_VARARGS, 0},
-	 { (char *)"TST___getitem__", _wrap_TST___getitem__, METH_VARARGS, 0},
-	 { (char *)"TST___setitem__", _wrap_TST___setitem__, METH_VARARGS, 0},
-	 { (char *)"TST___delitem__", _wrap_TST___delitem__, METH_VARARGS, 0},
-	 { (char *)"TST___contains__", _wrap_TST___contains__, METH_VARARGS, 0},
-	 { (char *)"TST_iterator", _wrap_TST_iterator, METH_VARARGS, 0},
-	 { (char *)"TST_close_match_iterator", _wrap_TST_close_match_iterator, METH_VARARGS, 0},
-	 { (char *)"TST___iter__", _wrap_TST___iter__, METH_VARARGS, 0},
-	 { (char *)"TST_swigregister", TST_swigregister, METH_VARARGS, 0},
-	 { (char *)"TSTLexicalIterator___iter__", _wrap_TSTLexicalIterator___iter__, METH_VARARGS, 0},
-	 { (char *)"TSTLexicalIterator_next", _wrap_TSTLexicalIterator_next, METH_VARARGS, 0},
-	 { (char *)"delete_TSTLexicalIterator", _wrap_delete_TSTLexicalIterator, METH_VARARGS, 0},
-	 { (char *)"TSTLexicalIterator_swigregister", TSTLexicalIterator_swigregister, METH_VARARGS, 0},
-	 { (char *)"TSTCloseMatchIterator___iter__", _wrap_TSTCloseMatchIterator___iter__, METH_VARARGS, 0},
-	 { (char *)"TSTCloseMatchIterator_next", _wrap_TSTCloseMatchIterator_next, METH_VARARGS, 0},
-	 { (char *)"delete_TSTCloseMatchIterator", _wrap_delete_TSTCloseMatchIterator, METH_VARARGS, 0},
-	 { (char *)"TSTCloseMatchIterator_swigregister", TSTCloseMatchIterator_swigregister, METH_VARARGS, 0},
-	 { 0, 0, 0, 0 }
+	 { (char *)"new_TSTException", _wrap_new_TSTException, METH_VARARGS, NULL},
+	 { (char *)"TSTException_what", _wrap_TSTException_what, METH_VARARGS, NULL},
+	 { (char *)"delete_TSTException", _wrap_delete_TSTException, METH_VARARGS, NULL},
+	 { (char *)"TSTException_swigregister", TSTException_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new__TST", _wrap_new__TST, METH_VARARGS, NULL},
+	 { (char *)"delete__TST", _wrap_delete__TST, METH_VARARGS, NULL},
+	 { (char *)"_TST_pack", _wrap__TST_pack, METH_VARARGS, NULL},
+	 { (char *)"_TST_walk", _wrap__TST_walk, METH_VARARGS, NULL},
+	 { (char *)"_TST_close_match", _wrap__TST_close_match, METH_VARARGS, NULL},
+	 { (char *)"_TST_prefix_match", _wrap__TST_prefix_match, METH_VARARGS, NULL},
+	 { (char *)"_TST_get", _wrap__TST_get, METH_VARARGS, NULL},
+	 { (char *)"_TST_get_or_build", _wrap__TST_get_or_build, METH_VARARGS, NULL},
+	 { (char *)"_TST_put", _wrap__TST_put, METH_VARARGS, NULL},
+	 { (char *)"_TST_remove", _wrap__TST_remove, METH_VARARGS, NULL},
+	 { (char *)"_TST_contains", _wrap__TST_contains, METH_VARARGS, NULL},
+	 { (char *)"_TST_get_maximum_key_length", _wrap__TST_get_maximum_key_length, METH_VARARGS, NULL},
+	 { (char *)"_TST_write", _wrap__TST_write, METH_VARARGS, NULL},
+	 { (char *)"_TST_read", _wrap__TST_read, METH_VARARGS, NULL},
+	 { (char *)"_TST_iterator", _wrap__TST_iterator, METH_VARARGS, NULL},
+	 { (char *)"_TST_close_match_iterator", _wrap__TST_close_match_iterator, METH_VARARGS, NULL},
+	 { (char *)"_TST_scan", _wrap__TST_scan, METH_VARARGS, NULL},
+	 { (char *)"_TST_scan_with_stop_chars", _wrap__TST_scan_with_stop_chars, METH_VARARGS, NULL},
+	 { (char *)"_TST_swigregister", _TST_swigregister, METH_VARARGS, NULL},
+	 { (char *)"delete__Action", _wrap_delete__Action, METH_VARARGS, NULL},
+	 { (char *)"_Action_perform", _wrap__Action_perform, METH_VARARGS, NULL},
+	 { (char *)"_Action_result", _wrap__Action_result, METH_VARARGS, NULL},
+	 { (char *)"_Action_swigregister", _Action_swigregister, METH_VARARGS, NULL},
+	 { (char *)"delete__Filter", _wrap_delete__Filter, METH_VARARGS, NULL},
+	 { (char *)"_Filter_perform", _wrap__Filter_perform, METH_VARARGS, NULL},
+	 { (char *)"_Filter_swigregister", _Filter_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_CallableAction", _wrap_new_CallableAction, METH_VARARGS, NULL},
+	 { (char *)"delete_CallableAction", _wrap_delete_CallableAction, METH_VARARGS, NULL},
+	 { (char *)"CallableAction_perform", _wrap_CallableAction_perform, METH_VARARGS, NULL},
+	 { (char *)"CallableAction_result", _wrap_CallableAction_result, METH_VARARGS, NULL},
+	 { (char *)"CallableAction_swigregister", CallableAction_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_CallableFilter", _wrap_new_CallableFilter, METH_VARARGS, NULL},
+	 { (char *)"delete_CallableFilter", _wrap_delete_CallableFilter, METH_VARARGS, NULL},
+	 { (char *)"CallableFilter_perform", _wrap_CallableFilter_perform, METH_VARARGS, NULL},
+	 { (char *)"CallableFilter_swigregister", CallableFilter_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_DictAction", _wrap_new_DictAction, METH_VARARGS, NULL},
+	 { (char *)"delete_DictAction", _wrap_delete_DictAction, METH_VARARGS, NULL},
+	 { (char *)"DictAction_perform", _wrap_DictAction_perform, METH_VARARGS, NULL},
+	 { (char *)"DictAction_result", _wrap_DictAction_result, METH_VARARGS, NULL},
+	 { (char *)"DictAction_swigregister", DictAction_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_ListAction", _wrap_new_ListAction, METH_VARARGS, NULL},
+	 { (char *)"delete_ListAction", _wrap_delete_ListAction, METH_VARARGS, NULL},
+	 { (char *)"ListAction_perform", _wrap_ListAction_perform, METH_VARARGS, NULL},
+	 { (char *)"ListAction_result", _wrap_ListAction_result, METH_VARARGS, NULL},
+	 { (char *)"ListAction_swigregister", ListAction_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_TupleListAction", _wrap_new_TupleListAction, METH_VARARGS, NULL},
+	 { (char *)"delete_TupleListAction", _wrap_delete_TupleListAction, METH_VARARGS, NULL},
+	 { (char *)"TupleListAction_perform", _wrap_TupleListAction_perform, METH_VARARGS, NULL},
+	 { (char *)"TupleListAction_result", _wrap_TupleListAction_result, METH_VARARGS, NULL},
+	 { (char *)"TupleListAction_swigregister", TupleListAction_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_ObjectSerializer", _wrap_new_ObjectSerializer, METH_VARARGS, NULL},
+	 { (char *)"ObjectSerializer_write", _wrap_ObjectSerializer_write, METH_VARARGS, NULL},
+	 { (char *)"ObjectSerializer_read", _wrap_ObjectSerializer_read, METH_VARARGS, NULL},
+	 { (char *)"ObjectSerializer_write_to_file", _wrap_ObjectSerializer_write_to_file, METH_VARARGS, NULL},
+	 { (char *)"ObjectSerializer_read_from_file", _wrap_ObjectSerializer_read_from_file, METH_VARARGS, NULL},
+	 { (char *)"delete_ObjectSerializer", _wrap_delete_ObjectSerializer, METH_VARARGS, NULL},
+	 { (char *)"ObjectSerializer_swigregister", ObjectSerializer_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_TST", _wrap_new_TST, METH_VARARGS, NULL},
+	 { (char *)"delete_TST", _wrap_delete_TST, METH_VARARGS, NULL},
+	 { (char *)"TST_write_to_file", _wrap_TST_write_to_file, METH_VARARGS, NULL},
+	 { (char *)"TST_read_from_file", _wrap_TST_read_from_file, METH_VARARGS, NULL},
+	 { (char *)"TST___getitem__", _wrap_TST___getitem__, METH_VARARGS, NULL},
+	 { (char *)"TST___setitem__", _wrap_TST___setitem__, METH_VARARGS, NULL},
+	 { (char *)"TST___delitem__", _wrap_TST___delitem__, METH_VARARGS, NULL},
+	 { (char *)"TST___contains__", _wrap_TST___contains__, METH_VARARGS, NULL},
+	 { (char *)"TST_iterator", _wrap_TST_iterator, METH_VARARGS, NULL},
+	 { (char *)"TST_close_match_iterator", _wrap_TST_close_match_iterator, METH_VARARGS, NULL},
+	 { (char *)"TST___iter__", _wrap_TST___iter__, METH_VARARGS, NULL},
+	 { (char *)"TST_swigregister", TST_swigregister, METH_VARARGS, NULL},
+	 { (char *)"TSTLexicalIterator___iter__", _wrap_TSTLexicalIterator___iter__, METH_VARARGS, NULL},
+	 { (char *)"TSTLexicalIterator_next", _wrap_TSTLexicalIterator_next, METH_VARARGS, NULL},
+	 { (char *)"delete_TSTLexicalIterator", _wrap_delete_TSTLexicalIterator, METH_VARARGS, NULL},
+	 { (char *)"TSTLexicalIterator_swigregister", TSTLexicalIterator_swigregister, METH_VARARGS, NULL},
+	 { (char *)"TSTCloseMatchIterator___iter__", _wrap_TSTCloseMatchIterator___iter__, METH_VARARGS, NULL},
+	 { (char *)"TSTCloseMatchIterator_next", _wrap_TSTCloseMatchIterator_next, METH_VARARGS, NULL},
+	 { (char *)"delete_TSTCloseMatchIterator", _wrap_delete_TSTCloseMatchIterator, METH_VARARGS, NULL},
+	 { (char *)"TSTCloseMatchIterator_swigregister", TSTCloseMatchIterator_swigregister, METH_VARARGS, NULL},
+	 { NULL, NULL, 0, NULL }
 };
 
 
@@ -4759,7 +4686,7 @@ extern "C" {
             var = var->next;
         }
         PyErr_SetString(PyExc_NameError,"Unknown C global variable");
-        return 0;
+        return NULL;
     }
     
     SWIGINTERN int

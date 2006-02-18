@@ -233,7 +233,7 @@ typedef TSTIterator<close_match_iterator_type> TSTCloseMatchIterator;
 
 class TST : public BaseTST {
 public:
-    TST() : BaseTST(new MemoryStorage(16),PythonReference()) {
+    TST() : BaseTST() {
     }
 
     virtual ~TST() {

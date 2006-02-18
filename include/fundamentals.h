@@ -21,13 +21,14 @@
 
 const int UNDEFINED_INDEX=-1;
 
+#include <exception>
+
 class TSTException : public exception {
 public:
-    TSTException(const char* _message) {
-        message=_message;
+    TSTException(const char* _message) : message(_message) {
     }
 
-    virtual const char* what() {
+    const char* what() {
         return message;
     }
 

@@ -234,7 +234,7 @@ template < typename character_type, typename document_type, typename reader_writ
         };
 
         textindex() :
-            tree(new tree_type::storage_type(16),tree_type::value_type()), tokenizer(L"\\b\\w+\\b"),
+            tree(), tokenizer(L"\\b\\w+\\b"),
             factory(),
             next_document_id(0) {
         }

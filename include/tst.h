@@ -58,7 +58,6 @@ public:
     typedef RW serializer_type;
 
     tst();
-    tst(M* storage,T default_value);
 
     virtual ~tst() {
         delete storage;
@@ -136,10 +135,6 @@ private:
 
 template <typename S, typename T, typename M=memory_storage<S,T>, typename RW=null_reader_writer<T> > class string_tst : public tst<S,T,M,RW> {
     public:
-        string_tst<S,T,M,RW>(M* storage,T default_value) : tst<S,T,M,RW>(storage,default_value)
-        {
-        }
-        
         T put(std::basic_string<S> string, T value) {
             return tst<S,T,M,RW>::put(string.c_str(),string.size(),value);
         }
@@ -190,15 +185,6 @@ template <typename S, typename T, typename M=memory_storage<S,T>, typename RW=nu
 template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst() {
     storage=new storage_type(16);
     default_value=value_type();
-    node_info<S,T> root_info;
-    storage->new_node(&root_info);
-    root = root_info.index;
-    maximum_key_length=0;
-}
-
-template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst(M* storage,T default_value) {
-    this->storage=storage;
-    this->default_value=default_value;
     node_info<S,T> root_info;
     storage->new_node(&root_info);
     root = root_info.index;

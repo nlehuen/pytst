@@ -229,7 +229,7 @@ typedef TSTIterator<close_match_iterator_type> TSTCloseMatchIterator;
 
 class TST : public string_tst<char,object,memory_storage<char,object>,ObjectSerializer> {
     public:
-        TST() : string_tst<char,object,memory_storage<char,object>,ObjectSerializer>(new memory_storage<char,object>(16),object()) {
+        TST() : string_tst<char,object,memory_storage<char,object>,ObjectSerializer>() {
         }
     
         void write_to_file(object file) const {
