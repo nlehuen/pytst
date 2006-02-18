@@ -43,6 +43,10 @@ public:
 
     void new_node(node_info<S,T>* info);
     void pack();
+
+    void erase() {
+        array.swap(array_type());
+    };
     
 protected:
     array_type array;

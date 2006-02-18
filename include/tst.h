@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "1.05";
+const char* const TST_VERSION = "1.06";
 
 #include "debug.h"
 
@@ -189,8 +189,8 @@ template <typename S, typename T, typename M=memory_storage<S,T>, typename RW=nu
 };
 
 template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst() {
-    this->storage=new storage_type(16);
-    this->default_value=value_type();
+    storage=new storage_type(16);
+    default_value=value_type();
     node_info<S,T> root_info;
     storage->new_node(&root_info);
     root = root_info.index;
@@ -1206,45 +1206,74 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(
         tst_free(version);
     }
 
+
     RW reader;
     fread(&maximum_key_length,sizeof(int),1,file);
     default_value = reader.read(file);
-    root = read_node(file,&reader,0);
+
+    // On efface le stockage
+    storage->erase();
+
+    if(fgetc(file)) {
+        root = read_node(file,&reader,0);
+    }
+    else {
+        node_info<S,T> root_info;
+        storage->new_node(&root_info);
+        root = root_info.index;
+    }
 }
 
 template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::read_node(FILE* file,RW* reader,int depth) {
-    if(fgetc(file)) {
-        node_info<S,T> node_info;
-        storage->new_node(&node_info);
-        
-        fread(&(node_info.node->c),sizeof(S),1,file);
-        if(fgetc(file)) {
-            node_info.node->store(reader->read(file));
-        }
-        else {
-            node_info.node->store(default_value);
-        }
-#ifdef SCANNER
-        fread(&(node_info.node->position),sizeof(int),1,file);
-        fread(&(node_info.node->backtrack),sizeof(int),1,file);
-        fread(&(node_info.node->backtrack_match_index),sizeof(int),1,file);
-#endif
-        int other_index;
+    char bitmask = fgetc(file);
 
-        other_index = read_node(file,reader,depth+1);
-        storage->get(node_info.index)->next = other_index;
+    node_info<S,T> node_info;
+    storage->new_node(&node_info);
+    
+    fread(&(node_info.node->c),sizeof(S),1,file);
 
-        other_index = read_node(file,reader,depth+1);
-        storage->get(node_info.index)->left = other_index;
-
-        other_index = read_node(file,reader,depth+1);
-        storage->get(node_info.index)->right = other_index;
-
-        return node_info.index;
+    if(bitmask & 16) {
+        node_info.node->store(reader->read(file));
     }
     else {
-        return UNDEFINED_INDEX;
+        node_info.node->store(default_value);
     }
+
+#ifdef SCANNER
+    fread(&(node_info.node->position),sizeof(int),1,file);
+    fread(&(node_info.node->backtrack),sizeof(int),1,file);
+    fread(&(node_info.node->backtrack_match_index),sizeof(int),1,file);
+#endif
+
+    int other_index;
+
+    if(bitmask & 1) {
+        // En deux étapes car le noeud peut bouger physiquement.
+        // Normalement tout se passe bien mais c'est plus rassurant ainsi.
+        other_index = read_node(file,reader,depth+1);
+        storage->get(node_info.index)->next = other_index;
+    }
+    else {
+        storage->get(node_info.index)->next = UNDEFINED_INDEX;
+    }
+
+    if(bitmask & 2) {
+        other_index = read_node(file,reader,depth+1);
+        storage->get(node_info.index)->left = other_index;
+    }
+    else {
+        storage->get(node_info.index)->left = UNDEFINED_INDEX;
+    }
+
+    if(bitmask & 4) {
+        other_index = read_node(file,reader,depth+1);
+        storage->get(node_info.index)->right = other_index;
+    }
+    else {
+        storage->get(node_info.index)->right = UNDEFINED_INDEX;
+    }
+
+    return node_info.index;
 }
 
 template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write(FILE* file) const {
@@ -1256,33 +1285,41 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write
     fwrite(&maximum_key_length,sizeof(int),1,file);
     RW writer;
     writer.write(file,default_value);
-    write_node(file,&writer,root);
+
+    if(root!=UNDEFINED_INDEX) {
+        fputc(1,file);
+        write_node(file,&writer,root);
+    }
+    else {
+        fputc(0,file);
+    }
 }
 
 template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write_node(FILE* file,RW* writer,int index) const {
-    if(index==UNDEFINED_INDEX) {
-        fputc(0,file);
+    tst_node<S,T>* node = storage->get(index);
+
+    char bitmask=0;
+    if(node->next!=UNDEFINED_INDEX)  bitmask |= 1;
+    if(node->left!=UNDEFINED_INDEX)  bitmask |= 2;
+    if(node->right!=UNDEFINED_INDEX) bitmask |= 4;
+    if(node->data!=default_value)    bitmask |=16;
+    fputc(bitmask,file);
+
+    fwrite(&(node->c),sizeof(S),1,file);
+
+    if(bitmask & 16) {
+        writer->write(file,node->data);
     }
-    else {
-        tst_node<S,T>* node = storage->get(index);
-        fputc(1,file);
-        fwrite(&(node->c),sizeof(S),1,file);
-        if(node->data!=default_value) {
-            fputc(1,file);
-            writer->write(file,node->data);
-        }
-        else {
-            fputc(0,file);
-        }
+
 #ifdef SCANNER
-        fwrite(&(node->position),sizeof(int),1,file);
-        fwrite(&(node->backtrack),sizeof(int),1,file);
-        fwrite(&(node->backtrack_match_index),sizeof(int),1,file);
+    fwrite(&(node->position),sizeof(int),1,file);
+    fwrite(&(node->backtrack),sizeof(int),1,file);
+    fwrite(&(node->backtrack_match_index),sizeof(int),1,file);
 #endif
-        write_node(file,writer,node->next);
-        write_node(file,writer,node->left);
-        write_node(file,writer,node->right);
-    }
+
+    if(bitmask & 1) write_node(file,writer,node->next);
+    if(bitmask & 2) write_node(file,writer,node->left);
+    if(bitmask & 4) write_node(file,writer,node->right);
 }
 
 #endif
