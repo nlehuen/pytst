@@ -63,7 +63,7 @@ template<typename S,typename T> void memory_storage<S,T>::new_node(node_info<S,T
         // si on a un noeud vide on l'utilise.
         info->index=empty;
         info->node=get(empty);
-        info->height=0;
+        info->node->reset();
         
         // on passe au noeud vide suivant.
         empty = get(empty)->next;
@@ -71,8 +71,8 @@ template<typename S,typename T> void memory_storage<S,T>::new_node(node_info<S,T
     else {
         // on construit un noeud supplémentaire dans le tableau.
         info->index = (int)array.size();
-        array.push_back(tst_node<S,T>());
-        // array.resize(next); // moins rapide !
+        array.resize(array.size()+1);
+        // array.push_back(tst_node<S,T>()); // Plus ou moins rapide ?
         info->node=get(info->index);
     }
 }

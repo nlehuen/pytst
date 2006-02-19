@@ -68,6 +68,19 @@ public:
         data = value;
         return old;
     }
+    
+    void reset() {
+        c = 0;
+        data = T();
+        next = UNDEFINED_INDEX;
+        right = UNDEFINED_INDEX;
+        left = UNDEFINED_INDEX;
+#ifdef SCANNER
+        position = UNDEFINED_INDEX;
+        backtrack = UNDEFINED_INDEX;
+        backtrack_match_index = UNDEFINED_INDEX;
+#endif
+    }
 };
 
 template<typename S,typename T> class node_info {
