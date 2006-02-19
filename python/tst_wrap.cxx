@@ -1736,7 +1736,7 @@ static PyObject *_wrap_new_TSTException(PyObject *, PyObject *args) {
         try {
             result = (TSTException *)new TSTException((char const *)arg1);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -1760,7 +1760,7 @@ static PyObject *_wrap_TSTException_what(PyObject *, PyObject *args) {
         try {
             result = (char *)(arg1)->what();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -1783,7 +1783,7 @@ static PyObject *_wrap_delete_TSTException(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -1810,7 +1810,7 @@ static PyObject *_wrap_new__TST(PyObject *, PyObject *args) {
         try {
             result = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *)new tst<char,PythonReference,MemoryStorage,ObjectSerializer >();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -1833,7 +1833,7 @@ static PyObject *_wrap_delete__TST(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -1854,9 +1854,9 @@ static PyObject *_wrap__TST_pack(PyObject *, PyObject *args) {
     if (SWIG_arg_fail(1)) SWIG_fail;
     {
         try {
-            ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->pack();
+            (arg1)->pack();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -1888,7 +1888,7 @@ static PyObject *_wrap__TST_walk__SWIG_0(PyObject *, PyObject *args) {
         try {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->walk(arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -1933,7 +1933,7 @@ static PyObject *_wrap__TST_walk__SWIG_1(PyObject *, PyObject *args) {
         try {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->walk(arg2,arg3,(char const *)arg4,arg5);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2082,7 +2082,7 @@ static PyObject *_wrap__TST_close_match(PyObject *, PyObject *args) {
         try {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->close_match((char const *)arg2,arg3,arg4,arg5,arg6);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2127,7 +2127,7 @@ static PyObject *_wrap__TST_prefix_match(PyObject *, PyObject *args) {
         try {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->prefix_match((char const *)arg2,arg3,arg4,arg5);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2164,7 +2164,7 @@ static PyObject *_wrap__TST_get(PyObject *, PyObject *args) {
         try {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->get((char const *)arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2205,7 +2205,7 @@ static PyObject *_wrap__TST_get_or_build(PyObject *, PyObject *args) {
         try {
             result = (arg1)->get_or_build((char const *)arg2,arg3,arg4);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2247,7 +2247,7 @@ static PyObject *_wrap__TST_put(PyObject *, PyObject *args) {
         try {
             result = (arg1)->put((char const *)arg2,arg3,arg4);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2283,7 +2283,7 @@ static PyObject *_wrap__TST_remove(PyObject *, PyObject *args) {
         try {
             (arg1)->remove((char const *)arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2318,7 +2318,7 @@ static PyObject *_wrap__TST_contains(PyObject *, PyObject *args) {
         try {
             result = (bool)((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->contains((char const *)arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2344,7 +2344,7 @@ static PyObject *_wrap__TST_get_maximum_key_length(PyObject *, PyObject *args) {
         try {
             result = (int)((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->get_maximum_key_length();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2373,7 +2373,7 @@ static PyObject *_wrap__TST_write(PyObject *, PyObject *args) {
         try {
             ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->write(arg2);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2400,7 +2400,7 @@ static PyObject *_wrap__TST_read(PyObject *, PyObject *args) {
         try {
             (arg1)->read(arg2);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2424,7 +2424,7 @@ static PyObject *_wrap__TST_iterator__SWIG_0(PyObject *, PyObject *args) {
         try {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->iterator();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2463,7 +2463,7 @@ static PyObject *_wrap__TST_iterator__SWIG_1(PyObject *, PyObject *args) {
         try {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->iterator((char const *)arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2562,7 +2562,7 @@ static PyObject *_wrap__TST_close_match_iterator(PyObject *, PyObject *args) {
         try {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->close_match_iterator((char const *)arg2,arg3,arg4);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2605,7 +2605,7 @@ static PyObject *_wrap__TST_scan(PyObject *, PyObject *args) {
         try {
             result = (arg1)->scan((char const *)arg2,arg3,arg4);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2657,7 +2657,7 @@ static PyObject *_wrap__TST_scan_with_stop_chars(PyObject *, PyObject *args) {
         try {
             result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->scan_with_stop_chars((char const *)arg2,arg3,(char const *)arg4,arg5,arg6);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2689,7 +2689,7 @@ static PyObject *_wrap_delete__Action(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2734,7 +2734,7 @@ static PyObject *_wrap__Action_perform(PyObject *, PyObject *args) {
         try {
             (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2758,7 +2758,7 @@ static PyObject *_wrap__Action_result(PyObject *, PyObject *args) {
         try {
             result = (arg1)->result();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2790,7 +2790,7 @@ static PyObject *_wrap_delete__Filter(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2836,7 +2836,7 @@ static PyObject *_wrap__Filter_perform(PyObject *, PyObject *args) {
         try {
             result = (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2875,7 +2875,7 @@ static PyObject *_wrap_new_CallableAction(PyObject *, PyObject *args) {
         try {
             result = (CallableAction *)new CallableAction(arg1,arg2);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2898,7 +2898,7 @@ static PyObject *_wrap_delete_CallableAction(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2943,7 +2943,7 @@ static PyObject *_wrap_CallableAction_perform(PyObject *, PyObject *args) {
         try {
             (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -2967,7 +2967,7 @@ static PyObject *_wrap_CallableAction_result(PyObject *, PyObject *args) {
         try {
             result = (arg1)->result();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3001,7 +3001,7 @@ static PyObject *_wrap_new_CallableFilter(PyObject *, PyObject *args) {
         try {
             result = (CallableFilter *)new CallableFilter(arg1);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3024,7 +3024,7 @@ static PyObject *_wrap_delete_CallableFilter(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3070,7 +3070,7 @@ static PyObject *_wrap_CallableFilter_perform(PyObject *, PyObject *args) {
         try {
             result = (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3099,7 +3099,7 @@ static PyObject *_wrap_new_DictAction(PyObject *, PyObject *args) {
         try {
             result = (DictAction *)new DictAction();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3122,7 +3122,7 @@ static PyObject *_wrap_delete_DictAction(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3167,7 +3167,7 @@ static PyObject *_wrap_DictAction_perform(PyObject *, PyObject *args) {
         try {
             (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3191,7 +3191,7 @@ static PyObject *_wrap_DictAction_result(PyObject *, PyObject *args) {
         try {
             result = (arg1)->result();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3220,7 +3220,7 @@ static PyObject *_wrap_new_ListAction(PyObject *, PyObject *args) {
         try {
             result = (ListAction *)new ListAction();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3243,7 +3243,7 @@ static PyObject *_wrap_delete_ListAction(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3288,7 +3288,7 @@ static PyObject *_wrap_ListAction_perform(PyObject *, PyObject *args) {
         try {
             (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3312,7 +3312,7 @@ static PyObject *_wrap_ListAction_result(PyObject *, PyObject *args) {
         try {
             result = (arg1)->result();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3341,7 +3341,7 @@ static PyObject *_wrap_new_TupleListAction(PyObject *, PyObject *args) {
         try {
             result = (TupleListAction *)new TupleListAction();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3364,7 +3364,7 @@ static PyObject *_wrap_delete_TupleListAction(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3409,7 +3409,7 @@ static PyObject *_wrap_TupleListAction_perform(PyObject *, PyObject *args) {
         try {
             (arg1)->perform((char const *)arg2,arg3,arg4,arg5);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3433,7 +3433,7 @@ static PyObject *_wrap_TupleListAction_result(PyObject *, PyObject *args) {
         try {
             result = (arg1)->result();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3462,7 +3462,7 @@ static PyObject *_wrap_new_ObjectSerializer(PyObject *, PyObject *args) {
         try {
             result = (ObjectSerializer *)new ObjectSerializer();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3494,7 +3494,7 @@ static PyObject *_wrap_ObjectSerializer_write(PyObject *, PyObject *args) {
         try {
             (arg1)->write(arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3522,7 +3522,7 @@ static PyObject *_wrap_ObjectSerializer_read(PyObject *, PyObject *args) {
         try {
             result = (arg1)->read(arg2);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3557,7 +3557,7 @@ static PyObject *_wrap_ObjectSerializer_write_to_file(PyObject *, PyObject *args
         try {
             (arg1)->write_to_file(arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3586,7 +3586,7 @@ static PyObject *_wrap_ObjectSerializer_read_from_file(PyObject *, PyObject *arg
         try {
             result = (arg1)->read_from_file(arg2);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3611,7 +3611,7 @@ static PyObject *_wrap_delete_ObjectSerializer(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3638,7 +3638,7 @@ static PyObject *_wrap_new_TST(PyObject *, PyObject *args) {
         try {
             result = (TST *)new TST();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3661,7 +3661,7 @@ static PyObject *_wrap_delete_TST(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3690,7 +3690,7 @@ static PyObject *_wrap_TST_write_to_file(PyObject *, PyObject *args) {
         try {
             result = (arg1)->write_to_file(arg2);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3721,7 +3721,7 @@ static PyObject *_wrap_TST_read_from_file(PyObject *, PyObject *args) {
         try {
             result = (arg1)->read_from_file(arg2);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3758,7 +3758,7 @@ static PyObject *_wrap_TST___getitem__(PyObject *, PyObject *args) {
         try {
             result = (arg1)->__getitem__(arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3800,7 +3800,7 @@ static PyObject *_wrap_TST___setitem__(PyObject *, PyObject *args) {
         try {
             result = (arg1)->__setitem__(arg2,arg3,arg4);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3836,7 +3836,7 @@ static PyObject *_wrap_TST___delitem__(PyObject *, PyObject *args) {
         try {
             (arg1)->__delitem__(arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3871,7 +3871,7 @@ static PyObject *_wrap_TST___contains__(PyObject *, PyObject *args) {
         try {
             result = (arg1)->__contains__(arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3897,7 +3897,7 @@ static PyObject *_wrap_TST_iterator__SWIG_0(PyObject *, PyObject *args) {
         try {
             result = (arg1)->iterator();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -3936,7 +3936,7 @@ static PyObject *_wrap_TST_iterator__SWIG_1(PyObject *, PyObject *args) {
         try {
             result = (arg1)->iterator(arg2,arg3);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -4035,7 +4035,7 @@ static PyObject *_wrap_TST_close_match_iterator(PyObject *, PyObject *args) {
         try {
             result = (arg1)->close_match_iterator(arg2,arg3,arg4);
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -4063,7 +4063,7 @@ static PyObject *_wrap_TST___iter__(PyObject *, PyObject *args) {
         try {
             result = (arg1)->__iter__();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -4098,7 +4098,7 @@ static PyObject *_wrap_TSTLexicalIterator___iter__(PyObject *, PyObject *args) {
         try {
             result = (arg1)->__iter__();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -4126,7 +4126,7 @@ static PyObject *_wrap_TSTLexicalIterator_next(PyObject *, PyObject *args) {
         try {
             result = (PyObject *)(arg1)->next();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -4149,7 +4149,7 @@ static PyObject *_wrap_delete_TSTLexicalIterator(PyObject *, PyObject *args) {
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -4180,7 +4180,7 @@ static PyObject *_wrap_TSTCloseMatchIterator___iter__(PyObject *, PyObject *args
         try {
             result = (arg1)->__iter__();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -4208,7 +4208,7 @@ static PyObject *_wrap_TSTCloseMatchIterator_next(PyObject *, PyObject *args) {
         try {
             result = (PyObject *)(arg1)->next();
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }
@@ -4231,7 +4231,7 @@ static PyObject *_wrap_delete_TSTCloseMatchIterator(PyObject *, PyObject *args) 
         try {
             delete arg1;
         }
-        catch (TSTException e) {
+        catch (exception e) {
             PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
         }
     }

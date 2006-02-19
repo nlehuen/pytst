@@ -304,13 +304,36 @@ class TestHighCapacity(unittest.TestCase):
         for k in self.keys[:len(self.keys)/10]:
             del self.tree[k]
         timer_end('delete_big/10',10)
+
+        timer_start('refill_pre_pack/10')
+        for k in self.keys[:len(self.keys)/10]:
+            self.tree[k] = k
+        timer_end('refill_pre_pack/10',10)
+
+        self.testGet()
+
+        timer_start('delete_big/10')
+        for k in self.keys[:len(self.keys)/10]:
+            del self.tree[k]
+        timer_end('delete_big/10',10)
+
+        timer_start('pack/10')
         self.tree.pack()
+        timer_end('pack/10',10)
+
         timer_start('check_delete_big')
         for k in self.keys[:len(self.keys)/10]:
             self.assertEqual(self.tree[k],None)
         for k in self.keys[len(self.keys)/10+1:]:
             self.assertEqual(self.tree[k],k)
         timer_end('check_delete_big')
+        
+        timer_start('refill_post_pack/10')
+        for k in self.keys[:len(self.keys)/10]:
+            self.tree[k] = k
+        timer_end('refill_post_pack/10',10)
+
+        self.testGet()
 
     def testUpdate(self):
         timer_start('build_big/10')
