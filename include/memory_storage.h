@@ -20,6 +20,8 @@
 #define __MEMORY_STORAGE__H_INCLUDED__
 
 #include <vector>
+#include <map>
+#include <algorithm>
 
 template<typename S,typename T> class memory_storage {
 public:
@@ -78,74 +80,81 @@ template<typename S,typename T> void memory_storage<S,T>::new_node(node_info<S,T
 }
 
 template<typename S,typename T> void memory_storage<S,T>::pack(int& root) {
-    // TODO : que faire quand on doit packer intégralement le vecteur ?
-    // Un raccourci serait bien pratique...
+    if(empty == UNDEFINED_INDEX) {
+        return;
+    }
 
-    int last_index = (int)(array.size() - 1);
-
-    // On va essayer de déplacer les noeuds en fin de vecteur vers
-    // les noeuds vides, s'il y en a.
+    // Etape 1 : on construit un vector des numéros de noeuds vide
+    std::vector<int> empty_nodes;
     while(empty!=UNDEFINED_INDEX) {
-        int next_empty = get(empty)->next; 
-    
-        if(empty==last_index) {
-            // Le noeud vide est en dernière position
-            // On le sort de la chaîne des noeuds vides
-            empty = next_empty;
-            // Et on n'en a plus besoin
-            last_index--;
-        }
-        else if(next_empty==last_index) {
-            // Le noeud suivant est le dernier noeud
-            // Il est donc inutile de procéder à l'échange :
-            // On sort le suivant de la chaine des noeuds vide
-            get(empty)->next = get(next_empty)->next; 
-            // et on le supprime
-            last_index--;
+        empty_nodes.push_back(empty);
+        empty = get(empty)->next;
+    }
+
+    // Etape 2 : on trie ce vecteur
+    std::sort(empty_nodes.begin(),empty_nodes.end());
+
+    // Etape 3 : on remplit les noeuds vides avec des noeuds pleins pris en
+    // fin du storage
+    std::map<int,int> mapping; // sera utile en étape 4
+    int current_empty_node=0, last_empty_node = static_cast<int>(empty_nodes.size())-1;
+    int last_node_index = static_cast<int>(array.size())-1 ;
+
+    while(current_empty_node<=last_empty_node) {
+        int last_empty_node_index = empty_nodes[last_empty_node];
+        if(last_empty_node_index<last_node_index) {
+            // le dernier noeud est plein
+            // on l'échange avec le premier noeud vide
+            int current_empty_node_index = empty_nodes[current_empty_node];
+            mapping[last_node_index] = current_empty_node_index;
+            array[current_empty_node_index] = array[last_node_index];
+            --last_node_index;
+            ++current_empty_node;
         }
         else {
-            // On échange le noeud vide actuel
-            // avec le dernier noeud
-            array[empty] = array[last_index];
-            
-            // Si c'est la racine de l'arbre qui est déplacée
-            // on la met à jour.
-            if(root == last_index) {
-                root = empty;
-            }
+            // le dernier noeud est vide
+            // on le supprime
+            --last_node_index;
+            --last_empty_node;
+        }
+    }
 
-            // On réécrit tout le tableau
-            // Une seule réécriture suffit puisqu'un noeud n'a qu'un seul
-            // parent
-            for(iterator_type i=array.begin(),e=i+last_index;i!=e;++i) {
-                if(i->right == last_index) {
-                    i->right = empty;
-                    break;
-                }
-                else if(i->left == last_index) {
-                    i->left = empty;
-                    break;
-                }
-                else if(i->next == last_index) {
-                    i->next = empty;
-                    break;
-                }
-            }
+    // Etape 4 : on réécrit les indices
+    std::map<int,int>::const_iterator item,end(mapping.end());
 
-            // On peut ensuite éliminer le dernier noeud
-            last_index--;
-            // Et passer au noeud vide suivant.
-            empty = next_empty;
+    // La racine a peut-être bougé ?
+    item = mapping.find(root);
+    if(item!=end) {
+        root = item->second;
+    }
+
+    last_empty_node = 0;
+    while(last_empty_node <= last_node_index) {
+        tst_node<S,T>* node = get(last_empty_node);
+        if(node->left!=UNDEFINED_INDEX) {
+            item = mapping.find(node->left);
+            if(item!=end) {
+                node->left = item->second;
+            }
+        }
+        if(node->right!=UNDEFINED_INDEX) {
+            item = mapping.find(node->right);
+            if(item!=end) {
+                node->right = item->second;
+            }
+        }
+        if(node->next!=UNDEFINED_INDEX) {
+            item = mapping.find(node->next);
+            if(item!=end) {
+                node->next = item->second;
+            }
         }
 
-    }
-    
-    if(last_index+1<(int)array.size()) {
-        // On réduit le nombre d'éléments du vecteur si nécessaire
-        array.resize(last_index+1);
+        ++last_empty_node;
     }
 
-    // On réduit la taille des réservations du vecteur.
+    // Etape 5 : on redimensionne le tableau
+    array.resize(last_node_index+1);
     array_type(array).swap(array);
 }
 
