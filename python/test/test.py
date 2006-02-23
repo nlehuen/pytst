@@ -299,8 +299,37 @@ class TestHighCapacity(unittest.TestCase):
             self.assertEqual(self.tree[k],k)
         timer_end('read_big')
 
+    def testFullPack(self):
+        timer_start('delete_full')
+        for k in self.keys:
+            del self.tree[k]
+        timer_end('delete_full')
+        
+        self.tree.pack()
+
+        for k in self.keys:
+            self.assertEqual(self.tree[k],None)
+
+        sample = random.sample(self.keys,len(self.keys)/10)
+        random.shuffle(sample)
+        timer_start('refill_post_pack/10')
+        for k in sample:
+            self.tree[k] = k
+        timer_end('refill_post_pack/10',10)
+
+        for k in sample:
+            self.assertEqual(self.tree[k],k)
+            del self.tree[k]
+        
+        self.tree.pack()
+
+        for k in self.keys:
+            self.assertEqual(self.tree[k],None)
+
+        self.tree.write_to_file(file('test.tst','wb'))
+
     def testDelete(self):
-        sample = self.keys[:len(self.keys)/10]
+        sample = random.sample(self.keys,len(self.keys)/10)
         
         random.shuffle(sample)
         timer_start('delete_big/10')

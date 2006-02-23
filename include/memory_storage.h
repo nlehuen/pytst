@@ -28,8 +28,10 @@ public:
     typedef typename std::vector< tst_node<S,T> > array_type;
     typedef typename array_type::iterator iterator_type;
     typedef typename array_type::reverse_iterator reverse_iterator_type;
+    typedef typename array_type::size_type size_type;
 
-    memory_storage(int initial_size) : array(initial_size), empty(UNDEFINED_INDEX) {
+    memory_storage(int initial_size) : array(), empty(UNDEFINED_INDEX) {
+        array.reserve(initial_size);
     }
 
     ~memory_storage() {
@@ -51,7 +53,7 @@ public:
         array_type().swap(array);
     };
 
-    typename array_type::size_type size() {
+    typename size_type size() {
         return array.size();
     }
 

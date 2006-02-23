@@ -2577,6 +2577,32 @@ static PyObject *_wrap__TST_close_match_iterator(PyObject *, PyObject *args) {
 }
 
 
+static PyObject *_wrap__TST_get_number_of_nodes(PyObject *, PyObject *args) {
+    PyObject *resultobj = NULL;
+    tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
+    int result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:_TST_get_number_of_nodes",&obj0)) goto fail;
+    SWIG_Python_ConvertPtr(obj0, (void **)&arg1, SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, SWIG_POINTER_EXCEPTION | 0);
+    if (SWIG_arg_fail(1)) SWIG_fail;
+    {
+        try {
+            result = (int)((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->get_number_of_nodes();
+        }
+        catch (exception e) {
+            PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
+        }
+    }
+    {
+        resultobj = SWIG_From_int(static_cast<int >(result)); 
+    }
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap__TST_scan(PyObject *, PyObject *args) {
     PyObject *resultobj = NULL;
     tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
@@ -4270,6 +4296,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_TST_read", _wrap__TST_read, METH_VARARGS, NULL},
 	 { (char *)"_TST_iterator", _wrap__TST_iterator, METH_VARARGS, NULL},
 	 { (char *)"_TST_close_match_iterator", _wrap__TST_close_match_iterator, METH_VARARGS, NULL},
+	 { (char *)"_TST_get_number_of_nodes", _wrap__TST_get_number_of_nodes, METH_VARARGS, NULL},
 	 { (char *)"_TST_scan", _wrap__TST_scan, METH_VARARGS, NULL},
 	 { (char *)"_TST_scan_with_stop_chars", _wrap__TST_scan_with_stop_chars, METH_VARARGS, NULL},
 	 { (char *)"_TST_swigregister", _TST_swigregister, METH_VARARGS, NULL},

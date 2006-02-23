@@ -94,6 +94,10 @@ public:
     match_iterator<S,T,M,RW> close_match_iterator(const S* string,size_t string_length,int distance) const {
         return match_iterator<S,T,M,RW>(this,std::basic_string<S>(string,string_length),distance,root);
     }
+    
+    int get_number_of_nodes() const {
+        return storage->size();
+    }
 
 #ifdef SCANNER
     T scan(const S* string,size_t string_length,action<S,T>* to_perform);
