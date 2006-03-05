@@ -19,11 +19,11 @@
 #ifndef __FUNDAMENTALS__H_INCLUDED__
 #define __FUNDAMENTALS__H_INCLUDED__
 
-const int UNDEFINED_INDEX=-1;
-
 #include <exception>
 
-class TSTException : public exception {
+const int UNDEFINED_INDEX=-1;
+
+class TSTException : public std::exception {
 public:
     TSTException(const char* _message) : message(_message) {
     }

@@ -34,7 +34,7 @@
 
 %exception {
     try { $action }
-    catch (exception e) { PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;}
+    catch (std::exception e) { PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;}
 }
 
 #define __PYTHON__BUILD__

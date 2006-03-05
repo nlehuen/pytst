@@ -53,7 +53,7 @@ public:
         array_type().swap(array);
     };
 
-    typename size_type size() {
+    typename array_type::size_type size() {
         return array.size();
     }
 
