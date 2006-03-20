@@ -80,16 +80,18 @@ try:
         ti.Save(r'..\..\textindex\\complete.ti')
         print 'OK !'
         
+        dump(ti,'b??j* sole*',0)
+
         ti = Dispatch('tstlib.TextIndex')
         print 'Loading...',
         ti.Load(r'..\..\textindex\complete.ti')
         print 'OK !'
         
-        dump(ti,'bonj sole',0)
+        dump(ti,'b??j* sole*',0)
         
-
         print "Suppression de tous les documents"        
         for input_filename in glob(r'..\..\textindex\*.txt')[:-1]:
+            print input_filename
             ti.RemoveDocument(input_filename)
         print "Pack..."
         start = clock()
@@ -98,7 +100,7 @@ try:
         print "Enregistrement..."
         ti.Save(r'..\..\textindex\empty.ti')
     
-        dump(ti,'bonj sole',0)
+        dump(ti,'b??j* sole*',0)
     except:
         traceback.print_exc()
 finally:

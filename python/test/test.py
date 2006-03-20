@@ -284,6 +284,9 @@ class TestMatch(unittest.TestCase):
         d = self.tree.match("**",None,DictAction())
         self.assertEquals(d,{'a': (0, 'a'), 'ab': (0, 'ab'), 'bbc': (0, 'bbc'), 'abc': (0, 'abc'), 'efgfjhny': (0, 'ok')})
 
+        d = self.tree.match("***",None,DictAction())
+        self.assertEquals(d,{'a': (0, 'a'), 'ab': (0, 'ab'), 'bbc': (0, 'bbc'), 'abc': (0, 'abc'), 'efgfjhny': (0, 'ok')})
+
     def testStar4(self):
         d = self.tree.match("e*ny",None,DictAction())
         self.assertEquals(d,{'efgfjhny': (0, 'ok')})
@@ -595,11 +598,11 @@ if __name__ == '__main__':
     comment = ' '.join(sys.argv[1:])
 
     suite = unittest.TestSuite((
-#         unittest.makeSuite(TestCollectors),
-#         unittest.makeSuite(TestBasics),
-#         unittest.makeSuite(TestHighCapacity),
-#         unittest.makeSuite(TestScan),
-#         unittest.makeSuite(TestIterators),
+        unittest.makeSuite(TestCollectors),
+        unittest.makeSuite(TestBasics),
+        unittest.makeSuite(TestHighCapacity),
+        unittest.makeSuite(TestScan),
+        unittest.makeSuite(TestIterators),
         unittest.makeSuite(TestMatch),
      ))
     

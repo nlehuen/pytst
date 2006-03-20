@@ -259,7 +259,7 @@ template < typename character_type, typename document_type, typename reader_writ
         };
 
         textindex() :
-            tree(), tokenizer(L"\\b\\w+\\b"),
+            tree(), tokenizer(L"[\\w\\?\\*\\-]+"),
             factory(),
             next_document_id(0) {
         }
@@ -301,7 +301,7 @@ template < typename character_type, typename document_type, typename reader_writ
 
         result_pointer find_word(const std::basic_string< character_type >& word) {
             collector c;
-            tree.walk2(0,&c,word);
+            tree.match(word,0,&c);
             return convert_to_result(c);
         }
         
@@ -319,12 +319,12 @@ template < typename character_type, typename document_type, typename reader_writ
                     collector c;
                     // Le mot le plus long doit faire au moins 3 caractères.
                     if(tokens_iterator->begin()->length()>2) {
-                        tree.walk2(0,&c,tokens_iterator->begin()->str());
+                        tree.match(tokens_iterator->begin()->str(),0,&c);
                         ++tokens_iterator;
                         while(tokens_iterator != tokens.end()) {
                             // on se fiche de la longueur des autres mots
                             collector c2(&c);
-                            tree.walk2(0,&c2,tokens_iterator->begin()->str());
+                            tree.match(tokens_iterator->begin()->str(),0,&c2);
                             c.intersect_with(c2);
                             ++tokens_iterator;
                         }
@@ -337,7 +337,7 @@ template < typename character_type, typename document_type, typename reader_writ
                     while(token != end) {
                         if(token->begin()->length()>2) {
                             std::basic_string<character_type> word = token->begin()->str();
-                            tree.walk2(0,&c,word);
+                            tree.match(word,0,&c);
                         }
                         ++token;
                     }

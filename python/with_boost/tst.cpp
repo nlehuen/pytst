@@ -303,6 +303,7 @@ BOOST_PYTHON_MODULE(tst)
 
         .def("close_match",&TST::close_match)
         .def("prefix_match",&TST::prefix_match)
+        .def("match",&TST::match)
 
         .def("pack",&TST::pack)
 

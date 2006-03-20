@@ -843,20 +843,20 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
 template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_star_recurse(tst_node<S,T>* current_node,S* key,size_t key_length,const S* string,const size_t string_length, size_t position,filter<S,T>* filter, action<S,T>* to_perform,bool advance) const {
     int other_index;
 
-    // PREVIOUS_MATCH
-    if(key_length>0 && position==(string_length-1)) {
-        T data = current_node->data;
-        if(data!=default_value) {
-            if(filter) {
-                data = filter->perform(key,key_length,0,data);
-            }
-            if(to_perform) {
-                to_perform->perform(key,key_length,0,data);
+    if(advance) {
+        // PREVIOUS_MATCH
+        if(position==(string_length-1)) {
+            T data = current_node->data;
+            if(data!=default_value) {
+                if(filter) {
+                    data = filter->perform(key,key_length,0,data);
+                }
+                if(to_perform) {
+                    to_perform->perform(key,key_length,0,data);
+                }
             }
         }
-    }
 
-    if(advance) {
         other_index=current_node->next;
         if(other_index!=UNDEFINED_INDEX) {
             current_node = storage->get(other_index);
