@@ -238,6 +238,7 @@ class TestMatch(unittest.TestCase):
         self.tree = TST()
         self.tree['abc'] = 'abc'
         self.tree['ab'] = 'ab'
+        self.tree['a'] = 'a'
         self.tree['bbc'] = 'bbc'
         self.tree['efgfjhny'] = 'ok'
     
@@ -259,11 +260,29 @@ class TestMatch(unittest.TestCase):
 
     def testStar2(self):
         d = self.tree.match("a*",None,DictAction())
+        self.assertEquals(d,{'a': (0, 'a'), 'ab': (0, 'ab'), 'abc': (0, 'abc')})
+
+    def testStar2_1(self):
+        d = self.tree.match("ab*",None,DictAction())
         self.assertEquals(d,{'ab': (0, 'ab'), 'abc': (0, 'abc')})
+
+    def testStar2_2(self):
+        d = self.tree.match("*b",None,DictAction())
+        self.assertEquals(d,{'ab': (0, 'ab')})
+
+        d = self.tree.match("*bbc",None,DictAction())
+        self.assertEquals(d,{'bbc': (0, 'bbc')})
 
     def testStar3(self):
         d = self.tree.match("*",None,DictAction())
-        self.assertEquals(d,{'ab': (0, 'ab'), 'bbc': (0, 'bbc'), 'abc': (0, 'abc'), 'efgfjhny': (0, 'ok')})
+        self.assertEquals(d,{'a': (0, 'a'), 'ab': (0, 'ab'), 'bbc': (0, 'bbc'), 'abc': (0, 'abc'), 'efgfjhny': (0, 'ok')})
+
+        d = self.tree.match("*?*",None,DictAction())
+        self.assertEquals(d,{'a': (0, 'a'), 'ab': (0, 'ab'), 'bbc': (0, 'bbc'), 'abc': (0, 'abc'), 'efgfjhny': (0, 'ok')})
+
+    def testStar3_1(self):
+        d = self.tree.match("**",None,DictAction())
+        self.assertEquals(d,{'a': (0, 'a'), 'ab': (0, 'ab'), 'bbc': (0, 'bbc'), 'abc': (0, 'abc'), 'efgfjhny': (0, 'ok')})
 
     def testStar4(self):
         d = self.tree.match("e*ny",None,DictAction())
@@ -576,11 +595,11 @@ if __name__ == '__main__':
     comment = ' '.join(sys.argv[1:])
 
     suite = unittest.TestSuite((
-        unittest.makeSuite(TestCollectors),
-        unittest.makeSuite(TestBasics),
-        unittest.makeSuite(TestHighCapacity),
-        unittest.makeSuite(TestScan),
-        unittest.makeSuite(TestIterators),
+#         unittest.makeSuite(TestCollectors),
+#         unittest.makeSuite(TestBasics),
+#         unittest.makeSuite(TestHighCapacity),
+#         unittest.makeSuite(TestScan),
+#         unittest.makeSuite(TestIterators),
         unittest.makeSuite(TestMatch),
      ))
     

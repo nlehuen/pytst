@@ -116,9 +116,9 @@ private:
 
     void walk_recurse(tst_node<S,T>* current_node,S* current_key,size_t current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const;
     void close_match_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,const size_t position, const int distance, const int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
-    void match_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform) const;
-    void match_joker_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform) const;
-    void match_star_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform) const;
+    void match_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
+    void match_joker_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
+    void match_star_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
 
     int build_node(node_info<S,T>* current_node,const S* string,size_t string_length,int current_position);
     void remove_node(int* current_index,const S* string,size_t string_length);
@@ -709,7 +709,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
 
 template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::match(const S* string, size_t string_length,filter<S,T>* filter,action<S,T>* to_perform) const {
     S* current_key=(S*)tst_malloc((string_length+maximum_key_length+2)*sizeof(S));
-    match_recurse(storage->get(root),current_key,0,string,string_length,0,filter,to_perform);
+    match_recurse(storage->get(root),current_key,0,string,string_length,0,filter,to_perform,false);
     tst_free(current_key);
     if(to_perform) {
         return to_perform->result();
@@ -719,22 +719,32 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::match(co
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_recurse(tst_node<S,T>* current_node,S* key,size_t key_length,const S* string,const size_t string_length, size_t position,filter<S,T>* filter, action<S,T>* to_perform) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_recurse(tst_node<S,T>* current_node,S* key,size_t key_length,const S* string,const size_t string_length, size_t position,filter<S,T>* filter, action<S,T>* to_perform, bool advance) const {
     while(true) {
         S c = string[position];
         switch(c) {
             case static_cast<S>('?'): {
-                match_joker_recurse(current_node,key,key_length,string,string_length,position,filter,to_perform);
+                match_joker_recurse(current_node,key,key_length,string,string_length,position,filter,to_perform,advance);
                 return;
             }
                 
             case static_cast<S>('*'): {
-                match_star_recurse(current_node,key,key_length,string,string_length,position,filter,to_perform);
+                match_star_recurse(current_node,key,key_length,string,string_length,position,filter,to_perform,advance);
                 return;
             }
     
             default: {
                 int other_index;
+                if(advance) {
+                    other_index = current_node->next;
+                    if(other_index!=UNDEFINED_INDEX) {
+                        current_node = storage->get(other_index);
+                        advance = false;
+                    }
+                    else {
+                        return;
+                    }
+                }
 
                 while(true) {
                     if(c == current_node->c) {
@@ -755,14 +765,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
                         }
                         else {
                             ++position;
-                            other_index = current_node->next;
-                            if(other_index!=UNDEFINED_INDEX) {
-                                current_node = storage->get(other_index);
-                                break;
-                            }
-                            else {
-                                return;
-                            }
+                            advance = true;
+                            break;
                         }
                     }
                     else if(c > current_node->c) {
@@ -789,13 +793,23 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_joker_recurse(tst_node<S,T>* current_node,S* key,size_t key_length,const S* string,const size_t string_length, size_t position,filter<S,T>* filter, action<S,T>* to_perform) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_joker_recurse(tst_node<S,T>* current_node,S* key,size_t key_length,const S* string,const size_t string_length, size_t position,filter<S,T>* filter, action<S,T>* to_perform,bool advance) const {
     int other_index;
+
+    if(advance) {
+        other_index=current_node->next;
+        if(other_index!=UNDEFINED_INDEX) {
+            current_node = storage->get(other_index);
+        }
+        else {
+            return;
+        }
+    }
 
     // LEFT    
     other_index=current_node->left;
     if(other_index!=UNDEFINED_INDEX) {
-        match_joker_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform);
+        match_joker_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform,false);
     }
 
     // MATCH_CURRENT
@@ -814,11 +828,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
         }
     }
     else {
-        // MATCH_NEXT
-        other_index=current_node->next;
-        if(other_index!=UNDEFINED_INDEX) {
-            match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,filter,to_perform);
-        }
+        match_recurse(current_node,key,key_length,string,string_length,position+1,filter,to_perform,true);
     }
 
     key_length--;
@@ -826,24 +836,43 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
     // RIGHT
     other_index=current_node->right;
     if(other_index!=UNDEFINED_INDEX) {
-        match_joker_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform);
+        match_joker_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform,false);
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_star_recurse(tst_node<S,T>* current_node,S* key,size_t key_length,const S* string,const size_t string_length, size_t position,filter<S,T>* filter, action<S,T>* to_perform) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_star_recurse(tst_node<S,T>* current_node,S* key,size_t key_length,const S* string,const size_t string_length, size_t position,filter<S,T>* filter, action<S,T>* to_perform,bool advance) const {
     int other_index;
 
-    // LEFT    
-    other_index=current_node->left;
-    if(other_index!=UNDEFINED_INDEX) {
-        match_star_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform);
+    // PREVIOUS_MATCH
+    if(key_length>0 && position==(string_length-1)) {
+        T data = current_node->data;
+        if(data!=default_value) {
+            if(filter) {
+                data = filter->perform(key,key_length,0,data);
+            }
+            if(to_perform) {
+                to_perform->perform(key,key_length,0,data);
+            }
+        }
     }
+
+    if(advance) {
+        other_index=current_node->next;
+        if(other_index!=UNDEFINED_INDEX) {
+            current_node = storage->get(other_index);
+        }
+        else {
+            return;
+        }
+    }
+
+    // MATCH_WITHOUT_ME
+    match_recurse(current_node,key,key_length,string,string_length,position+1,filter,to_perform,false);
 
     // MATCH_CURRENT
     key[key_length]=current_node->c;
     ++key_length;
     
-    bool go_next=true;
     if(position==(string_length-1)) {
         T data = current_node->data;
         if(data!=default_value) {
@@ -854,26 +883,26 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
                 to_perform->perform(key,key_length,0,data);
             }
         }
-        go_next = false;
     }
 
-    other_index=current_node->next;
-    if(other_index!=UNDEFINED_INDEX) {
-        // MATCH_SAME
-        match_star_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform);
-        
-        // MATCH_NEXT
-        if(go_next) {
-            match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,filter,to_perform);
-        }
-    }
+    // MATCH_SAME
+    match_star_recurse(current_node,key,key_length,string,string_length,position,filter,to_perform,true);
+    
+    // MATCH_NEXT
+    match_recurse(current_node,key,key_length,string,string_length,position+1,filter,to_perform,true);
 
     key_length--;
-    
+
+    // LEFT    
+    other_index=current_node->left;
+    if(other_index!=UNDEFINED_INDEX) {
+        match_star_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform,false);
+    }
+
     // RIGHT
     other_index=current_node->right;
     if(other_index!=UNDEFINED_INDEX) {
-        match_star_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform);
+        match_star_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform,false);
     }
 }
 
