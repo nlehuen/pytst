@@ -100,6 +100,10 @@ class _TST(object):
         """prefix_match(self, string, filter, to_perform) -> PythonReference"""
         return _tst._TST_prefix_match(*args)
 
+    def match(*args):
+        """match(self, string, filter, to_perform) -> PythonReference"""
+        return _tst._TST_match(*args)
+
     def get(*args):
         """get(self, string) -> PythonReference"""
         return _tst._TST_get(*args)

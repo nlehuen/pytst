@@ -19,11 +19,9 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "1.08";
+const char* const TST_VERSION = "1.09";
 
 #include "debug.h"
-
-#include <vector>
 
 #ifdef __PYTHON__BUILD__
     #include "Python.h"
@@ -71,6 +69,7 @@ public:
     T walk(filter<S,T>* filter,action<S,T>* to_perform,const S* string, size_t string_length) const;
     T close_match(const S* string,size_t string_length,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
     T prefix_match(const S* string,size_t string_length,filter<S,T>* filter,action<S,T>* to_perform) const;
+    T match(const S* string,size_t string_length,filter<S,T>* filter,action<S,T>* to_perform) const;
 
     T get(const S* string,size_t string_length) const;
     T get_or_build(const S* string,size_t string_length,filter<S,T>* factory);
@@ -117,6 +116,9 @@ private:
 
     void walk_recurse(tst_node<S,T>* current_node,S* current_key,size_t current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const;
     void close_match_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,const size_t position, const int distance, const int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
+    void match_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform) const;
+    void match_joker_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform) const;
+    void match_star_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform) const;
 
     int build_node(node_info<S,T>* current_node,const S* string,size_t string_length,int current_position);
     void remove_node(int* current_index,const S* string,size_t string_length);
@@ -173,6 +175,10 @@ template <typename S, typename T, typename M=memory_storage<S,T>, typename RW=nu
         
         T prefix_match(std::basic_string<S> string,filter<S,T> *filter,action<S,T> *to_perform) const {
             return tst<S,T,M,RW>::prefix_match(string.c_str(),string.size(),filter,to_perform);
+        }
+
+        T match(std::basic_string<S> string,filter<S,T> *filter,action<S,T> *to_perform) const {
+            return tst<S,T,M,RW>::match(string.c_str(),string.size(),filter,to_perform);
         }
 
 #ifdef SCANNER
@@ -696,6 +702,178 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
     other_index = current_node->right;
     if(other_index!=UNDEFINED_INDEX) {
         close_match_recurse(storage->get(other_index),key,key_length,string,string_length,position,distance,remaining_distance,filter,to_perform);
+    }
+}
+
+/**************************** match *************************************/
+
+template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::match(const S* string, size_t string_length,filter<S,T>* filter,action<S,T>* to_perform) const {
+    S* current_key=(S*)tst_malloc((string_length+maximum_key_length+2)*sizeof(S));
+    match_recurse(storage->get(root),current_key,0,string,string_length,0,filter,to_perform);
+    tst_free(current_key);
+    if(to_perform) {
+        return to_perform->result();
+    }
+    else {
+        return default_value;
+    }
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_recurse(tst_node<S,T>* current_node,S* key,size_t key_length,const S* string,const size_t string_length, size_t position,filter<S,T>* filter, action<S,T>* to_perform) const {
+    while(true) {
+        S c = string[position];
+        switch(c) {
+            case static_cast<S>('?'): {
+                match_joker_recurse(current_node,key,key_length,string,string_length,position,filter,to_perform);
+                return;
+            }
+                
+            case static_cast<S>('*'): {
+                match_star_recurse(current_node,key,key_length,string,string_length,position,filter,to_perform);
+                return;
+            }
+    
+            default: {
+                int other_index;
+
+                while(true) {
+                    if(c == current_node->c) {
+                        key[key_length]=current_node->c;
+                        ++key_length;
+
+                        if(position==(string_length-1)) {
+                            T data = current_node->data;
+                            if(data!=default_value) {
+                                if(filter) {
+                                    data = filter->perform(key,key_length,0,data);
+                                }
+                                if(to_perform) {
+                                    to_perform->perform(key,key_length,0,data);
+                                }
+                            }
+                            return;
+                        }
+                        else {
+                            ++position;
+                            other_index = current_node->next;
+                            if(other_index!=UNDEFINED_INDEX) {
+                                current_node = storage->get(other_index);
+                                break;
+                            }
+                            else {
+                                return;
+                            }
+                        }
+                    }
+                    else if(c > current_node->c) {
+                        other_index = current_node->right;
+                        if(other_index!=UNDEFINED_INDEX) {
+                            current_node = storage->get(other_index);
+                        }
+                        else {
+                            return;
+                        }
+                    }
+                    else {
+                        other_index = current_node->left;
+                        if(other_index!=UNDEFINED_INDEX) {
+                            current_node = storage->get(other_index);
+                        }
+                        else {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_joker_recurse(tst_node<S,T>* current_node,S* key,size_t key_length,const S* string,const size_t string_length, size_t position,filter<S,T>* filter, action<S,T>* to_perform) const {
+    int other_index;
+
+    // LEFT    
+    other_index=current_node->left;
+    if(other_index!=UNDEFINED_INDEX) {
+        match_joker_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform);
+    }
+
+    // MATCH_CURRENT
+    key[key_length]=current_node->c;
+    ++key_length;
+    
+    if(position==(string_length-1)) {
+        T data = current_node->data;
+        if(data!=default_value) {
+            if(filter) {
+                data = filter->perform(key,key_length,0,data);
+            }
+            if(to_perform) {
+                to_perform->perform(key,key_length,0,data);
+            }
+        }
+    }
+    else {
+        // MATCH_NEXT
+        other_index=current_node->next;
+        if(other_index!=UNDEFINED_INDEX) {
+            match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,filter,to_perform);
+        }
+    }
+
+    key_length--;
+    
+    // RIGHT
+    other_index=current_node->right;
+    if(other_index!=UNDEFINED_INDEX) {
+        match_joker_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform);
+    }
+}
+
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_star_recurse(tst_node<S,T>* current_node,S* key,size_t key_length,const S* string,const size_t string_length, size_t position,filter<S,T>* filter, action<S,T>* to_perform) const {
+    int other_index;
+
+    // LEFT    
+    other_index=current_node->left;
+    if(other_index!=UNDEFINED_INDEX) {
+        match_star_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform);
+    }
+
+    // MATCH_CURRENT
+    key[key_length]=current_node->c;
+    ++key_length;
+    
+    bool go_next=true;
+    if(position==(string_length-1)) {
+        T data = current_node->data;
+        if(data!=default_value) {
+            if(filter) {
+                data = filter->perform(key,key_length,0,data);
+            }
+            if(to_perform) {
+                to_perform->perform(key,key_length,0,data);
+            }
+        }
+        go_next = false;
+    }
+
+    other_index=current_node->next;
+    if(other_index!=UNDEFINED_INDEX) {
+        // MATCH_SAME
+        match_star_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform);
+        
+        // MATCH_NEXT
+        if(go_next) {
+            match_recurse(storage->get(other_index),key,key_length,string,string_length,position+1,filter,to_perform);
+        }
+    }
+
+    key_length--;
+    
+    // RIGHT
+    other_index=current_node->right;
+    if(other_index!=UNDEFINED_INDEX) {
+        match_star_recurse(storage->get(other_index),key,key_length,string,string_length,position,filter,to_perform);
     }
 }
 

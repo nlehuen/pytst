@@ -3217,6 +3217,67 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap__TST_match(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
+  char *arg2 = (char *) 0 ;
+  size_t arg3 ;
+  filter<char,PythonReference > *arg4 = (filter<char,PythonReference > *) 0 ;
+  action<char,PythonReference > *arg5 = (action<char,PythonReference > *) 0 ;
+  PythonReference result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 ;
+  char *buf2 = 0 ;
+  size_t size2 = 0 ;
+  int alloc2 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
+  PyObject *swig_obj[4] ;
+  
+  if (!SWIG_Python_UnpackTuple(args,"_TST_match",4,4,swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_TST_match" "', argument " "1"" of type '" "tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *""'"); 
+  }
+  arg1 = reinterpret_cast<tst<char,PythonReference,MemoryStorage,ObjectSerializer > * >(argp1);
+  res2 = SWIG_AsCharPtrAndSize(swig_obj[1], &buf2, &size2, &alloc2);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "_TST_match" "', argument " "2"" of type '" "char const *""'");
+  }  
+  arg2 = static_cast<char * >(buf2);
+  arg3 = static_cast<size_t >(size2 - 1);
+  res4 = SWIG_ConvertPtr(swig_obj[2], &argp4,SWIGTYPE_p_filterTchar_PythonReference_t, 0 |  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "_TST_match" "', argument " "4"" of type '" "filter<char,PythonReference > *""'"); 
+  }
+  arg4 = reinterpret_cast<filter<char,PythonReference > * >(argp4);
+  res5 = SWIG_ConvertPtr(swig_obj[3], &argp5,SWIGTYPE_p_actionTchar_PythonReference_t, 0 |  0 );
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "_TST_match" "', argument " "5"" of type '" "action<char,PythonReference > *""'"); 
+  }
+  arg5 = reinterpret_cast<action<char,PythonReference > * >(argp5);
+  {
+    try {
+      result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->match((char const *)arg2,arg3,arg4,arg5);
+    }
+    catch (std::exception e) {
+      PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
+    }
+  }
+  {
+    resultobj = (&result)->lend();
+  }
+  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+  return resultobj;
+fail:
+  if (alloc2 == SWIG_NEWOBJ) delete[] buf2;
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap__TST_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
@@ -5244,6 +5305,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_TST_walk", _wrap__TST_walk, METH_VARARGS, NULL},
 	 { (char *)"_TST_close_match", _wrap__TST_close_match, METH_VARARGS, NULL},
 	 { (char *)"_TST_prefix_match", _wrap__TST_prefix_match, METH_VARARGS, NULL},
+	 { (char *)"_TST_match", _wrap__TST_match, METH_VARARGS, NULL},
 	 { (char *)"_TST_get", _wrap__TST_get, METH_VARARGS, NULL},
 	 { (char *)"_TST_get_or_build", _wrap__TST_get_or_build, METH_VARARGS, NULL},
 	 { (char *)"_TST_put", _wrap__TST_put, METH_VARARGS, NULL},

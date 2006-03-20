@@ -233,6 +233,54 @@ class TestBasics(unittest.TestCase):
         
         self.testGet()
 
+class TestMatch(unittest.TestCase):
+    def setUp(self):
+        self.tree = TST()
+        self.tree['abc'] = 'abc'
+        self.tree['ab'] = 'ab'
+        self.tree['bbc'] = 'bbc'
+        self.tree['efgfjhny'] = 'ok'
+    
+    def testJoker1(self):
+        d = self.tree.match("a?c",None,DictAction())
+        self.assertEquals(d,dict(abc=(0,"abc")))
+
+    def testJoker2(self):
+        d = self.tree.match("???",None,DictAction())
+        self.assertEquals(d,{'abc': (0, 'abc'), 'bbc': (0, 'bbc')})
+
+    def testJoker3(self):
+        d = self.tree.match("??",None,DictAction())
+        self.assertEquals(d,{'ab': (0, 'ab')})
+
+    def testStar1(self):
+        d = self.tree.match("a*c",None,DictAction())
+        self.assertEquals(d,dict(abc=(0,"abc")))
+
+    def testStar2(self):
+        d = self.tree.match("a*",None,DictAction())
+        self.assertEquals(d,{'ab': (0, 'ab'), 'abc': (0, 'abc')})
+
+    def testStar3(self):
+        d = self.tree.match("*",None,DictAction())
+        self.assertEquals(d,{'ab': (0, 'ab'), 'bbc': (0, 'bbc'), 'abc': (0, 'abc'), 'efgfjhny': (0, 'ok')})
+
+    def testStar4(self):
+        d = self.tree.match("e*ny",None,DictAction())
+        self.assertEquals(d,{'efgfjhny': (0, 'ok')})
+
+    def testStar5(self):
+        d = self.tree.match("*****y",None,DictAction())
+        self.assertEquals(d,{'efgfjhny': (0, 'ok')})
+
+    def testStar6(self):
+        d = self.tree.match("????*",None,DictAction())
+        self.assertEquals(d,{'efgfjhny': (0, 'ok')})
+
+    def testStar7(self):
+        d = self.tree.match("ef?f*n?",None,DictAction())
+        self.assertEquals(d,{'efgfjhny': (0, 'ok')})
+
 class TestIterators(unittest.TestCase):
     def setUp(self):
         self.tree = TST()
@@ -533,6 +581,7 @@ if __name__ == '__main__':
         unittest.makeSuite(TestHighCapacity),
         unittest.makeSuite(TestScan),
         unittest.makeSuite(TestIterators),
+        unittest.makeSuite(TestMatch),
      ))
     
     for i in xrange(3):
