@@ -290,14 +290,6 @@ class ObjectSerializer(object):
         """read(self, file) -> PythonReference"""
         return _tst.ObjectSerializer_read(*args)
 
-    def write_to_file(*args):
-        """write_to_file(self, file, data)"""
-        return _tst.ObjectSerializer_write_to_file(*args)
-
-    def read_from_file(*args):
-        """read_from_file(self, file) -> PythonReference"""
-        return _tst.ObjectSerializer_read_from_file(*args)
-
     __swig_destroy__ = _tst.delete_ObjectSerializer
 _tst.ObjectSerializer_swigregister(ObjectSerializer)
 

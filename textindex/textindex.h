@@ -24,6 +24,7 @@
 #include <hash_map>
 #include <boost/shared_ptr.hpp>
 #include <boost/regex.hpp>
+#include <iostream>
 
 template <class pair> inline bool sort_by_document(const pair& lhs, const pair& rhs)
 {
@@ -120,31 +121,31 @@ template <typename document_id_type, typename score_type> class documents_scores
 
     class serializer {
        public:
-            void write(FILE* file, shared_ptr value) {
+            void write(std::ostream& file, shared_ptr value) {
                 documents_scores* ds = value.get();
                 if(ds!=0) {
                     size_t size = ds->size();
-                    fwrite(&size,sizeof(size_t),1,file);
+                    file.write((char*)(&size),sizeof(size_t));
                     for(storage_type::iterator iterator(ds->documents.begin()),end(ds->documents.end());iterator!=end;++iterator) {
-                        fwrite(&(iterator->first),sizeof(document_id_type),1,file);
-                        fwrite(&(iterator->second),sizeof(score_type),1,file);
+                        file.write((char*)(&(iterator->first)),sizeof(document_id_type));
+                        file.write((char*)(&(iterator->second)),sizeof(score_type));
                     }
                 }
                 else {
                     size_t size=0;
-                    fwrite(&size,sizeof(size_t),1,file);
+                    file.write((char*)(&size),sizeof(size_t));
                 }
             }
             
-            shared_ptr read(FILE* file) {
+            shared_ptr read(std::istream& file) {
                 size_t size;
-                fread(&size,sizeof(size_t),1,file);
+                file.read((char*)(&size),sizeof(size_t));
                 documents_scores* result = new documents_scores(size);
                 for(size_t i=0;i<size;++i) {
                     document_id_type document_id;
-                    fread(&document_id,sizeof(document_id_type),1,file);
+                    file.read((char*)(&document_id),sizeof(document_id_type));
                     score_type score;
-                    fread(&score,sizeof(score_type),1,file);
+                    file.read((char*)(&score),sizeof(score_type));
                     result->documents[document_id]=score;
                 }
 
@@ -359,35 +360,35 @@ template < typename character_type, typename document_type, typename reader_writ
             tree.pack();
         }
 
-        void write(FILE* file) const {
+        void write(std::ostream& file) const {
             // On écrit l'arbre
             tree.write(file);
             
             // On écrit le prochain id de document
-            fwrite(&next_document_id,sizeof(document_id_type),1,file);
+            file.write((char*)(&next_document_id),sizeof(document_id_type));
 
             // On écrit la taille du lexique
             documents_ids_type::size_type size = ids.size();
-            fwrite(&size,sizeof(documents_ids_type::size_type),1,file);
+            file.write((char*)(&size),sizeof(documents_ids_type::size_type));
             
             // On écrit le lexique
             reader_writer rw;
             for(documents_ids_type::const_iterator item(ids.begin()),end(ids.end());item!=end;item++) {
                 rw.write(file,item->first);
-                fwrite(&(item->second),sizeof(document_id_type),1,file);
+                file.write((char*)(&(item->second)),sizeof(document_id_type));
             }
         }
 
-        void read(FILE* file) {
+        void read(std::istream& file) {
             // On lit l'arbre
             tree.read(file);
 
             // On lit le prochain id de document
-            fread(&next_document_id,sizeof(document_id_type),1,file);
+            file.read((char*)(&next_document_id),sizeof(document_id_type));
             
             // On lit la taille du lexique
             documents_ids_type::size_type size;
-            fread(&size,sizeof(documents_ids_type::size_type),1,file);
+            file.read((char*)(&size),sizeof(documents_ids_type::size_type));
             
             // On lit le lexique dans de nouveaux objets
             reader_writer rw;
@@ -396,7 +397,7 @@ template < typename character_type, typename document_type, typename reader_writ
             for(;size>0;--size) {
                 document_type document(rw.read(file));
                 document_id_type document_id;
-                fread(&document_id,sizeof(document_id_type),1,file);
+                file.read((char*)(&document_id),sizeof(document_id_type));
 
                 new_ids[document] = document_id;
                 new_reversed_ids[document_id] = document;

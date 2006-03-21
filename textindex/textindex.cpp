@@ -18,7 +18,8 @@
  */
 
 #include <string>
-
+#include <iostream>
+#include <fstream>
 #include <boost/python.hpp>
 using namespace boost::python;
 
@@ -29,8 +30,8 @@ class object_serializer {
     public:
         object_serializer();
         
-        void write(FILE* file,object data);
-        object object_serializer::read(FILE* file);
+        void write(std::ostream& file,object data);
+        object object_serializer::read(std::istream& file);
     
     private:
         object dumps,loads;
@@ -42,20 +43,20 @@ object_serializer::object_serializer() {
     loads = cPickle.attr("loads");
 }
 
-void object_serializer::write(FILE* file,object data) {
+void object_serializer::write(std::ostream& file,object data) {
     str result = (str)dumps(data,2);
     char *string;
     int length;
     PyString_AsStringAndSize(result.ptr(),&string,&length);
-    fwrite(&length,sizeof(int),1,file);
-    fwrite(string,sizeof(char),length,file);
+    file.write((char*)(&length),sizeof(int));
+    file.write(string,length);
 }
 
-object object_serializer::read(FILE* file) {
+object object_serializer::read(std::istream& file) {
     int length;
-    fread(&length,sizeof(int),1,file);
+    file.read((char*)(&length),sizeof(int));
     char* string=(char*)tst_malloc(length);
-    fread(string,sizeof(char),length,file);
+    file.read(string,length);
     
     str dumped(string,length);
     object result = loads(dumped);
@@ -81,12 +82,19 @@ template <typename character_type> class python_textindex : public textindex<cha
             return to_list(textindex<character_type,object,object_serializer>::find_text(extract<std::basic_string<character_type> >(item[0]),item[1]));
         }
         
-        void write_to_file(object file) {
-            return write(PyFile_AsFile(file.ptr()));
+        void write_to_file(str file) {
+            std::ofstream out(PyString_AsString(file.ptr()),std::ofstream::binary|std::ofstream::out|std::ofstream::trunc);
+            out.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
+            write(out);
+            out.flush();
+            out.close();
         }
         
         void read_from_file(object file) {
-            return read(PyFile_AsFile(file.ptr()));
+            std::ifstream in(PyString_AsString(file.ptr()),std::ifstream::binary|std::ifstream::in);
+            in.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
+            read(in);
+            in.close();
         }
 
     protected:

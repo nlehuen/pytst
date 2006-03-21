@@ -5,6 +5,7 @@
 #include ".\textindex.h"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 
 // CTextIndex
@@ -49,20 +50,17 @@ STDMETHODIMP CTextIndex::get_Version(BSTR* pVal)
 }
 STDMETHODIMP CTextIndex::Load(BSTR* filename,LONG* result)
 {
-    *result = 0;
-    FILE* file = _wfopen(*filename,L"rb");
-    if(file == 0) {
-        *result = 0;
+    try {
+        FILE* fin=_wfopen(*filename, L"rb");
+        if(!fin) throw TSTException("Could not open file");
+        std::ifstream in(fin);
+        in.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
+        _textindex.read(in);
+        in.close();
+        *result = 1;
     }
-    else {
-        try {
-            _textindex.read(file);
-            fclose(file);
-            *result = 1;
-        }
-        catch(exception) {
-            *result = 0;
-        }
+    catch(exception) {
+        *result = 0;
     }
     return S_OK;
 }
@@ -70,20 +68,18 @@ STDMETHODIMP CTextIndex::Load(BSTR* filename,LONG* result)
 STDMETHODIMP CTextIndex::Save(BSTR* filename,LONG* result)
 {
     _textindex.pack();
-    FILE* file = _wfopen(*filename,L"wb");
-    if(file == 0) {
-        *result = 0;
+    try {
+        FILE* fout=_wfopen(*filename, L"wb");
+        if(!fout) throw TSTException("Could not open file");
+        std::ofstream out(fout);
+        out.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
+        _textindex.write(out);
+        out.flush();
+        out.close();
+        *result = 1;
     }
-    else {
-        try {
-            _textindex.write(file);
-            fflush(file);
-            fclose(file);
-            *result = 1;
-        }
-        catch(exception) {
-            *result = 0;
-        }
+    catch(exception) {
+        *result = 0;
     }
     return S_OK;
 }

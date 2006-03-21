@@ -222,14 +222,10 @@ class TestBasics(unittest.TestCase):
                     ))
 
     def testWriteRead(self):
-        f = file('test.tst','wb')
-        self.tree.write_to_file(f)
-        f.close()
+        self.tree.write_to_file('test.tst')
         
-        f = file('test.tst','rb')
         self.tree = TST()
-        self.tree.read_from_file(f)
-        f.close()
+        self.tree.read_from_file('test.tst')
         
         self.testGet()
 
@@ -396,7 +392,7 @@ class TestHighCapacity(unittest.TestCase):
         for k in self.keys:
             self.assertEqual(self.tree[k],None)
 
-        self.tree.write_to_file(file('test.tst','wb'))
+        self.tree.write_to_file('test.tst')
 
     def testDelete(self):
         sample = random.sample(self.keys,len(self.keys)/10)

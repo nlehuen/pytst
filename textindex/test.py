@@ -11,7 +11,7 @@ if __name__ == "__main__":
     
     try:
         start = time()
-        ti.read(file('text.ti','rb'))
+        ti.read('text.ti')
         print 'Loading time : %.2fs'%(time()-start)
     except:
         traceback.print_exc()
@@ -30,7 +30,7 @@ if __name__ == "__main__":
         ti.pack()
         print 'Indexing time : %.2fs for %i lines'%(time()-start,lines)
 
-        ti.write(file('text.ti','wb'))
+        ti.write('text.ti')
     
     def lines(text,intersection=True):
         for ln, r in ti.find_text(text.lower(),intersection):

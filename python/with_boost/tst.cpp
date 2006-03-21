@@ -23,6 +23,8 @@ using namespace boost::python;
 #define SCANNER
 
 #include <string>
+#include <iostream>
+#include <fstream>
 #include "tst.h"
 
 /********************* ACTION & FILTER ***********************************/
@@ -138,11 +140,8 @@ class ObjectSerializer {
     public:
         ObjectSerializer();
         
-        void write(FILE* file,object data);
-        object ObjectSerializer::read(FILE* file);
-    
-        void write_to_file(object file,object data);
-        object ObjectSerializer::read_from_file(object file);
+        void write(std::ostream& file,object data);
+        object ObjectSerializer::read(std::istream& file);
     
     private:
         object dumps,loads;
@@ -154,33 +153,25 @@ ObjectSerializer::ObjectSerializer() {
     loads = cPickle.attr("loads");
 }
 
-void ObjectSerializer::write(FILE* file,object data) {
+void ObjectSerializer::write(std::ostream& file,object data) {
     str result = (str)dumps(data,2);
     char *string;
     int length;
     PyString_AsStringAndSize(result.ptr(),&string,&length);
-    fwrite(&length,sizeof(int),1,file);
-    fwrite(string,sizeof(char),length,file);
+    file.write((char*)(&length),sizeof(int));
+    file.write(string,length);
 }
 
-void ObjectSerializer::write_to_file(object file,object data) {
-    return write(PyFile_AsFile(file.ptr()),data);
-}
-
-object ObjectSerializer::read(FILE* file) {
+object ObjectSerializer::read(std::istream& file) {
     int length;
-    fread(&length,sizeof(int),1,file);
+    file.read((char*)(&length),sizeof(int));
     char* string=(char*)tst_malloc(length);
-    fread(string,sizeof(char),length,file);
+    file.read(string,length);
     
     str dumped(string,length);
     object result = loads(dumped);
     tst_free(string);
     return result;
-}
-
-object ObjectSerializer::read_from_file(object file) {
-    return read(PyFile_AsFile(file.ptr()));
 }
 
 /********************* ITERATOR ***********************************/
@@ -232,12 +223,18 @@ class TST : public string_tst<char,object,memory_storage<char,object>,ObjectSeri
         TST() : string_tst<char,object,memory_storage<char,object>,ObjectSerializer>() {
         }
     
-        void write_to_file(object file) const {
-            this->write(PyFile_AsFile(file.ptr()));
+        void write_to_file(str file) const {
+            std::ofstream out(PyString_AsString(file.ptr()),std::ofstream::binary|std::ofstream::out|std::ofstream::trunc);
+            out.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
+            this->write(out);
+            out.close();
         }
     
-        void read_from_file(object file) {
-            this->read(PyFile_AsFile(file.ptr()));
+        void read_from_file(str file) {
+            std::ifstream in(PyString_AsString(file.ptr()),std::ifstream::binary|std::ifstream::in);
+            in.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
+            this->read(in);
+            in.close();
         }
 
         TSTLexicalIterator iterator1() {

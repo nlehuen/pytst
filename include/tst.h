@@ -19,9 +19,11 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "1.09";
+const char* const TST_VERSION = "1.10";
 
 #include "debug.h"
+
+#include <iostream>
 
 #ifdef __PYTHON__BUILD__
     #include "Python.h"
@@ -77,8 +79,8 @@ public:
     void remove(const S* string,size_t string_length);
     bool contains(const S* string,size_t string_length) const;
     int get_maximum_key_length() const { return maximum_key_length; }
-    void write(FILE* file) const;
-    void read(FILE* file);
+    void write(std::ostream &file) const;
+    void read(std::istream &file);
 
     lexical_iterator<S,T,M,RW> iterator() const {
         return lexical_iterator<S,T,M,RW>(this,std::basic_string<S>(""),root);
@@ -131,8 +133,8 @@ private:
     void rl(node_info<S,T>* bal);
     void compute_height_and_balance(node_info<S,T>* current_node_info) const;
 
-    void write_node(FILE* file,RW* writer,int index) const;
-    int read_node(FILE* file,RW* reader,int depth);
+    void write_node(std::ostream& file,RW* writer,int index) const;
+    int read_node(std::istream& file,RW* reader,int depth);
 
 #ifdef SCANNER
     void compute_backtrack(tst_node<S,T> *current_node,const S* string,int si_match_start,int si_match_end);
@@ -1383,16 +1385,14 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
 
 /**************************** file I/O *************************************/
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(FILE* file) {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(std::istream& file) {
     // We check the version number
     int version_length;
-    if(fread(&version_length,sizeof(size_t),1,file)!=1) {
-        throw TSTException("Bad version length");
-    }
+    file.read((char*)(&version_length),sizeof(size_t));
     char* version=(char*)tst_malloc(version_length+1);
     version[version_length]=0;
     assert(version);
-    fread(version,sizeof(char),version_length,file);
+    file.read(version,version_length);
 
     if(strcmp(TST_VERSION,version)!=0) {
         tst_free(version);
@@ -1402,15 +1402,14 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(
         tst_free(version);
     }
 
-
     RW reader;
-    fread(&maximum_key_length,sizeof(int),1,file);
+    file.read((char*)(&maximum_key_length),sizeof(int));
     default_value = reader.read(file);
 
     // On efface le stockage
     storage->erase();
 
-    if(fgetc(file)) {
+    if(file.get()) {
         root = read_node(file,&reader,0);
     }
     else {
@@ -1420,13 +1419,13 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(
     }
 }
 
-template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::read_node(FILE* file,RW* reader,int depth) {
-    char bitmask = fgetc(file);
+template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::read_node(std::istream& file,RW* reader,int depth) {
+    char bitmask = file.get();
 
     node_info<S,T> node_info;
     storage->new_node(&node_info);
     
-    fread(&(node_info.node->c),sizeof(S),1,file);
+    file.read((char*)(&(node_info.node->c)),sizeof(S));
 
     if(bitmask & 16) {
         node_info.node->store(reader->read(file));
@@ -1436,9 +1435,10 @@ template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::read_n
     }
 
 #ifdef SCANNER
-    fread(&(node_info.node->position),sizeof(int),1,file);
-    fread(&(node_info.node->backtrack),sizeof(int),1,file);
-    fread(&(node_info.node->backtrack_match_index),sizeof(int),1,file);
+    // TODO : inutile, peut être recalculé ?
+    file.read((char*)(&(node_info.node->position)),sizeof(int));
+    file.read((char*)(&(node_info.node->backtrack)),sizeof(int));
+    file.read((char*)(&(node_info.node->backtrack_match_index)),sizeof(int));
 #endif
 
     int other_index;
@@ -1472,26 +1472,26 @@ template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::read_n
     return node_info.index;
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write(FILE* file) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write(std::ostream& file) const {
     // We save the version number
     size_t version_length = strlen(TST_VERSION);
-    fwrite(&version_length,sizeof(size_t),1,file);
-    fwrite(TST_VERSION,sizeof(char),version_length,file);
+    file.write((char*)(&version_length),sizeof(size_t));
+    file.write(TST_VERSION,version_length);
+    file.write(const_cast<char*>(reinterpret_cast<const char*>(&maximum_key_length)),sizeof(int));
 
-    fwrite(&maximum_key_length,sizeof(int),1,file);
     RW writer;
     writer.write(file,default_value);
 
     if(root!=UNDEFINED_INDEX) {
-        fputc(1,file);
+        file.put(1);
         write_node(file,&writer,root);
     }
     else {
-        fputc(0,file);
+        file.put(0);
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write_node(FILE* file,RW* writer,int index) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write_node(std::ostream& file,RW* writer,int index) const {
     tst_node<S,T>* node = storage->get(index);
 
     char bitmask=0;
@@ -1499,18 +1499,18 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write
     if(node->left!=UNDEFINED_INDEX)  bitmask |= 2;
     if(node->right!=UNDEFINED_INDEX) bitmask |= 4;
     if(node->data!=default_value)    bitmask |=16;
-    fputc(bitmask,file);
+    file.put(bitmask);
 
-    fwrite(&(node->c),sizeof(S),1,file);
+    file.write((char*)(&(node->c)),sizeof(S));
 
     if(bitmask & 16) {
         writer->write(file,node->data);
     }
 
 #ifdef SCANNER
-    fwrite(&(node->position),sizeof(int),1,file);
-    fwrite(&(node->backtrack),sizeof(int),1,file);
-    fwrite(&(node->backtrack_match_index),sizeof(int),1,file);
+    file.write((char*)(&(node->position)),sizeof(int));
+    file.write((char*)(&(node->backtrack)),sizeof(int));
+    file.write((char*)(&(node->backtrack_match_index)),sizeof(int));
 #endif
 
     if(bitmask & 1) write_node(file,writer,node->next);

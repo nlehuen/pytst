@@ -2330,28 +2330,29 @@ SWIG_Python_MustGetPtr(PyObject *obj, swig_type_info *ty, int argnum, int flags)
 #define SWIGTYPE_p_CallableAction swig_types[0]
 #define SWIGTYPE_p_CallableFilter swig_types[1]
 #define SWIGTYPE_p_DictAction swig_types[2]
-#define SWIGTYPE_p_FILE swig_types[3]
-#define SWIGTYPE_p_ListAction swig_types[4]
-#define SWIGTYPE_p_ObjectSerializer swig_types[5]
-#define SWIGTYPE_p_PythonReference swig_types[6]
-#define SWIGTYPE_p_TST swig_types[7]
-#define SWIGTYPE_p_TSTException swig_types[8]
-#define SWIGTYPE_p_TSTIteratorTlexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t_t swig_types[9]
-#define SWIGTYPE_p_TSTIteratorTmatch_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t_t swig_types[10]
-#define SWIGTYPE_p_TupleListAction swig_types[11]
-#define SWIGTYPE_p_actionTchar_PythonReference_t swig_types[12]
-#define SWIGTYPE_p_char swig_types[13]
-#define SWIGTYPE_p_character_type swig_types[14]
-#define SWIGTYPE_p_filterTchar_PythonReference_t swig_types[15]
-#define SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t swig_types[16]
-#define SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t swig_types[17]
-#define SWIGTYPE_p_memory_storageTchar_PythonReference_t swig_types[18]
-#define SWIGTYPE_p_serializer_type swig_types[19]
-#define SWIGTYPE_p_storage_type swig_types[20]
-#define SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t swig_types[21]
-#define SWIGTYPE_p_value_type swig_types[22]
-static swig_type_info *swig_types[24];
-static swig_module_info swig_module = {swig_types, 23, 0, 0, 0, 0};
+#define SWIGTYPE_p_ListAction swig_types[3]
+#define SWIGTYPE_p_ObjectSerializer swig_types[4]
+#define SWIGTYPE_p_PythonReference swig_types[5]
+#define SWIGTYPE_p_TST swig_types[6]
+#define SWIGTYPE_p_TSTException swig_types[7]
+#define SWIGTYPE_p_TSTIteratorTlexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t_t swig_types[8]
+#define SWIGTYPE_p_TSTIteratorTmatch_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t_t swig_types[9]
+#define SWIGTYPE_p_TupleListAction swig_types[10]
+#define SWIGTYPE_p_actionTchar_PythonReference_t swig_types[11]
+#define SWIGTYPE_p_char swig_types[12]
+#define SWIGTYPE_p_character_type swig_types[13]
+#define SWIGTYPE_p_filterTchar_PythonReference_t swig_types[14]
+#define SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t swig_types[15]
+#define SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t swig_types[16]
+#define SWIGTYPE_p_memory_storageTchar_PythonReference_t swig_types[17]
+#define SWIGTYPE_p_serializer_type swig_types[18]
+#define SWIGTYPE_p_std__istream swig_types[19]
+#define SWIGTYPE_p_std__ostream swig_types[20]
+#define SWIGTYPE_p_storage_type swig_types[21]
+#define SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t swig_types[22]
+#define SWIGTYPE_p_value_type swig_types[23]
+static swig_type_info *swig_types[25];
+static swig_module_info swig_module = {swig_types, 24, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3543,7 +3544,7 @@ fail:
 SWIGINTERN PyObject *_wrap__TST_write(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
-  FILE *arg2 = (FILE *) 0 ;
+  std::ostream *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
@@ -3556,14 +3557,17 @@ SWIGINTERN PyObject *_wrap__TST_write(PyObject *SWIGUNUSEDPARM(self), PyObject *
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_TST_write" "', argument " "1"" of type '" "tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *""'"); 
   }
   arg1 = reinterpret_cast<tst<char,PythonReference,MemoryStorage,ObjectSerializer > * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2,SWIGTYPE_p_FILE, 0 |  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_std__ostream,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "_TST_write" "', argument " "2"" of type '" "FILE *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "_TST_write" "', argument " "2"" of type '" "std::ostream &""'"); 
   }
-  arg2 = reinterpret_cast<FILE * >(argp2);
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "_TST_write" "', argument " "2"" of type '" "std::ostream &""'"); 
+  }
+  arg2 = reinterpret_cast<std::ostream * >(argp2);
   {
     try {
-      ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->write(arg2);
+      ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->write(*arg2);
     }
     catch (std::exception e) {
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
@@ -3579,7 +3583,7 @@ fail:
 SWIGINTERN PyObject *_wrap__TST_read(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
-  FILE *arg2 = (FILE *) 0 ;
+  std::istream *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
@@ -3592,14 +3596,17 @@ SWIGINTERN PyObject *_wrap__TST_read(PyObject *SWIGUNUSEDPARM(self), PyObject *a
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_TST_read" "', argument " "1"" of type '" "tst<char,PythonReference,MemoryStorage,ObjectSerializer > *""'"); 
   }
   arg1 = reinterpret_cast<tst<char,PythonReference,MemoryStorage,ObjectSerializer > * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2,SWIGTYPE_p_FILE, 0 |  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_std__istream,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "_TST_read" "', argument " "2"" of type '" "FILE *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "_TST_read" "', argument " "2"" of type '" "std::istream &""'"); 
   }
-  arg2 = reinterpret_cast<FILE * >(argp2);
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "_TST_read" "', argument " "2"" of type '" "std::istream &""'"); 
+  }
+  arg2 = reinterpret_cast<std::istream * >(argp2);
   {
     try {
-      (arg1)->read(arg2);
+      (arg1)->read(*arg2);
     }
     catch (std::exception e) {
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
@@ -4442,7 +4449,7 @@ fail:
 SWIGINTERN PyObject *_wrap_ObjectSerializer_write(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ObjectSerializer *arg1 = (ObjectSerializer *) 0 ;
-  FILE *arg2 = (FILE *) 0 ;
+  std::ostream *arg2 = 0 ;
   PythonReference arg3 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -4456,17 +4463,20 @@ SWIGINTERN PyObject *_wrap_ObjectSerializer_write(PyObject *SWIGUNUSEDPARM(self)
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ObjectSerializer_write" "', argument " "1"" of type '" "ObjectSerializer *""'"); 
   }
   arg1 = reinterpret_cast<ObjectSerializer * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2,SWIGTYPE_p_FILE, 0 |  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_std__ostream,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ObjectSerializer_write" "', argument " "2"" of type '" "FILE *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ObjectSerializer_write" "', argument " "2"" of type '" "std::ostream &""'"); 
   }
-  arg2 = reinterpret_cast<FILE * >(argp2);
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ObjectSerializer_write" "', argument " "2"" of type '" "std::ostream &""'"); 
+  }
+  arg2 = reinterpret_cast<std::ostream * >(argp2);
   {
     arg3 = PythonReference(swig_obj[2]);
   }
   {
     try {
-      (arg1)->write(arg2,arg3);
+      (arg1)->write(*arg2,arg3);
     }
     catch (std::exception e) {
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
@@ -4482,7 +4492,7 @@ fail:
 SWIGINTERN PyObject *_wrap_ObjectSerializer_read(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ObjectSerializer *arg1 = (ObjectSerializer *) 0 ;
-  FILE *arg2 = (FILE *) 0 ;
+  std::istream *arg2 = 0 ;
   PythonReference result;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -4496,85 +4506,17 @@ SWIGINTERN PyObject *_wrap_ObjectSerializer_read(PyObject *SWIGUNUSEDPARM(self),
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ObjectSerializer_read" "', argument " "1"" of type '" "ObjectSerializer *""'"); 
   }
   arg1 = reinterpret_cast<ObjectSerializer * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2,SWIGTYPE_p_FILE, 0 |  0 );
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_std__istream,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ObjectSerializer_read" "', argument " "2"" of type '" "FILE *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ObjectSerializer_read" "', argument " "2"" of type '" "std::istream &""'"); 
   }
-  arg2 = reinterpret_cast<FILE * >(argp2);
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ObjectSerializer_read" "', argument " "2"" of type '" "std::istream &""'"); 
+  }
+  arg2 = reinterpret_cast<std::istream * >(argp2);
   {
     try {
-      result = (arg1)->read(arg2);
-    }
-    catch (std::exception e) {
-      PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
-    }
-  }
-  {
-    resultobj = (&result)->lend();
-  }
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_ObjectSerializer_write_to_file(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  ObjectSerializer *arg1 = (ObjectSerializer *) 0 ;
-  PythonReference arg2 ;
-  PythonReference arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject *swig_obj[3] ;
-  
-  if (!SWIG_Python_UnpackTuple(args,"ObjectSerializer_write_to_file",3,3,swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ObjectSerializer, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ObjectSerializer_write_to_file" "', argument " "1"" of type '" "ObjectSerializer *""'"); 
-  }
-  arg1 = reinterpret_cast<ObjectSerializer * >(argp1);
-  {
-    arg2 = PythonReference(swig_obj[1]);
-  }
-  {
-    arg3 = PythonReference(swig_obj[2]);
-  }
-  {
-    try {
-      (arg1)->write_to_file(arg2,arg3);
-    }
-    catch (std::exception e) {
-      PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
-    }
-  }
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_ObjectSerializer_read_from_file(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  ObjectSerializer *arg1 = (ObjectSerializer *) 0 ;
-  PythonReference arg2 ;
-  PythonReference result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject *swig_obj[2] ;
-  
-  if (!SWIG_Python_UnpackTuple(args,"ObjectSerializer_read_from_file",2,2,swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ObjectSerializer, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ObjectSerializer_read_from_file" "', argument " "1"" of type '" "ObjectSerializer *""'"); 
-  }
-  arg1 = reinterpret_cast<ObjectSerializer * >(argp1);
-  {
-    arg2 = PythonReference(swig_obj[1]);
-  }
-  {
-    try {
-      result = (arg1)->read_from_file(arg2);
+      result = (arg1)->read(*arg2);
     }
     catch (std::exception e) {
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
@@ -5345,8 +5287,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_ObjectSerializer", (PyCFunction)_wrap_new_ObjectSerializer, METH_NOARGS, NULL},
 	 { (char *)"ObjectSerializer_write", _wrap_ObjectSerializer_write, METH_VARARGS, NULL},
 	 { (char *)"ObjectSerializer_read", _wrap_ObjectSerializer_read, METH_VARARGS, NULL},
-	 { (char *)"ObjectSerializer_write_to_file", _wrap_ObjectSerializer_write_to_file, METH_VARARGS, NULL},
-	 { (char *)"ObjectSerializer_read_from_file", _wrap_ObjectSerializer_read_from_file, METH_VARARGS, NULL},
 	 { (char *)"delete_ObjectSerializer", (PyCFunction)_wrap_delete_ObjectSerializer, METH_O, NULL},
 	 { (char *)"ObjectSerializer_swigregister", ObjectSerializer_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_TST", (PyCFunction)_wrap_new_TST, METH_NOARGS, NULL},
@@ -5396,7 +5336,6 @@ static void *_p_CallableActionTo_p_actionTchar_PythonReference_t(void *x) {
 static swig_type_info _swigt__p_CallableAction = {"_p_CallableAction", "CallableAction *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_CallableFilter = {"_p_CallableFilter", "CallableFilter *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_DictAction = {"_p_DictAction", "DictAction *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_FILE = {"_p_FILE", "FILE *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ListAction = {"_p_ListAction", "ListAction *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ObjectSerializer = {"_p_ObjectSerializer", "ObjectSerializer *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_PythonReference = {"_p_PythonReference", "PythonReference *", 0, 0, (void*)0, 0};
@@ -5413,6 +5352,8 @@ static swig_type_info _swigt__p_lexical_iteratorTchar_PythonReference_memory_sto
 static swig_type_info _swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t = {"_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t", "match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer > *|close_match_iterator_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_memory_storageTchar_PythonReference_t = {"_p_memory_storageTchar_PythonReference_t", "memory_storage<char,PythonReference > *|MemoryStorage *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_serializer_type = {"_p_serializer_type", "serializer_type *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__istream = {"_p_std__istream", "std::istream *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__ostream = {"_p_std__ostream", "std::ostream *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_storage_type = {"_p_storage_type", "storage_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t = {"_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t", "tst<char,PythonReference,MemoryStorage,ObjectSerializer > *|BaseTST *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_value_type = {"_p_value_type", "value_type *", 0, 0, (void*)0, 0};
@@ -5421,7 +5362,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_CallableAction,
   &_swigt__p_CallableFilter,
   &_swigt__p_DictAction,
-  &_swigt__p_FILE,
   &_swigt__p_ListAction,
   &_swigt__p_ObjectSerializer,
   &_swigt__p_PythonReference,
@@ -5438,6 +5378,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t,
   &_swigt__p_memory_storageTchar_PythonReference_t,
   &_swigt__p_serializer_type,
+  &_swigt__p_std__istream,
+  &_swigt__p_std__ostream,
   &_swigt__p_storage_type,
   &_swigt__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t,
   &_swigt__p_value_type,
@@ -5446,7 +5388,6 @@ static swig_type_info *swig_type_initial[] = {
 static swig_cast_info _swigc__p_CallableAction[] = {  {&_swigt__p_CallableAction, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_CallableFilter[] = {  {&_swigt__p_CallableFilter, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_DictAction[] = {  {&_swigt__p_DictAction, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_FILE[] = {  {&_swigt__p_FILE, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ListAction[] = {  {&_swigt__p_ListAction, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ObjectSerializer[] = {  {&_swigt__p_ObjectSerializer, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_PythonReference[] = {  {&_swigt__p_PythonReference, 0, 0, 0},{0, 0, 0, 0}};
@@ -5463,6 +5404,8 @@ static swig_cast_info _swigc__p_lexical_iteratorTchar_PythonReference_memory_sto
 static swig_cast_info _swigc__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t[] = {  {&_swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_memory_storageTchar_PythonReference_t[] = {  {&_swigt__p_memory_storageTchar_PythonReference_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_serializer_type[] = {  {&_swigt__p_serializer_type, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__istream[] = {  {&_swigt__p_std__istream, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__ostream[] = {  {&_swigt__p_std__ostream, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_storage_type[] = {  {&_swigt__p_storage_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t[] = {  {&_swigt__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 0, 0, 0},  {&_swigt__p_TST, _p_TSTTo_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_value_type[] = {  {&_swigt__p_value_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -5471,7 +5414,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_CallableAction,
   _swigc__p_CallableFilter,
   _swigc__p_DictAction,
-  _swigc__p_FILE,
   _swigc__p_ListAction,
   _swigc__p_ObjectSerializer,
   _swigc__p_PythonReference,
@@ -5488,6 +5430,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_t,
   _swigc__p_memory_storageTchar_PythonReference_t,
   _swigc__p_serializer_type,
+  _swigc__p_std__istream,
+  _swigc__p_std__ostream,
   _swigc__p_storage_type,
   _swigc__p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t,
   _swigc__p_value_type,

@@ -22,6 +22,9 @@
 #include "Python.h"
 #include "PythonReference.h"
 
+#include <iostream>
+#include <fstream>
+
 class CallableAction : public action<char,PythonReference> {
 public:
     CallableAction(PythonReference perform,PythonReference result) : _perform(perform), _result(result) {
@@ -144,11 +147,8 @@ class ObjectSerializer {
 public:
     ObjectSerializer();
     
-    void write(FILE* file,PythonReference data);
-    PythonReference ObjectSerializer::read(FILE* file);
-
-    void write_to_file(PythonReference file,PythonReference data);
-    PythonReference ObjectSerializer::read_from_file(PythonReference file);
+    void write(std::ostream& file,PythonReference data);
+    PythonReference ObjectSerializer::read(std::istream& file);
 
 private:
     PythonReference dumps,loads;
@@ -162,36 +162,27 @@ ObjectSerializer::ObjectSerializer() {
 }
 
 
-void ObjectSerializer::write(FILE* file,PythonReference data) {
+void ObjectSerializer::write(std::ostream& file,PythonReference data) {
     PythonReference call(Py_BuildValue("Oi",data.get(),2),0);
     PythonReference result(PyObject_CallObject(dumps.get(),call.get()),0);
     char *string;
     int length;
     PyString_AsStringAndSize(result.get(),&string,&length);
-    fwrite(&length,sizeof(int),1,file);
-    fwrite(string,sizeof(char),length,file);
+    file.write((char*)(&length),sizeof(int));
+    file.write(string,length);
 }
 
-void ObjectSerializer::write_to_file(PythonReference file,PythonReference data) {
-    return write(PyFile_AsFile(file.get()),data);
-}
-
-PythonReference ObjectSerializer::read(FILE* file) {
+PythonReference ObjectSerializer::read(std::istream& file) {
     int length;
-    fread(&length,sizeof(int),1,file);
+    file.read((char*)(&length),sizeof(int));
     char* string=(char*)tst_malloc(length);
-    fread(string,sizeof(char),length,file);
+    file.read(string,length);
     PythonReference dumped(PyString_FromStringAndSize(string,length),0);
     PythonReference call(Py_BuildValue("(O)",dumped.get()),0);
     PythonReference result(PyObject_CallObject(loads.get(),call.get()),0);
     tst_free(string);
     return result;
 }
-
-PythonReference ObjectSerializer::read_from_file(PythonReference file) {
-    return read(PyFile_AsFile(file.get()));
-}
-
 
 typedef memory_storage<char,PythonReference> MemoryStorage;
 typedef tst<char,PythonReference,MemoryStorage,ObjectSerializer> BaseTST;
@@ -240,18 +231,25 @@ public:
     }
 
     virtual PythonReference write_to_file(PythonReference file) {
-        if(!PyFile_CheckExact(file.get())) {
-            throw TSTException("Argument of write() must be a file object");
+        if(!PyString_CheckExact(file.get())) {
+            throw TSTException("Argument of write_to_file() must be a string object");
         }
-        this->write(PyFile_AsFile(file.get()));
+        std::ofstream out(PyString_AsString(file.get()),std::ofstream::binary|std::ofstream::out|std::ofstream::trunc);
+        out.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
+        this->write(out);
+        out.flush();
+        out.close();
         return PythonReference();
     }
 
     virtual PythonReference read_from_file(PythonReference file) {
-        if(!PyFile_CheckExact(file.get())) {
-            throw TSTException("Argument of write() must be a file object");
+        if(!PyString_CheckExact(file.get())) {
+            throw TSTException("Argument of read_from_file() must be a string object");
         }
-        this->read(PyFile_AsFile(file.get()));
+        std::ifstream in(PyString_AsString(file.get()),std::ifstream::binary|std::ifstream::in);
+        in.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
+        this->read(in);
+        in.close();
         return PythonReference();
     }
 

@@ -29,9 +29,9 @@ def dump(ti,words,intersect=0,method="text"):
             sep = document.rindex(':')
             line = int(document[sep+1:])
             document = document[:sep]
-            print document, line, result.GetScore(i), linecache.getline(document,line+1).decode('iso-8859-1'),
+            print document.decode('iso-8859-1'), line, result.GetScore(i), linecache.getline(document,line+1).decode('iso-8859-1'),
         except ValueError:
-            print document, result.GetScore(i)
+            print document.encode('iso-8859-1','ignore'), result.GetScore(i)
 
 try:
     try:
@@ -77,7 +77,7 @@ try:
                 #    ti.AddWord(word,"%s:%i"%(input_filename,linenumber))
         print 'Index construit en %.2f'%(clock()-start)
         print 'Saving...',
-        ti.Save(r'..\..\textindex\\complete.ti')
+        ti.Save(r'..\..\textindex\complete.ti')
         print 'OK !'
         
         dump(ti,'b??j* sole*',0)
@@ -90,7 +90,7 @@ try:
         dump(ti,'b??j* sole*',0)
         
         print "Suppression de tous les documents"        
-        for input_filename in glob(r'..\..\textindex\*.txt')[:-1]:
+        for input_filename in glob(r'..\..\textindex\*.txt')[:-5]:
             print input_filename
             ti.RemoveDocument(input_filename)
         print "Pack..."

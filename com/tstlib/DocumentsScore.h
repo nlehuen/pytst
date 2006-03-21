@@ -8,17 +8,17 @@
 
 class _bstr_t_reader_writer {
     public:
-        void write(FILE* file, _bstr_t value) {
+        void write(std::ostream& file, _bstr_t value) {
             int length=value.length();
-            fwrite(&length,sizeof(int),1,file);
-            fwrite(static_cast<wchar_t*>(value),sizeof(wchar_t),length,file);
+            file.write((char*)(&length),sizeof(int));
+            file.write((char*)((wchar_t*)(value)),length*sizeof(wchar_t));
         }
         
-        _bstr_t read(FILE* file) {
+        _bstr_t read(std::istream& file) {
             int length;
-            fread(&length,sizeof(int),1,file);
+            file.read((char*)(&length),sizeof(int));
             wchar_t* buffer=static_cast<wchar_t*>(tst_malloc(length*sizeof(wchar_t)));
-            fread(buffer,sizeof(wchar_t),length,file);
+            file.read((char*)(buffer),length*sizeof(wchar_t));
             BSTR result = SysAllocStringLen(buffer,length);
             tst_free(buffer);
             return _bstr_t(result,false);
