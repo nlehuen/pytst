@@ -20,6 +20,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
 #include <boost/python.hpp>
 using namespace boost::python;
 
@@ -84,17 +86,22 @@ template <typename character_type> class python_textindex : public textindex<cha
         
         void write_to_file(str file) {
             std::ofstream out(PyString_AsString(file.ptr()),std::ofstream::binary|std::ofstream::out|std::ofstream::trunc);
-            out.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
-            write(out);
-            out.flush();
-            out.close();
+            boost::iostreams::filtering_ostream fout;
+            fout.push(boost::iostreams::zlib_compressor());
+            fout.push(out);
+            write(fout);
+            fout.strict_sync();
+            // out.close();
         }
         
         void read_from_file(object file) {
             std::ifstream in(PyString_AsString(file.ptr()),std::ifstream::binary|std::ifstream::in);
             in.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
-            read(in);
-            in.close();
+            boost::iostreams::filtering_istream fin;
+            fin.push(boost::iostreams::zlib_decompressor());
+            fin.push(in);
+            read(fin);
+            // in.close();
         }
 
     protected:

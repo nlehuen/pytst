@@ -36,7 +36,7 @@ setup(
         Extension(
             "_tst",
             ["tst_wrap.cxx"],
-            include_dirs=['include'],
+            include_dirs=['include',r'c:\projets\boost_1_33_1'],
             extra_compile_args = extra_compile_args,
             define_macros=[('SCANNER', None),],
         )

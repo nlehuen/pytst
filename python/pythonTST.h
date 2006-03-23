@@ -24,6 +24,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
+
 
 class CallableAction : public action<char,PythonReference> {
 public:
@@ -236,9 +239,12 @@ public:
         }
         std::ofstream out(PyString_AsString(file.get()),std::ofstream::binary|std::ofstream::out|std::ofstream::trunc);
         out.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
-        this->write(out);
-        out.flush();
-        out.close();
+        boost::iostreams::filtering_ostream fout;
+        fout.push(boost::iostreams::zlib_compressor());
+        fout.push(out);
+        this->write(fout);
+        fout.strict_sync();
+        // out.close();
         return PythonReference();
     }
 
@@ -248,8 +254,11 @@ public:
         }
         std::ifstream in(PyString_AsString(file.get()),std::ifstream::binary|std::ifstream::in);
         in.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
-        this->read(in);
-        in.close();
+        boost::iostreams::filtering_istream fin;
+        fin.push(boost::iostreams::zlib_decompressor());
+        fin.push(in);
+        this->read(fin);
+        // in.close();
         return PythonReference();
     }
 
