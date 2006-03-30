@@ -6,7 +6,6 @@ include include/memory_storage.h
 include include/tst.h
 include build.bat
 include build23.bat
-include ez_setup.py
 include LICENSE
 include MANIFEST.in
 include PythonReference.h

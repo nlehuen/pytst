@@ -14,10 +14,7 @@
  # You should have received a copy of the GNU Lesser General Public
  # License along with this library; if not, write to the Free Software
  # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-import ez_setup
-ez_setup.use_setuptools()
-
-from setuptools import setup, find_packages, Extension
+from distutils.core import setup, Extension
 import sys
 
 extra_compile_args = []
