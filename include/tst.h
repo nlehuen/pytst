@@ -116,7 +116,7 @@ private:
     T default_value;
     int root,maximum_key_length;
 
-    void walk_recurse(tst_node<S,T>* current_node,S* current_key,size_t current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const;
+    void walk_recurse(tst_node<S,T>* current_node,S* current_key,size_t current_key_length,size_t current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const;
     void close_match_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,const size_t position, const int distance, const int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
     void match_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
     void match_joker_recurse(tst_node<S,T>* current_node,S* key, const size_t key_length,const S* string, const size_t string_length,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
@@ -956,7 +956,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(fil
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_recurse(tst_node<S,T>* current_node,S* current_key,size_t current_key_length,int current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_recurse(tst_node<S,T>* current_node,S* current_key,size_t current_key_length,size_t current_key_limit,filter<S,T>* filter,action<S,T>* to_perform) const {
     int other_index;
 
     other_index=current_node->left;
@@ -995,7 +995,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_
 
 template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::prefix_match(const S* string,size_t string_length,filter<S,T>* filter,action<S,T>* to_perform) const {
     S* current_key=(S*)tst_malloc((maximum_key_length+2)*sizeof(S));
-    size_t current_key_length=0;
+    int current_key_length=0;
 
     T biggest=default_value;
     int biggest_length=0;

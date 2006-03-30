@@ -24,8 +24,11 @@
 
 #include <iostream>
 #include <fstream>
+
+#ifdef ZIPPED
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
+#endif
 
 
 class CallableAction : public action<char,PythonReference> {
@@ -239,12 +242,18 @@ public:
         }
         std::ofstream out(PyString_AsString(file.get()),std::ofstream::binary|std::ofstream::out|std::ofstream::trunc);
         out.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
+
+#ifdef ZIPPED_TREE
         boost::iostreams::filtering_ostream fout;
         fout.push(boost::iostreams::zlib_compressor());
         fout.push(out);
         this->write(fout);
         fout.strict_sync();
-        // out.close();
+#else
+        this->write(out);
+#endif        
+        
+        out.close();
         return PythonReference();
     }
 
@@ -254,11 +263,17 @@ public:
         }
         std::ifstream in(PyString_AsString(file.get()),std::ifstream::binary|std::ifstream::in);
         in.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
+        
+#ifdef ZIPPED_TREE
         boost::iostreams::filtering_istream fin;
         fin.push(boost::iostreams::zlib_decompressor());
         fin.push(in);
         this->read(fin);
-        // in.close();
+#else
+        this->read(in);
+#endif        
+
+        in.close();
         return PythonReference();
     }
 

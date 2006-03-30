@@ -1,4 +1,4 @@
-# This file was created automatically by SWIG 1.3.28.
+# This file was created automatically by SWIG 1.3.29.
 # Don't modify this file, modify the SWIG interface instead.
 
 import _tst
@@ -26,6 +26,11 @@ def _swig_getattr(self,class_type,name):
     if method: return method(self)
     raise AttributeError,name
 
+def _swig_repr(self):
+    try: strthis = "proxy of " + self.this.__repr__()
+    except: strthis = ""
+    return "<%s.%s; %s >" % (self.__class__.__module__, self.__class__.__name__, strthis,)
+
 import types
 try:
     _object = types.ObjectType
@@ -49,21 +54,18 @@ def _swig_setattr_nondynamic_method(set):
 class TSTException(object):
     """Proxy of C++ TSTException class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ TSTException instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
-    def __init__(self, *args):
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
         """__init__(self, _message) -> TSTException"""
-        this = _tst.new_TSTException(*args)
-        try: self.this.append(this)
-        except: self.this = this
+        _tst.TSTException_swiginit(self,_tst.new_TSTException(*args))
     def what(*args):
         """what(self) -> char"""
         return _tst.TSTException_what(*args)
 
     __swig_destroy__ = _tst.delete_TSTException
-_tst.TSTException_swigregister(TSTException)
+TSTException.what = new_instancemethod(_tst.TSTException_what,None,TSTException)
+TSTException_swigregister = _tst.TSTException_swigregister
+TSTException_swigregister(TSTException)
 cvar = _tst.cvar
 TST_VERSION = cvar.TST_VERSION
 UNDEFINED_INDEX = cvar.UNDEFINED_INDEX
@@ -71,15 +73,10 @@ UNDEFINED_INDEX = cvar.UNDEFINED_INDEX
 class _TST(object):
     """Proxy of C++ _TST class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ tst<char,PythonReference,MemoryStorage,ObjectSerializer > instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
-    def __init__(self, *args):
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
         """__init__(self) -> _TST"""
-        this = _tst.new__TST(*args)
-        try: self.this.append(this)
-        except: self.this = this
+        _tst._TST_swiginit(self,_tst.new__TST(*args))
     __swig_destroy__ = _tst.delete__TST
     def pack(*args):
         """pack(self)"""
@@ -159,16 +156,32 @@ class _TST(object):
         """scan_with_stop_chars(self, string, stop_chars, to_perform) -> PythonReference"""
         return _tst._TST_scan_with_stop_chars(*args)
 
-_tst._TST_swigregister(_TST)
+_TST.pack = new_instancemethod(_tst._TST_pack,None,_TST)
+_TST.walk = new_instancemethod(_tst._TST_walk,None,_TST)
+_TST.close_match = new_instancemethod(_tst._TST_close_match,None,_TST)
+_TST.prefix_match = new_instancemethod(_tst._TST_prefix_match,None,_TST)
+_TST.match = new_instancemethod(_tst._TST_match,None,_TST)
+_TST.get = new_instancemethod(_tst._TST_get,None,_TST)
+_TST.get_or_build = new_instancemethod(_tst._TST_get_or_build,None,_TST)
+_TST.put = new_instancemethod(_tst._TST_put,None,_TST)
+_TST.remove = new_instancemethod(_tst._TST_remove,None,_TST)
+_TST.contains = new_instancemethod(_tst._TST_contains,None,_TST)
+_TST.get_maximum_key_length = new_instancemethod(_tst._TST_get_maximum_key_length,None,_TST)
+_TST.write = new_instancemethod(_tst._TST_write,None,_TST)
+_TST.read = new_instancemethod(_tst._TST_read,None,_TST)
+_TST.iterator = new_instancemethod(_tst._TST_iterator,None,_TST)
+_TST.close_match_iterator = new_instancemethod(_tst._TST_close_match_iterator,None,_TST)
+_TST.get_number_of_nodes = new_instancemethod(_tst._TST_get_number_of_nodes,None,_TST)
+_TST.scan = new_instancemethod(_tst._TST_scan,None,_TST)
+_TST.scan_with_stop_chars = new_instancemethod(_tst._TST_scan_with_stop_chars,None,_TST)
+_TST_swigregister = _tst._TST_swigregister
+_TST_swigregister(_TST)
 
 class _Action(object):
     """Proxy of C++ _Action class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self): raise AttributeError, "No constructor defined"
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ action<char,PythonReference > instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
+    __repr__ = _swig_repr
     __swig_destroy__ = _tst.delete__Action
     def perform(*args):
         """perform(self, string, remaining_distance, data)"""
@@ -178,110 +191,87 @@ class _Action(object):
         """result(self) -> PythonReference"""
         return _tst._Action_result(*args)
 
-_tst._Action_swigregister(_Action)
+_Action.perform = new_instancemethod(_tst._Action_perform,None,_Action)
+_Action.result = new_instancemethod(_tst._Action_result,None,_Action)
+_Action_swigregister = _tst._Action_swigregister
+_Action_swigregister(_Action)
 
 class _Filter(object):
     """Proxy of C++ _Filter class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self): raise AttributeError, "No constructor defined"
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ filter<char,PythonReference > instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
+    __repr__ = _swig_repr
     __swig_destroy__ = _tst.delete__Filter
     def perform(*args):
         """perform(self, string, remaining_distance, data) -> PythonReference"""
         return _tst._Filter_perform(*args)
 
-_tst._Filter_swigregister(_Filter)
+_Filter.perform = new_instancemethod(_tst._Filter_perform,None,_Filter)
+_Filter_swigregister = _tst._Filter_swigregister
+_Filter_swigregister(_Filter)
 
 class CallableAction(_Action):
     """Proxy of C++ CallableAction class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ CallableAction instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
-    def __init__(self, *args):
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
         """__init__(self, perform, result) -> CallableAction"""
-        this = _tst.new_CallableAction(*args)
-        try: self.this.append(this)
-        except: self.this = this
+        _tst.CallableAction_swiginit(self,_tst.new_CallableAction(*args))
     __swig_destroy__ = _tst.delete_CallableAction
-_tst.CallableAction_swigregister(CallableAction)
+CallableAction_swigregister = _tst.CallableAction_swigregister
+CallableAction_swigregister(CallableAction)
 
 class CallableFilter(_Filter):
     """Proxy of C++ CallableFilter class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ CallableFilter instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
-    def __init__(self, *args):
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
         """__init__(self, _callable) -> CallableFilter"""
-        this = _tst.new_CallableFilter(*args)
-        try: self.this.append(this)
-        except: self.this = this
+        _tst.CallableFilter_swiginit(self,_tst.new_CallableFilter(*args))
     __swig_destroy__ = _tst.delete_CallableFilter
-_tst.CallableFilter_swigregister(CallableFilter)
+CallableFilter_swigregister = _tst.CallableFilter_swigregister
+CallableFilter_swigregister(CallableFilter)
 
 class DictAction(_Action):
     """Proxy of C++ DictAction class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ DictAction instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
-    def __init__(self, *args):
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
         """__init__(self) -> DictAction"""
-        this = _tst.new_DictAction(*args)
-        try: self.this.append(this)
-        except: self.this = this
+        _tst.DictAction_swiginit(self,_tst.new_DictAction(*args))
     __swig_destroy__ = _tst.delete_DictAction
-_tst.DictAction_swigregister(DictAction)
+DictAction_swigregister = _tst.DictAction_swigregister
+DictAction_swigregister(DictAction)
 
 class ListAction(_Action):
     """Proxy of C++ ListAction class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ ListAction instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
-    def __init__(self, *args):
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
         """__init__(self) -> ListAction"""
-        this = _tst.new_ListAction(*args)
-        try: self.this.append(this)
-        except: self.this = this
+        _tst.ListAction_swiginit(self,_tst.new_ListAction(*args))
     __swig_destroy__ = _tst.delete_ListAction
-_tst.ListAction_swigregister(ListAction)
+ListAction_swigregister = _tst.ListAction_swigregister
+ListAction_swigregister(ListAction)
 
 class TupleListAction(_Action):
     """Proxy of C++ TupleListAction class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ TupleListAction instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
-    def __init__(self, *args):
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
         """__init__(self) -> TupleListAction"""
-        this = _tst.new_TupleListAction(*args)
-        try: self.this.append(this)
-        except: self.this = this
+        _tst.TupleListAction_swiginit(self,_tst.new_TupleListAction(*args))
     __swig_destroy__ = _tst.delete_TupleListAction
-_tst.TupleListAction_swigregister(TupleListAction)
+TupleListAction_swigregister = _tst.TupleListAction_swigregister
+TupleListAction_swigregister(TupleListAction)
 
 class ObjectSerializer(object):
     """Proxy of C++ ObjectSerializer class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ ObjectSerializer instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
-    def __init__(self, *args):
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
         """__init__(self) -> ObjectSerializer"""
-        this = _tst.new_ObjectSerializer(*args)
-        try: self.this.append(this)
-        except: self.this = this
+        _tst.ObjectSerializer_swiginit(self,_tst.new_ObjectSerializer(*args))
     def write(*args):
         """write(self, file, data)"""
         return _tst.ObjectSerializer_write(*args)
@@ -291,20 +281,18 @@ class ObjectSerializer(object):
         return _tst.ObjectSerializer_read(*args)
 
     __swig_destroy__ = _tst.delete_ObjectSerializer
-_tst.ObjectSerializer_swigregister(ObjectSerializer)
+ObjectSerializer.write = new_instancemethod(_tst.ObjectSerializer_write,None,ObjectSerializer)
+ObjectSerializer.read = new_instancemethod(_tst.ObjectSerializer_read,None,ObjectSerializer)
+ObjectSerializer_swigregister = _tst.ObjectSerializer_swigregister
+ObjectSerializer_swigregister(ObjectSerializer)
 
 class TST(_TST):
     """Proxy of C++ TST class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ TST instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
-    def __init__(self, *args):
+    __repr__ = _swig_repr
+    def __init__(self, *args): 
         """__init__(self) -> TST"""
-        this = _tst.new_TST(*args)
-        try: self.this.append(this)
-        except: self.this = this
+        _tst.TST_swiginit(self,_tst.new_TST(*args))
     __swig_destroy__ = _tst.delete_TST
     def write_to_file(*args):
         """write_to_file(self, file) -> PythonReference"""
@@ -345,16 +333,23 @@ class TST(_TST):
         """__iter__(self) -> TSTLexicalIterator"""
         return _tst.TST___iter__(*args)
 
-_tst.TST_swigregister(TST)
+TST.write_to_file = new_instancemethod(_tst.TST_write_to_file,None,TST)
+TST.read_from_file = new_instancemethod(_tst.TST_read_from_file,None,TST)
+TST.__getitem__ = new_instancemethod(_tst.TST___getitem__,None,TST)
+TST.__setitem__ = new_instancemethod(_tst.TST___setitem__,None,TST)
+TST.__delitem__ = new_instancemethod(_tst.TST___delitem__,None,TST)
+TST.__contains__ = new_instancemethod(_tst.TST___contains__,None,TST)
+TST.iterator = new_instancemethod(_tst.TST_iterator,None,TST)
+TST.close_match_iterator = new_instancemethod(_tst.TST_close_match_iterator,None,TST)
+TST.__iter__ = new_instancemethod(_tst.TST___iter__,None,TST)
+TST_swigregister = _tst.TST_swigregister
+TST_swigregister(TST)
 
 class TSTLexicalIterator(object):
     """Proxy of C++ TSTLexicalIterator class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self): raise AttributeError, "No constructor defined"
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ TSTIterator<lexical_iterator_type > instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
+    __repr__ = _swig_repr
     def __iter__(*args):
         """__iter__(self) -> TSTLexicalIterator"""
         return _tst.TSTLexicalIterator___iter__(*args)
@@ -364,16 +359,16 @@ class TSTLexicalIterator(object):
         return _tst.TSTLexicalIterator_next(*args)
 
     __swig_destroy__ = _tst.delete_TSTLexicalIterator
-_tst.TSTLexicalIterator_swigregister(TSTLexicalIterator)
+TSTLexicalIterator.__iter__ = new_instancemethod(_tst.TSTLexicalIterator___iter__,None,TSTLexicalIterator)
+TSTLexicalIterator.next = new_instancemethod(_tst.TSTLexicalIterator_next,None,TSTLexicalIterator)
+TSTLexicalIterator_swigregister = _tst.TSTLexicalIterator_swigregister
+TSTLexicalIterator_swigregister(TSTLexicalIterator)
 
 class TSTCloseMatchIterator(object):
     """Proxy of C++ TSTCloseMatchIterator class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     def __init__(self): raise AttributeError, "No constructor defined"
-    def __repr__(self):
-        try: strthis = "at 0x%x" %( self.this, ) 
-        except: strthis = "" 
-        return "<%s.%s; proxy of C++ TSTIterator<close_match_iterator_type > instance %s>" % (self.__class__.__module__, self.__class__.__name__, strthis,)
+    __repr__ = _swig_repr
     def __iter__(*args):
         """__iter__(self) -> TSTCloseMatchIterator"""
         return _tst.TSTCloseMatchIterator___iter__(*args)
@@ -383,7 +378,10 @@ class TSTCloseMatchIterator(object):
         return _tst.TSTCloseMatchIterator_next(*args)
 
     __swig_destroy__ = _tst.delete_TSTCloseMatchIterator
-_tst.TSTCloseMatchIterator_swigregister(TSTCloseMatchIterator)
+TSTCloseMatchIterator.__iter__ = new_instancemethod(_tst.TSTCloseMatchIterator___iter__,None,TSTCloseMatchIterator)
+TSTCloseMatchIterator.next = new_instancemethod(_tst.TSTCloseMatchIterator_next,None,TSTCloseMatchIterator)
+TSTCloseMatchIterator_swigregister = _tst.TSTCloseMatchIterator_swigregister
+TSTCloseMatchIterator_swigregister(TSTCloseMatchIterator)
 
 
 

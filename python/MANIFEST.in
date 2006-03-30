@@ -1,15 +1,20 @@
-include include/LICENSE
-include include/tst.h
 include include/debug.h
 include include/fundamentals.h
+include include/iterators.h
+include include/LICENSE
 include include/memory_storage.h
-include pythonTST.h
-include tst_wrap.cxx
-include MANIFEST.in
-include README.html
-include tst.i
-include ez_setup.py
+include include/tst.h
 include build.bat
+include build23.bat
+include ez_setup.py
 include LICENSE
+include MANIFEST.in
+include PythonReference.h
+include pythonTST.h
+include README.html
+include setup.py
+include tst.i
+include tst.py
+include tst_wrap.cxx
 
 
