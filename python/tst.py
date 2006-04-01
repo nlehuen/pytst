@@ -148,6 +148,10 @@ class _TST(object):
         """get_number_of_nodes(self) -> int"""
         return _tst._TST_get_number_of_nodes(*args)
 
+    def get_default_value(*args):
+        """get_default_value(self) -> PythonReference"""
+        return _tst._TST_get_default_value(*args)
+
     def scan(*args):
         """scan(self, string, to_perform) -> PythonReference"""
         return _tst._TST_scan(*args)
@@ -172,6 +176,7 @@ _TST.read = new_instancemethod(_tst._TST_read,None,_TST)
 _TST.iterator = new_instancemethod(_tst._TST_iterator,None,_TST)
 _TST.close_match_iterator = new_instancemethod(_tst._TST_close_match_iterator,None,_TST)
 _TST.get_number_of_nodes = new_instancemethod(_tst._TST_get_number_of_nodes,None,_TST)
+_TST.get_default_value = new_instancemethod(_tst._TST_get_default_value,None,_TST)
 _TST.scan = new_instancemethod(_tst._TST_scan,None,_TST)
 _TST.scan_with_stop_chars = new_instancemethod(_tst._TST_scan_with_stop_chars,None,_TST)
 _TST_swigregister = _tst._TST_swigregister

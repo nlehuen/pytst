@@ -3936,6 +3936,38 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap__TST_get_default_value(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
+  PythonReference result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_TST_get_default_value" "', argument " "1"" of type '" "tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *""'"); 
+  }
+  arg1 = reinterpret_cast< tst<char,PythonReference,MemoryStorage,ObjectSerializer > * >(argp1);
+  {
+    try {
+      result = ((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->get_default_value(); 
+    }
+    catch (std::exception e) {
+      PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
+    }
+  }
+  {
+    resultobj = (&result)->lend();
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap__TST_scan(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
@@ -5439,6 +5471,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_TST_iterator", _wrap__TST_iterator, METH_VARARGS, NULL},
 	 { (char *)"_TST_close_match_iterator", _wrap__TST_close_match_iterator, METH_VARARGS, NULL},
 	 { (char *)"_TST_get_number_of_nodes", (PyCFunction)_wrap__TST_get_number_of_nodes, METH_O, NULL},
+	 { (char *)"_TST_get_default_value", (PyCFunction)_wrap__TST_get_default_value, METH_O, NULL},
 	 { (char *)"_TST_scan", _wrap__TST_scan, METH_VARARGS, NULL},
 	 { (char *)"_TST_scan_with_stop_chars", _wrap__TST_scan_with_stop_chars, METH_VARARGS, NULL},
 	 { (char *)"_TST_swigregister", _TST_swigregister, METH_VARARGS, NULL},

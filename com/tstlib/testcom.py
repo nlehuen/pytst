@@ -90,7 +90,7 @@ try:
         dump(ti,'b??j* sole*',0)
         
         print "Suppression de tous les documents"        
-        for input_filename in glob(r'..\..\textindex\*.txt')[:-5]:
+        for input_filename in glob(r'..\..\textindex\*.txt'):
             print input_filename
             ti.RemoveDocument(input_filename)
         print "Pack..."

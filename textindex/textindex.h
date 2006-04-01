@@ -140,16 +140,22 @@ template <typename document_id_type, typename score_type> class documents_scores
             shared_ptr read(std::istream& file) {
                 size_t size;
                 file.read((char*)(&size),sizeof(size_t));
-                documents_scores* result = new documents_scores(size);
-                for(size_t i=0;i<size;++i) {
-                    document_id_type document_id;
-                    file.read((char*)(&document_id),sizeof(document_id_type));
-                    score_type score;
-                    file.read((char*)(&score),sizeof(score_type));
-                    result->documents[document_id]=score;
-                }
 
-                return shared_ptr(result);
+                if(size>0) {
+                    documents_scores* result = new documents_scores(size);
+                    for(size_t i=0;i<size;++i) {
+                        document_id_type document_id;
+                        file.read((char*)(&document_id),sizeof(document_id_type));
+                        score_type score;
+                        file.read((char*)(&score),sizeof(score_type));
+                        result->documents[document_id]=score;
+                    }
+
+                    return shared_ptr(result);
+                }
+                else {
+                    return shared_ptr();
+                }
             }
     };
 
@@ -231,7 +237,7 @@ template < typename character_type, typename document_type, typename reader_writ
             public:
                 typedef boost::shared_ptr< std::vector< std::basic_string< typename character_type > > > result_type;
 
-                cleaner() : empty_words(new std::vector< std::basic_string< character_type > >() ) {
+                cleaner(typename tree_type* _tree) : tree(_tree), empty_words(new std::vector< std::basic_string< character_type > >() ) {
                 }
             
                 virtual void perform(const character_type* string, size_t string_length, int remaining_distance, typename documents_scores_pointer data) {
@@ -241,14 +247,14 @@ template < typename character_type, typename document_type, typename reader_writ
                 }
                 
                 virtual typename documents_scores_pointer result() {
+                    for(cleaner::result_type::element_type::const_iterator item(empty_words->begin()),end(empty_words->end());item!=end;++item) {
+                        tree->remove(*item);
+                    }
                     return documents_scores_pointer();
-                }
-                
-                typename result_type get_empty_words() {
-                    return empty_words;
                 }
 
             private:
+                typename tree_type* tree;
                 typename result_type empty_words;
         };
 
@@ -351,12 +357,8 @@ template < typename character_type, typename document_type, typename reader_writ
         }
 
         void pack() {
-            cleaner c;
+            cleaner c(&tree);
             tree.walk1(NULL,&c);
-            cleaner::result_type result(c.get_empty_words());
-            for(cleaner::result_type::element_type::const_iterator item(result->begin()),end(result->end());item!=end;++item) {
-                tree.remove(*item);
-            }
             tree.pack();
         }
 

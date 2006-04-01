@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "1.10";
+const char* const TST_VERSION = "1.11";
 
 #include "debug.h"
 
@@ -100,10 +100,15 @@ public:
         return storage->size();
     }
 
+    T get_default_value() const {
+        return default_value;
+    }
+
 #ifdef SCANNER
     T scan(const S* string,size_t string_length,action<S,T>* to_perform);
     T scan_with_stop_chars(const S* string,size_t string_length,const S* stop_chars,size_t stop_chars_length,action<S,T>* to_perform) const;
 #endif
+
 
 protected:
     void set_storage(M* new_storage) {
@@ -194,13 +199,13 @@ template <typename S, typename T, typename M=memory_storage<S,T>, typename RW=nu
 #endif
 };
 
-template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst() {
-    storage=new storage_type(16);
-    default_value=value_type();
+template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst() :
+    storage(new storage_type(16)),
+    default_value(),
+    maximum_key_length(0) {
     node_info<S,T> root_info;
     storage->new_node(&root_info);
     root = root_info.index;
-    maximum_key_length=0;
 }
 
 /*************************** high-level tree management ***********************/
