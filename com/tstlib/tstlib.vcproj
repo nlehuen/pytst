@@ -210,10 +210,10 @@
 				RelativePath=".\stdafx.h">
 			</File>
 			<File
-				RelativePath=".\TextIndex.h">
+				RelativePath="..\..\textindex\textindex.h">
 			</File>
 			<File
-				RelativePath="..\..\textindex\textindex.h">
+				RelativePath=".\TextIndex.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tst.h">

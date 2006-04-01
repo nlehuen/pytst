@@ -25,7 +25,7 @@
 #include <iostream>
 #include <fstream>
 
-#ifdef ZIPPED
+#ifdef ZIPPED_TREE
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
 #endif

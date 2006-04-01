@@ -8,8 +8,12 @@
 #include <fstream>
 #include <string>
 
-// CTextIndex
+#ifdef ZIPPED_TREE
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
+#endif
 
+// CTextIndex
 
 STDMETHODIMP CTextIndex::AddWord(BSTR* word, BSTR* document)
 {
@@ -55,8 +59,17 @@ STDMETHODIMP CTextIndex::Load(BSTR* filename,LONG* result)
         if(!fin) throw TSTException("Could not open file");
         std::ifstream in(fin);
         in.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
+
+#ifdef ZIPPED_TREE
+        boost::iostreams::filtering_istream zfin;
+        zfin.push(boost::iostreams::zlib_decompressor());
+        zfin.push(in);
+        _textindex.read(zfin);
+#else
         _textindex.read(in);
+#endif        
         in.close();
+
         *result = 1;
     }
     catch(exception) {
@@ -73,9 +86,18 @@ STDMETHODIMP CTextIndex::Save(BSTR* filename,LONG* result)
         if(!fout) throw TSTException("Could not open file");
         std::ofstream out(fout);
         out.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
+
+#ifdef ZIPPED_TREE
+        boost::iostreams::filtering_ostream zfout;
+        zfout.push(boost::iostreams::zlib_compressor());
+        zfout.push(out);
+        _textindex.write(zfout);
+        // zfout.strict_sync();
+#else
         _textindex.write(out);
-        out.flush();
+#endif        
         out.close();
+
         *result = 1;
     }
     catch(exception) {
