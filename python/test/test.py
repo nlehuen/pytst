@@ -476,6 +476,13 @@ class TestScan(unittest.TestCase):
         self.tree['olaaf']='olaaf'
         self.tree['laslo']='laslo'
 
+    def testScanMikeThornton(self):
+        t = TST()
+        t['ccc'] = 1
+        self.assertEqual(t.scan('cc',TupleListAction()),[('cc',-2,None)])
+        self.assertEqual(t.scan('ccd',TupleListAction()),[('ccd',-3,None)])
+        
+
     def testScan0_1(self):
         self.assertEqual(self.tree.scan('Nicolas',TupleListAction()),[('Nicolas', 7, 'Nicolas'),])
     

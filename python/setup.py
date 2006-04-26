@@ -23,7 +23,7 @@ if sys.platform == "win32" and sys.version >= '2.4':
 
 setup(
     name = "pytst",
-    version = "1.11",
+    version = "1.12",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
     url = "http://nicolas.lehuen.com/index.php/Pytst",

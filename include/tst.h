@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "1.11";
+const char* const TST_VERSION = "1.12";
 
 #include "debug.h"
 
@@ -31,7 +31,7 @@ const char* const TST_VERSION = "1.11";
     #define tst_realloc PyMem_Realloc
     #define tst_free PyMem_Free
     // Pour ajouter/supprimer les fonctions de scanning.
-    #define SCANNER
+    // #define SCANNER
 #else
     #include "stdlib.h"
     #define tst_malloc malloc
@@ -1169,21 +1169,28 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan(con
                 }
             }
             else if(si_match_start!=UNDEFINED_INDEX) {
-                // Si le caractère courant n'est pas accepté, qu'on avait commencé
-                // un match mais que celui-ci n'avait pas réussi, on va backtracker.
-                compute_backtrack(n_current,string,si_match_start+1,si_current);
-                ni_current = n_current->backtrack;
-                ni_best_match=n_current->backtrack_match_index;
+                if(si_current<string_length) {
+                    // Si on n'est pas en fin de chaîne...
+                    // Si le caractère courant n'est pas accepté, qu'on avait commencé
+                    // un match mais que celui-ci n'avait pas réussi, on va backtracker.
+                    compute_backtrack(n_current,string,si_match_start+1,si_current);
+                    ni_current = n_current->backtrack;
+                    ni_best_match=n_current->backtrack_match_index;
 
-                if(ni_current==root) {
-                    // Quand on a un retour à la racine, on n'a aucun match en cours
-                    si_match_start=UNDEFINED_INDEX;
+                    if(ni_current==root) {
+                        // Quand on a un retour à la racine, on n'a aucun match en cours
+                        si_match_start=UNDEFINED_INDEX;
+                    }
+                    else {
+                        // sinon c'est qu'un match est en cours, on va recalculer son point de démarrage
+                        // grâce à la position du noeud
+                        n_current=storage->get(ni_current);
+                        si_match_start=si_current-n_current->position;
+                    }
                 }
                 else {
-                    // sinon c'est qu'un match est en cours, on va recalculer son point de démarrage
-                    // grâce à la position du noeud
-                    n_current=storage->get(ni_current);
-                    si_match_start=si_current-n_current->position;
+                    // Si on est en fin de chaîne, on sort.
+                    break;
                 }
             }
             else {
