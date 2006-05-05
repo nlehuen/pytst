@@ -18,18 +18,29 @@
  */
 %module tst
 
-%feature("autodoc", "0");
-
-%apply (char *STRING, int LENGTH) { (const char* string, size_t string_length) };
-%apply (char *STRING, int LENGTH) { (const char* stop_chars, size_t stop_chars_length) };
-%apply (char *STRING, int LENGTH) { (char* string, size_t string_length) };
-%apply (char *STRING, int LENGTH) { (char* stop_chars, size_t stop_chars_length) };
+%feature("autodoc", "1");
 
 %typemap(in) PythonReference {
    $1 = PythonReference($input);
 }
+
 %typemap(out) PythonReference {
    $result = $1.lend();
+}
+
+%typemap(in) const std::basic_string<char>&, std::basic_string<char>& {
+    char* buffer;
+    int size;
+    PyString_AsStringAndSize($input,&buffer,&size);
+    $1 = new std::basic_string<char>(buffer,size);
+}
+
+%typemap(freearg) const std::basic_string<char>&, std::basic_string<char>& {
+    delete $1;
+}
+
+%typemap(out) const std::basic_string<char>&, std::basic_string<char>& {
+    $result = PyString_FromStringAndSize($1.data(),$1.size());
 }
 
 %exception {

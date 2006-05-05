@@ -83,7 +83,7 @@ public:
     void read(std::istream &file);
 
     lexical_iterator<S,T,M,RW> iterator() const {
-        return lexical_iterator<S,T,M,RW>(this,std::basic_string<S>(""),root);
+        return lexical_iterator<S,T,M,RW>(this,std::basic_string<S>(),root);
     }
 
     lexical_iterator<S,T,M,RW> iterator(const std::basic_string<S>& string) const {
@@ -882,7 +882,6 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(fil
         
         index = start->next; 
         if(index!=UNDEFINED_INDEX) {
-        	
             walk_recurse(storage->get(index),std::basic_string<S>(string),filter,to_perform);
         }
     }

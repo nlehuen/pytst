@@ -39,11 +39,11 @@ public:
     virtual ~CallableAction() {
     }
 
-    virtual void perform(const char* string,size_t string_length,int remaining_distance,PythonReference data) {
+    virtual void perform(const std::basic_string<char>& string,int remaining_distance,PythonReference data) {
         if(_perform.get()==Py_None) {
             return;
         }
-        PythonReference tuple(Py_BuildValue("s#iO",string,string_length,remaining_distance,data.get()),0);
+        PythonReference tuple(Py_BuildValue("s#iO",string.data(),string.size(),remaining_distance,data.get()),0);
         Py_DECREF(PyObject_CallObject(_perform.get(),tuple.get()));
     }
 
@@ -68,8 +68,8 @@ public:
     virtual ~CallableFilter() {
     }
 
-    virtual PythonReference perform(const char* string,size_t string_length,int remaining_distance,PythonReference data) {
-        PythonReference tuple(Py_BuildValue("s#iO",string,string_length,remaining_distance,data.get()),0);
+    virtual PythonReference perform(const std::basic_string<char>& string,int remaining_distance,PythonReference data) {
+        PythonReference tuple(Py_BuildValue("s#iO",string.data(),string.size(),remaining_distance,data.get()),0);
         return PythonReference(PyObject_CallObject(callable.get(),tuple.get()),0);
     }
 
@@ -85,8 +85,8 @@ public:
     virtual ~DictAction() {
     }
 
-    virtual void perform(const char* string,size_t string_length,int remaining_distance,PythonReference data) {
-        PythonReference key(Py_BuildValue("s#",string,string_length),0);
+    virtual void perform(const std::basic_string<char>& string,int remaining_distance,PythonReference data) {
+        PythonReference key(Py_BuildValue("s#",string.data(),string.size()),0);
         
         PyObject* old_tuple=PyDict_GetItem(dict.get(),key.get());
         if(old_tuple!=0) {
@@ -116,7 +116,7 @@ public:
     virtual ~ListAction() {
     }
 
-    virtual void perform(const char* string,size_t string_length,int remaining_distance,PythonReference data) {
+    virtual void perform(const std::basic_string<char>& string,int remaining_distance,PythonReference data) {
         PyList_Append(list.get(),data.get());
     }
 
@@ -136,8 +136,8 @@ public:
     virtual ~TupleListAction() {
     }
 
-    virtual void perform(const char* string,size_t string_length,int remaining_distance,PythonReference data) {
-        PythonReference tuple(Py_BuildValue("s#iO",string,string_length,remaining_distance,data.get()),0);
+    virtual void perform(const std::basic_string<char>& string,int remaining_distance,PythonReference data) {
+        PythonReference tuple(Py_BuildValue("s#iO",string.data(),string.size(),remaining_distance,data.get()),0);
         PyList_Append(list.get(),tuple.get());
     }
 
@@ -277,20 +277,20 @@ public:
         return PythonReference();
     }
 
-    PythonReference __getitem__(char* string,size_t string_length) {
-        return get(string,string_length);
+    PythonReference __getitem__(const std::basic_string<char>& string) {
+        return get(string);
     }
 
-    PythonReference __setitem__(char* string,size_t string_length,PythonReference data) {
-        return put(string,string_length,data);
+    PythonReference __setitem__(const std::basic_string<char>& string,PythonReference data) {
+        return put(string,data);
     }
 
-    void __delitem__(char* string,size_t string_length) {
-        remove(string,string_length);
+    void __delitem__(const std::basic_string<char>& string) {
+        remove(string);
     }
 
-    PythonReference __contains__(char* string,size_t string_length) {
-        if(contains(string,string_length)) {
+    PythonReference __contains__(const std::basic_string<char>& string) {
+        if(contains(string)) {
             return PythonReference(Py_False);
         }
         else {
@@ -302,12 +302,12 @@ public:
         return TSTLexicalIterator(BaseTST::iterator());
     }
 
-    TSTLexicalIterator iterator(char* string, size_t string_length) {
-        return TSTLexicalIterator(BaseTST::iterator(string,string_length));
+    TSTLexicalIterator iterator(const std::basic_string<char>& string) {
+        return TSTLexicalIterator(BaseTST::iterator(string));
     }
 
-    TSTCloseMatchIterator close_match_iterator(char* string, size_t string_length, int distance) {
-        return TSTCloseMatchIterator(BaseTST::close_match_iterator(string,string_length,distance));
+    TSTCloseMatchIterator close_match_iterator(const std::basic_string<char>& string, int distance) {
+        return TSTCloseMatchIterator(BaseTST::close_match_iterator(string,distance));
     }
 
     TSTLexicalIterator __iter__() {
