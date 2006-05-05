@@ -124,10 +124,6 @@ class _TST(object):
         """contains(self, std::basic_string<(char)> string) -> bool"""
         return _tst._TST_contains(*args)
 
-    def get_maximum_key_length(*args):
-        """get_maximum_key_length(self) -> int"""
-        return _tst._TST_get_maximum_key_length(*args)
-
     def write(*args):
         """write(self, std::ostream file)"""
         return _tst._TST_write(*args)
@@ -176,7 +172,6 @@ _TST.get_or_build = new_instancemethod(_tst._TST_get_or_build,None,_TST)
 _TST.put = new_instancemethod(_tst._TST_put,None,_TST)
 _TST.remove = new_instancemethod(_tst._TST_remove,None,_TST)
 _TST.contains = new_instancemethod(_tst._TST_contains,None,_TST)
-_TST.get_maximum_key_length = new_instancemethod(_tst._TST_get_maximum_key_length,None,_TST)
 _TST.write = new_instancemethod(_tst._TST_write,None,_TST)
 _TST.read = new_instancemethod(_tst._TST_read,None,_TST)
 _TST.iterator = new_instancemethod(_tst._TST_iterator,None,_TST)

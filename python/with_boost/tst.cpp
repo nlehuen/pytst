@@ -299,8 +299,6 @@ BOOST_PYTHON_MODULE(tst)
 
         .def("get_or_build",&TST::get_or_build)
         
-        .def("get_maximum_key_length",&TST::get_maximum_key_length)
-        
         .def("get_number_of_nodes",&TST::get_number_of_nodes)
 
         .def("remove",&TST::remove)

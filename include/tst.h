@@ -78,7 +78,6 @@ public:
     T put(const std::basic_string<S>& string,T data);
     void remove(const std::basic_string<S>& string);
     bool contains(const std::basic_string<S>& string) const;
-    int get_maximum_key_length() const { return maximum_key_length; }
     void write(std::ostream &file) const;
     void read(std::istream &file);
 
@@ -119,7 +118,7 @@ protected:
 private:
     M* storage;
     T default_value;
-    int root,maximum_key_length;
+    int root;
 
     void walk_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,filter<S,T>* filter,action<S,T>* to_perform) const;
     void close_match_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,const size_t position, const int distance, const int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
@@ -148,8 +147,7 @@ private:
 
 template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst() :
     storage(new storage_type(16)),
-    default_value(),
-    maximum_key_length(0) {
+    default_value() {
     node_info<S,T> root_info;
     storage->new_node(&root_info);
     root = root_info.index;
@@ -278,10 +276,6 @@ template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::build_
 
     if(diff==0) {
         ++current_position;
-
-        if(current_position>maximum_key_length) {
-            maximum_key_length=current_position;
-        }
 
         compute_height_and_balance(current_node_info); // TODO : est-ce bien necessaire ?
 
@@ -1332,7 +1326,6 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(
     }
 
     RW reader;
-    file.read((char*)(&maximum_key_length),sizeof(int));
     default_value = reader.read(file);
 
     // On efface le stockage
@@ -1406,7 +1399,6 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write
     size_t version_length = strlen(TST_VERSION);
     file.write((char*)(&version_length),sizeof(size_t));
     file.write(TST_VERSION,version_length);
-    file.write(const_cast<char*>(reinterpret_cast<const char*>(&maximum_key_length)),sizeof(int));
 
     RW writer;
     writer.write(file,default_value);

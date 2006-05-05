@@ -3596,36 +3596,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap__TST_get_maximum_key_length(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
-  int result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject *swig_obj[1] ;
-  
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_tstTchar_PythonReference_MemoryStorage_ObjectSerializer_t, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_TST_get_maximum_key_length" "', argument " "1"" of type '" "tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *""'"); 
-  }
-  arg1 = reinterpret_cast< tst<char,PythonReference,MemoryStorage,ObjectSerializer > * >(argp1);
-  {
-    try {
-      result = (int)((tst<char,PythonReference,MemoryStorage,ObjectSerializer > const *)arg1)->get_maximum_key_length(); 
-    }
-    catch (std::exception e) {
-      PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
-    }
-  }
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *_wrap__TST_write(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   tst<char,PythonReference,MemoryStorage,ObjectSerializer > *arg1 = (tst<char,PythonReference,MemoryStorage,ObjectSerializer > *) 0 ;
@@ -5390,7 +5360,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_TST_put", _wrap__TST_put, METH_VARARGS, NULL},
 	 { (char *)"_TST_remove", _wrap__TST_remove, METH_VARARGS, NULL},
 	 { (char *)"_TST_contains", _wrap__TST_contains, METH_VARARGS, NULL},
-	 { (char *)"_TST_get_maximum_key_length", (PyCFunction)_wrap__TST_get_maximum_key_length, METH_O, NULL},
 	 { (char *)"_TST_write", _wrap__TST_write, METH_VARARGS, NULL},
 	 { (char *)"_TST_read", _wrap__TST_read, METH_VARARGS, NULL},
 	 { (char *)"_TST_iterator", _wrap__TST_iterator, METH_VARARGS, NULL},

@@ -43,6 +43,10 @@
     $result = PyString_FromStringAndSize($1.data(),$1.size());
 }
 
+%typemap(ret) const std::basic_string<char>&, std::basic_string<char>& {
+    delete $1;
+}
+
 %exception {
     try { $action }
     catch (std::exception e) { PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;}
