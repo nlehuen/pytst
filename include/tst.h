@@ -121,11 +121,11 @@ private:
     T default_value;
     int root,maximum_key_length;
 
-    void walk_recurse(tst_node<S,T>* current_node,const std::basic_string<S>& current_key,filter<S,T>* filter,action<S,T>* to_perform) const;
-    void close_match_recurse(tst_node<S,T>* current_node,const std::basic_string<S>& current_key,const std::basic_string<S>& string,const size_t position, const int distance, const int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
-    void match_recurse(tst_node<S,T>* current_node,const std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
-    void match_joker_recurse(tst_node<S,T>* current_node,const std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
-    void match_star_recurse(tst_node<S,T>* current_node,const std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
+    void walk_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,filter<S,T>* filter,action<S,T>* to_perform) const;
+    void close_match_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,const size_t position, const int distance, const int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
+    void match_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
+    void match_joker_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
+    void match_star_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
 
     int build_node(node_info<S,T>* current_node,const std::basic_string<S>& string,int current_position);
     void remove_node(int* current_index,const std::basic_string<S>& string,const size_t position);
@@ -587,7 +587,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::close_ma
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close_match_recurse(tst_node<S,T>* current_node,const std::basic_string<S>& current_key,const std::basic_string<S>& string, const size_t position, const int distance, const int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close_match_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string, const size_t position, const int distance, const int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform) const {
 
     // LEFT
     int other_index=current_node->left;
@@ -601,7 +601,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
     }
 
     // ++KEY
-    std::basic_string<S> new_key = current_key + current_node->c;
+    current_key += current_node->c;
 
     // CURRENT
     T data = current_node->data;
@@ -614,10 +614,10 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
 
         if(new_remaining_distance>=0) {
             if(filter) {
-                data = filter->perform(new_key,distance-new_remaining_distance,data);
+                data = filter->perform(current_key,distance-new_remaining_distance,data);
             }
             if(data!=default_value && to_perform) {
-                to_perform->perform(new_key,distance-new_remaining_distance,data);
+                to_perform->perform(current_key,distance-new_remaining_distance,data);
             }
         }
     }
@@ -627,14 +627,17 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
     if (other_index!=UNDEFINED_INDEX) {
         int new_remaining_distance = remaining_distance - diff;
         if (new_remaining_distance>=0) {
-            close_match_recurse(storage->get(other_index),new_key,string,position+1,distance,new_remaining_distance,filter,to_perform);
+            close_match_recurse(storage->get(other_index),current_key,string,position+1,distance,new_remaining_distance,filter,to_perform);
         }
     }
 
     // SKIP_INPUT
     if(other_index!=UNDEFINED_INDEX && remaining_distance>0) {
-        close_match_recurse(storage->get(other_index),new_key,string,position,distance,remaining_distance-1,filter,to_perform);
+        close_match_recurse(storage->get(other_index),current_key,string,position,distance,remaining_distance-1,filter,to_perform);
     }
+    
+    // --KEY
+    current_key.resize(current_key.size()-1);
     
     // SKIP_BASE
     if(position<string.size() && remaining_distance>0) {
@@ -660,7 +663,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::match(co
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_recurse(tst_node<S,T>* current_node,const std::basic_string<S>& current_key2,const std::basic_string<S>& string, size_t position,filter<S,T>* filter, action<S,T>* to_perform, bool advance) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key2,const std::basic_string<S>& string, size_t position,filter<S,T>* filter, action<S,T>* to_perform, bool advance) const {
     std::basic_string<S> this_key(current_key2);
 
     while(true) {
@@ -735,7 +738,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_joker_recurse(tst_node<S,T>* current_node,const std::basic_string<S>& current_key,const std::basic_string<S>& string, size_t position,filter<S,T>* filter, action<S,T>* to_perform,bool advance) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_joker_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string, size_t position,filter<S,T>* filter, action<S,T>* to_perform,bool advance) const {
     int other_index;
 
     if(advance) {
@@ -755,22 +758,26 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
     }
 
     // MATCH_CURRENT
-    std::basic_string<S> new_key = current_key + current_node->c;
+    // ++KEY
+    current_key += current_node->c;
     
     if(position==(string.size()-1)) {
         T data = current_node->data;
         if(data!=default_value) {
             if(filter) {
-                data = filter->perform(new_key,0,data);
+                data = filter->perform(current_key,0,data);
             }
             if(to_perform) {
-                to_perform->perform(new_key,0,data);
+                to_perform->perform(current_key,0,data);
             }
         }
     }
     else {
-        match_recurse(current_node,new_key,string,position+1,filter,to_perform,true);
+        match_recurse(current_node,current_key,string,position+1,filter,to_perform,true);
     }
+    
+    // --KEY
+    current_key.resize(current_key.size()-1);
 
     // RIGHT
     other_index=current_node->right;
@@ -779,7 +786,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_star_recurse(tst_node<S,T>* current_node,const std::basic_string<S>& current_key,const std::basic_string<S>& string, size_t position,filter<S,T>* filter, action<S,T>* to_perform,bool advance) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_star_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string, size_t position,filter<S,T>* filter, action<S,T>* to_perform,bool advance) const {
     int other_index;
 
     if(advance) {
@@ -809,25 +816,28 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
     match_recurse(current_node,current_key,string,position+1,filter,to_perform,false);
 
     // MATCH_CURRENT
-    std::basic_string<S> new_key = current_key + current_node->c;
+    current_key += current_node->c;
     
     if(position==(string.size()-1)) {
         T data = current_node->data;
         if(data!=default_value) {
             if(filter) {
-                data = filter->perform(new_key,0,data);
+                data = filter->perform(current_key,0,data);
             }
             if(to_perform) {
-                to_perform->perform(new_key,0,data);
+                to_perform->perform(current_key,0,data);
             }
         }
     }
 
     // MATCH_SAME
-    match_star_recurse(current_node,new_key,string,position,filter,to_perform,true);
+    match_star_recurse(current_node,current_key,string,position,filter,to_perform,true);
     
     // MATCH_NEXT
-    match_recurse(current_node,new_key,string,position+1,filter,to_perform,true);
+    match_recurse(current_node,current_key,string,position+1,filter,to_perform,true);
+
+    // --KEY
+    current_key.resize(current_key.size()-1);
 
     // LEFT    
     other_index=current_node->left;
@@ -873,7 +883,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(fil
         index = start->next; 
         if(index!=UNDEFINED_INDEX) {
         	
-            walk_recurse(storage->get(index),string,filter,to_perform);
+            walk_recurse(storage->get(index),std::basic_string<S>(string),filter,to_perform);
         }
     }
 
@@ -885,7 +895,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(fil
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_recurse(tst_node<S,T>* current_node,const std::basic_string<S>& current_key,filter<S,T>* filter,action<S,T>* to_perform) const {
+template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,filter<S,T>* filter,action<S,T>* to_perform) const {
     int other_index;
 
     other_index=current_node->left;
@@ -893,22 +903,26 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_
         walk_recurse(storage->get(other_index),current_key,filter,to_perform);
     }
 
-    const std::basic_string<S> new_key = current_key + current_node->c;
+    // ++KEY
+    current_key += current_node->c;
 
     T data = current_node->data;
     if(data!=default_value) {
         if(filter) {
-            data = filter->perform(new_key,0,data);
+            data = filter->perform(current_key,0,data);
         }
         if(to_perform) {
-            to_perform->perform(new_key,0,data);
+            to_perform->perform(current_key,0,data);
         }
     }
 
     other_index=current_node->next;
     if(other_index!=UNDEFINED_INDEX) {
-        walk_recurse(storage->get(other_index),new_key,filter,to_perform);
+        walk_recurse(storage->get(other_index),current_key,filter,to_perform);
     }
+
+    // --KEY
+    current_key.resize(current_key.size()-1);
 
     other_index=current_node->right;
     if(other_index!=UNDEFINED_INDEX) {
