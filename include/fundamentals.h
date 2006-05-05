@@ -36,7 +36,8 @@ private:
     const char* message;
 };
 
-template<typename S,typename T> class tst_node {
+template <typename charT,typename valueT>
+class tst_node {
 public:
     tst_node() :
         c(0)
@@ -52,8 +53,8 @@ public:
     {
     }
 
-    S c;
-    T data;
+    charT c;
+    valueT data;
     int next;
     int right;
     int left;
@@ -63,15 +64,15 @@ public:
     int backtrack_match_index;
 #endif
 
-    T store(T value) {
-        T old = data;
+    valueT store(valueT value) {
+        valueT old = data;
         data = value;
         return old;
     }
     
     void reset() {
         c = 0;
-        data = T();
+        data = valueT();
         next = UNDEFINED_INDEX;
         right = UNDEFINED_INDEX;
         left = UNDEFINED_INDEX;
@@ -83,10 +84,11 @@ public:
     }
 };
 
-template<typename S,typename T> class node_info {
+template <typename charT,typename valueT>
+class node_info {
 public:
     int index;
-    tst_node<S,T>* node;
+    tst_node<charT,valueT>* node;
 
     int height;
     int balance;
@@ -106,28 +108,31 @@ public:
     }
 };
 
-template<typename S,typename T,typename string_type> class action {
+template <typename charT,typename valueT,typename stringT>
+class action {
 public:
     action() {}
     virtual ~action() {}
-    virtual void perform(const typename string_type & string,int remaining_distance,T data)=0;
-    virtual T result()=0;
+    virtual void perform(const typename stringT & string,int remaining_distance,valueT data)=0;
+    virtual valueT result()=0;
 };
 
-template<typename S,typename T,typename string_type> class filter {
+template <typename charT,typename valueT,typename stringT>
+class filter {
 public:
     filter() {}
     virtual ~filter() {}
-    virtual T perform(const typename string_type & string,int remaining_distance,T data)=0;
+    virtual valueT perform(const typename stringT & string,int remaining_distance,valueT data)=0;
 };
 
-template<typename T> class null_reader_writer {
+template <typename valueT>
+class null_reader_writer {
     public:
-        void write(FILE* file, T value) {
+        void write(FILE* file, valueT value) {
         }
         
-        T read(FILE* file) {
-            return T();
+        valueT read(FILE* file) {
+            return valueT();
         }
 };
 

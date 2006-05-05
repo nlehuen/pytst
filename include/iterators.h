@@ -22,7 +22,8 @@
 #include <string>
 #include <stack>
 
-template< typename S,typename T,typename M,typename RW,typename string_type> class lexical_iterator {
+template < typename charT,typename valueT,typename storageT,typename serializerT,typename stringT>
+class lexical_iterator {
     public:
         enum state_enum {
             state_left, state_current, state_right, state_end    
@@ -30,17 +31,17 @@ template< typename S,typename T,typename M,typename RW,typename string_type> cla
 
         class state_type {
             public:
-                state_type(const typename string_type & k,state_enum s,int n) : key(k), state(s), node(n) {
+                state_type(const typename stringT & k,state_enum s,int n) : key(k), state(s), node(n) {
                 }
             
-                typename string_type key;
+                typename stringT key;
                 state_enum state;
                 int node;
         };
 
-        typedef std::pair< string_type, T* > value_type;
+        typedef std::pair< stringT, valueT* > value_type;
 
-        lexical_iterator(const tst<S,T,M,RW,string_type> *t,const typename string_type & key,int root) : tree(t), stack() {
+        lexical_iterator(const tst<charT,valueT,storageT,serializerT,stringT> *t,const typename stringT & key,int root) : tree(t), stack() {
             stack.push(state_type(key,state_left,root));
         }
         
@@ -52,7 +53,7 @@ template< typename S,typename T,typename M,typename RW,typename string_type> cla
                     break;
                 }
 
-                tst_node<S,T>* node = tree->storage->get(state.node);
+                tst_node<charT,valueT>* node = tree->storage->get(state.node);
             
                 switch(state.state) {
                     case state_left: {
@@ -79,7 +80,7 @@ template< typename S,typename T,typename M,typename RW,typename string_type> cla
                         }
 
                         if(node->data != tree->default_value) {
-                            typename string_type new_key(state.key);
+                            typename stringT new_key(state.key);
                             new_key += node->c;
                             return value_type(
                                 new_key,
@@ -109,11 +110,12 @@ template< typename S,typename T,typename M,typename RW,typename string_type> cla
         }
                 
     private:
-        const tst<S,T,M,RW,string_type> *tree;
+        const tst<charT,valueT,storageT,serializerT,stringT> *tree;
         std::stack< state_type > stack;
 };
 
-template< typename S,typename T,typename M,typename RW,typename string_type> class match_iterator {
+template < typename charT,typename valueT,typename storageT,typename serializerT,typename stringT>
+class match_iterator {
     public:
         enum state_enum {
             state_left, state_current, state_skip_input, state_skip_base, state_right, state_end    
@@ -121,19 +123,19 @@ template< typename S,typename T,typename M,typename RW,typename string_type> cla
 
         class state_type {
             public:
-                state_type(const typename string_type & k,state_enum s,int p,int d,int n) : key(k), state(s), position(p), distance(d), node(n) {
+                state_type(const typename stringT & k,state_enum s,int p,int d,int n) : key(k), state(s), position(p), distance(d), node(n) {
                 }
             
-                typename string_type key;
+                typename stringT key;
                 state_enum state;
                 int position;
                 int distance;
                 int node;
         };
 
-        typedef std::pair< string_type, T* > value_type;
+        typedef std::pair< stringT, valueT* > value_type;
 
-        match_iterator(const tst<S,T,M,RW,string_type> *t,const typename string_type & string,int distance,int root) : tree(t), stack(), base(string) {
+        match_iterator(const tst<charT,valueT,storageT,serializerT,stringT> *t,const typename stringT & string,int distance,int root) : tree(t), stack(), base(string) {
             stack.push(state_type("",state_left,0,distance,root));
         }
 
@@ -145,7 +147,7 @@ template< typename S,typename T,typename M,typename RW,typename string_type> cla
                     break;
                 }
 
-                tst_node<S,T>* node = tree->storage->get(state.node);
+                tst_node<charT,valueT>* node = tree->storage->get(state.node);
             
                 int diff = 1;
                 if( (state.position < (int)base.size())
@@ -253,9 +255,9 @@ template< typename S,typename T,typename M,typename RW,typename string_type> cla
         }
                 
     private:
-        const tst<S,T,M,RW,string_type> *tree;
+        const tst<charT,valueT,storageT,serializerT,stringT> *tree;
         std::stack< state_type > stack;
-        const typename string_type base;
+        const typename stringT base;
 };
 
 #endif

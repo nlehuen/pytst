@@ -41,21 +41,23 @@ const char* const TST_VERSION = "1.13";
     // #define SCANNER
 #endif
 
-template< typename S,typename T,typename M,typename RW, typename string_type> class tst;
+template < typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+class tst;
 
 #include "fundamentals.h"
 #include "memory_storage.h"
 #include "iterators.h"
 
-template< typename S,typename T,typename M,typename RW, typename string_type> class tst {
+template < typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+class tst {
 public:
-    friend class lexical_iterator<S,T,M,RW,string_type>;
-    friend class match_iterator<S,T,M,RW,string_type>;
+    friend class lexical_iterator<charT,valueT,storageT,serializerT,stringT>;
+    friend class match_iterator<charT,valueT,storageT,serializerT,stringT>;
 
-    typedef S character_type;
-    typedef T value_type;
-    typedef M storage_type;
-    typedef RW serializer_type;
+    typedef charT character_type;
+    typedef valueT value_type;
+    typedef storageT storage_type;
+    typedef serializerT serializer_type;
 
     tst();
 
@@ -67,100 +69,100 @@ public:
         storage->pack(root);
     }
     
-    T walk(filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
-    T walk(filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform,const typename string_type & string) const;
-    T close_match(const typename string_type & string,int maximum_distance,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
-    T prefix_match(const typename string_type & string,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
-    T match(const typename string_type & string,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
+    valueT walk(filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const;
+    valueT walk(filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform,const typename stringT & string) const;
+    valueT close_match(const typename stringT & string,int maximum_distance,filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const;
+    valueT prefix_match(const typename stringT & string,filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const;
+    valueT match(const typename stringT & string,filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const;
 
-    T get(const typename string_type & string) const;
-    T get_or_build(const typename string_type & string,filter<S,T,string_type>* factory);
-    T put(const typename string_type & string,T data);
-    void remove(const typename string_type & string);
-    bool contains(const typename string_type & string) const;
+    valueT get(const typename stringT & string) const;
+    valueT get_or_build(const typename stringT & string,filter<charT,valueT,stringT>* factory);
+    valueT put(const typename stringT & string,valueT data);
+    void remove(const typename stringT & string);
+    bool contains(const typename stringT & string) const;
     void write(std::ostream &file) const;
     void read(std::istream &file);
 
-    lexical_iterator<S,T,M,RW,string_type> iterator() const {
-        typename string_type key;
-        return lexical_iterator<S,T,M,RW,string_type>(this,key,root);
+    lexical_iterator<charT,valueT,storageT,serializerT,stringT> iterator() const {
+        typename stringT key;
+        return lexical_iterator<charT,valueT,storageT,serializerT,stringT>(this,key,root);
     }
 
-    lexical_iterator<S,T,M,RW,string_type> iterator(const typename string_type & string) const {
+    lexical_iterator<charT,valueT,storageT,serializerT,stringT> iterator(const typename stringT & string) const {
         int current_index=root,best_node=UNDEFINED_INDEX;
         find_node(&current_index,&best_node,string);
-        return lexical_iterator<S,T,M,RW,string_type>(this,string.substr(0,string.size()-1),current_index);
+        return lexical_iterator<charT,valueT,storageT,serializerT,stringT>(this,string.substr(0,string.size()-1),current_index);
     }
 
-    match_iterator<S,T,M,RW,string_type> close_match_iterator(const typename string_type & string,int distance) const {
-        return match_iterator<S,T,M,RW,string_type>(this,string,distance,root);
+    match_iterator<charT,valueT,storageT,serializerT,stringT> close_match_iterator(const typename stringT & string,int distance) const {
+        return match_iterator<charT,valueT,storageT,serializerT,stringT>(this,string,distance,root);
     }
     
     int get_number_of_nodes() const {
         return storage->size();
     }
 
-    T get_default_value() const {
+    valueT get_default_value() const {
         return default_value;
     }
 
 #ifdef SCANNER
-    T scan(const typename string_type & string,action<S,T,string_type>* to_perform);
-    T scan_with_stop_chars(const typename string_type & string,const typename string_type& stop_chars,action<S,T,string_type>* to_perform) const;
+    valueT scan(const typename stringT & string,action<charT,valueT,stringT>* to_perform);
+    valueT scan_with_stop_chars(const typename stringT & string,const typename stringT& stop_chars,action<charT,valueT,stringT>* to_perform) const;
 #endif
 
 
 protected:
-    void set_storage(M* new_storage) {
+    void set_storage(storageT* new_storage) {
         delete storage;
         storage = new_storage;
     }
 
 private:
-    M* storage;
-    T default_value;
+    storageT* storage;
+    valueT default_value;
     int root;
 
-    void walk_recurse(tst_node<S,T>* current_node,typename string_type & current_key,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
-    void close_match_recurse(tst_node<S,T>* current_node,typename string_type & current_key,const typename string_type & string,const size_t position, const int distance, const int remaining_distance,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
-    void match_recurse(tst_node<S,T>* current_node,typename string_type & current_key,const typename string_type & string,size_t position, filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform,bool advance) const;
-    void match_joker_recurse(tst_node<S,T>* current_node,typename string_type & current_key,const typename string_type & string,size_t position, filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform,bool advance) const;
-    void match_star_recurse(tst_node<S,T>* current_node,typename string_type & current_key,const typename string_type & string,size_t position, filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform,bool advance) const;
+    void walk_recurse(tst_node<charT,valueT>* current_node,typename stringT & current_key,filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const;
+    void close_match_recurse(tst_node<charT,valueT>* current_node,typename stringT & current_key,const typename stringT & string,const size_t position, const int distance, const int remaining_distance,filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const;
+    void match_recurse(tst_node<charT,valueT>* current_node,typename stringT & current_key,const typename stringT & string,size_t position, filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform,bool advance) const;
+    void match_joker_recurse(tst_node<charT,valueT>* current_node,typename stringT & current_key,const typename stringT & string,size_t position, filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform,bool advance) const;
+    void match_star_recurse(tst_node<charT,valueT>* current_node,typename stringT & current_key,const typename stringT & string,size_t position, filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform,bool advance) const;
 
-    int build_node(node_info<S,T>* current_node,const typename string_type & string,size_t current_position);
-    void remove_node(int* current_index,const typename string_type & string,const size_t position);
-    tst_node<S,T>* find_node(int* current_index,int* best_node, const typename string_type & string) const;
+    int build_node(node_info<charT,valueT>* current_node,const typename stringT & string,size_t current_position);
+    void remove_node(int* current_index,const typename stringT & string,const size_t position);
+    tst_node<charT,valueT>* find_node(int* current_index,int* best_node, const typename stringT & string) const;
 
-    void balance_node(node_info<S,T>* bal);
-    void ll(node_info<S,T>* bal);
-    void rr(node_info<S,T>* bal);
-    void lr(node_info<S,T>* bal);
-    void rl(node_info<S,T>* bal);
-    void compute_height_and_balance(node_info<S,T>* current_node_info) const;
+    void balance_node(node_info<charT,valueT>* bal);
+    void ll(node_info<charT,valueT>* bal);
+    void rr(node_info<charT,valueT>* bal);
+    void lr(node_info<charT,valueT>* bal);
+    void rl(node_info<charT,valueT>* bal);
+    void compute_height_and_balance(node_info<charT,valueT>* current_node_info) const;
 
-    void write_node(std::ostream& file,RW* writer,int index) const;
-    int read_node(std::istream& file,RW* reader,int depth);
+    void write_node(std::ostream& file,serializerT* writer,int index) const;
+    int read_node(std::istream& file,serializerT* reader,int depth);
 
 #ifdef SCANNER
-    void compute_backtrack(tst_node<S,T> *current_node,const typename string_type & string,int si_match_start,int si_match_end);
+    void compute_backtrack(tst_node<charT,valueT> *current_node,const typename stringT & string,int si_match_start,int si_match_end);
 #endif
 };
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- tst<S,T,M,RW,string_type>::tst() :
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ tst<charT,valueT,storageT,serializerT,stringT>::tst() :
     storage(new storage_type(16)),
     default_value() {
-    node_info<S,T> root_info;
+    node_info<charT,valueT> root_info;
     storage->new_node(&root_info);
     root = root_info.index;
 }
 
 /*************************** high-level tree management ***********************/
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- T tst<S,T,M,RW,string_type>::get(const typename string_type & string) const {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ valueT tst<charT,valueT,storageT,serializerT,stringT>::get(const typename stringT & string) const {
     int current_index=root,best_node=UNDEFINED_INDEX;
-    tst_node<S,T>* current_node=find_node(&current_index,&best_node,string);
+    tst_node<charT,valueT>* current_node=find_node(&current_index,&best_node,string);
     if(current_node) {
         return current_node->data;
     }
@@ -169,10 +171,10 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- bool tst<S,T,M,RW,string_type>::contains(const typename string_type & string) const {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ bool tst<charT,valueT,storageT,serializerT,stringT>::contains(const typename stringT & string) const {
     int current_index=root,best_node=UNDEFINED_INDEX;
-    tst_node<S,T>* current_node=find_node(&current_index,&best_node,string);
+    tst_node<charT,valueT>* current_node=find_node(&current_index,&best_node,string);
     if(current_node) {
         return true;
     }
@@ -181,9 +183,9 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- T tst<S,T,M,RW,string_type>::put(const typename string_type & string,T data) {
-    node_info<S,T> root_info;
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ valueT tst<charT,valueT,storageT,serializerT,stringT>::put(const typename stringT & string,valueT data) {
+    node_info<charT,valueT> root_info;
     root_info.index=root;
     root_info.node=storage->get(root);
     int node_index=build_node(&root_info,string,0);
@@ -191,17 +193,17 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     return storage->get(node_index)->store(data);
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- T tst<S,T,M,RW,string_type>::get_or_build(const typename string_type & string,filter<S,T,string_type>* factory) {
-    node_info<S,T> root_info;
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ valueT tst<charT,valueT,storageT,serializerT,stringT>::get_or_build(const typename stringT & string,filter<charT,valueT,stringT>* factory) {
+    node_info<charT,valueT> root_info;
     root_info.index=root;
     root_info.node=storage->get(root);
     int node_index=build_node(&root_info,string,0);
     root = root_info.index;
 
-    tst_node<S,T>* current_node=storage->get(node_index);
+    tst_node<charT,valueT>* current_node=storage->get(node_index);
     
-    T data = current_node->data; 
+    valueT data = current_node->data; 
     if(data==default_value) {
         data=factory->perform(string,0,current_node->data);
         current_node->store(data);
@@ -212,11 +214,11 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::remove(const typename string_type & string) {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::remove(const typename stringT & string) {
     remove_node(&root,string,0);
     if(root==UNDEFINED_INDEX) {
-        node_info<S,T> root_info;
+        node_info<charT,valueT> root_info;
         storage->new_node(&root_info);
         root = root_info.index;
     }
@@ -224,9 +226,9 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
 
 /**************************** low-level tree management ***********************/
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- tst_node<S,T>* tst<S,T,M,RW,string_type>::find_node(int* current_index,int* best_node,const typename string_type & string) const {
-    tst_node<S,T>* current_node;
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ tst_node<charT,valueT>* tst<charT,valueT,storageT,serializerT,stringT>::find_node(int* current_index,int* best_node,const typename stringT & string) const {
+    tst_node<charT,valueT>* current_node;
     int diff;
     size_t pos=0;
 
@@ -265,8 +267,8 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     return 0;
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- int tst<S,T,M,RW,string_type>::build_node(node_info<S,T>* current_node_info,const typename string_type & string,size_t current_position) {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ int tst<charT,valueT,storageT,serializerT,stringT>::build_node(node_info<charT,valueT>* current_node_info,const typename stringT & string,size_t current_position) {
     int diff,result;
 
     if(current_node_info->node->c==0) {
@@ -289,7 +291,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
         compute_height_and_balance(current_node_info); // TODO : est-ce bien necessaire ?
 
         if(current_position<string.size()) {
-            node_info<S,T> next_node_info;
+            node_info<charT,valueT> next_node_info;
             next_node_info.index = current_node_info->node->next;
             if(next_node_info.index==UNDEFINED_INDEX) {
                 storage->new_node(&next_node_info);
@@ -307,7 +309,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
         }
     }
     else if(diff>0) {
-        node_info<S,T> next_node_info;
+        node_info<charT,valueT> next_node_info;
         next_node_info.index = current_node_info->node->right;
         if(next_node_info.index==UNDEFINED_INDEX) {
             storage->new_node(&next_node_info);
@@ -330,7 +332,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
                 current_node_info->right_balance = next_node_info.balance;
             }
             else {
-                node_info<S,T> other_node_info;
+                node_info<charT,valueT> other_node_info;
                 other_node_info.index = current_node_info->node->left;    
                 other_node_info.node = storage->get(other_node_info.index);
                 compute_height_and_balance(&other_node_info);
@@ -350,7 +352,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
         return result;
     }
     else {
-        node_info<S,T> next_node_info;
+        node_info<charT,valueT> next_node_info;
         next_node_info.index = current_node_info->node->left;
         if(next_node_info.index==UNDEFINED_INDEX) {
             storage->new_node(&next_node_info);
@@ -373,7 +375,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
                 current_node_info->left_balance = next_node_info.balance;
             }
             else {
-                node_info<S,T> other_node_info;
+                node_info<charT,valueT> other_node_info;
                 other_node_info.index = current_node_info->node->right;    
                 other_node_info.node = storage->get(other_node_info.index);
                 compute_height_and_balance(&other_node_info);
@@ -395,9 +397,9 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::remove_node(int* current_index,const typename string_type & string,const size_t current_position) {
-    tst_node<S,T>* current_node = storage->get(*current_index);
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::remove_node(int* current_index,const typename stringT & string,const size_t current_position) {
+    tst_node<charT,valueT>* current_node = storage->get(*current_index);
     int diff,*next_index;
 
     if(current_node->c==0) {
@@ -441,7 +443,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
             *current_index=UNDEFINED_INDEX;
         }
     else {
-        node_info<S,T> current_node_info;
+        node_info<charT,valueT> current_node_info;
         current_node_info.index=*current_index;
         current_node_info.node=current_node;
         current_node_info.height=-1;
@@ -450,8 +452,8 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::balance_node(node_info<S,T>* bal) {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::balance_node(node_info<charT,valueT>* bal) {
     if(bal->height==-1) {
         compute_height_and_balance(bal);
     }
@@ -480,10 +482,10 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     assert(abs(bal->left_balance)<2);
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::ll(node_info<S,T>* bal) {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::ll(node_info<charT,valueT>* bal) {
     int left_index=bal->node->left;
-    tst_node<S,T>* left_node=storage->get(left_index);
+    tst_node<charT,valueT>* left_node=storage->get(left_index);
     int left_right_index=left_node->right;
     bal->node->left=left_right_index;
     left_node->right=bal->index;
@@ -495,10 +497,10 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     bal->right_balance=0;
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::rr(node_info<S,T>* bal) {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::rr(node_info<charT,valueT>* bal) {
     int right_index=bal->node->right;
-    tst_node<S,T>* right_node=storage->get(right_index);
+    tst_node<charT,valueT>* right_node=storage->get(right_index);
     int right_left_index=right_node->left;
     bal->node->right=right_left_index;
     right_node->left=bal->index;
@@ -510,9 +512,9 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     bal->left_balance=0;
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::lr(node_info<S,T>* bal) {
-    node_info<S,T> left;
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::lr(node_info<charT,valueT>* bal) {
+    node_info<charT,valueT> left;
     left.index = bal->node->left;
     left.node = storage->get(left.index);
     rr(&left);
@@ -520,9 +522,9 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     ll(bal);
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::rl(node_info<S,T>* bal) {
-    node_info<S,T> right;
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::rl(node_info<charT,valueT>* bal) {
+    node_info<charT,valueT> right;
     right.index = bal->node->right;
     right.node = storage->get(right.index);
     ll(&right);
@@ -530,19 +532,19 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     rr(bal);
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::compute_height_and_balance(node_info<S,T>* current_node_info) const {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::compute_height_and_balance(node_info<charT,valueT>* current_node_info) const {
     int left = current_node_info->node->left;
     int right = current_node_info->node->right;
 
     if(right!=UNDEFINED_INDEX) {
-        node_info<S,T> right_balance;
+        node_info<charT,valueT> right_balance;
         right_balance.index=right;
         right_balance.node=storage->get(right);
         compute_height_and_balance(&right_balance);
 
         if(left!=UNDEFINED_INDEX) {
-            node_info<S,T> left_balance;
+            node_info<charT,valueT> left_balance;
             left_balance.index=left;
             left_balance.node=storage->get(left);
             compute_height_and_balance(&left_balance);
@@ -566,7 +568,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
     else {
         if(left!=UNDEFINED_INDEX) {
-            node_info<S,T> left_balance;
+            node_info<charT,valueT> left_balance;
             left_balance.index=left;
             left_balance.node=storage->get(left);
             compute_height_and_balance(&left_balance);
@@ -587,9 +589,9 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
 
 /**************************** close_match *************************************/
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- T tst<S,T,M,RW,string_type>::close_match(const typename string_type & string, int maximum_distance,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const {
-    typename string_type key;
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ valueT tst<charT,valueT,storageT,serializerT,stringT>::close_match(const typename stringT & string, int maximum_distance,filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const {
+    typename stringT key;
     close_match_recurse(storage->get(root),key,string,0,maximum_distance,maximum_distance,filter,to_perform);
     if(to_perform) {
         return to_perform->result();
@@ -599,8 +601,8 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::close_match_recurse(tst_node<S,T>* current_node,typename string_type& current_key,const typename string_type & string, const size_t position, const int distance, const int remaining_distance,filter<S,T,string_type>* filter, action<S,T,string_type>* to_perform) const {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::close_match_recurse(tst_node<charT,valueT>* current_node,typename stringT& current_key,const typename stringT & string, const size_t position, const int distance, const int remaining_distance,filter<charT,valueT,stringT>* filter, action<charT,valueT,stringT>* to_perform) const {
 
     // LEFT
     int other_index=current_node->left;
@@ -617,7 +619,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     current_key.push_back(current_node->c);
 
     // CURRENT
-    T data = current_node->data;
+    valueT data = current_node->data;
     if(data!=default_value) {
         int new_remaining_distance=string.size() - position - 1;
         if(new_remaining_distance<0) {
@@ -666,9 +668,9 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
 
 /**************************** match *************************************/
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- T tst<S,T,M,RW,string_type>::match(const typename string_type & string,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const {
-    typename string_type key;
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ valueT tst<charT,valueT,storageT,serializerT,stringT>::match(const typename stringT & string,filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const {
+    typename stringT key;
     match_recurse(storage->get(root),key,string,0,filter,to_perform,false);
     if(to_perform) {
         return to_perform->result();
@@ -678,19 +680,19 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::match_recurse(tst_node<S,T>* current_node,typename string_type& current_key,const typename string_type & string, size_t position,filter<S,T,string_type>* filter, action<S,T,string_type>* to_perform, bool advance) const {
-    typename string_type this_key(current_key);
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::match_recurse(tst_node<charT,valueT>* current_node,typename stringT& current_key,const typename stringT & string, size_t position,filter<charT,valueT,stringT>* filter, action<charT,valueT,stringT>* to_perform, bool advance) const {
+    typename stringT this_key(current_key);
 
     while(true) {
-        S c = string[position];
+        charT c = string[position];
         switch(c) {
-            case static_cast<S>('?'): {
+            case static_cast<charT>('?'): {
                 match_joker_recurse(current_node,this_key,string,position,filter,to_perform,advance);
                 return;
             }
                 
-            case static_cast<S>('*'): {
+            case static_cast<charT>('*'): {
                 match_star_recurse(current_node,this_key,string,position,filter,to_perform,advance);
                 return;
             }
@@ -713,7 +715,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
                         this_key.push_back(current_node->c); 
 
                         if(position==(string.size()-1)) {
-                            T data = current_node->data;
+                            valueT data = current_node->data;
                             if(data!=default_value) {
                                 if(filter) {
                                     data = filter->perform(this_key,0,data);
@@ -754,8 +756,8 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::match_joker_recurse(tst_node<S,T>* current_node,typename string_type& current_key,const typename string_type & string, size_t position,filter<S,T,string_type>* filter, action<S,T,string_type>* to_perform,bool advance) const {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::match_joker_recurse(tst_node<charT,valueT>* current_node,typename stringT& current_key,const typename stringT & string, size_t position,filter<charT,valueT,stringT>* filter, action<charT,valueT,stringT>* to_perform,bool advance) const {
     int other_index;
 
     if(advance) {
@@ -779,7 +781,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     current_key.push_back(current_node->c);
     
     if(position==(string.size()-1)) {
-        T data = current_node->data;
+        valueT data = current_node->data;
         if(data!=default_value) {
             if(filter) {
                 data = filter->perform(current_key,0,data);
@@ -803,14 +805,14 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::match_star_recurse(tst_node<S,T>* current_node,typename string_type& current_key,const typename string_type & string, size_t position,filter<S,T,string_type>* filter, action<S,T,string_type>* to_perform,bool advance) const {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::match_star_recurse(tst_node<charT,valueT>* current_node,typename stringT& current_key,const typename stringT & string, size_t position,filter<charT,valueT,stringT>* filter, action<charT,valueT,stringT>* to_perform,bool advance) const {
     int other_index;
 
     if(advance) {
         // PREVIOUS_MATCH
         if(position==(string.size()-1)) {
-            T data = current_node->data;
+            valueT data = current_node->data;
             if(data!=default_value) {
                 if(filter) {
                     data = filter->perform(current_key,0,data);
@@ -837,7 +839,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     current_key.push_back(current_node->c);
     
     if(position==(string.size()-1)) {
-        T data = current_node->data;
+        valueT data = current_node->data;
         if(data!=default_value) {
             if(filter) {
                 data = filter->perform(current_key,0,data);
@@ -872,9 +874,9 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
 
 /**************************** walk *************************************/
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- T tst<S,T,M,RW,string_type>::walk(filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const {
-    typename string_type key;
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ valueT tst<charT,valueT,storageT,serializerT,stringT>::walk(filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const {
+    typename stringT key;
     walk_recurse(storage->get(root),key,filter,to_perform);
     if(to_perform) {
         return to_perform->result();
@@ -884,14 +886,14 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- T tst<S,T,M,RW,string_type>::walk(filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform,const typename string_type & string) const {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ valueT tst<charT,valueT,storageT,serializerT,stringT>::walk(filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform,const typename stringT & string) const {
     int index = root;
     int best_node = UNDEFINED_INDEX;
-    tst_node<S,T>* start = find_node(&index,&best_node,string);
+    tst_node<charT,valueT>* start = find_node(&index,&best_node,string);
 
     if(start) {
-        T data = start->data;
+        valueT data = start->data;
         if(data!=default_value) {
             if(filter) {
                 data = filter->perform(string,0,data);
@@ -903,7 +905,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
         
         index = start->next; 
         if(index!=UNDEFINED_INDEX) {
-            typename string_type key(string);            
+            typename stringT key(string);            
             walk_recurse(storage->get(index),key,filter,to_perform);
         }
     }
@@ -916,8 +918,8 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::walk_recurse(tst_node<S,T>* current_node,typename string_type& current_key,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::walk_recurse(tst_node<charT,valueT>* current_node,typename stringT& current_key,filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const {
     int other_index;
 
     other_index=current_node->left;
@@ -928,7 +930,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     // ++KEY
     current_key.push_back(current_node->c);
 
-    T data = current_node->data;
+    valueT data = current_node->data;
     if(data!=default_value) {
         if(filter) {
             data = filter->perform(current_key,0,data);
@@ -954,17 +956,17 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
 
 /**************************** prefix_match *************************************/
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- T tst<S,T,M,RW,string_type>::prefix_match(const typename string_type & string,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const {
-    typename string_type current_key;
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ valueT tst<charT,valueT,storageT,serializerT,stringT>::prefix_match(const typename stringT & string,filter<charT,valueT,stringT>* filter,action<charT,valueT,stringT>* to_perform) const {
+    typename stringT current_key;
     size_t position=0;
 
-    T biggest=default_value;
+    valueT biggest=default_value;
     int biggest_length=0;
     int current_index=root;
-    tst_node<S,T>* current_node;
+    tst_node<charT,valueT>* current_node;
     int diff;
-    S c;
+    charT c;
 
     while(position<string.size()) {
         c = string[position];
@@ -1020,8 +1022,8 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
 /**************************** scan *************************************/
 
 #ifdef SCANNER
-template<typename S,typename T,typename M,typename RW, typename string_type>
- T tst<S,T,M,RW,string_type>::scan(const typename string_type & string,action<S,T,string_type>* to_perform) {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ valueT tst<charT,valueT,storageT,serializerT,stringT>::scan(const typename stringT & string,action<charT,valueT,stringT>* to_perform) {
     // Le premier caractère de la chaine ne correspondant pas à un match
     size_t si_non_match_start=0;
     // Le noeud pour lequel on a enregistré un match (noeud avec un objet associé)
@@ -1033,7 +1035,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     // Le numéro du noeud actuel de l'arbre
     int ni_current=root;
     // Le noeud actuel de l'arbre
-    tst_node<S,T> *n_current;
+    tst_node<charT,valueT> *n_current;
     // Boucle principale
     while(1) {
         n_current = storage->get(ni_current);
@@ -1093,7 +1095,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
                 // On envoie maintenant le match
                 // On connait sa longueur grâce à la position dans l'arbre
                 // TODO: voir si on ne pourrait pas de passer de ça
-                tst_node<S,T> *match_node=storage->get(ni_best_match);
+                tst_node<charT,valueT> *match_node=storage->get(ni_best_match);
                 int match_length = match_node->position+1;
                 // On envoie le match
                 to_perform->perform(string.substr(si_match_start,match_length),match_length,match_node->data);
@@ -1167,7 +1169,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
 
     // on n'arrive ici que si on est arrivé à la fin de la chaine en entrée
     if((si_current - si_non_match_start)>0) {
-        // s'il y avait un non-match en cours
+        // charT'il y avait un non-match en cours
         // on l'envoie
         to_perform->perform(string.substr(si_non_match_start,si_current - si_non_match_start),-static_cast<int>(si_current - si_non_match_start),default_value);
     }
@@ -1175,8 +1177,8 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     return to_perform->result();
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::compute_backtrack(tst_node<S,T> *current_node,const typename string_type & string, int si_match_start, int si_match_end) {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::compute_backtrack(tst_node<charT,valueT> *current_node,const typename stringT & string, int si_match_start, int si_match_end) {
     if(current_node->backtrack==UNDEFINED_INDEX) {
         while(si_match_start<si_match_end) {
             current_node->backtrack=root;
@@ -1197,8 +1199,8 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- T tst<S,T,M,RW,string_type>::scan_with_stop_chars(const typename string_type & string,const typename string_type& stop_chars,action<S,T,string_type>* to_perform) const {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ valueT tst<charT,valueT,storageT,serializerT,stringT>::scan_with_stop_chars(const typename stringT & string,const typename stringT& stop_chars,action<charT,valueT,stringT>* to_perform) const {
     // Le premier caractère de la chaine ne correspondant pas à un match
     size_t si_non_match_start=0;
     // Le noeud pour lequel on a enregistré un match (noeud avec un objet associé)
@@ -1210,7 +1212,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     // Le numéro du noeud actuel de l'arbre
     int ni_current=root;
     // Le noeud actuel de l'arbre
-    tst_node<S,T> *n_current;
+    tst_node<charT,valueT> *n_current;
     // Boucle principale
 
     while(1) {
@@ -1281,7 +1283,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
                 // On envoie maintenant le match
                 // On connait sa longueur grâce à la position dans l'arbre
                 // TODO: voir si on ne pourrait pas de passer de ça
-                tst_node<S,T> *match_node=storage->get(ni_best_match);
+                tst_node<charT,valueT> *match_node=storage->get(ni_best_match);
                 int match_length = match_node->position+1;
                 // On envoie le match
                 to_perform->perform(string.substr(si_match_start,match_length),match_length,match_node->data);
@@ -1330,7 +1332,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
 
     // on n'arrive ici que si on est arrivé à la fin de la chaine en entrée
     if((si_current - si_non_match_start)>0) {
-        // s'il y avait un non-match en cours
+        // charT'il y avait un non-match en cours
         // on l'envoie
         to_perform->perform(string.substr(si_non_match_start,si_current - si_non_match_start),-static_cast<int>(si_current - si_non_match_start),default_value);
     }
@@ -1341,8 +1343,8 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
 
 /**************************** file I/O *************************************/
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::read(std::istream& file) {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::read(std::istream& file) {
     // We check the version number
     int version_length;
     file.read((char*)(&version_length),sizeof(size_t));
@@ -1359,7 +1361,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
         tst_free(version);
     }
 
-    RW reader;
+    serializerT reader;
     default_value = reader.read(file);
 
     // On efface le stockage
@@ -1369,20 +1371,20 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
         root = read_node(file,&reader,0);
     }
     else {
-        node_info<S,T> root_info;
+        node_info<charT,valueT> root_info;
         storage->new_node(&root_info);
         root = root_info.index;
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- int tst<S,T,M,RW,string_type>::read_node(std::istream& file,RW* reader,int depth) {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ int tst<charT,valueT,storageT,serializerT,stringT>::read_node(std::istream& file,serializerT* reader,int depth) {
     char bitmask = file.get();
 
-    node_info<S,T> node_info;
+    node_info<charT,valueT> node_info;
     storage->new_node(&node_info);
     
-    file.read((char*)(&(node_info.node->c)),sizeof(S));
+    file.read((char*)(&(node_info.node->c)),sizeof(charT));
 
     if(bitmask & 16) {
         node_info.node->store(reader->read(file));
@@ -1429,14 +1431,14 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     return node_info.index;
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::write(std::ostream& file) const {
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::write(std::ostream& file) const {
     // We save the version number
     size_t version_length = strlen(TST_VERSION);
     file.write((char*)(&version_length),sizeof(size_t));
     file.write(TST_VERSION,version_length);
 
-    RW writer;
+    serializerT writer;
     writer.write(file,default_value);
 
     if(root!=UNDEFINED_INDEX) {
@@ -1448,9 +1450,9 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     }
 }
 
-template<typename S,typename T,typename M,typename RW, typename string_type>
- void tst<S,T,M,RW,string_type>::write_node(std::ostream& file,RW* writer,int index) const {
-    tst_node<S,T>* node = storage->get(index);
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ void tst<charT,valueT,storageT,serializerT,stringT>::write_node(std::ostream& file,serializerT* writer,int index) const {
+    tst_node<charT,valueT>* node = storage->get(index);
 
     char bitmask=0;
     if(node->next!=UNDEFINED_INDEX)  bitmask |= 1;
@@ -1459,7 +1461,7 @@ template<typename S,typename T,typename M,typename RW, typename string_type>
     if(node->data!=default_value)    bitmask |=16;
     file.put(bitmask);
 
-    file.write((char*)(&(node->c)),sizeof(S));
+    file.write((char*)(&(node->c)),sizeof(charT));
 
     if(bitmask & 16) {
         writer->write(file,node->data);

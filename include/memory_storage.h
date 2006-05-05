@@ -23,9 +23,10 @@
 #include <map>
 #include <algorithm>
 
-template<typename S,typename T> class memory_storage {
+template <typename charT,typename valueT>
+class memory_storage {
 public:
-    typedef typename std::vector< tst_node<S,T> > array_type;
+    typedef typename std::vector< tst_node<charT,valueT> > array_type;
     typedef typename array_type::iterator iterator_type;
     typedef typename array_type::reverse_iterator reverse_iterator_type;
     typedef typename array_type::size_type size_type;
@@ -37,7 +38,7 @@ public:
     ~memory_storage() {
     }
 
-    inline tst_node<S,T>* get(int index) {
+    inline tst_node<charT,valueT>* get(int index) {
         return &(array[index]);
     }
 
@@ -46,7 +47,7 @@ public:
         empty = index;
     }
 
-    void new_node(node_info<S,T>* info);
+    void new_node(node_info<charT,valueT>* info);
     void pack(int& root);
 
     void erase() {
@@ -62,7 +63,8 @@ protected:
     int empty;
 };
 
-template<typename S,typename T> void memory_storage<S,T>::new_node(node_info<S,T>* info) {
+template <typename charT,typename valueT>
+void memory_storage<charT,valueT>::new_node(node_info<charT,valueT>* info) {
     if(empty!=UNDEFINED_INDEX) {
         // si on a un noeud vide on l'utilise.
         info->index=empty;
@@ -76,12 +78,13 @@ template<typename S,typename T> void memory_storage<S,T>::new_node(node_info<S,T
         // on construit un noeud supplémentaire dans le tableau.
         info->index = (int)array.size();
         array.resize(array.size()+1);
-        // array.push_back(tst_node<S,T>()); // Plus ou moins rapide ?
+        // array.push_back(tst_node<charT,valueT>()); // Plus ou moins rapide ?
         info->node=get(info->index);
     }
 }
 
-template<typename S,typename T> void memory_storage<S,T>::pack(int& root) {
+template <typename charT,typename valueT>
+void memory_storage<charT,valueT>::pack(int& root) {
     if(empty == UNDEFINED_INDEX) {
         return;
     }
@@ -132,7 +135,7 @@ template<typename S,typename T> void memory_storage<S,T>::pack(int& root) {
 
     last_empty_node = 0;
     while(last_empty_node <= last_node_index) {
-        tst_node<S,T>* node = get(last_empty_node);
+        tst_node<charT,valueT>* node = get(last_empty_node);
         if(node->left!=UNDEFINED_INDEX) {
             item = mapping.find(node->left);
             if(item!=end) {

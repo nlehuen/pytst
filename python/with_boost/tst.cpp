@@ -31,7 +31,8 @@ using namespace boost::python;
 
 /********************* ACTION & FILTER ***********************************/
 
-template <class S, class T, class string_type> class NullAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
+template <class S, class T, class string_type>
+class NullAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
     public:
         void perform(const typename string_type & string,int remaining_distance,T data) {
         }
@@ -42,7 +43,8 @@ template <class S, class T, class string_type> class NullAction : public action<
         
 };
 
-template <class S,class T, class string_type> class DictAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
+template <class S,class T, class string_type>
+class DictAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
     public:
         void perform(const typename string_type & string,int remaining_distance,T data) {
             object r = result_dict.get(string);
@@ -59,7 +61,8 @@ template <class S,class T, class string_type> class DictAction : public action<S
         dict result_dict;
 };
 
-template <class S,class T, class string_type> class TupleListAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
+template <class S,class T, class string_type>
+class TupleListAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
     public:
         void perform(const typename string_type & string,int remaining_distance,T data) {
             result_list.append(make_tuple(string,remaining_distance,data));
@@ -73,7 +76,8 @@ template <class S,class T, class string_type> class TupleListAction : public act
         list result_list;
 };
 
-template <class S,class T, class string_type> class ListAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
+template <class S,class T, class string_type>
+class ListAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
     public:
         void perform(const typename string_type & string,int remaining_distance,T data) {
             result_list.append(data);
@@ -87,7 +91,8 @@ template <class S,class T, class string_type> class ListAction : public action<S
         list result_list;
 };
 
-template <class S,class T, class string_type> class CallableAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
+template <class S,class T, class string_type>
+class CallableAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
     public:
         CallableAction(object perform, object result) :
             _perform(perform),
@@ -113,14 +118,16 @@ template <class S,class T, class string_type> class CallableAction : public acti
         object _result;
 };
 
-template <class S, class T, class string_type> class NullFilter : public filter<S,T,string_type>, public wrapper< filter<S,T,string_type> > {
+template <class S, class T, class string_type>
+class NullFilter : public filter<S,T,string_type>, public wrapper< filter<S,T,string_type> > {
     public:
         T perform(const typename string_type & string,int remaining_distance,T data) {
             return data;
         }
 };
 
-template <class S,class T, class string_type> class CallableFilter : public filter<S,T,string_type>, public wrapper< filter<S,T,string_type> > {
+template <class S,class T, class string_type>
+class CallableFilter : public filter<S,T,string_type>, public wrapper< filter<S,T,string_type> > {
     public:
         CallableFilter(object perform) :
             _perform(perform) {
@@ -178,7 +185,8 @@ object ObjectSerializer::read(std::istream& file) {
 
 class TST;
 
-template <typename iterator_type> class TSTIterator {
+template <typename iterator_type>
+class TSTIterator {
     private:
         friend class TST;
         

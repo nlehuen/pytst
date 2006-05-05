@@ -194,7 +194,8 @@ PythonReference ObjectSerializer::read(std::istream& file) {
 
 class TST;
 
-template <typename iterator_type> class TSTIterator {
+template <typename iterator_type>
+class TSTIterator {
     public:
         friend class TST;
     
