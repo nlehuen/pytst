@@ -1,7 +1,9 @@
 # -*- coding: iso-8859-1 -*-
 
-import unittest
 import sys
+sys.path.insert(0,r"D:\projets\tst\python\Debug")
+
+import unittest
 import os
 import random
 import string

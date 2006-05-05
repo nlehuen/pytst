@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "1.13";
+const char* const TST_VERSION = "1.14";
 
 #include "debug.h"
 
@@ -682,7 +682,7 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
 
 template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
  void tst<charT,valueT,storageT,serializerT,stringT>::match_recurse(tst_node<charT,valueT>* current_node,typename stringT& current_key,const typename stringT & string, size_t position,filter<charT,valueT,stringT>* filter, action<charT,valueT,stringT>* to_perform, bool advance) const {
-    typename stringT this_key(current_key);
+    typename stringT this_key(current_key,true);
 
     while(true) {
         charT c = string[position];
@@ -905,7 +905,7 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
         
         index = start->next; 
         if(index!=UNDEFINED_INDEX) {
-            typename stringT key(string);            
+            typename stringT key(string,true);
             walk_recurse(storage->get(index),key,filter,to_perform);
         }
     }

@@ -21,6 +21,7 @@
 #include "tst.h"
 #include "Python.h"
 #include "PythonReference.h"
+#include "qad_string.h"
 
 #include <iostream>
 #include <fstream>
@@ -30,7 +31,7 @@
 #include <boost/iostreams/filter/zlib.hpp>
 #endif
 
-typedef std::basic_string<char> string_type;
+typedef qad_string<char> string_type;
 
 
 class CallableAction : public action<char,PythonReference,string_type > {
@@ -206,7 +207,7 @@ class TSTIterator {
         PyObject* next() {
             typename iterator_type::value_type v(iterator.next());
             if(v.second) {
-                return Py_BuildValue("s#O",v.first.c_str(),v.first.size(),v.second->get());
+                return Py_BuildValue("s#O",v.first.data(),v.first.size(),v.second->get());
             }
             else {
                 PythonReference exceptions(PyImport_ImportModule("exceptions"),0);

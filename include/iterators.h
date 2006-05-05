@@ -69,19 +69,20 @@ class lexical_iterator {
                         state.state = state_right;
 
                         if(node->next!=UNDEFINED_INDEX) {
-                            state_type new_state = state_type(
-                                state.key,
+                            typename stringT new_key(state.key,true);
+                            new_key.push_back(node->c);
+                            state_type new_state(
+                                new_key,
                                 state_left,
                                 node->next
                             );
-                            new_state.key += node->c;
                             stack.push(new_state);
                             must_break = true;
                         }
 
                         if(node->data != tree->default_value) {
-                            typename stringT new_key(state.key);
-                            new_key += node->c;
+                            typename stringT new_key(state.key,true);
+                            new_key.push_back(node->c);
                             return value_type(
                                 new_key,
                                 &(node->data)
@@ -106,7 +107,7 @@ class lexical_iterator {
                     }
                 }
             }
-            return value_type("",0);
+            return value_type(stringT(),0);
         }
                 
     private:
@@ -136,7 +137,7 @@ class match_iterator {
         typedef std::pair< stringT, valueT* > value_type;
 
         match_iterator(const tst<charT,valueT,storageT,serializerT,stringT> *t,const typename stringT & string,int distance,int root) : tree(t), stack(), base(string) {
-            stack.push(state_type("",state_left,0,distance,root));
+            stack.push(state_type(stringT(),state_left,0,distance,root));
         }
 
         value_type next() {
@@ -170,14 +171,15 @@ class match_iterator {
 
                         if(state.distance>=diff) {
                             if(node->next!=UNDEFINED_INDEX) {
+                                typename stringT new_key(state.key,true);
+                                new_key.push_back(node->c);
                                 state_type new_state = state_type(
-                                    state.key,
+                                    new_key,
                                     state_left,
                                     state.position+1,
                                     state.distance-diff,
                                     node->next
                                 );
-                                new_state.key += node->c;
                                 stack.push(new_state);
                                 must_break = true;
                             }
@@ -189,12 +191,12 @@ class match_iterator {
                             }
                             
                             if(state.distance>=diff && node->data != tree->default_value) {
-                                value_type result(
-                                    state.key,
+                                stringT new_key(state.key,true);
+                                new_key.push_back(node->c);
+                                return value_type(
+                                    new_key,
                                     &(node->data)
                                 );
-                                result.first += node->c;
-                                return result;
                             }
                             else if(must_break) {
                                 break;
@@ -207,14 +209,15 @@ class match_iterator {
                         
                         if(state.distance>0) {
                             if(node->next!=UNDEFINED_INDEX) {
-                                state_type new_state = state_type(
-                                    state.key,
+                                stringT new_key(state.key,true);
+                                new_key.push_back(node->c);
+                                state_type new_state(
+                                    new_key,
                                     state_left,
                                     state.position,
                                     state.distance-1,
                                     node->next
                                 );
-                                new_state.key += node->c;
                                 stack.push(new_state);
                                 break;
                             }
@@ -251,7 +254,7 @@ class match_iterator {
                     }
                 }
             }
-            return value_type("",0);
+            return value_type(stringT(),0);
         }
                 
     private:

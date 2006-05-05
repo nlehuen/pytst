@@ -404,13 +404,13 @@ class _lexical_iterator_type(object):
     state_end = _tst._lexical_iterator_type_state_end
     def __init__(self, *args): 
         """
-        __init__(self, tst<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,std::basic_string<(char)>)> t, 
-            std::basic_string<(char)> key, 
+        __init__(self, tst<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,qad_string<(char)>)> t, 
+            qad_string<(char)> key, 
             int root) -> _lexical_iterator_type
         """
         _tst._lexical_iterator_type_swiginit(self,_tst.new__lexical_iterator_type(*args))
     def next(*args):
-        """next(self) -> lexical_iterator<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,std::basic_string<(char)>)>::value_type"""
+        """next(self) -> lexical_iterator<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,qad_string<(char)>)>::value_type"""
         return _tst._lexical_iterator_type_next(*args)
 
     __swig_destroy__ = _tst.delete__lexical_iterator_type
@@ -430,14 +430,14 @@ class _close_match_iterator_type(object):
     state_end = _tst._close_match_iterator_type_state_end
     def __init__(self, *args): 
         """
-        __init__(self, tst<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,std::basic_string<(char)>)> t, 
-            std::basic_string<(char)> string, 
+        __init__(self, tst<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,qad_string<(char)>)> t, 
+            qad_string<(char)> string, 
             int distance, 
             int root) -> _close_match_iterator_type
         """
         _tst._close_match_iterator_type_swiginit(self,_tst.new__close_match_iterator_type(*args))
     def next(*args):
-        """next(self) -> match_iterator<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,std::basic_string<(char)>)>::value_type"""
+        """next(self) -> match_iterator<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,qad_string<(char)>)>::value_type"""
         return _tst._close_match_iterator_type_next(*args)
 
     __swig_destroy__ = _tst.delete__close_match_iterator_type

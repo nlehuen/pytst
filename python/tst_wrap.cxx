@@ -2048,7 +2048,7 @@ SWIG_Python_ConvertFunctionPtr(PyObject *obj, void **ptr, swig_type_info *ty) {
     void *vptr = 0;
     
     /* here we get the method pointer for callbacks */
-    char *doc = (((PyCFunctionObject *)obj) -> m_ml -> ml_doc);
+    const char *doc = (((PyCFunctionObject *)obj) -> m_ml -> ml_doc);
     const char *desc = doc ? strstr(doc, "swig_ptr: ") : 0;
     if (desc) {
       desc = ty ? SWIG_UnpackVoidPtr(desc + 10, &vptr, ty->name) : 0;
@@ -2474,15 +2474,15 @@ SWIG_Python_MustGetPtr(PyObject *obj, swig_type_info *ty, int argnum, int flags)
 #define SWIGTYPE_p_char swig_types[12]
 #define SWIGTYPE_p_character_type swig_types[13]
 #define SWIGTYPE_p_filterTchar_PythonReference_string_type_t swig_types[14]
-#define SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t swig_types[15]
-#define SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t swig_types[16]
-#define SWIGTYPE_p_serializer_type swig_types[17]
-#define SWIGTYPE_p_std__basic_stringTchar_t swig_types[18]
+#define SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t swig_types[15]
+#define SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t swig_types[16]
+#define SWIGTYPE_p_qad_stringTchar_t swig_types[17]
+#define SWIGTYPE_p_serializer_type swig_types[18]
 #define SWIGTYPE_p_std__istream swig_types[19]
 #define SWIGTYPE_p_std__ostream swig_types[20]
-#define SWIGTYPE_p_std__pairTstd__basic_stringTchar_t_PythonReference_p_t swig_types[21]
+#define SWIGTYPE_p_std__pairTqad_stringTchar_t_PythonReference_p_t swig_types[21]
 #define SWIGTYPE_p_storage_type swig_types[22]
-#define SWIGTYPE_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t swig_types[23]
+#define SWIGTYPE_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t swig_types[23]
 #define SWIGTYPE_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t swig_types[24]
 #define SWIGTYPE_p_value_type swig_types[25]
 static swig_type_info *swig_types[27];
@@ -3678,7 +3678,7 @@ fail:
 SWIGINTERN PyObject *_wrap__TST_iterator__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *arg1 = (tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *) 0 ;
-  SwigValueWrapper<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > result;
+  SwigValueWrapper<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   
@@ -3696,7 +3696,7 @@ SWIGINTERN PyObject *_wrap__TST_iterator__SWIG_0(PyObject *SWIGUNUSEDPARM(self),
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj((new lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >(static_cast< const lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >& >(result))), SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, SWIG_POINTER_OWN |  0 );
+  resultobj = SWIG_NewPointerObj((new lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >(static_cast< const lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >& >(result))), SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -3707,7 +3707,7 @@ SWIGINTERN PyObject *_wrap__TST_iterator__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
   PyObject *resultobj = 0;
   tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *arg1 = (tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *) 0 ;
   string_type *arg2 = 0 ;
-  SwigValueWrapper<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > result;
+  SwigValueWrapper<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   
@@ -3731,7 +3731,7 @@ SWIGINTERN PyObject *_wrap__TST_iterator__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj((new lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >(static_cast< const lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >& >(result))), SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, SWIG_POINTER_OWN |  0 );
+  resultobj = SWIG_NewPointerObj((new lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >(static_cast< const lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >& >(result))), SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, SWIG_POINTER_OWN |  0 );
   {
     delete arg2;
   }
@@ -3768,7 +3768,7 @@ SWIGINTERN PyObject *_wrap__TST_close_match_iterator(PyObject *SWIGUNUSEDPARM(se
   tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *arg1 = (tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *) 0 ;
   string_type *arg2 = 0 ;
   int arg3 ;
-  SwigValueWrapper<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > result;
+  SwigValueWrapper<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int val3 ;
@@ -3800,7 +3800,7 @@ SWIGINTERN PyObject *_wrap__TST_close_match_iterator(PyObject *SWIGUNUSEDPARM(se
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj((new match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >(static_cast< const match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >& >(result))), SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, SWIG_POINTER_OWN |  0 );
+  resultobj = SWIG_NewPointerObj((new match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >(static_cast< const match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >& >(result))), SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, SWIG_POINTER_OWN |  0 );
   {
     delete arg2;
   }
@@ -4975,7 +4975,7 @@ fail:
 SWIGINTERN PyObject *_wrap_TST___iter__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   TST *arg1 = (TST *) 0 ;
-  SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > > result;
+  SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > > result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject *swig_obj[1] ;
@@ -5005,7 +5005,7 @@ fail:
 SWIGINTERN PyObject *_wrap_TST_iterator__SWIG_0(PyObject *SWIGUNUSEDPARM(self), int nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   TST *arg1 = (TST *) 0 ;
-  SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > > result;
+  SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > > result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   
@@ -5034,7 +5034,7 @@ SWIGINTERN PyObject *_wrap_TST_iterator__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
   PyObject *resultobj = 0;
   TST *arg1 = (TST *) 0 ;
   string_type *arg2 = 0 ;
-  SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > > result;
+  SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > > result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   
@@ -5095,7 +5095,7 @@ SWIGINTERN PyObject *_wrap_TST_close_match_iterator(PyObject *SWIGUNUSEDPARM(sel
   TST *arg1 = (TST *) 0 ;
   string_type *arg2 = 0 ;
   int arg3 ;
-  SwigValueWrapper<TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > > result;
+  SwigValueWrapper<TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > > result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int val3 ;
@@ -5643,8 +5643,8 @@ SWIGINTERN PyObject *TST_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObject *args
 
 SWIGINTERN PyObject *_wrap_new__lexical_iterator_type(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > *arg1 = (tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > *) 0 ;
-  std::basic_string<char > *arg2 = 0 ;
+  tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > *arg1 = (tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > *) 0 ;
+  qad_string<char > *arg2 = 0 ;
   int arg3 ;
   lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *result = 0 ;
   void *argp1 = 0 ;
@@ -5656,19 +5656,19 @@ SWIGINTERN PyObject *_wrap_new__lexical_iterator_type(PyObject *SWIGUNUSEDPARM(s
   PyObject *swig_obj[3] ;
   
   if (!SWIG_Python_UnpackTuple(args,"new__lexical_iterator_type",3,3,swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, 0 |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new__lexical_iterator_type" "', argument " "1"" of type '" "tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new__lexical_iterator_type" "', argument " "1"" of type '" "tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > const *""'"); 
   }
-  arg1 = reinterpret_cast< tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_std__basic_stringTchar_t,  0  | 0);
+  arg1 = reinterpret_cast< tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_qad_stringTchar_t,  0  | 0);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new__lexical_iterator_type" "', argument " "2"" of type '" "std::basic_string<char > const &""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new__lexical_iterator_type" "', argument " "2"" of type '" "qad_string<char > const &""'"); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new__lexical_iterator_type" "', argument " "2"" of type '" "std::basic_string<char > const &""'"); 
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new__lexical_iterator_type" "', argument " "2"" of type '" "qad_string<char > const &""'"); 
   }
-  arg2 = reinterpret_cast< std::basic_string<char > * >(argp2);
+  arg2 = reinterpret_cast< qad_string<char > * >(argp2);
   ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new__lexical_iterator_type" "', argument " "3"" of type '" "int""'");
@@ -5676,13 +5676,13 @@ SWIGINTERN PyObject *_wrap_new__lexical_iterator_type(PyObject *SWIGUNUSEDPARM(s
   arg3 = static_cast< int >(val3);
   {
     try {
-      result = (lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *)new lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >((tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > const *)arg1,(std::basic_string<char > const &)*arg2,arg3); 
+      result = (lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *)new lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >((tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > const *)arg1,(qad_string<char > const &)*arg2,arg3); 
     }
     catch (std::exception e) {
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -5692,14 +5692,14 @@ fail:
 SWIGINTERN PyObject *_wrap__lexical_iterator_type_next(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *arg1 = (lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *) 0 ;
-  lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > >::value_type result;
+  lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > >::value_type result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject *swig_obj[1] ;
   
   if (!args) SWIG_fail;
   swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, 0 |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_lexical_iterator_type_next" "', argument " "1"" of type '" "lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *""'"); 
   }
@@ -5712,7 +5712,7 @@ SWIGINTERN PyObject *_wrap__lexical_iterator_type_next(PyObject *SWIGUNUSEDPARM(
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj((new lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > >::value_type(static_cast< const lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > >::value_type& >(result))), SWIGTYPE_p_std__pairTstd__basic_stringTchar_t_PythonReference_p_t, SWIG_POINTER_OWN |  0 );
+  resultobj = SWIG_NewPointerObj((new lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > >::value_type(static_cast< const lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > >::value_type& >(result))), SWIGTYPE_p_std__pairTqad_stringTchar_t_PythonReference_p_t, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -5728,7 +5728,7 @@ SWIGINTERN PyObject *_wrap_delete__lexical_iterator_type(PyObject *SWIGUNUSEDPAR
   
   if (!args) SWIG_fail;
   swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, SWIG_POINTER_DISOWN |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete__lexical_iterator_type" "', argument " "1"" of type '" "lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *""'"); 
   }
@@ -5751,7 +5751,7 @@ fail:
 SWIGINTERN PyObject *_lexical_iterator_type_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!SWIG_Python_UnpackTuple(args,(char*)"swigregister", 1, 1,&obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, SWIG_NewClientData(obj));
+  SWIG_TypeNewClientData(SWIGTYPE_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
 
@@ -5761,8 +5761,8 @@ SWIGINTERN PyObject *_lexical_iterator_type_swiginit(PyObject *SWIGUNUSEDPARM(se
 
 SWIGINTERN PyObject *_wrap_new__close_match_iterator_type(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > *arg1 = (tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > *) 0 ;
-  std::basic_string<char > *arg2 = 0 ;
+  tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > *arg1 = (tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > *) 0 ;
+  qad_string<char > *arg2 = 0 ;
   int arg3 ;
   int arg4 ;
   match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *result = 0 ;
@@ -5777,19 +5777,19 @@ SWIGINTERN PyObject *_wrap_new__close_match_iterator_type(PyObject *SWIGUNUSEDPA
   PyObject *swig_obj[4] ;
   
   if (!SWIG_Python_UnpackTuple(args,"new__close_match_iterator_type",4,4,swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, 0 |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new__close_match_iterator_type" "', argument " "1"" of type '" "tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > const *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new__close_match_iterator_type" "', argument " "1"" of type '" "tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > const *""'"); 
   }
-  arg1 = reinterpret_cast< tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > * >(argp1);
-  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_std__basic_stringTchar_t,  0  | 0);
+  arg1 = reinterpret_cast< tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > * >(argp1);
+  res2 = SWIG_ConvertPtr(swig_obj[1], &argp2, SWIGTYPE_p_qad_stringTchar_t,  0  | 0);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new__close_match_iterator_type" "', argument " "2"" of type '" "std::basic_string<char > const &""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "new__close_match_iterator_type" "', argument " "2"" of type '" "qad_string<char > const &""'"); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new__close_match_iterator_type" "', argument " "2"" of type '" "std::basic_string<char > const &""'"); 
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new__close_match_iterator_type" "', argument " "2"" of type '" "qad_string<char > const &""'"); 
   }
-  arg2 = reinterpret_cast< std::basic_string<char > * >(argp2);
+  arg2 = reinterpret_cast< qad_string<char > * >(argp2);
   ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new__close_match_iterator_type" "', argument " "3"" of type '" "int""'");
@@ -5802,13 +5802,13 @@ SWIGINTERN PyObject *_wrap_new__close_match_iterator_type(PyObject *SWIGUNUSEDPA
   arg4 = static_cast< int >(val4);
   {
     try {
-      result = (match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *)new match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >((tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > const *)arg1,(std::basic_string<char > const &)*arg2,arg3,arg4); 
+      result = (match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *)new match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type >((tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > const *)arg1,(qad_string<char > const &)*arg2,arg3,arg4); 
     }
     catch (std::exception e) {
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, SWIG_POINTER_NEW |  0 );
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, SWIG_POINTER_NEW |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -5818,14 +5818,14 @@ fail:
 SWIGINTERN PyObject *_wrap__close_match_iterator_type_next(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *arg1 = (match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *) 0 ;
-  match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > >::value_type result;
+  match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > >::value_type result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject *swig_obj[1] ;
   
   if (!args) SWIG_fail;
   swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, 0 |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_close_match_iterator_type_next" "', argument " "1"" of type '" "match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *""'"); 
   }
@@ -5838,7 +5838,7 @@ SWIGINTERN PyObject *_wrap__close_match_iterator_type_next(PyObject *SWIGUNUSEDP
       PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;
     }
   }
-  resultobj = SWIG_NewPointerObj((new match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > >::value_type(static_cast< const match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > >::value_type& >(result))), SWIGTYPE_p_std__pairTstd__basic_stringTchar_t_PythonReference_p_t, SWIG_POINTER_OWN |  0 );
+  resultobj = SWIG_NewPointerObj((new match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > >::value_type(static_cast< const match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > >::value_type& >(result))), SWIGTYPE_p_std__pairTqad_stringTchar_t_PythonReference_p_t, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -5854,7 +5854,7 @@ SWIGINTERN PyObject *_wrap_delete__close_match_iterator_type(PyObject *SWIGUNUSE
   
   if (!args) SWIG_fail;
   swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, SWIG_POINTER_DISOWN |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete__close_match_iterator_type" "', argument " "1"" of type '" "match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *""'"); 
   }
@@ -5877,7 +5877,7 @@ fail:
 SWIGINTERN PyObject *_close_match_iterator_type_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!SWIG_Python_UnpackTuple(args,(char*)"swigregister", 1, 1,&obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, SWIG_NewClientData(obj));
+  SWIG_TypeNewClientData(SWIGTYPE_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
 
@@ -5888,7 +5888,7 @@ SWIGINTERN PyObject *_close_match_iterator_type_swiginit(PyObject *SWIGUNUSEDPAR
 SWIGINTERN PyObject *_wrap_TSTLexicalIterator___iter__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > > *arg1 = (TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > > *) 0 ;
-  SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > > result;
+  SwigValueWrapper<TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > > result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject *swig_obj[1] ;
@@ -5984,7 +5984,7 @@ SWIGINTERN PyObject *TSTLexicalIterator_swigregister(PyObject *SWIGUNUSEDPARM(se
 SWIGINTERN PyObject *_wrap_TSTCloseMatchIterator___iter__(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > > *arg1 = (TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > > *) 0 ;
-  SwigValueWrapper<TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > > result;
+  SwigValueWrapper<TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > > result;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject *swig_obj[1] ;
@@ -6209,22 +6209,22 @@ static swig_type_info _swigt__p_ObjectSerializer = {"_p_ObjectSerializer", "Obje
 static swig_type_info _swigt__p_PythonReference = {"_p_PythonReference", "PythonReference *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_TST = {"_p_TST", "TST *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_TSTException = {"_p_TSTException", "TSTException *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_TSTIteratorTlexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t_t = {"_p_TSTIteratorTlexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t_t", "TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > *|TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_TSTIteratorTmatch_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t_t = {"_p_TSTIteratorTmatch_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t_t", "TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > > *|TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_TSTIteratorTlexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t_t = {"_p_TSTIteratorTlexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t_t", "TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > *|TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_TSTIteratorTmatch_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t_t = {"_p_TSTIteratorTmatch_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t_t", "TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > > *|TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_TupleListAction = {"_p_TupleListAction", "TupleListAction *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_actionTchar_PythonReference_string_type_t = {"_p_actionTchar_PythonReference_string_type_t", "action<char,PythonReference,string_type > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_character_type = {"_p_character_type", "character_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_filterTchar_PythonReference_string_type_t = {"_p_filterTchar_PythonReference_string_type_t", "filter<char,PythonReference,string_type > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t = {"_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t", "lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > *|lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t = {"_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t", "match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > *|match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t = {"_p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t", "lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > *|lexical_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t = {"_p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t", "match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > *|match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_qad_stringTchar_t = {"_p_qad_stringTchar_t", "qad_string<char > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_serializer_type = {"_p_serializer_type", "serializer_type *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__basic_stringTchar_t = {"_p_std__basic_stringTchar_t", "std::basic_string<char > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__istream = {"_p_std__istream", "std::istream *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__ostream = {"_p_std__ostream", "std::ostream *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__pairTstd__basic_stringTchar_t_PythonReference_p_t = {"_p_std__pairTstd__basic_stringTchar_t_PythonReference_p_t", "std::pair<std::basic_string<char >,PythonReference * > *|match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > >::value_type *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__pairTqad_stringTchar_t_PythonReference_p_t = {"_p_std__pairTqad_stringTchar_t_PythonReference_p_t", "std::pair<qad_string<char >,PythonReference * > *|match_iterator<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > >::value_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_storage_type = {"_p_storage_type", "storage_type *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t = {"_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t", "tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,std::basic_string<char > > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t = {"_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t", "tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,qad_string<char > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t = {"_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t", "tst<char,PythonReference,memory_storage<char,PythonReference >,ObjectSerializer,string_type > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_value_type = {"_p_value_type", "value_type *", 0, 0, (void*)0, 0};
 
@@ -6244,15 +6244,15 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
   &_swigt__p_character_type,
   &_swigt__p_filterTchar_PythonReference_string_type_t,
-  &_swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t,
-  &_swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t,
+  &_swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t,
+  &_swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t,
+  &_swigt__p_qad_stringTchar_t,
   &_swigt__p_serializer_type,
-  &_swigt__p_std__basic_stringTchar_t,
   &_swigt__p_std__istream,
   &_swigt__p_std__ostream,
-  &_swigt__p_std__pairTstd__basic_stringTchar_t_PythonReference_p_t,
+  &_swigt__p_std__pairTqad_stringTchar_t_PythonReference_p_t,
   &_swigt__p_storage_type,
-  &_swigt__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t,
+  &_swigt__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t,
   &_swigt__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t,
   &_swigt__p_value_type,
 };
@@ -6272,15 +6272,15 @@ static swig_cast_info _swigc__p_actionTchar_PythonReference_string_type_t[] = { 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_character_type[] = {  {&_swigt__p_character_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_filterTchar_PythonReference_string_type_t[] = {  {&_swigt__p_CallableFilter, _p_CallableFilterTo_p_filterTchar_PythonReference_string_type_t, 0, 0},  {&_swigt__p_filterTchar_PythonReference_string_type_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t[] = {  {&_swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t[] = {  {&_swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t[] = {  {&_swigt__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t[] = {  {&_swigt__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_qad_stringTchar_t[] = {  {&_swigt__p_qad_stringTchar_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_serializer_type[] = {  {&_swigt__p_serializer_type, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__basic_stringTchar_t[] = {  {&_swigt__p_std__basic_stringTchar_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__istream[] = {  {&_swigt__p_std__istream, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__ostream[] = {  {&_swigt__p_std__ostream, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__pairTstd__basic_stringTchar_t_PythonReference_p_t[] = {  {&_swigt__p_std__pairTstd__basic_stringTchar_t_PythonReference_p_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__pairTqad_stringTchar_t_PythonReference_p_t[] = {  {&_swigt__p_std__pairTqad_stringTchar_t_PythonReference_p_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_storage_type[] = {  {&_swigt__p_storage_type, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t[] = {  {&_swigt__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t[] = {  {&_swigt__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t[] = {  {&_swigt__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t, 0, 0, 0},  {&_swigt__p_TST, _p_TSTTo_p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_value_type[] = {  {&_swigt__p_value_type, 0, 0, 0},{0, 0, 0, 0}};
 
@@ -6300,15 +6300,15 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
   _swigc__p_character_type,
   _swigc__p_filterTchar_PythonReference_string_type_t,
-  _swigc__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t,
-  _swigc__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t,
+  _swigc__p_lexical_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t,
+  _swigc__p_match_iteratorTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t,
+  _swigc__p_qad_stringTchar_t,
   _swigc__p_serializer_type,
-  _swigc__p_std__basic_stringTchar_t,
   _swigc__p_std__istream,
   _swigc__p_std__ostream,
-  _swigc__p_std__pairTstd__basic_stringTchar_t_PythonReference_p_t,
+  _swigc__p_std__pairTqad_stringTchar_t_PythonReference_p_t,
   _swigc__p_storage_type,
-  _swigc__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_std__basic_stringTchar_t_t,
+  _swigc__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_qad_stringTchar_t_t,
   _swigc__p_tstTchar_PythonReference_memory_storageTchar_PythonReference_t_ObjectSerializer_string_type_t,
   _swigc__p_value_type,
 };
@@ -6755,11 +6755,11 @@ extern "C" {
     swig_type_info **types_initial) {
     size_t i;
     for (i = 0; methods[i].ml_name; ++i) {
-      char *c = methods[i].ml_doc;
+      const char *c = methods[i].ml_doc;
       if (c && (c = strstr(c, "swig_ptr: "))) {
         int j;
         swig_const_info *ci = 0;
-        char *name = c + 10;
+        const char *name = c + 10;
         for (j = 0; const_table[j].type; ++j) {
           if (strncmp(const_table[j].name, name, 
               strlen(const_table[j].name)) == 0) {

@@ -20,8 +20,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\projets\python\PC;C:\projets\python\Include;..\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS"
+				AdditionalIncludeDirectories="D:\projets\python-svn\PC;D:\projets\python-svn\Include;..\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;PYD_EXPORTS;SCANNER"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -35,7 +35,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/_tst_d.pyd"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\projets\python\PCbuild&quot;"
+				AdditionalLibraryDirectories="&quot;D:\projets\python-svn\PCbuild&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/_tst_d.pdb"
 				GenerateMapFile="TRUE"
@@ -252,8 +252,7 @@
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="E:\swigwin-1.3.29\swig -c++ -O -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)
-"
+						CommandLine="E:\swigwin-1.3.29\swig -c++ -O -DSCANNER -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)"
 						AdditionalDependencies="..\include\tst.h;pythonTST.h"
 						Outputs="tst_wrap.cxx"/>
 				</FileConfiguration>
