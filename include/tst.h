@@ -682,7 +682,7 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
 
 template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
  void tst<charT,valueT,storageT,serializerT,stringT>::match_recurse(tst_node<charT,valueT>* current_node,typename stringT& current_key,const typename stringT & string, size_t position,filter<charT,valueT,stringT>* filter, action<charT,valueT,stringT>* to_perform, bool advance) const {
-    typename stringT this_key(current_key,true);
+    typename stringT this_key(current_key);
 
     while(true) {
         charT c = string[position];
@@ -905,7 +905,7 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
         
         index = start->next; 
         if(index!=UNDEFINED_INDEX) {
-            typename stringT key(string,true);
+            typename stringT key(string);
             walk_recurse(storage->get(index),key,filter,to_perform);
         }
     }

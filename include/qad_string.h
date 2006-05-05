@@ -53,32 +53,6 @@ class qad_string {
         }
 
         /**
-         * Copies a qad_string, with the possibility of making a deep, read-write copy.
-         */
-        qad_string(const qad_string<charT> & other, bool copy) :
-            _size(other._size),
-            _shared(other._shared) {
-            if(copy && _shared==0) {
-                _capacity = _size;
-                if(_capacity==0) {
-                    _capacity=2;
-                }
-                _array = new charT[_capacity];
-                _start = 0;
-                memcpy(_array,other._array+other._start,_size);
-                _shared = new size_t(1);
-            }
-            else {
-                _array = other._array;
-                _start = other._start;
-                _capacity = other._capacity;
-                if(_shared) {
-                    ++(*_shared);
-                }
-            }
-        }
-
-        /**
          * Creates a new, empty, read-write string.
          */
         qad_string() : _array(new charT[2]), _start(0), _size(0), _capacity(2), _shared(new size_t(1)) {
@@ -152,10 +126,14 @@ class qad_string {
 template <typename charT>
 void qad_string<charT>::push_back(charT c) {
     if(!_shared) {
-        throw std::exception("This string is immutable");
+        size_t new_capacity = _capacity + (_capacity>>1) + 1;
+        charT* new_array = new charT[new_capacity];
+        memcpy(new_array,_array,_capacity*sizeof(charT));
+        _capacity = new_capacity;
+        _array = new_array;
+        _shared = new size_t(1);
     }
-    
-    if(_size>=_capacity) {
+    else if(_size>=_capacity) {
         // Creates a new array and copy it.
         size_t new_capacity = _capacity + (_capacity>>1) + 1;
         charT* new_array = new charT[new_capacity];

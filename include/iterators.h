@@ -69,7 +69,7 @@ class lexical_iterator {
                         state.state = state_right;
 
                         if(node->next!=UNDEFINED_INDEX) {
-                            typename stringT new_key(state.key,true);
+                            typename stringT new_key(state.key);
                             new_key.push_back(node->c);
                             state_type new_state(
                                 new_key,
@@ -81,7 +81,7 @@ class lexical_iterator {
                         }
 
                         if(node->data != tree->default_value) {
-                            typename stringT new_key(state.key,true);
+                            typename stringT new_key(state.key);
                             new_key.push_back(node->c);
                             return value_type(
                                 new_key,
@@ -171,7 +171,7 @@ class match_iterator {
 
                         if(state.distance>=diff) {
                             if(node->next!=UNDEFINED_INDEX) {
-                                typename stringT new_key(state.key,true);
+                                typename stringT new_key(state.key);
                                 new_key.push_back(node->c);
                                 state_type new_state = state_type(
                                     new_key,
@@ -191,7 +191,7 @@ class match_iterator {
                             }
                             
                             if(state.distance>=diff && node->data != tree->default_value) {
-                                stringT new_key(state.key,true);
+                                stringT new_key(state.key);
                                 new_key.push_back(node->c);
                                 return value_type(
                                     new_key,
@@ -209,7 +209,7 @@ class match_iterator {
                         
                         if(state.distance>0) {
                             if(node->next!=UNDEFINED_INDEX) {
-                                stringT new_key(state.key,true);
+                                stringT new_key(state.key);
                                 new_key.push_back(node->c);
                                 state_type new_state(
                                     new_key,
