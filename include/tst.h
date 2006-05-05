@@ -82,7 +82,8 @@ public:
     void read(std::istream &file);
 
     lexical_iterator<S,T,M,RW> iterator() const {
-        return lexical_iterator<S,T,M,RW>(this,std::basic_string<S>(),root);
+        std::basic_string<S> key;
+        return lexical_iterator<S,T,M,RW>(this,key,root);
     }
 
     lexical_iterator<S,T,M,RW> iterator(const std::basic_string<S>& string) const {
@@ -572,7 +573,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compu
 /**************************** close_match *************************************/
 
 template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::close_match(const std::basic_string<S>& string, int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) const {
-    close_match_recurse(storage->get(root),std::basic_string<S>(),string,0,maximum_distance,maximum_distance,filter,to_perform);
+    std::basic_string<S> key;
+    close_match_recurse(storage->get(root),key,string,0,maximum_distance,maximum_distance,filter,to_perform);
     if(to_perform) {
         return to_perform->result();
     }
@@ -648,7 +650,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
 /**************************** match *************************************/
 
 template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::match(const std::basic_string<S>& string,filter<S,T>* filter,action<S,T>* to_perform) const {
-    match_recurse(storage->get(root),std::basic_string<S>(),string,0,filter,to_perform,false);
+    std::basic_string<S> key;
+    match_recurse(storage->get(root),key,string,0,filter,to_perform,false);
     if(to_perform) {
         return to_perform->result();
     }
@@ -849,7 +852,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
 /**************************** walk *************************************/
 
 template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(filter<S,T>* filter,action<S,T>* to_perform) const {
-    walk_recurse(storage->get(root),std::basic_string<S>(),filter,to_perform);
+    std::basic_string<S> key;
+    walk_recurse(storage->get(root),key,filter,to_perform);
     if(to_perform) {
         return to_perform->result();
     }
@@ -876,7 +880,8 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(fil
         
         index = start->next; 
         if(index!=UNDEFINED_INDEX) {
-            walk_recurse(storage->get(index),std::basic_string<S>(string),filter,to_perform);
+            std::basic_string<S> key(string);            
+            walk_recurse(storage->get(index),key,filter,to_perform);
         }
     }
 
