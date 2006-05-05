@@ -31,9 +31,9 @@ using namespace boost::python;
 
 /********************* ACTION & FILTER ***********************************/
 
-template <class S, class T> class NullAction : public action<S,T>, public wrapper< action<S,T> > {
+template <class S, class T, class string_type> class NullAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
     public:
-        void perform(const std::basic_string<S>& string,int remaining_distance,T data) {
+        void perform(const typename string_type & string,int remaining_distance,T data) {
         }
         
         T result() {
@@ -42,9 +42,9 @@ template <class S, class T> class NullAction : public action<S,T>, public wrappe
         
 };
 
-template <class S,class T> class DictAction : public action<S,T>, public wrapper< action<S,T> > {
+template <class S,class T, class string_type> class DictAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
     public:
-        void perform(const std::basic_string<S>& string,int remaining_distance,T data) {
+        void perform(const typename string_type & string,int remaining_distance,T data) {
             object r = result_dict.get(string);
             if(!r || (r[0] > remaining_distance) ) {
                 result_dict[string] = make_tuple(remaining_distance,data);
@@ -59,9 +59,9 @@ template <class S,class T> class DictAction : public action<S,T>, public wrapper
         dict result_dict;
 };
 
-template <class S,class T> class TupleListAction : public action<S,T>, public wrapper< action<S,T> > {
+template <class S,class T, class string_type> class TupleListAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
     public:
-        void perform(const std::basic_string<S>& string,int remaining_distance,T data) {
+        void perform(const typename string_type & string,int remaining_distance,T data) {
             result_list.append(make_tuple(string,remaining_distance,data));
         }        
         
@@ -73,9 +73,9 @@ template <class S,class T> class TupleListAction : public action<S,T>, public wr
         list result_list;
 };
 
-template <class S,class T> class ListAction : public action<S,T>, public wrapper< action<S,T> > {
+template <class S,class T, class string_type> class ListAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
     public:
-        void perform(const std::basic_string<S>& string,int remaining_distance,T data) {
+        void perform(const typename string_type & string,int remaining_distance,T data) {
             result_list.append(data);
         }        
         
@@ -87,14 +87,14 @@ template <class S,class T> class ListAction : public action<S,T>, public wrapper
         list result_list;
 };
 
-template <class S,class T> class CallableAction : public action<S,T>, public wrapper< action<S,T> > {
+template <class S,class T, class string_type> class CallableAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
     public:
-        CallableAction<S,T>(object perform, object result) :
+        CallableAction(object perform, object result) :
             _perform(perform),
             _result(result) {
         }
     
-        void perform(const std::basic_string<S>& string,int remaining_distance,T data) {
+        void perform(const typename string_type & string,int remaining_distance,T data) {
             _perform(
                 string,
                 remaining_distance,
@@ -113,20 +113,20 @@ template <class S,class T> class CallableAction : public action<S,T>, public wra
         object _result;
 };
 
-template <class S, class T> class NullFilter : public filter<S,T>, public wrapper< filter<S,T> > {
+template <class S, class T, class string_type> class NullFilter : public filter<S,T,string_type>, public wrapper< filter<S,T,string_type> > {
     public:
-        T perform(const std::basic_string<S>& string,int remaining_distance,T data) {
+        T perform(const typename string_type & string,int remaining_distance,T data) {
             return data;
         }
 };
 
-template <class S,class T> class CallableFilter : public filter<S,T>, public wrapper< filter<S,T> > {
+template <class S,class T, class string_type> class CallableFilter : public filter<S,T,string_type>, public wrapper< filter<S,T,string_type> > {
     public:
-        CallableFilter<S,T>(object perform) :
+        CallableFilter(object perform) :
             _perform(perform) {
         }
     
-        T perform(const std::basic_string<S>& string,int remaining_distance,T data) {
+        T perform(const typename string_type & string,int remaining_distance,T data) {
         	return _perform(string,remaining_distance,data);
         }        
     
@@ -211,16 +211,16 @@ template <typename iterator_type> class TSTIterator {
         iterator_type iterator;
 };
 
-typedef lexical_iterator<char,object,memory_storage<char,object>,ObjectSerializer> lexical_iterator_type;
-typedef match_iterator<char,object,memory_storage<char,object>,ObjectSerializer> close_match_iterator_type;
+typedef lexical_iterator<char,object,memory_storage<char,object>,ObjectSerializer,std::basic_string<char> > lexical_iterator_type;
+typedef match_iterator<char,object,memory_storage<char,object>,ObjectSerializer,std::basic_string<char> > close_match_iterator_type;
 typedef TSTIterator<lexical_iterator_type> TSTLexicalIterator;
 typedef TSTIterator<close_match_iterator_type> TSTCloseMatchIterator;
 
 /********************* TST ***********************************/
 
-class TST : public tst<char,object,memory_storage<char,object>,ObjectSerializer> {
+class TST : public tst<char,object,memory_storage<char,object>,ObjectSerializer,std::basic_string<char> > {
     public:
-        TST() : tst<char,object,memory_storage<char,object>,ObjectSerializer>() {
+        TST() : tst<char,object,memory_storage<char,object>,ObjectSerializer,std::basic_string<char> >() {
         }
     
         void write_to_file(str file) const {
@@ -244,33 +244,30 @@ class TST : public tst<char,object,memory_storage<char,object>,ObjectSerializer>
             // in.close();
         }
 
-        object walk1(filter<char,object>* filter,action<char,object>* to_perform) const {
+        object walk1(filter<char,object,std::basic_string<char> >* filter,action<char,object,std::basic_string<char> >* to_perform) const {
             return walk(filter,to_perform);
         }
         
-        object walk2(filter<char,object>* filter,action<char,object>* to_perform,const std::basic_string<char>& string) const {
+        object walk2(filter<char,object,std::basic_string<char> >* filter,action<char,object,std::basic_string<char> >* to_perform,const std::basic_string<char>& string) const {
             return walk(filter,to_perform,string);
         }
 
 
         TSTLexicalIterator iterator1() {
-            return TSTLexicalIterator(tst<char,object,memory_storage<char,object>,ObjectSerializer>::iterator());
+            return TSTLexicalIterator(tst<char,object,memory_storage<char,object>,ObjectSerializer,std::basic_string<char> >::iterator());
         }
         
         TSTLexicalIterator iterator2(std::basic_string<char> s) {
-            return TSTLexicalIterator(tst<char,object,memory_storage<char,object>,ObjectSerializer>::iterator(s));
+            return TSTLexicalIterator(tst<char,object,memory_storage<char,object>,ObjectSerializer,std::basic_string<char> >::iterator(s));
         }
         
         TSTCloseMatchIterator close_match_iterator(std::basic_string<char> s, int distance) {
-            return TSTCloseMatchIterator(tst<char,object,memory_storage<char,object>,ObjectSerializer>::close_match_iterator(s,distance));
+            return TSTCloseMatchIterator(tst<char,object,memory_storage<char,object>,ObjectSerializer,std::basic_string<char> >::close_match_iterator(s,distance));
         }
 };
 
 BOOST_PYTHON_MODULE(tst)
 {
-    filter<char,object> *test = new NullFilter<char,object>;
-    action<char,object> *test2 = new NullAction<char,object>;
-
     scope().attr("TST_VERSION") = std::string(TST_VERSION)+"-Boost.Python";
 
     class_< TSTLexicalIterator >("TSTLexicalIterator",no_init)
@@ -324,28 +321,28 @@ BOOST_PYTHON_MODULE(tst)
         .def("close_match_iterator",&TST::close_match_iterator)
     ;
     
-    class_< NullAction<char,object>, boost::noncopyable >("NullAction")
+    class_< NullAction<char,object,std::basic_string<char> >, boost::noncopyable >("NullAction")
     ;
 
-    class_< DictAction<char,object>, boost::noncopyable >("DictAction")
-        .def("result", &DictAction<char,object>::result)
+    class_< DictAction<char,object,std::basic_string<char> >, boost::noncopyable >("DictAction")
+        .def("result", &DictAction<char,object,std::basic_string<char> >::result)
     ;
 
-    class_< TupleListAction<char,object>, boost::noncopyable >("TupleListAction")
-        .def("result", &TupleListAction<char,object>::result)
+    class_< TupleListAction<char,object,std::basic_string<char> >, boost::noncopyable >("TupleListAction")
+        .def("result", &TupleListAction<char,object,std::basic_string<char> >::result)
     ;
 
-    class_< ListAction<char,object>, boost::noncopyable >("ListAction")
-        .def("result", &ListAction<char,object>::result)
+    class_< ListAction<char,object,std::basic_string<char> >, boost::noncopyable >("ListAction")
+        .def("result", &ListAction<char,object,std::basic_string<char> >::result)
     ;
 
-    class_< CallableAction<char,object>, boost::noncopyable >("CallableAction",init<object,object>())
-        .def("result", &CallableAction<char,object>::result)
+    class_< CallableAction<char,object,std::basic_string<char> >, boost::noncopyable >("CallableAction",init<object,object>())
+        .def("result", &CallableAction<char,object,std::basic_string<char> >::result)
     ;
 
-    class_< NullFilter<char,object>, boost::noncopyable >("NullFilter")
+    class_< NullFilter<char,object,std::basic_string<char> >, boost::noncopyable >("NullFilter")
     ;
 
-    class_< CallableFilter<char,object>, boost::noncopyable >("CallableFilter",init<object>())
+    class_< CallableFilter<char,object,std::basic_string<char> >, boost::noncopyable >("CallableFilter",init<object>())
     ;
 }

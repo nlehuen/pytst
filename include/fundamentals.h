@@ -106,19 +106,19 @@ public:
     }
 };
 
-template<typename S,typename T> class action {
+template<typename S,typename T,typename string_type> class action {
 public:
     action() {}
     virtual ~action() {}
-    virtual void perform(const std::basic_string<S>& string,int remaining_distance,T data)=0;
+    virtual void perform(const typename string_type & string,int remaining_distance,T data)=0;
     virtual T result()=0;
 };
 
-template<typename S,typename T> class filter {
+template<typename S,typename T,typename string_type> class filter {
 public:
     filter() {}
     virtual ~filter() {}
-    virtual T perform(const std::basic_string<S>& string,int remaining_distance,T data)=0;
+    virtual T perform(const typename string_type & string,int remaining_distance,T data)=0;
 };
 
 template<typename T> class null_reader_writer {

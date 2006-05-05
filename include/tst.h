@@ -41,16 +41,16 @@ const char* const TST_VERSION = "1.13";
     // #define SCANNER
 #endif
 
-template< typename S,typename T,typename M,typename RW > class tst;
+template< typename S,typename T,typename M,typename RW, typename string_type> class tst;
 
 #include "fundamentals.h"
 #include "memory_storage.h"
 #include "iterators.h"
 
-template< typename S,typename T,typename M=memory_storage<S,T>,typename RW=null_reader_writer<T> > class tst {
+template< typename S,typename T,typename M,typename RW, typename string_type> class tst {
 public:
-    friend class lexical_iterator<S,T,M,RW>;
-    friend class match_iterator<S,T,M,RW>;
+    friend class lexical_iterator<S,T,M,RW,string_type>;
+    friend class match_iterator<S,T,M,RW,string_type>;
 
     typedef S character_type;
     typedef T value_type;
@@ -67,33 +67,33 @@ public:
         storage->pack(root);
     }
     
-    T walk(filter<S,T>* filter,action<S,T>* to_perform) const;
-    T walk(filter<S,T>* filter,action<S,T>* to_perform,const std::basic_string<S>& string) const;
-    T close_match(const std::basic_string<S>& string,int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
-    T prefix_match(const std::basic_string<S>& string,filter<S,T>* filter,action<S,T>* to_perform) const;
-    T match(const std::basic_string<S>& string,filter<S,T>* filter,action<S,T>* to_perform) const;
+    T walk(filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
+    T walk(filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform,const typename string_type & string) const;
+    T close_match(const typename string_type & string,int maximum_distance,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
+    T prefix_match(const typename string_type & string,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
+    T match(const typename string_type & string,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
 
-    T get(const std::basic_string<S>& string) const;
-    T get_or_build(const std::basic_string<S>& string,filter<S,T>* factory);
-    T put(const std::basic_string<S>& string,T data);
-    void remove(const std::basic_string<S>& string);
-    bool contains(const std::basic_string<S>& string) const;
+    T get(const typename string_type & string) const;
+    T get_or_build(const typename string_type & string,filter<S,T,string_type>* factory);
+    T put(const typename string_type & string,T data);
+    void remove(const typename string_type & string);
+    bool contains(const typename string_type & string) const;
     void write(std::ostream &file) const;
     void read(std::istream &file);
 
-    lexical_iterator<S,T,M,RW> iterator() const {
-        std::basic_string<S> key;
-        return lexical_iterator<S,T,M,RW>(this,key,root);
+    lexical_iterator<S,T,M,RW,string_type> iterator() const {
+        typename string_type key;
+        return lexical_iterator<S,T,M,RW,string_type>(this,key,root);
     }
 
-    lexical_iterator<S,T,M,RW> iterator(const std::basic_string<S>& string) const {
+    lexical_iterator<S,T,M,RW,string_type> iterator(const typename string_type & string) const {
         int current_index=root,best_node=UNDEFINED_INDEX;
         find_node(&current_index,&best_node,string);
-        return lexical_iterator<S,T,M,RW>(this,string.substr(0,string.size()-1),current_index);
+        return lexical_iterator<S,T,M,RW,string_type>(this,string.substr(0,string.size()-1),current_index);
     }
 
-    match_iterator<S,T,M,RW> close_match_iterator(const std::basic_string<S>& string,int distance) const {
-        return match_iterator<S,T,M,RW>(this,string,distance,root);
+    match_iterator<S,T,M,RW,string_type> close_match_iterator(const typename string_type & string,int distance) const {
+        return match_iterator<S,T,M,RW,string_type>(this,string,distance,root);
     }
     
     int get_number_of_nodes() const {
@@ -105,8 +105,8 @@ public:
     }
 
 #ifdef SCANNER
-    T scan(const std::basic_string<S>& string,action<S,T>* to_perform);
-    T scan_with_stop_chars(const std::basic_string<S>& string,const std::basic_string<S>& stop_chars,action<S,T>* to_perform) const;
+    T scan(const typename string_type & string,action<S,T,string_type>* to_perform);
+    T scan_with_stop_chars(const typename string_type & string,const typename string_type& stop_chars,action<S,T,string_type>* to_perform) const;
 #endif
 
 
@@ -121,15 +121,15 @@ private:
     T default_value;
     int root;
 
-    void walk_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,filter<S,T>* filter,action<S,T>* to_perform) const;
-    void close_match_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,const size_t position, const int distance, const int remaining_distance,filter<S,T>* filter,action<S,T>* to_perform) const;
-    void match_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
-    void match_joker_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
-    void match_star_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
+    void walk_recurse(tst_node<S,T>* current_node,typename string_type & current_key,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
+    void close_match_recurse(tst_node<S,T>* current_node,typename string_type & current_key,const typename string_type & string,const size_t position, const int distance, const int remaining_distance,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const;
+    void match_recurse(tst_node<S,T>* current_node,typename string_type & current_key,const typename string_type & string,size_t position, filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform,bool advance) const;
+    void match_joker_recurse(tst_node<S,T>* current_node,typename string_type & current_key,const typename string_type & string,size_t position, filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform,bool advance) const;
+    void match_star_recurse(tst_node<S,T>* current_node,typename string_type & current_key,const typename string_type & string,size_t position, filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform,bool advance) const;
 
-    int build_node(node_info<S,T>* current_node,const std::basic_string<S>& string,size_t current_position);
-    void remove_node(int* current_index,const std::basic_string<S>& string,const size_t position);
-    tst_node<S,T>* find_node(int* current_index,int* best_node, const std::basic_string<S>& string) const;
+    int build_node(node_info<S,T>* current_node,const typename string_type & string,size_t current_position);
+    void remove_node(int* current_index,const typename string_type & string,const size_t position);
+    tst_node<S,T>* find_node(int* current_index,int* best_node, const typename string_type & string) const;
 
     void balance_node(node_info<S,T>* bal);
     void ll(node_info<S,T>* bal);
@@ -142,11 +142,12 @@ private:
     int read_node(std::istream& file,RW* reader,int depth);
 
 #ifdef SCANNER
-    void compute_backtrack(tst_node<S,T> *current_node,const std::basic_string<S>& string,int si_match_start,int si_match_end);
+    void compute_backtrack(tst_node<S,T> *current_node,const typename string_type & string,int si_match_start,int si_match_end);
 #endif
 };
 
-template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst() :
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ tst<S,T,M,RW,string_type>::tst() :
     storage(new storage_type(16)),
     default_value() {
     node_info<S,T> root_info;
@@ -156,7 +157,8 @@ template<typename S,typename T,typename M,typename RW> tst<S,T,M,RW>::tst() :
 
 /*************************** high-level tree management ***********************/
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::get(const std::basic_string<S>& string) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ T tst<S,T,M,RW,string_type>::get(const typename string_type & string) const {
     int current_index=root,best_node=UNDEFINED_INDEX;
     tst_node<S,T>* current_node=find_node(&current_index,&best_node,string);
     if(current_node) {
@@ -167,7 +169,8 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::get(cons
     }
 }
 
-template<typename S,typename T,typename M,typename RW> bool tst<S,T,M,RW>::contains(const std::basic_string<S>& string) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ bool tst<S,T,M,RW,string_type>::contains(const typename string_type & string) const {
     int current_index=root,best_node=UNDEFINED_INDEX;
     tst_node<S,T>* current_node=find_node(&current_index,&best_node,string);
     if(current_node) {
@@ -178,7 +181,8 @@ template<typename S,typename T,typename M,typename RW> bool tst<S,T,M,RW>::conta
     }
 }
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::put(const std::basic_string<S>& string,T data) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ T tst<S,T,M,RW,string_type>::put(const typename string_type & string,T data) {
     node_info<S,T> root_info;
     root_info.index=root;
     root_info.node=storage->get(root);
@@ -187,7 +191,8 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::put(cons
     return storage->get(node_index)->store(data);
 }
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::get_or_build(const std::basic_string<S>& string,filter<S,T>* factory) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ T tst<S,T,M,RW,string_type>::get_or_build(const typename string_type & string,filter<S,T,string_type>* factory) {
     node_info<S,T> root_info;
     root_info.index=root;
     root_info.node=storage->get(root);
@@ -207,7 +212,8 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::get_or_b
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::remove(const std::basic_string<S>& string) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::remove(const typename string_type & string) {
     remove_node(&root,string,0);
     if(root==UNDEFINED_INDEX) {
         node_info<S,T> root_info;
@@ -218,7 +224,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::remov
 
 /**************************** low-level tree management ***********************/
 
-template<typename S,typename T,typename M,typename RW> tst_node<S,T>* tst<S,T,M,RW>::find_node(int* current_index,int* best_node,const std::basic_string<S>& string) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ tst_node<S,T>* tst<S,T,M,RW,string_type>::find_node(int* current_index,int* best_node,const typename string_type & string) const {
     tst_node<S,T>* current_node;
     int diff;
     size_t pos=0;
@@ -258,7 +265,8 @@ template<typename S,typename T,typename M,typename RW> tst_node<S,T>* tst<S,T,M,
     return 0;
 }
 
-template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::build_node(node_info<S,T>* current_node_info,const std::basic_string<S>& string,size_t current_position) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ int tst<S,T,M,RW,string_type>::build_node(node_info<S,T>* current_node_info,const typename string_type & string,size_t current_position) {
     int diff,result;
 
     if(current_node_info->node->c==0) {
@@ -387,7 +395,8 @@ template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::build_
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::remove_node(int* current_index,const std::basic_string<S>& string,const size_t current_position) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::remove_node(int* current_index,const typename string_type & string,const size_t current_position) {
     tst_node<S,T>* current_node = storage->get(*current_index);
     int diff,*next_index;
 
@@ -441,7 +450,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::remov
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::balance_node(node_info<S,T>* bal) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::balance_node(node_info<S,T>* bal) {
     if(bal->height==-1) {
         compute_height_and_balance(bal);
     }
@@ -470,7 +480,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::balan
     assert(abs(bal->left_balance)<2);
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::ll(node_info<S,T>* bal) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::ll(node_info<S,T>* bal) {
     int left_index=bal->node->left;
     tst_node<S,T>* left_node=storage->get(left_index);
     int left_right_index=left_node->right;
@@ -484,7 +495,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::ll(no
     bal->right_balance=0;
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::rr(node_info<S,T>* bal) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::rr(node_info<S,T>* bal) {
     int right_index=bal->node->right;
     tst_node<S,T>* right_node=storage->get(right_index);
     int right_left_index=right_node->left;
@@ -498,7 +510,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::rr(no
     bal->left_balance=0;
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::lr(node_info<S,T>* bal) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::lr(node_info<S,T>* bal) {
     node_info<S,T> left;
     left.index = bal->node->left;
     left.node = storage->get(left.index);
@@ -507,7 +520,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::lr(no
     ll(bal);
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::rl(node_info<S,T>* bal) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::rl(node_info<S,T>* bal) {
     node_info<S,T> right;
     right.index = bal->node->right;
     right.node = storage->get(right.index);
@@ -516,7 +530,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::rl(no
     rr(bal);
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compute_height_and_balance(node_info<S,T>* current_node_info) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::compute_height_and_balance(node_info<S,T>* current_node_info) const {
     int left = current_node_info->node->left;
     int right = current_node_info->node->right;
 
@@ -572,8 +587,9 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compu
 
 /**************************** close_match *************************************/
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::close_match(const std::basic_string<S>& string, int maximum_distance,filter<S,T>* filter,action<S,T>* to_perform) const {
-    std::basic_string<S> key;
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ T tst<S,T,M,RW,string_type>::close_match(const typename string_type & string, int maximum_distance,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const {
+    typename string_type key;
     close_match_recurse(storage->get(root),key,string,0,maximum_distance,maximum_distance,filter,to_perform);
     if(to_perform) {
         return to_perform->result();
@@ -583,7 +599,8 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::close_ma
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close_match_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string, const size_t position, const int distance, const int remaining_distance,filter<S,T>* filter, action<S,T>* to_perform) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::close_match_recurse(tst_node<S,T>* current_node,typename string_type& current_key,const typename string_type & string, const size_t position, const int distance, const int remaining_distance,filter<S,T,string_type>* filter, action<S,T,string_type>* to_perform) const {
 
     // LEFT
     int other_index=current_node->left;
@@ -649,8 +666,9 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
 
 /**************************** match *************************************/
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::match(const std::basic_string<S>& string,filter<S,T>* filter,action<S,T>* to_perform) const {
-    std::basic_string<S> key;
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ T tst<S,T,M,RW,string_type>::match(const typename string_type & string,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const {
+    typename string_type key;
     match_recurse(storage->get(root),key,string,0,filter,to_perform,false);
     if(to_perform) {
         return to_perform->result();
@@ -660,8 +678,9 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::match(co
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key2,const std::basic_string<S>& string, size_t position,filter<S,T>* filter, action<S,T>* to_perform, bool advance) const {
-    std::basic_string<S> this_key(current_key2);
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::match_recurse(tst_node<S,T>* current_node,typename string_type& current_key,const typename string_type & string, size_t position,filter<S,T,string_type>* filter, action<S,T,string_type>* to_perform, bool advance) const {
+    typename string_type this_key(current_key);
 
     while(true) {
         S c = string[position];
@@ -735,7 +754,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_joker_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string, size_t position,filter<S,T>* filter, action<S,T>* to_perform,bool advance) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::match_joker_recurse(tst_node<S,T>* current_node,typename string_type& current_key,const typename string_type & string, size_t position,filter<S,T,string_type>* filter, action<S,T,string_type>* to_perform,bool advance) const {
     int other_index;
 
     if(advance) {
@@ -783,7 +803,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match_star_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string, size_t position,filter<S,T>* filter, action<S,T>* to_perform,bool advance) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::match_star_recurse(tst_node<S,T>* current_node,typename string_type& current_key,const typename string_type & string, size_t position,filter<S,T,string_type>* filter, action<S,T,string_type>* to_perform,bool advance) const {
     int other_index;
 
     if(advance) {
@@ -851,8 +872,9 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
 
 /**************************** walk *************************************/
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(filter<S,T>* filter,action<S,T>* to_perform) const {
-    std::basic_string<S> key;
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ T tst<S,T,M,RW,string_type>::walk(filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const {
+    typename string_type key;
     walk_recurse(storage->get(root),key,filter,to_perform);
     if(to_perform) {
         return to_perform->result();
@@ -862,7 +884,8 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(fil
     }
 }
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(filter<S,T>* filter,action<S,T>* to_perform,const std::basic_string<S>& string) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ T tst<S,T,M,RW,string_type>::walk(filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform,const typename string_type & string) const {
     int index = root;
     int best_node = UNDEFINED_INDEX;
     tst_node<S,T>* start = find_node(&index,&best_node,string);
@@ -880,7 +903,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(fil
         
         index = start->next; 
         if(index!=UNDEFINED_INDEX) {
-            std::basic_string<S> key(string);            
+            typename string_type key(string);            
             walk_recurse(storage->get(index),key,filter,to_perform);
         }
     }
@@ -893,7 +916,8 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::walk(fil
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,filter<S,T>* filter,action<S,T>* to_perform) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::walk_recurse(tst_node<S,T>* current_node,typename string_type& current_key,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const {
     int other_index;
 
     other_index=current_node->left;
@@ -930,8 +954,9 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_
 
 /**************************** prefix_match *************************************/
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::prefix_match(const std::basic_string<S>& string,filter<S,T>* filter,action<S,T>* to_perform) const {
-    std::basic_string<S> current_key;
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ T tst<S,T,M,RW,string_type>::prefix_match(const typename string_type & string,filter<S,T,string_type>* filter,action<S,T,string_type>* to_perform) const {
+    typename string_type current_key;
     size_t position=0;
 
     T biggest=default_value;
@@ -995,7 +1020,8 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::prefix_m
 /**************************** scan *************************************/
 
 #ifdef SCANNER
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan(const std::basic_string<S>& string,action<S,T>* to_perform) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ T tst<S,T,M,RW,string_type>::scan(const typename string_type & string,action<S,T,string_type>* to_perform) {
     // Le premier caractère de la chaine ne correspondant pas à un match
     size_t si_non_match_start=0;
     // Le noeud pour lequel on a enregistré un match (noeud avec un objet associé)
@@ -1149,7 +1175,8 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan(con
     return to_perform->result();
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compute_backtrack(tst_node<S,T> *current_node,const std::basic_string<S>& string, int si_match_start, int si_match_end) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::compute_backtrack(tst_node<S,T> *current_node,const typename string_type & string, int si_match_start, int si_match_end) {
     if(current_node->backtrack==UNDEFINED_INDEX) {
         while(si_match_start<si_match_end) {
             current_node->backtrack=root;
@@ -1170,7 +1197,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compu
     }
 }
 
-template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_with_stop_chars(const std::basic_string<S>& string,const std::basic_string<S>& stop_chars,action<S,T>* to_perform) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ T tst<S,T,M,RW,string_type>::scan_with_stop_chars(const typename string_type & string,const typename string_type& stop_chars,action<S,T,string_type>* to_perform) const {
     // Le premier caractère de la chaine ne correspondant pas à un match
     size_t si_non_match_start=0;
     // Le noeud pour lequel on a enregistré un match (noeud avec un objet associé)
@@ -1313,7 +1341,8 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
 
 /**************************** file I/O *************************************/
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(std::istream& file) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::read(std::istream& file) {
     // We check the version number
     int version_length;
     file.read((char*)(&version_length),sizeof(size_t));
@@ -1346,7 +1375,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::read(
     }
 }
 
-template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::read_node(std::istream& file,RW* reader,int depth) {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ int tst<S,T,M,RW,string_type>::read_node(std::istream& file,RW* reader,int depth) {
     char bitmask = file.get();
 
     node_info<S,T> node_info;
@@ -1399,7 +1429,8 @@ template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::read_n
     return node_info.index;
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write(std::ostream& file) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::write(std::ostream& file) const {
     // We save the version number
     size_t version_length = strlen(TST_VERSION);
     file.write((char*)(&version_length),sizeof(size_t));
@@ -1417,7 +1448,8 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write
     }
 }
 
-template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::write_node(std::ostream& file,RW* writer,int index) const {
+template<typename S,typename T,typename M,typename RW, typename string_type>
+ void tst<S,T,M,RW,string_type>::write_node(std::ostream& file,RW* writer,int index) const {
     tst_node<S,T>* node = storage->get(index);
 
     char bitmask=0;

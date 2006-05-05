@@ -31,7 +31,7 @@
 #endif
 
 
-class CallableAction : public action<char,PythonReference> {
+class CallableAction : public action<char,PythonReference,std::basic_string<char> > {
 public:
     CallableAction(PythonReference perform,PythonReference result) : _perform(perform), _result(result) {
     }
@@ -60,7 +60,7 @@ private:
     PythonReference _perform,_result;
 };
 
-class CallableFilter : public filter<char,PythonReference> {
+class CallableFilter : public filter<char,PythonReference,std::basic_string<char> > {
 public:
     CallableFilter(PythonReference _callable) : callable(_callable) {
     }
@@ -77,7 +77,7 @@ private:
     PythonReference callable;
 };
 
-class DictAction : public action<char,PythonReference> {
+class DictAction : public action<char,PythonReference,std::basic_string<char> > {
 public:
     DictAction() : dict(PyDict_New(),0) {
     }
@@ -108,7 +108,7 @@ private:
     PythonReference dict;
 };
 
-class ListAction : public action<char,PythonReference> {
+class ListAction : public action<char,PythonReference,std::basic_string<char> > {
 public:
     ListAction() : list(PyList_New(0),0) {
     }
@@ -128,7 +128,7 @@ private:
     PythonReference list;
 };
 
-class TupleListAction : public action<char,PythonReference> {
+class TupleListAction : public action<char,PythonReference,std::basic_string<char> > {
 public:
     TupleListAction() : list(PyList_New(0),0){
     }
@@ -190,9 +190,6 @@ PythonReference ObjectSerializer::read(std::istream& file) {
     return result;
 }
 
-typedef memory_storage<char,PythonReference> MemoryStorage;
-typedef tst<char,PythonReference,MemoryStorage,ObjectSerializer> BaseTST;
-
 class TST;
 
 template <typename iterator_type> class TSTIterator {
@@ -223,14 +220,12 @@ template <typename iterator_type> class TSTIterator {
         iterator_type iterator;
 };
 
-typedef lexical_iterator<char,PythonReference,MemoryStorage,ObjectSerializer> lexical_iterator_type;
-typedef match_iterator<char,PythonReference,MemoryStorage,ObjectSerializer> close_match_iterator_type;
-typedef TSTIterator<lexical_iterator_type> TSTLexicalIterator;
-typedef TSTIterator<close_match_iterator_type> TSTCloseMatchIterator;
+typedef TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> > > TSTLexicalIterator;
+typedef TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> > > TSTCloseMatchIterator;
 
-class TST : public BaseTST {
+class TST : private tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> > {
 public:
-    TST() : BaseTST() {
+    TST() : tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >() {
     }
 
     virtual ~TST() {
@@ -298,19 +293,28 @@ public:
         }
     }
     
+    TSTLexicalIterator __iter__() {
+        return TSTLexicalIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::iterator());
+    }
+
     TSTLexicalIterator iterator() {
-        return TSTLexicalIterator(BaseTST::iterator());
+        return TSTLexicalIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::iterator());
     }
 
     TSTLexicalIterator iterator(const std::basic_string<char>& string) {
-        return TSTLexicalIterator(BaseTST::iterator(string));
+        return TSTLexicalIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::iterator(string));
     }
 
     TSTCloseMatchIterator close_match_iterator(const std::basic_string<char>& string, int distance) {
-        return TSTCloseMatchIterator(BaseTST::close_match_iterator(string,distance));
+        return TSTCloseMatchIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::close_match_iterator(string,distance));
     }
 
-    TSTLexicalIterator __iter__() {
-        return TSTLexicalIterator(BaseTST::iterator());
-    }
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::put; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::get; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::pack; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::walk; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::close_match; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::match; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::scan; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::scan_with_stop_chars;
 };

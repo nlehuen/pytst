@@ -55,16 +55,19 @@
 #define __PYTHON__BUILD__
 %include "tst.h"
 %include "fundamentals.h"
+%include "iterators.h"
 %include "memory_storage.h"
 
-%template(_TST)         tst<char,PythonReference,MemoryStorage,ObjectSerializer>;
-%template(_Action)      action<char,PythonReference>;
-%template(_Filter)      filter<char,PythonReference>;
+%template(_TST) tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >;
+%template(_Action) action<char,PythonReference,std::basic_string<char> >;
+%template(_Filter) filter<char,PythonReference,std::basic_string<char> >;
 
 %include "pythonTST.h"
 
-%template(TSTLexicalIterator)    TSTIterator<lexical_iterator_type>;
-%template(TSTCloseMatchIterator) TSTIterator<close_match_iterator_type>;
+%template(_lexical_iterator_type) lexical_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >;
+%template(_close_match_iterator_type) match_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >;
+%template(TSTLexicalIterator)    TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> > >;
+%template(TSTCloseMatchIterator) TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> > >;
 
 %{
 #include "pythonTST.h"

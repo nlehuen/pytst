@@ -134,13 +134,13 @@ class _TST(object):
 
     def iterator(*args):
         """
-        iterator(self) -> lexical_iterator<(char,PythonReference,MemoryStorage,ObjectSerializer)>
-        iterator(self, std::basic_string<(char)> string) -> lexical_iterator<(char,PythonReference,MemoryStorage,ObjectSerializer)>
+        iterator(self) -> _lexical_iterator_type
+        iterator(self, std::basic_string<(char)> string) -> _lexical_iterator_type
         """
         return _tst._TST_iterator(*args)
 
     def close_match_iterator(*args):
-        """close_match_iterator(self, std::basic_string<(char)> string, int distance) -> match_iterator<(char,PythonReference,MemoryStorage,ObjectSerializer)>"""
+        """close_match_iterator(self, std::basic_string<(char)> string, int distance) -> _close_match_iterator_type"""
         return _tst._TST_close_match_iterator(*args)
 
     def get_number_of_nodes(*args):
@@ -298,7 +298,7 @@ ObjectSerializer.read = new_instancemethod(_tst.ObjectSerializer_read,None,Objec
 ObjectSerializer_swigregister = _tst.ObjectSerializer_swigregister
 ObjectSerializer_swigregister(ObjectSerializer)
 
-class TST(_TST):
+class TST(object):
     """Proxy of C++ TST class"""
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
@@ -330,6 +330,10 @@ class TST(_TST):
         """__contains__(self, std::basic_string<(char)> string) -> PythonReference"""
         return _tst.TST___contains__(*args)
 
+    def __iter__(*args):
+        """__iter__(self) -> TSTLexicalIterator"""
+        return _tst.TST___iter__(*args)
+
     def iterator(*args):
         """
         iterator(self) -> TSTLexicalIterator
@@ -341,9 +345,46 @@ class TST(_TST):
         """close_match_iterator(self, std::basic_string<(char)> string, int distance) -> TSTCloseMatchIterator"""
         return _tst.TST_close_match_iterator(*args)
 
-    def __iter__(*args):
-        """__iter__(self) -> TSTLexicalIterator"""
-        return _tst.TST___iter__(*args)
+    def put(*args):
+        """put(self, std::basic_string<(char)> string, PythonReference data) -> PythonReference"""
+        return _tst.TST_put(*args)
+
+    def get(*args):
+        """get(self, std::basic_string<(char)> string) -> PythonReference"""
+        return _tst.TST_get(*args)
+
+    def pack(*args):
+        """pack(self)"""
+        return _tst.TST_pack(*args)
+
+    def walk(*args):
+        """
+        walk(self, _Filter filter, _Action to_perform) -> PythonReference
+        walk(self, _Filter filter, _Action to_perform, std::basic_string<(char)> string) -> PythonReference
+        """
+        return _tst.TST_walk(*args)
+
+    def close_match(*args):
+        """
+        close_match(self, std::basic_string<(char)> string, int maximum_distance, 
+            _Filter filter, _Action to_perform) -> PythonReference
+        """
+        return _tst.TST_close_match(*args)
+
+    def match(*args):
+        """match(self, std::basic_string<(char)> string, _Filter filter, _Action to_perform) -> PythonReference"""
+        return _tst.TST_match(*args)
+
+    def scan(*args):
+        """scan(self, std::basic_string<(char)> string, _Action to_perform) -> PythonReference"""
+        return _tst.TST_scan(*args)
+
+    def scan_with_stop_chars(*args):
+        """
+        scan_with_stop_chars(self, std::basic_string<(char)> string, std::basic_string<(char)> stop_chars, 
+            _Action to_perform) -> PythonReference
+        """
+        return _tst.TST_scan_with_stop_chars(*args)
 
 TST.write_to_file = new_instancemethod(_tst.TST_write_to_file,None,TST)
 TST.read_from_file = new_instancemethod(_tst.TST_read_from_file,None,TST)
@@ -351,11 +392,64 @@ TST.__getitem__ = new_instancemethod(_tst.TST___getitem__,None,TST)
 TST.__setitem__ = new_instancemethod(_tst.TST___setitem__,None,TST)
 TST.__delitem__ = new_instancemethod(_tst.TST___delitem__,None,TST)
 TST.__contains__ = new_instancemethod(_tst.TST___contains__,None,TST)
+TST.__iter__ = new_instancemethod(_tst.TST___iter__,None,TST)
 TST.iterator = new_instancemethod(_tst.TST_iterator,None,TST)
 TST.close_match_iterator = new_instancemethod(_tst.TST_close_match_iterator,None,TST)
-TST.__iter__ = new_instancemethod(_tst.TST___iter__,None,TST)
+TST.put = new_instancemethod(_tst.TST_put,None,TST)
+TST.get = new_instancemethod(_tst.TST_get,None,TST)
+TST.pack = new_instancemethod(_tst.TST_pack,None,TST)
+TST.walk = new_instancemethod(_tst.TST_walk,None,TST)
+TST.close_match = new_instancemethod(_tst.TST_close_match,None,TST)
+TST.match = new_instancemethod(_tst.TST_match,None,TST)
+TST.scan = new_instancemethod(_tst.TST_scan,None,TST)
+TST.scan_with_stop_chars = new_instancemethod(_tst.TST_scan_with_stop_chars,None,TST)
 TST_swigregister = _tst.TST_swigregister
 TST_swigregister(TST)
+
+class _lexical_iterator_type(object):
+    """Proxy of C++ _lexical_iterator_type class"""
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    state_left = _tst._lexical_iterator_type_state_left
+    state_current = _tst._lexical_iterator_type_state_current
+    state_right = _tst._lexical_iterator_type_state_right
+    state_end = _tst._lexical_iterator_type_state_end
+    def __init__(self, *args): 
+        """__init__(self, _TST t, std::basic_string<(char)> key, int root) -> _lexical_iterator_type"""
+        _tst._lexical_iterator_type_swiginit(self,_tst.new__lexical_iterator_type(*args))
+    def next(*args):
+        """next(self) -> value_type"""
+        return _tst._lexical_iterator_type_next(*args)
+
+    __swig_destroy__ = _tst.delete__lexical_iterator_type
+_lexical_iterator_type.next = new_instancemethod(_tst._lexical_iterator_type_next,None,_lexical_iterator_type)
+_lexical_iterator_type_swigregister = _tst._lexical_iterator_type_swigregister
+_lexical_iterator_type_swigregister(_lexical_iterator_type)
+
+class _close_match_iterator_type(object):
+    """Proxy of C++ _close_match_iterator_type class"""
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    state_left = _tst._close_match_iterator_type_state_left
+    state_current = _tst._close_match_iterator_type_state_current
+    state_skip_input = _tst._close_match_iterator_type_state_skip_input
+    state_skip_base = _tst._close_match_iterator_type_state_skip_base
+    state_right = _tst._close_match_iterator_type_state_right
+    state_end = _tst._close_match_iterator_type_state_end
+    def __init__(self, *args): 
+        """
+        __init__(self, _TST t, std::basic_string<(char)> string, int distance, 
+            int root) -> _close_match_iterator_type
+        """
+        _tst._close_match_iterator_type_swiginit(self,_tst.new__close_match_iterator_type(*args))
+    def next(*args):
+        """next(self) -> value_type"""
+        return _tst._close_match_iterator_type_next(*args)
+
+    __swig_destroy__ = _tst.delete__close_match_iterator_type
+_close_match_iterator_type.next = new_instancemethod(_tst._close_match_iterator_type_next,None,_close_match_iterator_type)
+_close_match_iterator_type_swigregister = _tst._close_match_iterator_type_swigregister
+_close_match_iterator_type_swigregister(_close_match_iterator_type)
 
 class TSTLexicalIterator(object):
     """Proxy of C++ TSTLexicalIterator class"""
