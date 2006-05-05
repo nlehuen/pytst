@@ -1,6 +1,7 @@
 include include/debug.h
 include include/fundamentals.h
 include include/iterators.h
+include include/qad_string.h
 include include/LICENSE
 include include/memory_storage.h
 include include/tst.h
