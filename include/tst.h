@@ -88,7 +88,7 @@ public:
     lexical_iterator<S,T,M,RW> iterator(const std::basic_string<S>& string) const {
         int current_index=root,best_node=UNDEFINED_INDEX;
         find_node(&current_index,&best_node,string);
-        return lexical_iterator<S,T,M,RW>(this,std::basic_string<S>(string,0,string.size()-1),current_index);
+        return lexical_iterator<S,T,M,RW>(this,string.substr(0,string.size()-1),current_index);
     }
 
     match_iterator<S,T,M,RW> close_match_iterator(const std::basic_string<S>& string,int distance) const {
@@ -126,7 +126,7 @@ private:
     void match_joker_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
     void match_star_recurse(tst_node<S,T>* current_node,std::basic_string<S>& current_key,const std::basic_string<S>& string,size_t position, filter<S,T>* filter,action<S,T>* to_perform,bool advance) const;
 
-    int build_node(node_info<S,T>* current_node,const std::basic_string<S>& string,int current_position);
+    int build_node(node_info<S,T>* current_node,const std::basic_string<S>& string,size_t current_position);
     void remove_node(int* current_index,const std::basic_string<S>& string,const size_t position);
     tst_node<S,T>* find_node(int* current_index,int* best_node, const std::basic_string<S>& string) const;
 
@@ -257,7 +257,7 @@ template<typename S,typename T,typename M,typename RW> tst_node<S,T>* tst<S,T,M,
     return 0;
 }
 
-template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::build_node(node_info<S,T>* current_node_info,const std::basic_string<S>& string,int current_position) {
+template<typename S,typename T,typename M,typename RW> int tst<S,T,M,RW>::build_node(node_info<S,T>* current_node_info,const std::basic_string<S>& string,size_t current_position) {
     int diff,result;
 
     if(current_node_info->node->c==0) {
@@ -595,7 +595,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::close
     }
 
     // ++KEY
-    current_key += current_node->c;
+    current_key.push_back(current_node->c);
 
     // CURRENT
     T data = current_node->data;
@@ -688,7 +688,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
 
                 while(true) {
                     if(c == current_node->c) {
-                        this_key += current_node->c; 
+                        this_key.push_back(current_node->c); 
 
                         if(position==(string.size()-1)) {
                             T data = current_node->data;
@@ -753,7 +753,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
 
     // MATCH_CURRENT
     // ++KEY
-    current_key += current_node->c;
+    current_key.push_back(current_node->c);
     
     if(position==(string.size()-1)) {
         T data = current_node->data;
@@ -810,7 +810,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::match
     match_recurse(current_node,current_key,string,position+1,filter,to_perform,false);
 
     // MATCH_CURRENT
-    current_key += current_node->c;
+    current_key.push_back(current_node->c);
     
     if(position==(string.size()-1)) {
         T data = current_node->data;
@@ -897,7 +897,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::walk_
     }
 
     // ++KEY
-    current_key += current_node->c;
+    current_key.push_back(current_node->c);
 
     T data = current_node->data;
     if(data!=default_value) {
@@ -940,7 +940,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::prefix_m
         c = string[position];
         ++position;
 
-        current_key += c;
+        current_key.push_back(c);
 
         while(current_index!=UNDEFINED_INDEX) {
             current_node=storage->get(current_index);
@@ -950,7 +950,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::prefix_m
                     biggest=current_node->data;
                     biggest_length=current_key.size();
                     if(filter) {
-                        biggest=filter->perform(std::basic_string<S>(current_key,0,biggest_length),0,biggest);
+                        biggest=filter->perform(current_key.substr(0,biggest_length),0,biggest);
                     }
                 }
                 if(position<string.size()) {
@@ -959,7 +959,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::prefix_m
                 }
                 else {
                     if(biggest!=default_value && to_perform) {
-                        to_perform->perform(std::basic_string<S>(current_key,0,biggest_length),0,biggest);
+                        to_perform->perform(current_key.substr(0,biggest_length),0,biggest);
                     }
                     current_index=current_node->next;
                     if(current_index!=UNDEFINED_INDEX) {
@@ -981,7 +981,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::prefix_m
     }
 
     if(biggest!=default_value && to_perform) {
-        to_perform->perform(std::basic_string<S>(current_key,0,biggest_length),0,biggest);
+        to_perform->perform(current_key.substr(0,biggest_length),0,biggest);
     }
 
     return to_perform->result();
@@ -1056,7 +1056,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan(con
                 int non_match_length = si_match_start-si_non_match_start;
                 if(non_match_length>0) {
                     // On l'envoie.
-                    to_perform->perform(std::basic_string<S>(string,si_non_match_start,non_match_length),-non_match_length,default_value);
+                    to_perform->perform(string.substr(si_non_match_start,non_match_length),-non_match_length,default_value);
                 }
 
                 // On envoie maintenant le match
@@ -1065,7 +1065,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan(con
                 tst_node<S,T> *match_node=storage->get(ni_best_match);
                 int match_length = match_node->position+1;
                 // On envoie le match
-                to_perform->perform(std::basic_string<S>(string,si_match_start,match_length),match_length,match_node->data);
+                to_perform->perform(string.substr(si_match_start,match_length),match_length,match_node->data);
                 // On repositionne la zone de non-match juste après la fin du match
                 si_non_match_start=si_match_start+match_length;
 
@@ -1138,7 +1138,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan(con
     if((si_current - si_non_match_start)>0) {
         // s'il y avait un non-match en cours
         // on l'envoie
-        to_perform->perform(std::basic_string<S>(string,si_non_match_start,si_current - si_non_match_start),-static_cast<int>(si_current - si_non_match_start),default_value);
+        to_perform->perform(string.substr(si_non_match_start,si_current - si_non_match_start),-static_cast<int>(si_current - si_non_match_start),default_value);
     }
 
     return to_perform->result();
@@ -1149,7 +1149,7 @@ template<typename S,typename T,typename M,typename RW> void tst<S,T,M,RW>::compu
         while(si_match_start<si_match_end) {
             current_node->backtrack=root;
             current_node->backtrack_match_index=UNDEFINED_INDEX;
-            find_node(&(current_node->backtrack),&(current_node->backtrack_match_index),std::basic_string<S>(string,si_match_start,si_match_end-si_match_start));
+            find_node(&(current_node->backtrack),&(current_node->backtrack_match_index),string.substr(si_match_start,si_match_end-si_match_start));
             if(current_node->backtrack==UNDEFINED_INDEX) {
                 ++si_match_start;
             }
@@ -1242,7 +1242,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
                 int non_match_length = si_match_start-si_non_match_start;
                 if(non_match_length>0) {
                     // On l'envoie.
-                    to_perform->perform(std::basic_string<S>(string,si_non_match_start,non_match_length),-non_match_length,default_value);
+                    to_perform->perform(string.substr(si_non_match_start,non_match_length),-non_match_length,default_value);
                 }
 
                 // On envoie maintenant le match
@@ -1251,7 +1251,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
                 tst_node<S,T> *match_node=storage->get(ni_best_match);
                 int match_length = match_node->position+1;
                 // On envoie le match
-                to_perform->perform(std::basic_string<S>(string,si_match_start,match_length),match_length,match_node->data);
+                to_perform->perform(string.substr(si_match_start,match_length),match_length,match_node->data);
                 // On repositionne la zone de non-match juste après la fin du match
                 si_non_match_start=si_match_start+match_length;
 
@@ -1299,7 +1299,7 @@ template<typename S,typename T,typename M,typename RW> T tst<S,T,M,RW>::scan_wit
     if((si_current - si_non_match_start)>0) {
         // s'il y avait un non-match en cours
         // on l'envoie
-        to_perform->perform(std::basic_string<S>(string,si_non_match_start,si_current - si_non_match_start),-static_cast<int>(si_current - si_non_match_start),default_value);
+        to_perform->perform(string.substr(si_non_match_start,si_current - si_non_match_start),-static_cast<int>(si_current - si_non_match_start),default_value);
     }
 
     return to_perform->result();
