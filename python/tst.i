@@ -28,22 +28,22 @@
    $result = $1.lend();
 }
 
-%typemap(in) const std::basic_string<char>&, std::basic_string<char>& {
+%typemap(in) const string_type&, string_type& {
     char* buffer;
     int size;
     PyString_AsStringAndSize($input,&buffer,&size);
-    $1 = new std::basic_string<char>(buffer,size);
+    $1 = new string_type(buffer,size);
 }
 
-%typemap(freearg) const std::basic_string<char>&, std::basic_string<char>& {
+%typemap(freearg) const string_type&, string_type& {
     delete $1;
 }
 
-%typemap(out) const std::basic_string<char>&, std::basic_string<char>& {
+%typemap(out) const string_type&, string_type& {
     $result = PyString_FromStringAndSize($1.data(),$1.size());
 }
 
-%typemap(ret) const std::basic_string<char>&, std::basic_string<char>& {
+%typemap(ret) const string_type&, string_type& {
     delete $1;
 }
 
@@ -58,16 +58,16 @@
 %include "iterators.h"
 %include "memory_storage.h"
 
-%template(_TST) tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >;
-%template(_Action) action<char,PythonReference,std::basic_string<char> >;
-%template(_Filter) filter<char,PythonReference,std::basic_string<char> >;
+%template(_TST) tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >;
+%template(_Action) action<char,PythonReference,string_type >;
+%template(_Filter) filter<char,PythonReference,string_type >;
 
 %include "pythonTST.h"
 
-%template(_lexical_iterator_type) lexical_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >;
-%template(_close_match_iterator_type) match_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >;
-%template(TSTLexicalIterator)    TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> > >;
-%template(TSTCloseMatchIterator) TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> > >;
+%template(_lexical_iterator_type) lexical_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >;
+%template(_close_match_iterator_type) match_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >;
+%template(TSTLexicalIterator)    TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type > >;
+%template(TSTCloseMatchIterator) TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type > >;
 
 %{
 #include "pythonTST.h"

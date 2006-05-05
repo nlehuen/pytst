@@ -30,8 +30,10 @@
 #include <boost/iostreams/filter/zlib.hpp>
 #endif
 
+typedef std::basic_string<char> string_type;
 
-class CallableAction : public action<char,PythonReference,std::basic_string<char> > {
+
+class CallableAction : public action<char,PythonReference,string_type > {
 public:
     CallableAction(PythonReference perform,PythonReference result) : _perform(perform), _result(result) {
     }
@@ -39,7 +41,7 @@ public:
     virtual ~CallableAction() {
     }
 
-    virtual void perform(const std::basic_string<char>& string,int remaining_distance,PythonReference data) {
+    virtual void perform(const string_type& string,int remaining_distance,PythonReference data) {
         if(_perform.get()==Py_None) {
             return;
         }
@@ -60,7 +62,7 @@ private:
     PythonReference _perform,_result;
 };
 
-class CallableFilter : public filter<char,PythonReference,std::basic_string<char> > {
+class CallableFilter : public filter<char,PythonReference,string_type > {
 public:
     CallableFilter(PythonReference _callable) : callable(_callable) {
     }
@@ -68,7 +70,7 @@ public:
     virtual ~CallableFilter() {
     }
 
-    virtual PythonReference perform(const std::basic_string<char>& string,int remaining_distance,PythonReference data) {
+    virtual PythonReference perform(const string_type& string,int remaining_distance,PythonReference data) {
         PythonReference tuple(Py_BuildValue("s#iO",string.data(),string.size(),remaining_distance,data.get()),0);
         return PythonReference(PyObject_CallObject(callable.get(),tuple.get()),0);
     }
@@ -77,7 +79,7 @@ private:
     PythonReference callable;
 };
 
-class DictAction : public action<char,PythonReference,std::basic_string<char> > {
+class DictAction : public action<char,PythonReference,string_type > {
 public:
     DictAction() : dict(PyDict_New(),0) {
     }
@@ -85,7 +87,7 @@ public:
     virtual ~DictAction() {
     }
 
-    virtual void perform(const std::basic_string<char>& string,int remaining_distance,PythonReference data) {
+    virtual void perform(const string_type& string,int remaining_distance,PythonReference data) {
         PythonReference key(Py_BuildValue("s#",string.data(),string.size()),0);
         
         PyObject* old_tuple=PyDict_GetItem(dict.get(),key.get());
@@ -108,7 +110,7 @@ private:
     PythonReference dict;
 };
 
-class ListAction : public action<char,PythonReference,std::basic_string<char> > {
+class ListAction : public action<char,PythonReference,string_type > {
 public:
     ListAction() : list(PyList_New(0),0) {
     }
@@ -116,7 +118,7 @@ public:
     virtual ~ListAction() {
     }
 
-    virtual void perform(const std::basic_string<char>& string,int remaining_distance,PythonReference data) {
+    virtual void perform(const string_type& string,int remaining_distance,PythonReference data) {
         PyList_Append(list.get(),data.get());
     }
 
@@ -128,7 +130,7 @@ private:
     PythonReference list;
 };
 
-class TupleListAction : public action<char,PythonReference,std::basic_string<char> > {
+class TupleListAction : public action<char,PythonReference,string_type > {
 public:
     TupleListAction() : list(PyList_New(0),0){
     }
@@ -136,7 +138,7 @@ public:
     virtual ~TupleListAction() {
     }
 
-    virtual void perform(const std::basic_string<char>& string,int remaining_distance,PythonReference data) {
+    virtual void perform(const string_type& string,int remaining_distance,PythonReference data) {
         PythonReference tuple(Py_BuildValue("s#iO",string.data(),string.size(),remaining_distance,data.get()),0);
         PyList_Append(list.get(),tuple.get());
     }
@@ -220,12 +222,12 @@ template <typename iterator_type> class TSTIterator {
         iterator_type iterator;
 };
 
-typedef TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> > > TSTLexicalIterator;
-typedef TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> > > TSTCloseMatchIterator;
+typedef TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type > > TSTLexicalIterator;
+typedef TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type > > TSTCloseMatchIterator;
 
-class TST : private tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> > {
+class TST : private tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type > {
 public:
-    TST() : tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >() {
+    TST() : tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >() {
     }
 
     virtual ~TST() {
@@ -272,19 +274,19 @@ public:
         return PythonReference();
     }
 
-    PythonReference __getitem__(const std::basic_string<char>& string) {
+    PythonReference __getitem__(const string_type& string) {
         return get(string);
     }
 
-    PythonReference __setitem__(const std::basic_string<char>& string,PythonReference data) {
+    PythonReference __setitem__(const string_type& string,PythonReference data) {
         return put(string,data);
     }
 
-    void __delitem__(const std::basic_string<char>& string) {
+    void __delitem__(const string_type& string) {
         remove(string);
     }
 
-    PythonReference __contains__(const std::basic_string<char>& string) {
+    PythonReference __contains__(const string_type& string) {
         if(contains(string)) {
             return PythonReference(Py_False);
         }
@@ -294,27 +296,27 @@ public:
     }
     
     TSTLexicalIterator __iter__() {
-        return TSTLexicalIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::iterator());
+        return TSTLexicalIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::iterator());
     }
 
     TSTLexicalIterator iterator() {
-        return TSTLexicalIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::iterator());
+        return TSTLexicalIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::iterator());
     }
 
-    TSTLexicalIterator iterator(const std::basic_string<char>& string) {
-        return TSTLexicalIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::iterator(string));
+    TSTLexicalIterator iterator(const string_type& string) {
+        return TSTLexicalIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::iterator(string));
     }
 
-    TSTCloseMatchIterator close_match_iterator(const std::basic_string<char>& string, int distance) {
-        return TSTCloseMatchIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::close_match_iterator(string,distance));
+    TSTCloseMatchIterator close_match_iterator(const string_type& string, int distance) {
+        return TSTCloseMatchIterator(tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::close_match_iterator(string,distance));
     }
 
-    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::put; 
-    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::get; 
-    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::pack; 
-    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::walk; 
-    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::close_match; 
-    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::match; 
-    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::scan; 
-    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,std::basic_string<char> >::scan_with_stop_chars;
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::put; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::get; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::pack; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::walk; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::close_match; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::match; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::scan; 
+    using tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >::scan_with_stop_chars;
 };

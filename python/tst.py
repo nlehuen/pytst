@@ -85,43 +85,43 @@ class _TST(object):
     def walk(*args):
         """
         walk(self, _Filter filter, _Action to_perform) -> PythonReference
-        walk(self, _Filter filter, _Action to_perform, std::basic_string<(char)> string) -> PythonReference
+        walk(self, _Filter filter, _Action to_perform, string_type string) -> PythonReference
         """
         return _tst._TST_walk(*args)
 
     def close_match(*args):
         """
-        close_match(self, std::basic_string<(char)> string, int maximum_distance, 
-            _Filter filter, _Action to_perform) -> PythonReference
+        close_match(self, string_type string, int maximum_distance, _Filter filter, 
+            _Action to_perform) -> PythonReference
         """
         return _tst._TST_close_match(*args)
 
     def prefix_match(*args):
-        """prefix_match(self, std::basic_string<(char)> string, _Filter filter, _Action to_perform) -> PythonReference"""
+        """prefix_match(self, string_type string, _Filter filter, _Action to_perform) -> PythonReference"""
         return _tst._TST_prefix_match(*args)
 
     def match(*args):
-        """match(self, std::basic_string<(char)> string, _Filter filter, _Action to_perform) -> PythonReference"""
+        """match(self, string_type string, _Filter filter, _Action to_perform) -> PythonReference"""
         return _tst._TST_match(*args)
 
     def get(*args):
-        """get(self, std::basic_string<(char)> string) -> PythonReference"""
+        """get(self, string_type string) -> PythonReference"""
         return _tst._TST_get(*args)
 
     def get_or_build(*args):
-        """get_or_build(self, std::basic_string<(char)> string, _Filter factory) -> PythonReference"""
+        """get_or_build(self, string_type string, _Filter factory) -> PythonReference"""
         return _tst._TST_get_or_build(*args)
 
     def put(*args):
-        """put(self, std::basic_string<(char)> string, PythonReference data) -> PythonReference"""
+        """put(self, string_type string, PythonReference data) -> PythonReference"""
         return _tst._TST_put(*args)
 
     def remove(*args):
-        """remove(self, std::basic_string<(char)> string)"""
+        """remove(self, string_type string)"""
         return _tst._TST_remove(*args)
 
     def contains(*args):
-        """contains(self, std::basic_string<(char)> string) -> bool"""
+        """contains(self, string_type string) -> bool"""
         return _tst._TST_contains(*args)
 
     def write(*args):
@@ -135,12 +135,12 @@ class _TST(object):
     def iterator(*args):
         """
         iterator(self) -> _lexical_iterator_type
-        iterator(self, std::basic_string<(char)> string) -> _lexical_iterator_type
+        iterator(self, string_type string) -> _lexical_iterator_type
         """
         return _tst._TST_iterator(*args)
 
     def close_match_iterator(*args):
-        """close_match_iterator(self, std::basic_string<(char)> string, int distance) -> _close_match_iterator_type"""
+        """close_match_iterator(self, string_type string, int distance) -> _close_match_iterator_type"""
         return _tst._TST_close_match_iterator(*args)
 
     def get_number_of_nodes(*args):
@@ -152,14 +152,11 @@ class _TST(object):
         return _tst._TST_get_default_value(*args)
 
     def scan(*args):
-        """scan(self, std::basic_string<(char)> string, _Action to_perform) -> PythonReference"""
+        """scan(self, string_type string, _Action to_perform) -> PythonReference"""
         return _tst._TST_scan(*args)
 
     def scan_with_stop_chars(*args):
-        """
-        scan_with_stop_chars(self, std::basic_string<(char)> string, std::basic_string<(char)> stop_chars, 
-            _Action to_perform) -> PythonReference
-        """
+        """scan_with_stop_chars(self, string_type string, string_type stop_chars, _Action to_perform) -> PythonReference"""
         return _tst._TST_scan_with_stop_chars(*args)
 
 _TST.pack = new_instancemethod(_tst._TST_pack,None,_TST)
@@ -190,10 +187,7 @@ class _Action(object):
     __repr__ = _swig_repr
     __swig_destroy__ = _tst.delete__Action
     def perform(*args):
-        """
-        perform(self, std::basic_string<(char)> string, int remaining_distance, 
-            PythonReference data)
-        """
+        """perform(self, string_type string, int remaining_distance, PythonReference data)"""
         return _tst._Action_perform(*args)
 
     def result(*args):
@@ -212,10 +206,7 @@ class _Filter(object):
     __repr__ = _swig_repr
     __swig_destroy__ = _tst.delete__Filter
     def perform(*args):
-        """
-        perform(self, std::basic_string<(char)> string, int remaining_distance, 
-            PythonReference data) -> PythonReference
-        """
+        """perform(self, string_type string, int remaining_distance, PythonReference data) -> PythonReference"""
         return _tst._Filter_perform(*args)
 
 _Filter.perform = new_instancemethod(_tst._Filter_perform,None,_Filter)
@@ -315,19 +306,19 @@ class TST(object):
         return _tst.TST_read_from_file(*args)
 
     def __getitem__(*args):
-        """__getitem__(self, std::basic_string<(char)> string) -> PythonReference"""
+        """__getitem__(self, string_type string) -> PythonReference"""
         return _tst.TST___getitem__(*args)
 
     def __setitem__(*args):
-        """__setitem__(self, std::basic_string<(char)> string, PythonReference data) -> PythonReference"""
+        """__setitem__(self, string_type string, PythonReference data) -> PythonReference"""
         return _tst.TST___setitem__(*args)
 
     def __delitem__(*args):
-        """__delitem__(self, std::basic_string<(char)> string)"""
+        """__delitem__(self, string_type string)"""
         return _tst.TST___delitem__(*args)
 
     def __contains__(*args):
-        """__contains__(self, std::basic_string<(char)> string) -> PythonReference"""
+        """__contains__(self, string_type string) -> PythonReference"""
         return _tst.TST___contains__(*args)
 
     def __iter__(*args):
@@ -337,20 +328,20 @@ class TST(object):
     def iterator(*args):
         """
         iterator(self) -> TSTLexicalIterator
-        iterator(self, std::basic_string<(char)> string) -> TSTLexicalIterator
+        iterator(self, string_type string) -> TSTLexicalIterator
         """
         return _tst.TST_iterator(*args)
 
     def close_match_iterator(*args):
-        """close_match_iterator(self, std::basic_string<(char)> string, int distance) -> TSTCloseMatchIterator"""
+        """close_match_iterator(self, string_type string, int distance) -> TSTCloseMatchIterator"""
         return _tst.TST_close_match_iterator(*args)
 
     def put(*args):
-        """put(self, std::basic_string<(char)> string, PythonReference data) -> PythonReference"""
+        """put(self, string_type string, PythonReference data) -> PythonReference"""
         return _tst.TST_put(*args)
 
     def get(*args):
-        """get(self, std::basic_string<(char)> string) -> PythonReference"""
+        """get(self, string_type string) -> PythonReference"""
         return _tst.TST_get(*args)
 
     def pack(*args):
@@ -360,30 +351,27 @@ class TST(object):
     def walk(*args):
         """
         walk(self, _Filter filter, _Action to_perform) -> PythonReference
-        walk(self, _Filter filter, _Action to_perform, std::basic_string<(char)> string) -> PythonReference
+        walk(self, _Filter filter, _Action to_perform, string_type string) -> PythonReference
         """
         return _tst.TST_walk(*args)
 
     def close_match(*args):
         """
-        close_match(self, std::basic_string<(char)> string, int maximum_distance, 
-            _Filter filter, _Action to_perform) -> PythonReference
+        close_match(self, string_type string, int maximum_distance, _Filter filter, 
+            _Action to_perform) -> PythonReference
         """
         return _tst.TST_close_match(*args)
 
     def match(*args):
-        """match(self, std::basic_string<(char)> string, _Filter filter, _Action to_perform) -> PythonReference"""
+        """match(self, string_type string, _Filter filter, _Action to_perform) -> PythonReference"""
         return _tst.TST_match(*args)
 
     def scan(*args):
-        """scan(self, std::basic_string<(char)> string, _Action to_perform) -> PythonReference"""
+        """scan(self, string_type string, _Action to_perform) -> PythonReference"""
         return _tst.TST_scan(*args)
 
     def scan_with_stop_chars(*args):
-        """
-        scan_with_stop_chars(self, std::basic_string<(char)> string, std::basic_string<(char)> stop_chars, 
-            _Action to_perform) -> PythonReference
-        """
+        """scan_with_stop_chars(self, string_type string, string_type stop_chars, _Action to_perform) -> PythonReference"""
         return _tst.TST_scan_with_stop_chars(*args)
 
 TST.write_to_file = new_instancemethod(_tst.TST_write_to_file,None,TST)
@@ -415,10 +403,14 @@ class _lexical_iterator_type(object):
     state_right = _tst._lexical_iterator_type_state_right
     state_end = _tst._lexical_iterator_type_state_end
     def __init__(self, *args): 
-        """__init__(self, _TST t, std::basic_string<(char)> key, int root) -> _lexical_iterator_type"""
+        """
+        __init__(self, tst<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,std::basic_string<(char)>)> t, 
+            std::basic_string<(char)> key, 
+            int root) -> _lexical_iterator_type
+        """
         _tst._lexical_iterator_type_swiginit(self,_tst.new__lexical_iterator_type(*args))
     def next(*args):
-        """next(self) -> value_type"""
+        """next(self) -> lexical_iterator<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,std::basic_string<(char)>)>::value_type"""
         return _tst._lexical_iterator_type_next(*args)
 
     __swig_destroy__ = _tst.delete__lexical_iterator_type
@@ -438,12 +430,14 @@ class _close_match_iterator_type(object):
     state_end = _tst._close_match_iterator_type_state_end
     def __init__(self, *args): 
         """
-        __init__(self, _TST t, std::basic_string<(char)> string, int distance, 
+        __init__(self, tst<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,std::basic_string<(char)>)> t, 
+            std::basic_string<(char)> string, 
+            int distance, 
             int root) -> _close_match_iterator_type
         """
         _tst._close_match_iterator_type_swiginit(self,_tst.new__close_match_iterator_type(*args))
     def next(*args):
-        """next(self) -> value_type"""
+        """next(self) -> match_iterator<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,std::basic_string<(char)>)>::value_type"""
         return _tst._close_match_iterator_type_next(*args)
 
     __swig_destroy__ = _tst.delete__close_match_iterator_type
