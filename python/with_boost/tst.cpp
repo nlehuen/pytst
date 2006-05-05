@@ -33,7 +33,7 @@ using namespace boost::python;
 
 template <class S, class T> class NullAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
-        void perform(const S* string,size_t string_length,int remaining_distance,T data) {
+        void perform(const std::basic_string<S>& string,int remaining_distance,T data) {
         }
         
         T result() {
@@ -44,11 +44,10 @@ template <class S, class T> class NullAction : public action<S,T>, public wrappe
 
 template <class S,class T> class DictAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
-        void perform(const S* string,size_t string_length,int remaining_distance,T data) {
-            str s(string,string_length);
-            object r = result_dict.get(s);
+        void perform(const std::basic_string<S>& string,int remaining_distance,T data) {
+            object r = result_dict.get(string);
             if(!r || (r[0] > remaining_distance) ) {
-                result_dict[s] = make_tuple(remaining_distance,data);
+                result_dict[string] = make_tuple(remaining_distance,data);
             }
         }        
         
@@ -62,9 +61,8 @@ template <class S,class T> class DictAction : public action<S,T>, public wrapper
 
 template <class S,class T> class TupleListAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
-        void perform(const S* string,size_t string_length,int remaining_distance,T data) {
-            str s(string,string_length);
-            result_list.append(make_tuple(s,remaining_distance,data));
+        void perform(const std::basic_string<S>& string,int remaining_distance,T data) {
+            result_list.append(make_tuple(string,remaining_distance,data));
         }        
         
         T result() {
@@ -77,7 +75,7 @@ template <class S,class T> class TupleListAction : public action<S,T>, public wr
 
 template <class S,class T> class ListAction : public action<S,T>, public wrapper< action<S,T> > {
     public:
-        void perform(const S* string,size_t string_length,int remaining_distance,T data) {
+        void perform(const std::basic_string<S>& string,int remaining_distance,T data) {
             result_list.append(data);
         }        
         
@@ -96,9 +94,9 @@ template <class S,class T> class CallableAction : public action<S,T>, public wra
             _result(result) {
         }
     
-        void perform(const S* string,size_t string_length,int remaining_distance,T data) {
+        void perform(const std::basic_string<S>& string,int remaining_distance,T data) {
             _perform(
-                str(string,string_length),
+                string,
                 remaining_distance,
                 data
             );
@@ -117,7 +115,7 @@ template <class S,class T> class CallableAction : public action<S,T>, public wra
 
 template <class S, class T> class NullFilter : public filter<S,T>, public wrapper< filter<S,T> > {
     public:
-        T perform(const S* string,size_t string_length,int remaining_distance,T data) {
+        T perform(const std::basic_string<S>& string,int remaining_distance,T data) {
             return data;
         }
 };
@@ -128,8 +126,8 @@ template <class S,class T> class CallableFilter : public filter<S,T>, public wra
             _perform(perform) {
         }
     
-        T perform(const S* string,size_t string_length,int remaining_distance,T data) {
-        	return _perform(str(string,string_length),remaining_distance,data);
+        T perform(const std::basic_string<S>& string,int remaining_distance,T data) {
+        	return _perform(string,remaining_distance,data);
         }        
     
     private:
@@ -220,9 +218,9 @@ typedef TSTIterator<close_match_iterator_type> TSTCloseMatchIterator;
 
 /********************* TST ***********************************/
 
-class TST : public string_tst<char,object,memory_storage<char,object>,ObjectSerializer> {
+class TST : public tst<char,object,memory_storage<char,object>,ObjectSerializer> {
     public:
-        TST() : string_tst<char,object,memory_storage<char,object>,ObjectSerializer>() {
+        TST() : tst<char,object,memory_storage<char,object>,ObjectSerializer>() {
         }
     
         void write_to_file(str file) const {
@@ -246,16 +244,25 @@ class TST : public string_tst<char,object,memory_storage<char,object>,ObjectSeri
             // in.close();
         }
 
+        object walk1(filter<char,object>* filter,action<char,object>* to_perform) const {
+            return walk(filter,to_perform);
+        }
+        
+        object walk2(filter<char,object>* filter,action<char,object>* to_perform,const std::basic_string<char>& string) const {
+            return walk(filter,to_perform,string);
+        }
+
+
         TSTLexicalIterator iterator1() {
-            return TSTLexicalIterator(string_tst<char,object,memory_storage<char,object>,ObjectSerializer>::iterator());
+            return TSTLexicalIterator(tst<char,object,memory_storage<char,object>,ObjectSerializer>::iterator());
         }
         
         TSTLexicalIterator iterator2(std::basic_string<char> s) {
-            return TSTLexicalIterator(string_tst<char,object,memory_storage<char,object>,ObjectSerializer>::iterator(s.c_str(),s.size()));
+            return TSTLexicalIterator(tst<char,object,memory_storage<char,object>,ObjectSerializer>::iterator(s));
         }
         
         TSTCloseMatchIterator close_match_iterator(std::basic_string<char> s, int distance) {
-            return TSTCloseMatchIterator(string_tst<char,object,memory_storage<char,object>,ObjectSerializer>::close_match_iterator(s.c_str(),s.size(),distance));
+            return TSTCloseMatchIterator(tst<char,object,memory_storage<char,object>,ObjectSerializer>::close_match_iterator(s,distance));
         }
 };
 
