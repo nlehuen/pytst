@@ -31,17 +31,17 @@ class lexical_iterator {
 
         class state_type {
             public:
-                state_type(const typename stringT & k,state_enum s,int n) : key(k), state(s), node(n) {
+                state_type(const stringT & k,state_enum s,int n) : key(k), state(s), node(n) {
                 }
             
-                typename stringT key;
+                stringT key;
                 state_enum state;
                 int node;
         };
 
         typedef std::pair< stringT, valueT* > value_type;
 
-        lexical_iterator(const tst<charT,valueT,storageT,serializerT,stringT> *t,const typename stringT & key,int root) : tree(t), stack() {
+        lexical_iterator(const tst<charT,valueT,storageT,serializerT,stringT> *t,const stringT & key,int root) : tree(t), stack() {
             stack.push(state_type(key,state_left,root));
         }
         
@@ -69,7 +69,7 @@ class lexical_iterator {
                         state.state = state_right;
 
                         if(node->next!=UNDEFINED_INDEX) {
-                            typename stringT new_key(state.key);
+                            stringT new_key(state.key);
                             new_key.push_back(node->c);
                             state_type new_state(
                                 new_key,
@@ -81,7 +81,7 @@ class lexical_iterator {
                         }
 
                         if(node->data != tree->default_value) {
-                            typename stringT new_key(state.key);
+                            stringT new_key(state.key);
                             new_key.push_back(node->c);
                             return value_type(
                                 new_key,
@@ -124,10 +124,10 @@ class match_iterator {
 
         class state_type {
             public:
-                state_type(const typename stringT & k,state_enum s,int p,int d,int n) : key(k), state(s), position(p), distance(d), node(n) {
+                state_type(const stringT & k,state_enum s,int p,int d,int n) : key(k), state(s), position(p), distance(d), node(n) {
                 }
             
-                typename stringT key;
+                stringT key;
                 state_enum state;
                 int position;
                 int distance;
@@ -136,7 +136,7 @@ class match_iterator {
 
         typedef std::pair< stringT, valueT* > value_type;
 
-        match_iterator(const tst<charT,valueT,storageT,serializerT,stringT> *t,const typename stringT & string,int distance,int root) : tree(t), stack(), base(string) {
+        match_iterator(const tst<charT,valueT,storageT,serializerT,stringT> *t,const stringT & string,int distance,int root) : tree(t), stack(), base(string) {
             stack.push(state_type(stringT(),state_left,0,distance,root));
         }
 
@@ -171,7 +171,7 @@ class match_iterator {
 
                         if(state.distance>=diff) {
                             if(node->next!=UNDEFINED_INDEX) {
-                                typename stringT new_key(state.key);
+                                stringT new_key(state.key);
                                 new_key.push_back(node->c);
                                 state_type new_state = state_type(
                                     new_key,
@@ -260,7 +260,7 @@ class match_iterator {
     private:
         const tst<charT,valueT,storageT,serializerT,stringT> *tree;
         std::stack< state_type > stack;
-        const typename stringT base;
+        const stringT base;
 };
 
 #endif

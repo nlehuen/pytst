@@ -113,7 +113,7 @@ class action {
 public:
     action() {}
     virtual ~action() {}
-    virtual void perform(const typename stringT & string,int remaining_distance,valueT data)=0;
+    virtual void perform(const stringT & string,int remaining_distance,valueT data)=0;
     virtual valueT result()=0;
 };
 
@@ -122,7 +122,7 @@ class filter {
 public:
     filter() {}
     virtual ~filter() {}
-    virtual valueT perform(const typename stringT & string,int remaining_distance,valueT data)=0;
+    virtual valueT perform(const stringT & string,int remaining_distance,valueT data)=0;
 };
 
 template <typename valueT>

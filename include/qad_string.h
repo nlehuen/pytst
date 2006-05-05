@@ -98,10 +98,10 @@ class qad_string {
          */
         void resize(size_t size) {
             if(!_shared) {
-                throw std::exception("This string is not mutable");
+                throw std::exception();
             }
             if(size>_size) {
-                throw std::exception("This string cannot be expanded");
+                throw std::exception();
             }
             _size=size;
         }
@@ -111,8 +111,9 @@ class qad_string {
          * then the result value will be equal to size().
          */
         size_t find(charT c) const {
+            size_t iP = _start;
             size_t endP = _start+_size;
-            for(size_t iP=_start;iP<endP;iP++) {
+            for(;iP<endP;iP++) {
                 if(_array[iP]==c) {
                     return iP;
                 }
@@ -173,7 +174,7 @@ void qad_string<charT>::push_back(charT c) {
         }
 
         // We ensure the array size is a power of 2.
-        if((test2P&-test2P)!=test2P) throw std::exception("WTF?");
+        if((test2P&-test2P)!=test2P) throw std::exception();
 
         // Creates a new array and copy it.
         charT* new_array = new charT[test2P];
