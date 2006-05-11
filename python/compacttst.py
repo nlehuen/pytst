@@ -138,14 +138,11 @@ class compact_tst(object):
             # On est arrivé au bout de la clé, mais pas au bout des caractères
             # du noeud
             assert index == len(string)
-            assert 0 < local_index < node.number_of_chars
             
             # On est au bout de la clé, mais avant la fin des caractères du
-            # noeud ; il faut donc splitter, mais au caractère juste avant celui
-            # obtenu, et ça je n'ai aucune idée pourquoi ! 
+            # noeud ; il faut donc splitter, mais au local_index précédent car
+            # on a bêtement avancé les deux à la fois aux lignes 95-96 
             node = self._split_node(node,local_index-1)
-            
-            assert node.chars[-1] == string[index-1]
 
             # On stocke ensuite la clé et la valeur
             node.key = string
