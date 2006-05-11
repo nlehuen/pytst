@@ -151,7 +151,7 @@ class compact_tst(object):
             
             # On est au bout de la clé, mais avant la fin des caractères du
             # noeud ; il faut donc splitter, mais au local_index précédent car
-            # on a bêtement avancé les deux à la fois aux lignes 95-96 
+            # on a bêtement avancé les deux à la fois aux lignes 105 - 106 
             node = self._split_node(node,local_index-1)
 
             # On stocke ensuite la clé et la valeur
