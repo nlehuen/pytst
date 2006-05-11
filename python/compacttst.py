@@ -2,11 +2,17 @@
 from array import array
 import sys
 
+# Tant qu'à faire vu qu'ici le nombre de caractères par noeud est complètement
+# dynamique, on peut se lâcher, mettre 1024 caractère, ce qui revient à une
+# implémentation de Patricia avec en plus le partage des caractères de préfixe
+# commun
 CHARS_PER_NODE = 1024
 
-
-
 class tst_node(object):
+    """ classe représentant un noeud du TST """
+
+    # __slots__ est une optimisation permettant de créer des objets Python
+    # non dynamiques, ce qui utilise moins de mémoire
     __slots__ = ['chars','key','data','next','left','right']
 
     def __init__(self):
@@ -28,10 +34,13 @@ class tst_node(object):
         )
 
 class compact_tst(object):
+    """ Implémentation d'un TST compact """
+
     def __init__(self):
         self.root = None
 
     def __getitem__(self,string):
+        """ Lit dans l'arbre selon la syntaxe tst[string] """
         node = self.root
         index = 0
         
@@ -76,7 +85,9 @@ class compact_tst(object):
         # node is None ==> pas de match
         return None
 
+    
     def __setitem__(self,string,value):
+        """ Ecrit dans l'arbre selon la syntaxe tst[string] = value """
         self.root = self._insert(string,value,0,self.root)
         assert self[string] == value
 
