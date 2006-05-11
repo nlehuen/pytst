@@ -7,6 +7,8 @@ CHARS_PER_NODE = 1024
 
 
 class tst_node(object):
+    __slots__ = ['number_of_chars','chars','key','data','next','left','right']
+
     def __init__(self):
         self.number_of_chars = 0
         self.chars = array('c')
@@ -52,6 +54,7 @@ class compact_tst(object):
                 # il n'y a donc pas de match possible (sinon il y aurait eu
                 # split à l'insertion)
                 return None
+            
             elif local_index == node.number_of_chars - 1:
                 # différence au dernier caractère du noeud
                 # on va donc aller soit à droite, soit à gauche
@@ -76,7 +79,7 @@ class compact_tst(object):
 
     def __setitem__(self,string,value):
         self.root = self._insert(string,value,0,self.root)
-        assert self[string] == value, "%s : %s != %s"%(string,value,self[string])
+        assert self[string] == value
 
     def _insert(self,string,value,index,node):
         if node is None:
@@ -94,65 +97,83 @@ class compact_tst(object):
             else:
                 break
         
-        if local_index < node.number_of_chars-1:
-            # On a trouvé un point de divergence avant la fin des caractères du
-            # noeud, il va donc falloir splitter
-            
-            # On crée un nouveau noeud
-            new_node = tst_node()
-            
-            # On prend tout le début du segment de clé du noeud jusqu'à y compris
-            # le caractère qui diffère et on les met dans le nouveau noeud
-            new_node.number_of_chars = local_index + 1
-            new_node.chars = node.chars[0:local_index + 1]
-
-            # La suite de ce nouveau noeud est l'ancien noeud
-            new_node.next = node
-
-            # On adapte la chaîne dans l'ancien noeud, c'est le restant de
-            # la chaîne après le split
-            node.number_of_chars = node.number_of_chars - local_index - 1
-            node.chars = node.chars[local_index + 1:]
+        if diff!=0:
+            assert local_index < node.number_of_chars and index<len(string)
+        
+            # On a trouvé un point de divergence avant le dernier caractère du
+            # noeud, et de la clé, il va donc falloir splitter
+            if local_index < node.number_of_chars - 1:
+                node = self._split_node(node,local_index)
             
             # Maintenant que le split est fait, on peut continuer à positionner
             # la nouvelle clé
             if diff>0:
-                new_node.left = self._new_node(string,value,index)
-            elif diff<0:
-                new_node.right = self._new_node(string,value,index)
-            else:
-                assert index == len(string)
-                new_node.key = string
-                new_node.data = value
-
-            return new_node
-
-        elif local_index == node.number_of_chars-1:
-            # Il y a divergence au dernier caractère, pas besoin de splitter
-            if diff>0:
                 node.left = self._insert(string,value,index,node.left)
-            elif diff<0:
-                node.right = self._insert(string,value,index,node.right)
             else:
-                assert index == len(string)
-                node.key = string
-                node.data = value
-            
+                node.right = self._insert(string,value,index,node.right)
+
+            # Puisqu'on vient d'effectuer une opération qui a pu perturber
+            # l'équilibre du noeud, on le rétablit. Bien sûr cela peut changer
+            # le noeud devant être retourné à l'appelant.
+            node = self._balance_node(node)
+
             return node
 
         elif local_index == node.number_of_chars:
-            assert diff == 0
-            
             # On est arrivé au bout des caractères du noeud
-            if index==len(string):
-                # si on est en fin de chaîne, on stocke la donnée
+            # sans différence
+            
+            if index == len(string):
+                # On est également au bout de la clé
+                # C'est qu'on a de la chance !
                 node.key = string
                 node.data = value
-                return node
             else:
-                # on n'est pas en fin de chaîne, on continue
+                # On n'est pas au bout de la clé
                 node.next = self._insert(string,value,index,node.next)
-                return node
+        
+            return node
+
+        else:
+            # On est arrivé au bout de la clé, mais pas au bout des caractères
+            # du noeud
+            assert index == len(string)
+            assert 0 < local_index < node.number_of_chars
+            
+            # On est au bout de la clé, mais avant la fin des caractères du
+            # noeud ; il faut donc splitter, mais au caractère juste avant celui
+            # obtenu, et ça je n'ai aucune idée pourquoi ! 
+            node = self._split_node(node,local_index-1)
+            
+            assert node.chars[-1] == string[index-1]
+
+            # On stocke ensuite la clé et la valeur
+            node.key = string
+            node.data = value
+            
+            return node
+
+    def _split_node(self,node,local_index):
+        assert local_index < node.number_of_chars
+        assert node.number_of_chars == len(node.chars)
+        
+        # On crée un nouveau noeud
+        new_node = tst_node()
+        
+        # On prend tout le début du segment de clé du noeud y compris
+        # le caractère qui diffère et on les met dans le nouveau noeud
+        new_node.number_of_chars = local_index + 1
+        new_node.chars = node.chars[0:local_index + 1]
+
+        # La suite de ce nouveau noeud est l'ancien noeud
+        new_node.next = node
+
+        # On adapte la chaîne dans l'ancien noeud, c'est le restant de
+        # la chaîne après le split
+        node.number_of_chars = node.number_of_chars - local_index - 1
+        node.chars = node.chars[local_index + 1:]
+        
+        return new_node
 
     def _new_node(self,string,value,index):
         length = min(len(string)-index,CHARS_PER_NODE)
@@ -171,6 +192,10 @@ class compact_tst(object):
             new_node.data = value
         
         return new_node
+    
+    def _balance_node(self,node):
+        # ici vérifier le critère AVL et faire une rotation si nécessaire
+        return node
         
 if __name__ == '__main__':
     t = compact_tst()
@@ -191,10 +216,7 @@ if __name__ == '__main__':
     random.shuffle(data)
     
     for i, d in enumerate(data):
-        print i,d
         t[str(d)] = i
-#        for j, d2 in enumerate(data[:i]):
-#            assert t[str(d2)] == j, "%s=%s ! %s => %s != %s"%(d,i,d2,j,t[str(d2)])
     
     for i,d in enumerate(data):
         assert t[str(d)] == i, "%s => %s != %s"%(d,i,t[str(d)]) 
