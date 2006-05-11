@@ -15,7 +15,10 @@ class tst_node(object):
     # non dynamiques, ce qui utilise moins de mémoire
     __slots__ = ['chars','key','data','next','left','right']
 
+    instances = 0
+
     def __init__(self):
+        tst_node.instances += 1
         self.chars = array('c')
         self.key = None # inutile, just là pour le debug
         self.data = None
@@ -203,6 +206,17 @@ class compact_tst(object):
         return node
         
 if __name__ == '__main__':
+    urls = compact_tst()
+    try:
+        chars = 0
+        for n, l in enumerate(file('url-list.txt','rb')):
+            if n%1000==0 : print n
+            key = l.rstrip()
+            chars += len(key)
+            urls[key] = 0
+    finally:    
+        print tst_node.instances, "noeuds crees pour", n+1, "lignes", chars, "caracteres"
+
     t = compact_tst()
     t['nicolas'] = 'nicolas'
     t['laurent'] = 'laurent'
