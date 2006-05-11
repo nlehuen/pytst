@@ -2,7 +2,7 @@
 from array import array
 import sys
 
-CHARS_PER_NODE = 4
+CHARS_PER_NODE = 1024
 
 
 
@@ -101,20 +101,21 @@ class compact_tst(object):
             # On crée un nouveau noeud
             new_node = tst_node()
             
-            # On prend les premiers caractères du tableau
-            # et on les met dans le nouveau noeud
+            # On prend tout le début du segment de clé du noeud jusqu'à y compris
+            # le caractère qui diffère et on les met dans le nouveau noeud
             new_node.number_of_chars = local_index + 1
             new_node.chars = node.chars[0:local_index + 1]
+
+            # La suite de ce nouveau noeud est l'ancien noeud
             new_node.next = node
-            assert len(new_node.chars) == new_node.number_of_chars 
 
             # On adapte la chaîne dans l'ancien noeud, c'est le restant de
             # la chaîne après le split
             node.number_of_chars = node.number_of_chars - local_index - 1
             node.chars = node.chars[local_index + 1:]
-            assert len(node.chars) == node.number_of_chars
             
-            # Maintenant que le split est fait, on recommence
+            # Maintenant que le split est fait, on peut continuer à positionner
+            # la nouvelle clé
             if diff>0:
                 new_node.left = self._new_node(string,value,index)
             elif diff<0:
@@ -158,11 +159,14 @@ class compact_tst(object):
 
         new_node = tst_node()
         new_node.number_of_chars = length
+        # On remplit le segment du noeud avec les caractères
         new_node.chars.extend(string[index:index+length])
         
         if index+length<len(string):
+            # s'il reste des caractères dans la clé après ce segment...
             new_node.next = self._new_node(string,value,index+length)
         else:
+            # sinon on met la clé et la donnée dans ce noeud
             new_node.key = string
             new_node.data = value
         
@@ -187,9 +191,10 @@ if __name__ == '__main__':
     random.shuffle(data)
     
     for i, d in enumerate(data):
+        print i,d
         t[str(d)] = i
-        for j, d2 in enumerate(data[:i]):
-            assert t[str(d2)] == j, "%s=%s ! %s => %s != %s"%(d,i,d2,j,t[str(d2)])
+#        for j, d2 in enumerate(data[:i]):
+#            assert t[str(d2)] == j, "%s=%s ! %s => %s != %s"%(d,i,d2,j,t[str(d2)])
     
     for i,d in enumerate(data):
         assert t[str(d)] == i, "%s => %s != %s"%(d,i,t[str(d)]) 
