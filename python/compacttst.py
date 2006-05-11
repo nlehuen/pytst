@@ -7,10 +7,9 @@ CHARS_PER_NODE = 1024
 
 
 class tst_node(object):
-    __slots__ = ['number_of_chars','chars','key','data','next','left','right']
+    __slots__ = ['chars','key','data','next','left','right']
 
     def __init__(self):
-        self.number_of_chars = 0
         self.chars = array('c')
         self.key = None # inutile, just là pour le debug
         self.data = None
@@ -41,7 +40,7 @@ class compact_tst(object):
     
             # On avance tant qu'il y a égalité
             diff = 0
-            while local_index < node.number_of_chars and index < len(string):
+            while local_index < len(node.chars) and index < len(string):
                 diff = cmp(string[index],node.chars[local_index]) 
                 if diff == 0:
                     local_index += 1
@@ -49,13 +48,13 @@ class compact_tst(object):
                 else:
                     break
             
-            if local_index < node.number_of_chars - 1:
+            if local_index < len(node.chars) - 1:
                 # on s'est arrêté avant le dernier caractère du noeud,
                 # il n'y a donc pas de match possible (sinon il y aurait eu
                 # split à l'insertion)
                 return None
             
-            elif local_index == node.number_of_chars - 1:
+            elif local_index == len(node.chars) - 1:
                 # différence au dernier caractère du noeud
                 # on va donc aller soit à droite, soit à gauche
                 if diff>0:
@@ -89,7 +88,7 @@ class compact_tst(object):
         
         # On avance tant qu'il y a égalité
         diff = 0
-        while local_index < node.number_of_chars and index<len(string):
+        while local_index < len(node.chars) and index<len(string):
             diff = cmp(string[index],node.chars[local_index])
             if diff == 0:
                 local_index += 1
@@ -98,11 +97,11 @@ class compact_tst(object):
                 break
         
         if diff!=0:
-            assert local_index < node.number_of_chars and index<len(string)
+            assert local_index < len(node.chars) and index<len(string)
         
             # On a trouvé un point de divergence avant le dernier caractère du
             # noeud, et de la clé, il va donc falloir splitter
-            if local_index < node.number_of_chars - 1:
+            if local_index < len(node.chars) - 1:
                 node = self._split_node(node,local_index)
             
             # Maintenant que le split est fait, on peut continuer à positionner
@@ -119,7 +118,7 @@ class compact_tst(object):
 
             return node
 
-        elif local_index == node.number_of_chars:
+        elif local_index == len(node.chars):
             # On est arrivé au bout des caractères du noeud
             # sans différence
             
@@ -151,15 +150,13 @@ class compact_tst(object):
             return node
 
     def _split_node(self,node,local_index):
-        assert local_index < node.number_of_chars
-        assert node.number_of_chars == len(node.chars)
+        assert local_index < len(node.chars)
         
         # On crée un nouveau noeud
         new_node = tst_node()
         
         # On prend tout le début du segment de clé du noeud y compris
         # le caractère qui diffère et on les met dans le nouveau noeud
-        new_node.number_of_chars = local_index + 1
         new_node.chars = node.chars[0:local_index + 1]
 
         # La suite de ce nouveau noeud est l'ancien noeud
@@ -167,17 +164,16 @@ class compact_tst(object):
 
         # On adapte la chaîne dans l'ancien noeud, c'est le restant de
         # la chaîne après le split
-        node.number_of_chars = node.number_of_chars - local_index - 1
         node.chars = node.chars[local_index + 1:]
         
         return new_node
 
     def _new_node(self,string,value,index):
-        length = min(len(string)-index,CHARS_PER_NODE)
-
         new_node = tst_node()
-        new_node.number_of_chars = length
-        # On remplit le segment du noeud avec les caractères
+
+        # On remplit le segment du noeud avec un maximum de caractères de la clé
+        # en partant de l'index donné
+        length = min(len(string)-index,CHARS_PER_NODE)
         new_node.chars.extend(string[index:index+length])
         
         if index+length<len(string):
@@ -191,7 +187,8 @@ class compact_tst(object):
         return new_node
     
     def _balance_node(self,node):
-        # ici vérifier le critère AVL et faire une rotation si nécessaire
+        # ici vérifier le critère AVL et faire une rotation LL, RR, RL ou LR
+        # si nécessaire
         return node
         
 if __name__ == '__main__':
