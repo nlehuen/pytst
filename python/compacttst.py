@@ -11,7 +11,7 @@ import sys
 
 # Tant qu'à faire vu qu'ici le nombre de caractères par noeud est complètement
 # dynamique, on peut se lâcher, mettre 1024 caractère ou plus
-CHARS_PER_NODE = 16
+CHARS_PER_NODE = 10240
 
 class tst_node(object):
     """ classe représentant un noeud du TST """
@@ -140,6 +140,10 @@ class compact_tst(object):
             if local_index < len(node.chars) - 1:
                 node, balance = self._split_node(node,local_index)
                 assert balance.height == self._compute_balance(node).height
+                # On peut essayer de joindre le noeud suivant au noeud d'après
+                # car le split peut permettre de compléter un noeud pas totalement
+                # remplit
+                node.next, discard = self._cat_node(node.next,None)
 
             # Maintenant que le split est fait, on peut continuer à positionner
             # la nouvelle clé
@@ -188,6 +192,10 @@ class compact_tst(object):
             else:
                 # On n'est pas au bout de la clé
                 node.next, next_balance = self._insert(string,value,index,node.next)
+    
+                # Suite à un split du noeud suivant, il est peut-être possible
+                # de le recoller à ce noeud ?
+                node, discard = self._cat_node(node, None)
         
             return node, self._compute_balance(node)
 
@@ -200,6 +208,9 @@ class compact_tst(object):
             # noeud ; il faut donc splitter, mais au local_index précédent car
             # on a bêtement avancé les deux à la fois aux lignes 105 - 106 
             node, balance = self._split_node(node,local_index-1)
+
+            # On peut essayer de joindre le noeud suivant au noeud d'après
+            node.next, discard = self._cat_node(node.next,None)
 
             # On stocke ensuite la clé et la valeur
             node.data = value
@@ -338,7 +349,7 @@ class compact_tst(object):
         
         return new_node, balance_info(height=1)
 
-    def _cat_node(self,node,balance):
+    def _cat_node(self,node,balance,debug=False):
         """ Tente de ressouder un noeud à son noeud suivant si cela est
             possible """
         if node is None:
@@ -355,8 +366,10 @@ class compact_tst(object):
             # - le noeud actuel ne contient pas de données (idem)
             # - il y a de la place pour les caractères du noeud courant dans
             # le noeud suivant
+            if debug: print "CAT", node, node.next,
             node.chars.extend(node.next.chars)
             node.next.chars = node.chars
+            if debug: print '=>',node.next
             return node.next, balance_info(height=1)
         else:
             return node, balance             
@@ -394,13 +407,22 @@ class compact_tst(object):
         self.stats(node.right,acc)
         
         return acc
+    
+    def cat(self,node,debug=False):
+    	""" Méthode forçant la concaténation des noeuds, inutile sauf en cas de bug. """
+        if node == None : return
+        node.left = self.cat(node.left,debug)
+        node.next = self.cat(node.next,debug)
+        node.right = self.cat(node.right,debug)
+        node, discard = self._cat_node(node,None,debug)
+        return node
         
 if __name__ == '__main__':
     urls = compact_tst()
     try:
         chars = 0
         for n, l in enumerate(file('url-list.txt','rb')):
-            if n == 100000: break
+            if n == 99999: break
             if n%1000==0 : print n
             key = l.rstrip()
             chars += len(key)
@@ -416,8 +438,22 @@ if __name__ == '__main__':
                 100.0 * stats[key] / stats['nodes']
             ) 
 
-    for n, l in enumerate(file('url_1000000.csv','rb')):
-        if n == 100000: break
+    urls.root = urls.cat(urls.root,True)
+
+	# On recalcule les stats après concaténation forcée des noeuds.
+	# Si qqchose a changé c'est un bug !
+    stats = {}
+    urls.stats(urls.root,stats)
+    print n+1, "lignes", chars, "caracteres"
+    for key in sorted(stats.keys()):
+        print "%16s\t%6i\t%6.2f%%"%(
+            key,
+            stats[key],
+            100.0 * stats[key] / stats['nodes']
+        ) 
+
+    for n, l in enumerate(file('url-list.txt','rb')):
+        if n == 99999: break
         if n%1000==0 : print 'Check ',n
         key = l.rstrip()
         assert urls[key] == 0
