@@ -1,6 +1,10 @@
 # -*- coding: iso-8859-1 -*-
-import psyco
-psyco.full()
+try:
+    import psyco
+except ImportError:
+    pass
+else:
+    psyco.full()
 
 from array import array
 import sys
@@ -395,7 +399,7 @@ if __name__ == '__main__':
     urls = compact_tst()
     try:
         chars = 0
-        for n, l in enumerate(file('url_1000000.csv','rb')):
+        for n, l in enumerate(file('url-list.txt','rb')):
             if n == 100000: break
             if n%1000==0 : print n
             key = l.rstrip()
