@@ -53,7 +53,7 @@ class balance_info(object):
             self.left_balance,
             self.right_balance
         )
-7
+
 class compact_tst(object):
     """ Implémentation d'un TST compact """
 
