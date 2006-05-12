@@ -11,7 +11,7 @@ import sys
 
 # Tant qu'à faire vu qu'ici le nombre de caractères par noeud est complètement
 # dynamique, on peut se lâcher, mettre 1024 caractère ou plus
-CHARS_PER_NODE = 10240
+CHARS_PER_NODE = 8
 
 class tst_node(object):
     """ classe représentant un noeud du TST """
@@ -90,7 +90,6 @@ class compact_tst(object):
             
             elif local_index == len(node.chars) - 1:
                 # différence au dernier caractère du noeud
-                # on va donc aller soit à droite, soit à gauche
                 if diff>0:
                     node = node.left
                 elif diff<0:
