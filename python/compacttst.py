@@ -1,12 +1,13 @@
 # -*- coding: iso-8859-1 -*-
+import psyco
+psyco.full()
+
 from array import array
 import sys
 
 # Tant qu'à faire vu qu'ici le nombre de caractères par noeud est complètement
-# dynamique, on peut se lâcher, mettre 1024 caractère, ce qui revient à une
-# implémentation de Patricia avec en plus le partage des caractères de préfixe
-# commun
-CHARS_PER_NODE = 1024
+# dynamique, on peut se lâcher, mettre 1024 caractère ou plus
+CHARS_PER_NODE = 16
 
 class tst_node(object):
     """ classe représentant un noeud du TST """
@@ -108,7 +109,7 @@ class compact_tst(object):
     
     def __setitem__(self,string,value):
         """ Ecrit dans l'arbre selon la syntaxe tst[string] = value """
-        self.root, balance = self._insert(string,value,0,self.root)
+        self.root, discard = self._insert(string,value,0,self.root)
         assert self[string] == value
 
     def _insert(self,string,value,index,node):
@@ -150,6 +151,7 @@ class compact_tst(object):
                 balance.did_balance = right_balance.did_balance
                 left_balance = self._compute_balance(node.left)
 
+            # On calcule la nouvelle balance en tenant compte des modifs
             balance.height = (len(node.chars)>1 and 1) or max(left_balance.height, right_balance.height) + 1
             balance.balance = left_balance.height - right_balance.height
             balance.left_balance = left_balance.balance
@@ -158,13 +160,16 @@ class compact_tst(object):
             assert balance.height == self._compute_balance(node).height, "%s != %s --- %s, %s"%(balance, self._compute_balance(node), left_balance, right_balance)
 
             if not balance.did_balance:
+                # On effectue la balance si elle n'a pa déjà été effectué
                 node, balance = self._balance(node,balance)
 
-            if len(node.chars)!=1:
-                balance.height = 1
-                balance.balance = 0
-                balance.left_balance = 0
-                balance.right_balance = 0
+                if len(node.chars)!=1:
+                    # Si à l'issue de la balance on se retrouve avec plusieurs
+                    # caractères, alors la hauteur du nouveau noeud est 1.
+                    balance.height = 1
+                    balance.balance = 0
+                    balance.left_balance = 0
+                    balance.right_balance = 0
 
             return node, balance
 
@@ -201,10 +206,13 @@ class compact_tst(object):
         
         if node is not None:
             if len(node.chars)>1:
+                # La hauteur d'un noeud contenant plusieurs caractères
+                # est forcément 1
                 return balance_info(height=1)
             else:
                 balance = balance_info()
-    
+
+                # Récursion sur les noeuds fils
                 left_balance = self._compute_balance(node.left)
                 right_balance = self._compute_balance(node.right)
     
@@ -216,9 +224,12 @@ class compact_tst(object):
                 
                 return balance
         else:
+            # La hauteur d'un noeud non existant est 0, ce qui fait
+            # que la hauteur d'une feuille est 1
             return balance_info()
 
     def _balance(self,node,balance):
+        # Assure le critère AVL
         if balance.balance > 1:
             if balance.left_balance > 0:
                 node, balance = self._ll(node,balance)
@@ -256,7 +267,10 @@ class compact_tst(object):
         new_char = node.chars.pop()
         node.chars.append(left_node.chars.pop())
         left_node.chars.append(new_char)
-        node.chars, left_node.chars = left_node.chars, node.chars 
+        node.chars, left_node.chars = left_node.chars, node.chars
+        
+        # Il est possible que le noeud d'origine soit concaténable avec la suite
+        node, discard = self._cat_node(node,None)
 
         # On ajuste la balance en fonction de l'opération effectuée
         balance.height -= 1
@@ -278,6 +292,8 @@ class compact_tst(object):
         right_node.chars.append(new_char)
         node.chars, right_node.chars = right_node.chars, node.chars 
 
+        node, discard = self._cat_node(node,None)
+
         balance.height -= 1
         balance.balance = 0
         balance.right_balance = 0
@@ -286,19 +302,20 @@ class compact_tst(object):
     
     def _lr(self,node,balance):
         if len(node.left.right.chars)>1:
-            node.left.right, right_balance = self._split_node(node.left.right,0)
-        node.left, left_balance = self._rr(node.left,balance_info())
+            node.left.right, discard = self._split_node(node.left.right,0)
+        node.left, discard = self._rr(node.left,balance_info())
         node, balance = self._ll(node,balance)
         return node, balance
     
     def _rl(self,node,balance):
         if len(node.right.left.chars)>1:
-            node.right.left, left_balance = self._split_node(node.right.left,0)
-        node.right, right_balance = self._ll(node.right,balance_info())
+            node.right.left, discard = self._split_node(node.right.left,0)
+        node.right, discard = self._ll(node.right,balance_info())
         node, balance = self._rr(node,balance)
         return node, balance
 
     def _split_node(self,node,local_index):
+        """ Découpe un noeud à l'index donné """
         assert local_index < len(node.chars)
         
         # On crée un nouveau noeud
@@ -318,9 +335,22 @@ class compact_tst(object):
         return new_node, balance_info(height=1)
 
     def _cat_node(self,node,balance):
+        """ Tente de ressouder un noeud à son noeud suivant si cela est
+            possible """
         if node is None:
             return None
-        elif node.next is not None and node.left is None and node.right is None and node.data is None:
+        elif (node.next is not None
+            and node.left is None and node.right is None
+            and node.data is None
+            and len(node.chars)+len(node.next.chars)<CHARS_PER_NODE
+        ):
+            # Les quatre conditions ci dessus sont :
+            # - on a un noeud suivant
+            # - le noeud actuel n'est pas un pivot (dans ce cas la concaténation
+            # serait impossible)
+            # - le noeud actuel ne contient pas de données (idem)
+            # - il y a de la place pour les caractères du noeud courant dans
+            # le noeud suivant
             node.chars.extend(node.next.chars)
             node.next.chars = node.chars
             return node.next, balance_info(height=1)
@@ -337,7 +367,7 @@ class compact_tst(object):
         
         if index+length<len(string):
             # s'il reste des caractères dans la clé après ce segment...
-            new_node.next = self._new_node(string,value,index+length)
+            new_node.next, discard = self._new_node(string,value,index+length)
         else:
             # sinon on met la clé et la donnée dans ce noeud
             new_node.data = value
@@ -353,31 +383,33 @@ class compact_tst(object):
         
         links = ((node.left is not None and 1) or 0) + ((node.next is not None and 1) or 0) + ((node.right is not None and 1) or 0) 
         key = ('links',links)
-        acc[keys] = acc.get(key,0) + 1
+        acc[key] = acc.get(key,0) + 1
         
         self.stats(node.left,acc)
         self.stats(node.next,acc)
         self.stats(node.right,acc)
         
+        return acc
+        
 if __name__ == '__main__':
-#     urls = compact_tst()
-#     try:
-#         chars = 0
-#         for n, l in enumerate(file('url_1000000.csv','rb')):
-#             if n%1000==0 : print n
-#             key = l.rstrip()
-#             chars += len(key)
-#             urls[key] = 0
-#     finally:
-#         stats = {}
-#         urls.stats(urls.root,stats)
-#         print n+1, "lignes", chars, "caracteres"
-#         for key in sorted(stats.keys()):
-#             print "%16s\t%6i\t%6.2f%%"%(
-#                 key,
-#                 stats[key],
-#                 100.0 * stats[key] / stats['nodes']
-#             ) 
+    urls = compact_tst()
+    try:
+        chars = 0
+        for n, l in enumerate(file('url_1000000.csv','rb')):
+            if n%1000==0 : print n
+            key = l.rstrip()
+            chars += len(key)
+            urls[key] = 0
+    finally:
+        stats = {}
+        urls.stats(urls.root,stats)
+        print n+1, "lignes", chars, "caracteres"
+        for key in sorted(stats.keys()):
+            print "%16s\t%6i\t%6.2f%%"%(
+                key,
+                stats[key],
+                100.0 * stats[key] / stats['nodes']
+            ) 
 
     t = compact_tst()
     t['nicolas'] = 'nicolas'
@@ -397,7 +429,7 @@ if __name__ == '__main__':
     random.shuffle(data)
     
     for i, d in enumerate(data):
-        print d
+        if i%1000==0: print i
         t[str(d)] = d
 #         for i2, d2 in enumerate(data[:i]):
 #             assert t[str(d2)] == d2
