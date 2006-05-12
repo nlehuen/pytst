@@ -135,7 +135,7 @@ class compact_tst(object):
             # noeud, et de la clé, il va donc falloir splitter
             if local_index < len(node.chars) - 1:
                 node, balance = self._split_node(node,local_index)
-                assert balance.height == self._compute_balance(node).height, "%s != %s"%(balance, self._compute_balance(node))
+                assert balance.height == self._compute_balance(node).height
 
             # Maintenant que le split est fait, on peut continuer à positionner
             # la nouvelle clé
@@ -157,7 +157,7 @@ class compact_tst(object):
             balance.left_balance = left_balance.balance
             balance.right_balance = right_balance.balance
 
-            assert balance.height == self._compute_balance(node).height, "%s != %s --- %s, %s"%(balance, self._compute_balance(node), left_balance, right_balance)
+            assert balance.height == self._compute_balance(node).height
 
             if not balance.did_balance:
                 # On effectue la balance si elle n'a pa déjà été effectué
@@ -243,8 +243,8 @@ class compact_tst(object):
                 node, balance = self._rl(node,balance)
             balance.did_balance = True
 
-        assert -2 < balance.balance < 2, "Noeud non balancé : %s"%balance
-        assert -2 < self._compute_balance(node).balance < 2, "Noeud non balancé : %s"%self._compute_balance(node)
+        assert -2 < balance.balance < 2
+        assert -2 < self._compute_balance(node).balance < 2
 
         return node, balance
     
