@@ -270,7 +270,7 @@ class compact_tst(object):
         node.chars, left_node.chars = left_node.chars, node.chars
         
         # Il est possible que le noeud d'origine soit concaténable avec la suite
-        node, discard = self._cat_node(node,None)
+        left_node.right, discard = self._cat_node(left_node.right,None)
 
         # On ajuste la balance en fonction de l'opération effectuée
         balance.height -= 1
@@ -292,7 +292,7 @@ class compact_tst(object):
         right_node.chars.append(new_char)
         node.chars, right_node.chars = right_node.chars, node.chars 
 
-        node, discard = self._cat_node(node,None)
+        right_node.left, discard = self._cat_node(right_node.left,None)
 
         balance.height -= 1
         balance.balance = 0
@@ -396,6 +396,7 @@ if __name__ == '__main__':
     try:
         chars = 0
         for n, l in enumerate(file('url_1000000.csv','rb')):
+            if n == 100000: break
             if n%1000==0 : print n
             key = l.rstrip()
             chars += len(key)
@@ -411,6 +412,12 @@ if __name__ == '__main__':
                 100.0 * stats[key] / stats['nodes']
             ) 
 
+    for n, l in enumerate(file('url_1000000.csv','rb')):
+        if n == 100000: break
+        if n%1000==0 : print 'Check ',n
+        key = l.rstrip()
+        assert urls[key] == 0
+
     t = compact_tst()
     t['nicolas'] = 'nicolas'
     t['laurent'] = 'laurent'
@@ -425,7 +432,7 @@ if __name__ == '__main__':
         
     t = compact_tst()
     
-    data = range(100000)
+    data = range(10000)
     random.shuffle(data)
     
     for i, d in enumerate(data):
