@@ -207,6 +207,10 @@ class compact_tst(object):
         key = ('nbchars',len(node.chars)) 
         acc[key] = acc.get(key,0) + 1
         
+        links = ((node.left is not None and 1) or 0) + ((node.next is not None and 1) or 0) + ((node.right is not None and 1) or 0) 
+        key = ('links',links)
+        acc[keys] = acc.get(key,0) + 1
+        
         self.stats(node.left,acc)
         self.stats(node.next,acc)
         self.stats(node.right,acc)
