@@ -20,16 +20,14 @@ class tst_node(object):
     def __init__(self):
         tst_node.instances += 1
         self.chars = array('c')
-        self.key = None # inutile, just là pour le debug
         self.data = None
         self.next = None
         self.left = None
         self.right = None
     
     def __repr__(self):
-        return "node(%s,key=%s,data=%s,%i,%i,%i)"%(
+        return "node(%s,data=%s,%i,%i,%i)"%(
             self.chars,
-            self.key,
             self.data,
             self.left is not None and 1 or 0,
             self.next is not None and 1 or 0,
@@ -139,7 +137,6 @@ class compact_tst(object):
             if index == len(string):
                 # On est également au bout de la clé
                 # C'est qu'on a de la chance !
-                node.key = string
                 node.data = value
             else:
                 # On n'est pas au bout de la clé
@@ -158,7 +155,6 @@ class compact_tst(object):
             node = self._split_node(node,local_index-1)
 
             # On stocke ensuite la clé et la valeur
-            node.key = string
             node.data = value
             
             return node
@@ -195,7 +191,6 @@ class compact_tst(object):
             new_node.next = self._new_node(string,value,index+length)
         else:
             # sinon on met la clé et la donnée dans ce noeud
-            new_node.key = string
             new_node.data = value
         
         return new_node
@@ -204,6 +199,17 @@ class compact_tst(object):
         # ici vérifier le critère AVL et faire une rotation LL, RR, RL ou LR
         # si nécessaire
         return node
+    
+    def stats(self,node,acc):
+        if node == None : return
+        
+        acc['nodes'] = acc.get('nodes',0) + 1
+        key = ('nbchars',len(node.chars)) 
+        acc[key] = acc.get(key,0) + 1
+        
+        self.stats(node.left,acc)
+        self.stats(node.next,acc)
+        self.stats(node.right,acc)
         
 if __name__ == '__main__':
     urls = compact_tst()
@@ -214,8 +220,16 @@ if __name__ == '__main__':
             key = l.rstrip()
             chars += len(key)
             urls[key] = 0
-    finally:    
-        print tst_node.instances, "noeuds crees pour", n+1, "lignes", chars, "caracteres"
+    finally:
+        stats = {}
+        urls.stats(urls.root,stats)
+        print n+1, "lignes", chars, "caracteres"
+        for key in sorted(stats.keys()):
+            print "%16s\t%6i\t%6.2f%%"%(
+                key,
+                stats[key],
+                100.0 * stats[key] / stats['nodes']
+            ) 
 
     t = compact_tst()
     t['nicolas'] = 'nicolas'
