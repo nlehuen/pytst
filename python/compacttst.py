@@ -13,7 +13,7 @@ class tst_node(object):
 
     # __slots__ est une optimisation permettant de créer des objets Python
     # non dynamiques, ce qui utilise moins de mémoire
-    __slots__ = ['chars','key','data','next','left','right']
+    __slots__ = ['chars','data','next','left','right']
 
     instances = 0
 
