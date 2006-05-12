@@ -11,7 +11,7 @@ import sys
 
 # Tant qu'à faire vu qu'ici le nombre de caractères par noeud est complètement
 # dynamique, on peut se lâcher, mettre 1024 caractère ou plus
-CHARS_PER_NODE = 8
+CHARS_PER_NODE = 16
 
 class tst_node(object):
     """ classe représentant un noeud du TST """
@@ -394,12 +394,15 @@ class compact_tst(object):
         if node == None : return
         
         acc['nodes'] = acc.get('nodes',0) + 1
+
+        acc['total_chars'] = acc.get('total_chars',0) + len(node.chars)
         key = ('nbchars',len(node.chars)) 
         acc[key] = acc.get(key,0) + 1
         
         links = ((node.left is not None and 1) or 0) + ((node.next is not None and 1) or 0) + ((node.right is not None and 1) or 0) 
         key = ('links',links)
         acc[key] = acc.get(key,0) + 1
+        
         
         self.stats(node.left,acc)
         self.stats(node.next,acc)
@@ -434,7 +437,7 @@ if __name__ == '__main__':
             print "%16s\t%6i\t%6.2f%%"%(
                 key,
                 stats[key],
-                100.0 * stats[key] / stats['nodes']
+                (key=='total_chars' and 100.0 * stats[key] / chars) or (100.0 * stats[key] / stats['nodes']) 
             ) 
 
     urls.root = urls.cat(urls.root,True)
@@ -448,7 +451,7 @@ if __name__ == '__main__':
         print "%16s\t%6i\t%6.2f%%"%(
             key,
             stats[key],
-            100.0 * stats[key] / stats['nodes']
+            (key=='total_chars' and 100.0 * stats[key] / chars) or (100.0 * stats[key] / stats['nodes']) 
         ) 
 
     for n, l in enumerate(file('url-list.txt','rb')):
