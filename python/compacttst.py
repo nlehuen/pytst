@@ -1,11 +1,4 @@
 # -*- coding: iso-8859-1 -*-
-try:
-	import psyco
-except ImportError:
-    pass
-else:
-	psyco.full()
-
 from array import array
 import sys
 
@@ -117,7 +110,7 @@ class compact_tst(object):
                 # bout de la clé, et donc qu'il n'y a pas de match, sinon
                 # il y aurait eu un split
                 assert index == len(string)
-                return Node
+                return None
         
         # node is None ==> pas de match
         return None
@@ -181,9 +174,11 @@ class compact_tst(object):
             balance.right_balance = right_balance.balance
 
             assert balance.height == self._compute_balance(node).height
+            assert left_balance.height == self._compute_balance(node.left).height
+            assert right_balance.height == self._compute_balance(node.right).height
 
             if not balance.did_balance:
-                # On effectue la balance si elle n'a pa déjà été effectué
+                # On effectue la balance si elle n'a pas déjà été effectuée
                 node, balance = self._balance(node,balance)
 
                 if len(node.chars)!=1:
@@ -193,6 +188,8 @@ class compact_tst(object):
                     balance.balance = 0
                     balance.left_balance = 0
                     balance.right_balance = 0
+
+                assert balance.height == self._compute_balance(node).height
 
             return node, balance
 
@@ -259,6 +256,11 @@ class compact_tst(object):
             return balance_info()
 
     def _balance(self,node,balance):
+        assert balance.height == self._compute_balance(node).height
+        assert len(node.chars)>1 or balance.balance == self._compute_balance(node).balance, "%s : %s != %s"%(node,balance,self._compute_balance(node))
+        assert balance.left_balance == self._compute_balance(node.left).balance
+        assert balance.right_balance == self._compute_balance(node.right).balance
+
         # Assure le critère AVL
         if balance.balance > 1:
             if balance.left_balance > 0:
@@ -280,7 +282,7 @@ class compact_tst(object):
     
     def _ll(self,node,balance):
         # Un déséquilibre LL n'est possible qu'avec un noeud de gauche
-        # n'ayant qu'un caractère 
+        # n'ayant qu'un caractère
         assert len(node.left.chars) == 1
 
         # On fait la rotation au niveau des liens
@@ -308,7 +310,7 @@ class compact_tst(object):
         balance.left_balance = 0
 
         # Le noeud de gauche prend la place du noeud d'origine dans l'arbre
-        return left_node, balance
+        return left_node, self._compute_balance(left_node)
          
     def _rr(self,node,balance):
         assert len(node.right.chars) == 1
@@ -328,7 +330,7 @@ class compact_tst(object):
         balance.balance = 0
         balance.right_balance = 0
 
-        return right_node, balance
+        return right_node, self._compute_balance(right_node)
     
     def _lr(self,node,balance):
         if len(node.left.right.chars)>1:
@@ -369,7 +371,8 @@ class compact_tst(object):
             possible """
         if node is None:
             return None
-        elif (node.next is not None
+        elif (
+            node.next is not None
             and node.left is None and node.right is None
             and node.data is None
             and len(node.chars)+len(node.next.chars)<CHARS_PER_NODE
@@ -385,7 +388,7 @@ class compact_tst(object):
             node.chars.extend(node.next.chars)
             node.next.chars = node.chars
             if debug: print '=>',node.next
-            return node.next, balance_info(height=1)
+            return node.next, balance_info(did_balance=(balance and balance.did_balance) or False,height=1)
         else:
             return node, balance             
 
@@ -418,7 +421,6 @@ class compact_tst(object):
         links = ((node.left is not None and 1) or 0) + ((node.next is not None and 1) or 0) + ((node.right is not None and 1) or 0) 
         key = ('links',links)
         acc[key] = acc.get(key,0) + 1
-        
         
         self.stats(node.left,acc)
         self.stats(node.next,acc)
@@ -489,7 +491,7 @@ class compact_tst(object):
                 key = string[:len(string)-local_index]
                 return self._visit(node,array('c',key),callback,local_index<len(node.chars))
         else:
-            return self._visit(self.root,array('c'),callback)
+            return self._visit(self.root,array('c'),callback,True)
 
     def _visit(self,node,string,callback,visit_left_right):
         if node is None:
@@ -521,7 +523,19 @@ class compact_tst(object):
         node.right = self.cat(node.right,debug)
         node, discard = self._join_node(node,None,debug)
         return node
-        
+    
+    def debug(self,node,indentation=0):
+        print node.chars,node.data
+        if node.left is not None:
+            print '  '*(indentation+1),'LEFT',
+            self.debug(node.left,indentation+1)
+        if node.next is not None:
+            print '  '*(indentation+1),'NEXT',
+            self.debug(node.next,indentation+1)
+        if node.right is not None:
+            print '  '*(indentation+1),'RIGHT',
+            self.debug(node.right,indentation+1)
+
 if __name__ == '__main__':
     urls = compact_tst()
 
@@ -533,7 +547,7 @@ if __name__ == '__main__':
     try:
         chars = 0
         for n, l in enumerate(file('url_1000000.csv','rb')):
-            if n == 999999: break
+            if n == 9999: break
             if n%1000==0 : print n
             key = l.rstrip()
             chars += len(key)
@@ -563,8 +577,8 @@ if __name__ == '__main__':
             (key=='total_chars' and 100.0 * stats[key] / chars) or (100.0 * stats[key] / stats['nodes']) 
         ) 
 
-    for n, l in enumerate(file('url-list.txt','rb')):
-        if n == 99999: break
+    for n, l in enumerate(file('url_1000000.csv','rb')):
+        if n == 9999: break
         if n%1000==0 : print 'Check ',n
         key = l.rstrip()
         assert urls[key] == 0
@@ -583,15 +597,23 @@ if __name__ == '__main__':
         
     t = compact_tst()
     
-    data = range(10000)
-    random.shuffle(data)
+    data = range(1000)
+    random.Random(654).shuffle(data)
     
     for i, d in enumerate(data):
         if i%1000==0: print i
         t[str(d)] = d
-#         for i2, d2 in enumerate(data[:i]):
-#             assert t[str(d2)] == d2
+        for i2, d2 in enumerate(data[:i]):
+            assert t[str(d2)] == d2
         
-    
+    for i, d in enumerate(data):
+        if i%1000==0: print i
+        # if i%3==0: del t[str(d)]
+
+    t.root = t.cat(t.root,True)
+
     for i,d in enumerate(data):
-        assert t[str(d)] == d, "%s => %s != %s"%(d,i,t[str(d)]) 
+#        if i%3==0 :
+#            assert t[str(d)] == None, "%s => %s != %s"%(d,None,t[str(d)]) 
+#        else: 
+            assert t[str(d)] == d, "%s => %s != %s"%(d,i,t[str(d)]) 
