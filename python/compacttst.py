@@ -142,7 +142,7 @@ class compact_tst(object):
                 # On peut essayer de joindre le noeud suivant au noeud d'après
                 # car le split peut permettre de compléter un noeud pas totalement
                 # remplit
-                node.next, discard = self._cat_node(node.next,None)
+                node.next, discard = self._join_node(node.next,None)
 
             # Maintenant que le split est fait, on peut continuer à positionner
             # la nouvelle clé
@@ -197,7 +197,7 @@ class compact_tst(object):
         
                 # Suite à un split du noeud suivant, il est peut-être possible
                 # de le recoller à ce noeud ?
-                node, discard = self._cat_node(node, None)
+                node, discard = self._join_node(node, None)
         
             return node, self._compute_balance(node)
 
@@ -212,7 +212,7 @@ class compact_tst(object):
             node, balance = self._split_node(node,local_index-1)
 
             # On peut essayer de joindre le noeud suivant au noeud d'après
-            node.next, discard = self._cat_node(node.next,None)
+            node.next, discard = self._join_node(node.next,None)
 
             # On stocke ensuite la clé et la valeur
             node.data = value
@@ -287,7 +287,7 @@ class compact_tst(object):
         node.chars, left_node.chars = left_node.chars, node.chars
         
         # Il est possible que le noeud d'origine soit concaténable avec la suite
-        left_node.right, discard = self._cat_node(left_node.right,None)
+        left_node.right, discard = self._join_node(left_node.right,None)
 
         # On ajuste la balance en fonction de l'opération effectuée
         balance.height -= 1
@@ -309,7 +309,7 @@ class compact_tst(object):
         right_node.chars.append(new_char)
         node.chars, right_node.chars = right_node.chars, node.chars 
 
-        right_node.left, discard = self._cat_node(right_node.left,None)
+        right_node.left, discard = self._join_node(right_node.left,None)
 
         balance.height -= 1
         balance.balance = 0
@@ -351,7 +351,7 @@ class compact_tst(object):
         
         return new_node, balance_info(height=1)
 
-    def _cat_node(self,node,balance,debug=False):
+    def _join_node(self,node,balance,debug=False):
         """ Tente de ressouder un noeud à son noeud suivant si cela est
             possible """
         if node is None:
@@ -412,6 +412,31 @@ class compact_tst(object):
         self.stats(node.right,acc)
         
         return acc
+
+    def visit(self,callback):
+        return self._visit(self.root,array('c'),callback)
+
+    def _visit(self,node,string,callback):
+        if node is None:
+            return False
+        
+        # D'abord à droite pour obtenir un ordre lexicographique
+        if self._visit(node.right,string+node.chars[:-1],callback):
+            return True
+
+        # Maintenant le noeud en cours
+        if node.data is not None and callback(string+node.chars,node.data):
+            return True
+        
+        # Puis le noeud suivant
+        if self._visit(node.next,string+node.chars,callback):
+            return True
+        
+        # Puis à gauche
+        if self._visit(node.left,string+node.chars[:-1],callback):
+            return True
+        
+        return False
         
     def cat(self,node,debug=False):
     	""" Méthode forçant la concaténation des noeuds, inutile sauf en cas de bug. """
@@ -419,11 +444,17 @@ class compact_tst(object):
         node.left = self.cat(node.left,debug)
         node.next = self.cat(node.next,debug)
         node.right = self.cat(node.right,debug)
-        node, discard = self._cat_node(node,None,debug)
+        node, discard = self._join_node(node,None,debug)
         return node
         
 if __name__ == '__main__':
     urls = compact_tst()
+
+    def callback(key,value):
+        assert urls[key] == value
+        print key, value
+        return False
+
     try:
         chars = 0
         for n, l in enumerate(file('url_1000000.csv','rb')):
