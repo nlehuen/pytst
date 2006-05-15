@@ -66,9 +66,13 @@ class compact_tst(object):
 
     def __getitem__(self,string):
         """ Lit dans l'arbre selon la syntaxe tst[string] """
+        
+        # ATTENTION : ce code est intentionnellement dupliqué dans la méthode
+        # visit(). Ne pas oublier de mettre celle-ci à jour lorsqu'il est modifié
+        # ici.
+        
         node = self.root
         index = 0
-        
         while node is not None:
             local_index = 0
     
@@ -82,29 +86,38 @@ class compact_tst(object):
                 else:
                     break
             
-            if local_index < len(node.chars) - 1:
-                # on s'est arrêté avant le dernier caractère du noeud,
-                # il n'y a donc pas de match possible (sinon il y aurait eu
-                # split à l'insertion)
-                return None
-            
-            elif local_index == len(node.chars) - 1:
-                # différence au dernier caractère du noeud
-                if diff>0:
-                    node = node.left
-                elif diff<0:
-                    node = node.right
+            if diff != 0:
+                # On a une différence de caractère
+                
+                if local_index < len(node.chars) - 1:
+                    # on s'est arrêté avant le dernier caractère du noeud,
+                    # il n'y a donc pas de match possible (sinon il y aurait eu
+                    # split à l'insertion)
+                    return None
                 else:
-                    node = node.next
-            else:
-                # tous les caractères du noeud correspondent à ceux de la chaîne
+                    # différence au dernier caractère du noeud
+                    if diff>0:
+                        node = node.left
+                    elif diff<0:
+                        node = node.right
+    
+            elif local_index == len(node.chars):
+                # On est au bout des caractères du noeud
+            
                 if index == len(string):
-                    # si on est en fin de chaîne, on retourne la donnée stockée
-                    # dans le noeud, si elle existe
+                    # On est également au bout de la clé
+                    # C'est qu'on a de la chance !
                     return node.data
                 else:
-                    # sinon, on passe au noeud suivant
+                    # On avance d'un cran
                     node = node.next
+
+            else:
+                # On n'est pas au bout des caractères, c'est qu'on est au
+                # bout de la clé, et donc qu'il n'y a pas de match, sinon
+                # il y aurait eu un split
+                assert index == len(string)
+                return Node
         
         # node is None ==> pas de match
         return None
@@ -413,15 +426,77 @@ class compact_tst(object):
         
         return acc
 
-    def visit(self,callback):
-        return self._visit(self.root,array('c'),callback)
+    def visit(self,callback,string=None):
+        if string is not None:
+            # Ce code est copié / collé depuis _find_node().
+            # C'est fait exprès, car cela évite d'avoir instanciation d'un
+            # tuple pour retour de valeur multiple à chaque appel de __getitem__.
+            
+            node = self.root
+            index = 0
+            while node is not None:
+                local_index = 0
+        
+                # On avance tant qu'il y a égalité
+                diff = 0
+                while local_index < len(node.chars) and index < len(string):
+                    diff = cmp(string[index],node.chars[local_index]) 
+                    if diff == 0:
+                        local_index += 1
+                        index += 1
+                    else:
+                        break
+                
+                if diff != 0:
+                    # On a une différence de caractère
+                    
+                    if local_index < len(node.chars) - 1:
+                        # on s'est arrêté avant le dernier caractère du noeud,
+                        # il n'y a donc pas de match possible (sinon il y aurait eu
+                        # split à l'insertion)
+                        node = None
+                        break
+                    else:
+                        # différence au dernier caractère du noeud
+                        if diff>0:
+                            node = node.left
+                        elif diff<0:
+                            node = node.right
+        
+                elif local_index == len(node.chars):
+                    # On est au bout des caractères du noeud
+                
+                    if index == len(string):
+                        # On est également au bout de la clé
+                        # C'est qu'on a de la chance !
+                        break
+                    else:
+                        # On avance d'un cran
+                        node = node.next
+    
+                else:
+                    # On n'est pas au bout des caractères, c'est qu'on est au
+                    # bout de la clé, et donc qu'il n'y a pas de match, sinon
+                    # il y aurait eu un split
+                    assert index == len(string)
+                    # On retourne le noeud quand même car il va être utile pour
+                    # le visiteur, simplement il n'y a aucune donnée dedans
+                    break
+        
+            if node is None:
+                return False
+            else:
+                key = string[:len(string)-local_index]
+                return self._visit(node,array('c',key),callback,local_index<len(node.chars))
+        else:
+            return self._visit(self.root,array('c'),callback)
 
-    def _visit(self,node,string,callback):
+    def _visit(self,node,string,callback,visit_left_right):
         if node is None:
             return False
         
         # D'abord à droite pour obtenir un ordre lexicographique
-        if self._visit(node.right,string+node.chars[:-1],callback):
+        if visit_left_right and self._visit(node.right,string+node.chars[:-1],callback,True):
             return True
 
         # Maintenant le noeud en cours
@@ -429,11 +504,11 @@ class compact_tst(object):
             return True
         
         # Puis le noeud suivant
-        if self._visit(node.next,string+node.chars,callback):
+        if self._visit(node.next,string+node.chars,callback,True):
             return True
         
         # Puis à gauche
-        if self._visit(node.left,string+node.chars[:-1],callback):
+        if visit_left_right and self._visit(node.left,string+node.chars[:-1],callback,True):
             return True
         
         return False
@@ -451,7 +526,7 @@ if __name__ == '__main__':
     urls = compact_tst()
 
     def callback(key,value):
-        assert urls[key] == value
+        assert urls[key] == value, "%s : %s != %s"%(key,urls[key],value)
         print key, value
         return False
 
