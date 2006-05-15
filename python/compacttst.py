@@ -1,10 +1,10 @@
 # -*- coding: iso-8859-1 -*-
 try:
-    import psyco
+	import psyco
 except ImportError:
     pass
 else:
-    psyco.full()
+	psyco.full()
 
 from array import array
 import sys
@@ -159,7 +159,10 @@ class compact_tst(object):
                 left_balance = self._compute_balance(node.left)
 
             # On calcule la nouvelle balance en tenant compte des modifs
-            balance.height = (len(node.chars)>1 and 1) or max(left_balance.height, right_balance.height) + 1
+            if len(node.chars)>1:
+                balance.height = 1
+            else:
+                balance.height = max(left_balance.height, right_balance.height) + 1
             balance.balance = left_balance.height - right_balance.height
             balance.left_balance = left_balance.balance
             balance.right_balance = right_balance.balance
@@ -191,7 +194,7 @@ class compact_tst(object):
             else:
                 # On n'est pas au bout de la clé
                 node.next, next_balance = self._insert(string,value,index,node.next)
-    
+        
                 # Suite à un split du noeud suivant, il est peut-être possible
                 # de le recoller à ce noeud ?
                 node, discard = self._cat_node(node, None)
@@ -409,7 +412,7 @@ class compact_tst(object):
         self.stats(node.right,acc)
         
         return acc
-    
+        
     def cat(self,node,debug=False):
     	""" Méthode forçant la concaténation des noeuds, inutile sauf en cas de bug. """
         if node == None : return
@@ -423,8 +426,8 @@ if __name__ == '__main__':
     urls = compact_tst()
     try:
         chars = 0
-        for n, l in enumerate(file('url-list.txt','rb')):
-            if n == 99999: break
+        for n, l in enumerate(file('url_1000000.csv','rb')):
+            if n == 999999: break
             if n%1000==0 : print n
             key = l.rstrip()
             chars += len(key)
