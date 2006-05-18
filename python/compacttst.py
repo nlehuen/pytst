@@ -544,6 +544,7 @@ if __name__ == '__main__':
         print key, value
         return False
 
+    n = 0
     try:
         chars = 0
         for n, l in enumerate(file('url_1000000.csv','rb')):
