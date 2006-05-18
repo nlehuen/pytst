@@ -230,7 +230,7 @@ class compact_tst(object):
             return node, balance
 
     def __delitem__(self,string):
-      self.root, discard = self._remove(string,0,self.root)
+        self.root, discard = self._remove(string,0,self.root)
 
     def _remove(self,string,index,node):
         if node is None:
@@ -261,12 +261,12 @@ class compact_tst(object):
             balance = balance_info()
             if diff>0:
                 node.left, left_balance = self._remove(string,index,node.left)
-                assert not (len(node.left.chars)>1 and left_balance.height!=1)
+                assert not (node.left and len(node.left.chars)>1 and left_balance.height!=1)
                 balance.did_balance = left_balance.did_balance
                 right_balance = self._compute_balance(node.right)
             else:
                 node.right, right_balance = self._remove(string,index,node.right)
-                assert not (len(node.right.chars)>1 and right_balance.height!=1)
+                assert not (node.right and len(node.right.chars)>1 and right_balance.height!=1)
                 balance.did_balance = right_balance.did_balance
                 left_balance = self._compute_balance(node.left)
 
@@ -285,7 +285,7 @@ class compact_tst(object):
 
             if not balance.did_balance:
                 # On effectue la balance si elle n'a pas déjà été effectuée
-                # node, balance = self._balance(node,balance)
+                node, balance = self._balance(node,balance)
 
                 if len(node.chars)!=1:
                     # Si à l'issue de la balance on se retrouve avec plusieurs
@@ -359,6 +359,8 @@ class compact_tst(object):
         assert balance.left_balance == self._compute_balance(node.left).balance
         assert balance.right_balance == self._compute_balance(node.right).balance
 
+        assert -3 < balance.balance < 3
+
         # Assure le critère AVL
         if balance.balance > 1:
             if balance.left_balance > 0:
@@ -373,8 +375,8 @@ class compact_tst(object):
                 node, balance = self._rl(node,balance)
             balance.did_balance = True
 
-        assert -2 < balance.balance < 2
         assert -2 < self._compute_balance(node).balance < 2
+        assert -2 < balance.balance < 2
 
         return node, balance
     
@@ -468,11 +470,12 @@ class compact_tst(object):
         """ Tente de ressouder un noeud à son noeud suivant si cela est
             possible """
         if node is None:
-            return None
+            return None, balance_info()
+        elif node.data is not None:
+            return node, balance
         elif (
             node.next is not None
             and node.left is None and node.right is None
-            and node.data is None
             and len(node.chars)+len(node.next.chars)<CHARS_PER_NODE
         ):
             # Les quatre conditions ci dessus sont :
@@ -487,6 +490,29 @@ class compact_tst(object):
             node.next.chars = node.chars
             if debug: print '=>',node.next
             return node.next, balance_info(did_balance=(balance and balance.did_balance) or False,height=1)
+        elif (
+            node.next is None
+            and (node.left is None or node.right is None)
+        ):
+            if node.left is None and node.right is None:
+                if debug: print "CAT2", node, "=>", None
+                return None, balance_info()
+            else:
+                # On prend le noeud restant
+                new_node = node.left or node.right
+                
+                if len(node.chars)+len(new_node.chars) - 1 < CHARS_PER_NODE:
+                    if debug: print "CAT3", node, new_node,
+                    # On supprime le dernier caractère du noeud
+                    node.chars.pop()
+                    # On ajoute les caractères du nouveau noeud
+                    node.chars.extend(new_node.chars)
+                    # On met le résultat dans le nouveau noeud
+                    new_node.chars = node.chars
+                    if debug: print '=>',new_node
+                    return new_node, self._compute_balance(new_node)
+                else:
+                    return node, balance
         else:
             return node, balance             
 
@@ -635,52 +661,75 @@ class compact_tst(object):
             self.debug(node.right,indentation+1)
 
 if __name__ == '__main__':
-#     urls = compact_tst()
-# 
-#     def callback(key,value):
-#         assert urls[key] == value, "%s : %s != %s"%(key,urls[key],value)
-#         print key, value
-#         return False
-# 
-#     n = 0
-#     try:
-#         chars = 0
-#         for n, l in enumerate(file('url_1000000.csv','rb')):
-#             if n == 9999: break
-#             if n%1000==0 : print n
-#             key = l.rstrip()
-#             chars += len(key)
-#             urls[key] = 0
-#     finally:
-#         stats = {}
-#         urls.stats(urls.root,stats)
-#         print n+1, "lignes", chars, "caracteres"
-#         for key in sorted(stats.keys()):
-#             print "%16s\t%6i\t%6.2f%%"%(
-#                 key,
-#                 stats[key],
-#                 (key=='total_chars' and 100.0 * stats[key] / chars) or (100.0 * stats[key] / stats['nodes']) 
-#             ) 
-# 
-#     urls.root = urls.cat(urls.root,True)
-# 
-# 	# On recalcule les stats après concaténation forcée des noeuds.
-# 	# Si qqchose a changé c'est un bug !
-#     stats = {}
-#     urls.stats(urls.root,stats)
-#     print n+1, "lignes", chars, "caracteres"
-#     for key in sorted(stats.keys()):
-#         print "%16s\t%6i\t%6.2f%%"%(
-#             key,
-#             stats[key],
-#             (key=='total_chars' and 100.0 * stats[key] / chars) or (100.0 * stats[key] / stats['nodes']) 
-#         ) 
-# 
-#     for n, l in enumerate(file('url_1000000.csv','rb')):
-#         if n == 9999: break
-#         if n%1000==0 : print 'Check ',n
-#         key = l.rstrip()
-#         assert urls[key] == 0
+    urls = compact_tst()
+
+    def callback(key,value):
+        assert urls[key] == value, "%s : %s != %s"%(key,urls[key],value)
+        print key, value
+        return False
+
+    n = 0
+    try:
+        chars = 0
+        for n, l in enumerate(file('url_1000000.csv','rb')):
+            if n == 9999: break
+            if n%1000==0 : print n
+            key = l.rstrip()
+            chars += len(key)
+            urls[key] = 0
+    finally:
+        stats = {}
+        urls.stats(urls.root,stats)
+        print n+1, "lignes", chars, "caracteres"
+        for key in sorted(stats.keys()):
+            print "%16s\t%6i\t%6.2f%%"%(
+                key,
+                stats[key],
+                (key=='total_chars' and 100.0 * stats[key] / chars) or (100.0 * stats[key] / stats['nodes']) 
+            ) 
+
+    urls.root = urls.cat(urls.root,True)
+
+	# On recalcule les stats après concaténation forcée des noeuds.
+	# Si qqchose a changé c'est un bug !
+    stats = {}
+    urls.stats(urls.root,stats)
+    print n+1, "lignes", chars, "caracteres"
+    for key in sorted(stats.keys()):
+        print "%16s\t%6i\t%6.2f%%"%(
+            key,
+            stats[key],
+            (key=='total_chars' and 100.0 * stats[key] / chars) or (100.0 * stats[key] / stats['nodes']) 
+        ) 
+
+    for n, l in enumerate(file('url_1000000.csv','rb')):
+        if n == 9999: break
+        if n%1000==0 : print 'Delete ',n
+        key = l.rstrip()
+        if n%2 == 0 : del urls[key]
+
+    urls.root = urls.cat(urls.root,True)
+
+    for n, l in enumerate(file('url_1000000.csv','rb')):
+        if n == 9999: break
+        if n%1000==0 : print 'Check ',n
+        key = l.rstrip()
+        if n%2==1:
+            assert urls[key] == 0
+        else:
+            assert urls[key] is None
+
+	# On recalcule les stats après concaténation forcée des noeuds.
+	# Si qqchose a changé c'est un bug !
+    stats = {}
+    urls.stats(urls.root,stats)
+    print n+1, "lignes", chars, "caracteres"
+    for key in sorted(stats.keys()):
+        print "%16s\t%6i\t%6.2f%%"%(
+            key,
+            stats[key],
+            (key=='total_chars' and 100.0 * stats[key] / chars) or (100.0 * stats[key] / stats['nodes']) 
+        ) 
 
     t = compact_tst()
     t['nicolas'] = 'nicolas'
@@ -697,7 +746,9 @@ if __name__ == '__main__':
     t = compact_tst()
     
     data = range(1000)
-    random.Random(654).shuffle(data)
+    seed = random.randint(-5000000,5000000)
+    print 'Seed is ',seed
+    random.Random(seed).shuffle(data)
     
     for i, d in enumerate(data):
         if i%100==0: print i
@@ -707,12 +758,12 @@ if __name__ == '__main__':
         
     for i, d in enumerate(data):
         if i%100==0: print i
-        if i%3==0: del t[str(d)]
+        if d%3==0: del t[str(d)]
 
     t.root = t.cat(t.root,True)
 
     for i,d in enumerate(data):
-       if i%3==0 :
+       if d%3==0 :
            assert t[str(d)] == None, "%s => %s != %s"%(d,None,t[str(d)]) 
        else: 
           assert t[str(d)] == d, "%s => %s != %s"%(d,i,t[str(d)]) 
