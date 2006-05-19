@@ -4,7 +4,7 @@ import sys
 
 # Tant qu'à faire vu qu'ici le nombre de caractères par noeud est complètement
 # dynamique, on peut se lâcher, mettre 1024 caractère ou plus
-CHARS_PER_NODE = 16
+CHARS_PER_NODE = 1024
 
 class tst_node(object):
     """ classe représentant un noeud du TST """
@@ -533,22 +533,25 @@ class compact_tst(object):
         
         return new_node, balance_info(height=1)
     
-    def stats(self,node,acc):
+    def stats(self,node,acc,depth=0):
         if node == None : return
         
         acc['nodes'] = acc.get('nodes',0) + 1
-
         acc['total_chars'] = acc.get('total_chars',0) + len(node.chars)
         key = ('nbchars',len(node.chars)) 
+        
         acc[key] = acc.get(key,0) + 1
         
         links = ((node.left is not None and 1) or 0) + ((node.next is not None and 1) or 0) + ((node.right is not None and 1) or 0) 
         key = ('links',links)
         acc[key] = acc.get(key,0) + 1
         
-        self.stats(node.left,acc)
-        self.stats(node.next,acc)
-        self.stats(node.right,acc)
+        key = ('depth',depth)
+        acc[key] = acc.get(key,0) + 1
+        
+        self.stats(node.left,acc,depth+1)
+        self.stats(node.next,acc,depth+1)
+        self.stats(node.right,acc,depth+1)
         
         return acc
 
@@ -672,7 +675,7 @@ if __name__ == '__main__':
     try:
         chars = 0
         for n, l in enumerate(file('url_1000000.csv','rb')):
-            if n == 9999: break
+            if n == 999999: break
             if n%1000==0 : print n
             key = l.rstrip()
             chars += len(key)
@@ -703,7 +706,7 @@ if __name__ == '__main__':
         ) 
 
     for n, l in enumerate(file('url_1000000.csv','rb')):
-        if n == 9999: break
+        if n == 999999: break
         if n%1000==0 : print 'Delete ',n
         key = l.rstrip()
         if n%2 == 0 : del urls[key]
@@ -711,7 +714,7 @@ if __name__ == '__main__':
     urls.root = urls.cat(urls.root,True)
 
     for n, l in enumerate(file('url_1000000.csv','rb')):
-        if n == 9999: break
+        if n == 999999: break
         if n%1000==0 : print 'Check ',n
         key = l.rstrip()
         if n%2==1:
