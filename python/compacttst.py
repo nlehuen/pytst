@@ -144,7 +144,6 @@ class compact_tst(object):
             # noeud, et de la clé, il va donc falloir splitter
             if local_index < len(node.chars) - 1:
                 node, balance = self._split_node(node,local_index)
-                assert balance.height == self._compute_balance(node).height
                 # On peut essayer de joindre le noeud suivant au noeud d'après
                 # car le split peut permettre de compléter un noeud pas totalement
                 # remplit
@@ -155,12 +154,10 @@ class compact_tst(object):
             balance = balance_info()
             if diff>0:
                 node.left, left_balance = self._insert(string,value,index,node.left)
-                assert not (len(node.left.chars)>1 and left_balance.height!=1)
                 balance.did_balance = left_balance.did_balance
                 right_balance = self._compute_balance(node.right)
             else:
                 node.right, right_balance = self._insert(string,value,index,node.right)
-                assert not (len(node.right.chars)>1 and right_balance.height!=1)
                 balance.did_balance = right_balance.did_balance
                 left_balance = self._compute_balance(node.left)
 
@@ -173,10 +170,6 @@ class compact_tst(object):
             balance.left_balance = left_balance.balance
             balance.right_balance = right_balance.balance
 
-            assert balance.height == self._compute_balance(node).height
-            assert left_balance.height == self._compute_balance(node.left).height
-            assert right_balance.height == self._compute_balance(node.right).height
-
             if not balance.did_balance:
                 # On effectue la balance si elle n'a pas déjà été effectuée
                 node, balance = self._balance(node,balance)
@@ -188,8 +181,6 @@ class compact_tst(object):
                     balance.balance = 0
                     balance.left_balance = 0
                     balance.right_balance = 0
-
-                assert balance.height == self._compute_balance(node).height
 
             return node, balance
 
@@ -261,13 +252,13 @@ class compact_tst(object):
             balance = balance_info()
             if diff>0:
                 node.left, left_balance = self._remove(string,index,node.left)
-                assert not (node.left and len(node.left.chars)>1 and left_balance.height!=1)
                 balance.did_balance = left_balance.did_balance
+                node, balance = self._compact_node(node,balance,True)
                 right_balance = self._compute_balance(node.right)
             else:
                 node.right, right_balance = self._remove(string,index,node.right)
-                assert not (node.right and len(node.right.chars)>1 and right_balance.height!=1)
                 balance.did_balance = right_balance.did_balance
+                node, balance = self._compact_node(node,balance,True)
                 left_balance = self._compute_balance(node.left)
 
             # On calcule la nouvelle balance en tenant compte des modifs
@@ -278,10 +269,6 @@ class compact_tst(object):
             balance.balance = left_balance.height - right_balance.height
             balance.left_balance = left_balance.balance
             balance.right_balance = right_balance.balance
-
-            assert balance.height == self._compute_balance(node).height
-            assert left_balance.height == self._compute_balance(node.left).height
-            assert right_balance.height == self._compute_balance(node.right).height
 
             if not balance.did_balance:
                 # On effectue la balance si elle n'a pas déjà été effectuée
@@ -295,9 +282,8 @@ class compact_tst(object):
                     balance.left_balance = 0
                     balance.right_balance = 0
 
-                assert balance.height == self._compute_balance(node).height
-
-            return self._compact_node(node,balance)
+            # return self._compact_node(node,balance)
+            return node, balance
 
         elif local_index == len(node.chars):
             # On est arrivé au bout des caractères du noeud
@@ -354,12 +340,18 @@ class compact_tst(object):
             return balance_info()
 
     def _balance(self,node,balance):
-        assert balance.height == self._compute_balance(node).height
+        assert balance.height == self._compute_balance(node).height, (node, balance, self._compute_balance(node))
         assert len(node.chars)>1 or balance.balance == self._compute_balance(node).balance, "%s : %s != %s"%(node,balance,self._compute_balance(node))
         assert balance.left_balance == self._compute_balance(node.left).balance
         assert balance.right_balance == self._compute_balance(node.right).balance
 
+        assert -2 < balance.left_balance < 2
+        assert -2 < balance.right_balance < 2
         assert -3 < balance.balance < 3
+
+        assert -2 < self._compute_balance(node.left).balance < 2
+        assert -2 < self._compute_balance(node.right).balance < 2
+        assert -3 < self._compute_balance(node).balance < 3
 
         # Assure le critère AVL
         if balance.balance > 1:
@@ -375,7 +367,7 @@ class compact_tst(object):
                 node, balance = self._rl(node,balance)
             balance.did_balance = True
 
-        assert -2 < self._compute_balance(node).balance < 2
+        assert -2 < self._compute_balance(node).balance < 2,(node,self._compute_balance(node)) 
         assert -2 < balance.balance < 2
 
         return node, balance
@@ -410,7 +402,7 @@ class compact_tst(object):
         balance.left_balance = 0
 
         # Le noeud de gauche prend la place du noeud d'origine dans l'arbre
-        return left_node, self._compute_balance(left_node)
+        return left_node, balance
          
     def _rr(self,node,balance):
         assert len(node.right.chars) == 1
@@ -430,7 +422,7 @@ class compact_tst(object):
         balance.balance = 0
         balance.right_balance = 0
 
-        return right_node, self._compute_balance(right_node)
+        return right_node, balance
     
     def _lr(self,node,balance):
         if len(node.left.right.chars)>1:
@@ -489,7 +481,7 @@ class compact_tst(object):
             node.chars.extend(node.next.chars)
             node.next.chars = node.chars
             if debug: print '=>',node.next
-            return node.next, balance_info(did_balance=(balance and balance.did_balance) or False,height=1)
+            return node.next, self._compute_balance(node.next)
         elif (
             node.next is None
             and (node.left is None or node.right is None)
@@ -671,11 +663,13 @@ if __name__ == '__main__':
         print key, value
         return False
 
+    QUANTITY = 1000 - 1
+
     n = 0
     try:
         chars = 0
         for n, l in enumerate(file('url_1000000.csv','rb')):
-            if n == 99999: break
+            if n == QUANTITY: break
             if n%1000==0 : print n
             key = l.rstrip()
             chars += len(key)
@@ -706,7 +700,7 @@ if __name__ == '__main__':
         ) 
 
     for n, l in enumerate(file('url_1000000.csv','rb')):
-        if n == 99999: break
+        if n == QUANTITY: break
         if n%1000==0 : print 'Delete ',n
         key = l.rstrip()
         if n%2 == 0 : del urls[key]
@@ -714,7 +708,7 @@ if __name__ == '__main__':
     urls.root = urls.cat(urls.root,True)
 
     for n, l in enumerate(file('url_1000000.csv','rb')):
-        if n == 99999: break
+        if n == QUANTITY: break
         if n%1000==0 : print 'Check ',n
         key = l.rstrip()
         if n%2==1:
@@ -743,7 +737,7 @@ if __name__ == '__main__':
     assert 'nicolas lehuen' == t['nicolas lehuen']
     assert 'laurent' == t['laurent']
     assert 'laurent querel' == t['laurent querel']
-
+ 
     import random
         
     t = compact_tst()
