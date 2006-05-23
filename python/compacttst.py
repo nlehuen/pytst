@@ -675,7 +675,7 @@ if __name__ == '__main__':
     try:
         chars = 0
         for n, l in enumerate(file('url_1000000.csv','rb')):
-            if n == 999999: break
+            if n == 99999: break
             if n%1000==0 : print n
             key = l.rstrip()
             chars += len(key)
@@ -706,7 +706,7 @@ if __name__ == '__main__':
         ) 
 
     for n, l in enumerate(file('url_1000000.csv','rb')):
-        if n == 999999: break
+        if n == 99999: break
         if n%1000==0 : print 'Delete ',n
         key = l.rstrip()
         if n%2 == 0 : del urls[key]
@@ -714,7 +714,7 @@ if __name__ == '__main__':
     urls.root = urls.cat(urls.root,True)
 
     for n, l in enumerate(file('url_1000000.csv','rb')):
-        if n == 999999: break
+        if n == 99999: break
         if n%1000==0 : print 'Check ',n
         key = l.rstrip()
         if n%2==1:
@@ -751,6 +751,7 @@ if __name__ == '__main__':
     data = range(1000)
     seed = random.randint(-5000000,5000000)
     print 'Seed is ',seed
+    seed = 654
     random.Random(seed).shuffle(data)
     
     for i, d in enumerate(data):
@@ -761,12 +762,12 @@ if __name__ == '__main__':
         
     for i, d in enumerate(data):
         if i%100==0: print i
-        if d%3==0: del t[str(d)]
+        if i%3==0: del t[str(d)]
 
     t.root = t.cat(t.root,True)
 
     for i,d in enumerate(data):
-       if d%3==0 :
+       if i%3==0 :
            assert t[str(d)] == None, "%s => %s != %s"%(d,None,t[str(d)]) 
        else: 
           assert t[str(d)] == d, "%s => %s != %s"%(d,i,t[str(d)]) 
