@@ -55,7 +55,7 @@ if __name__ == "__main__":
                 
                 self.entry = Entry(self.frame, name='input')
                 self.entry.pack(fill=X)
-                self.entry.bind('<Key>',self.keyPressed)
+                self.entry.bind('<KeyRelease>',self.keyPressed)
                 
                 frame = Frame(self.frame)
                 frame.pack(fill=BOTH, expand=1)

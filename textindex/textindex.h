@@ -26,21 +26,25 @@
 #include <boost/regex.hpp>
 #include <iostream>
 
-template <class pair> inline bool sort_by_document(const pair& lhs, const pair& rhs)
+template <class pair>
+inline bool sort_by_document(const pair& lhs, const pair& rhs)
 {
     return lhs.first < rhs.first;
 }
 
-template <class pair> inline bool sort_by_score(const pair& lhs, const pair& rhs)
+template <class pair>
+inline bool sort_by_score(const pair& lhs, const pair& rhs)
 {
     return lhs.second > rhs.second;
 }
 
-template <class item> inline bool sort_by_first_item_length_desc(const item& lhs, const item& rhs) {
+template <class item>
+inline bool sort_by_first_item_length_desc(const item& lhs, const item& rhs) {
     return lhs.begin()->length() > rhs.begin()->length();
 }
 
-template <typename document_id_type, typename score_type> class documents_scores {
+template <typename document_id_type, typename score_type>
+class documents_scores {
     public:
         typedef std::pair<document_id_type,score_type> pair_type;
         typedef std::map<document_id_type,score_type> storage_type;
@@ -164,8 +168,11 @@ template <typename document_id_type, typename score_type> class documents_scores
 };
 
 
-template < typename character_type, typename document_type, typename reader_writer, typename document_id_type = unsigned int, typename score_type = unsigned int > class textindex {
+template < typename character_type, typename document_type, typename reader_writer, typename document_id_type = unsigned int, typename score_type = unsigned int>
+class textindex {
     public:
+        // Chaînes de caractères
+        typedef std::basic_string<typename character_type> string_type;
 
         // Mapping document <=> id
         typedef std::map< typename document_type, document_id_type > documents_ids_type;
@@ -175,7 +182,7 @@ template < typename character_type, typename document_type, typename reader_writ
         typedef documents_scores< typename document_id_type, typename score_type > documents_scores_type;
         typedef typename documents_scores_type::shared_ptr documents_scores_pointer; 
         typedef typename documents_scores_type::serializer documents_scores_serializer; 
-        typedef string_tst < character_type, typename documents_scores_pointer, memory_storage<character_type, typename documents_scores_pointer>, documents_scores_serializer > tree_type;
+        typedef tst < character_type, typename documents_scores_pointer, memory_storage<character_type, typename documents_scores_pointer>, documents_scores_serializer, typename string_type > tree_type;
 
         // Résultat des requêtes
         typedef std::pair< document_type, score_type > pair_type;
@@ -184,14 +191,14 @@ template < typename character_type, typename document_type, typename reader_writ
 
         // Regexes
         typedef boost::basic_regex < character_type > regex_type;
-        typedef boost::regex_iterator<typename std::basic_string<character_type>::const_iterator> regex_type_iterator;
+        typedef boost::regex_iterator<typename string_type::const_iterator> regex_type_iterator;
 
-        class collector : public action< typename character_type, typename documents_scores_pointer > {
+        class collector : public action< typename character_type, typename documents_scores_pointer, typename string_type> {
             public:
                 collector(collector* _intersect=0) : intersect(_intersect), entries(new documents_scores_type(0)) {
                 }
             
-                virtual void perform(const character_type* string, size_t string_length, int remaining_distance, typename documents_scores_pointer data) {
+                virtual void perform(const typename string_type& string, int remaining_distance, typename documents_scores_pointer data) {
                     entries->merge_with(*data,intersect ? intersect->entries.get() : 0);
                 }
                 
@@ -216,12 +223,12 @@ template < typename character_type, typename document_type, typename reader_writ
                 documents_scores_pointer entries;
         };
         
-        class eraser : public action< typename character_type, typename documents_scores_pointer > {
+        class eraser : public action< typename character_type, typename documents_scores_pointer, typename string_type > {
             public:
                 eraser(document_id_type _document_id) : document_id(_document_id) {
                 }
             
-                virtual void perform(const character_type* string, size_t string_length, int remaining_distance, typename documents_scores_pointer data) {
+                virtual void perform(const typename string_type& string, int remaining_distance, typename documents_scores_pointer data) {
                     data->remove_document(document_id);
                 }
                 
@@ -233,16 +240,16 @@ template < typename character_type, typename document_type, typename reader_writ
                 document_id_type document_id;
         };
 
-        class cleaner : public action< typename character_type, typename documents_scores_pointer > {
+        class cleaner : public action< typename character_type, typename documents_scores_pointer, typename string_type > {
             public:
-                typedef boost::shared_ptr< std::vector< std::basic_string< typename character_type > > > result_type;
+                typedef boost::shared_ptr< std::vector< typename string_type > > result_type;
 
-                cleaner(typename tree_type* _tree) : tree(_tree), empty_words(new std::vector< std::basic_string< character_type > >() ) {
+                cleaner(typename tree_type* _tree) : tree(_tree), empty_words(new std::vector< typename string_type >() ) {
                 }
             
-                virtual void perform(const character_type* string, size_t string_length, int remaining_distance, typename documents_scores_pointer data) {
+                virtual void perform(const typename string_type& string, int remaining_distance, typename documents_scores_pointer data) {
                     if(data->size()==0) {
-                        empty_words->push_back(std::basic_string< typename character_type >(string,string_length));
+                        empty_words->push_back(string);
                     }
                 }
                 
@@ -258,9 +265,9 @@ template < typename character_type, typename document_type, typename reader_writ
                 typename result_type empty_words;
         };
 
-        class documents_scores_type_factory : public filter< character_type, documents_scores_pointer > {
+        class documents_scores_type_factory : public filter< character_type, documents_scores_pointer, typename string_type > {
             public:
-                virtual documents_scores_pointer perform(const character_type* string, size_t string_length, int remaining_distance, typename documents_scores_pointer data) {
+                virtual documents_scores_pointer perform(const typename string_type& string, int remaining_distance, typename documents_scores_pointer data) {
                     return typename documents_scores_pointer(new documents_scores_type(0));
                 }
         };
@@ -271,7 +278,7 @@ template < typename character_type, typename document_type, typename reader_writ
             next_document_id(0) {
         }
 
-        int put_word(const std::basic_string< character_type >& word,const document_type& document) {
+        int put_word(const typename string_type& word,const document_type& document) {
             if(word.size()>2) {
                 documents_scores_pointer scores(tree.get_or_build(word,&factory));
                 return scores->add_document(get_document_id(document),1);
@@ -281,7 +288,7 @@ template < typename character_type, typename document_type, typename reader_writ
             }
         }
 
-        int put_text(const std::basic_string< character_type >& text,const document_type& document) {
+        int put_text(const typename string_type& text,const document_type& document) {
             typename regex_type_iterator token(text.begin(),text.end(),tokenizer);
             typename regex_type_iterator end;
             int count = 0;
@@ -302,17 +309,17 @@ template < typename character_type, typename document_type, typename reader_writ
                 reversed_ids.erase(document_id);
 
                 eraser e(document_id);
-                tree.walk1(0,&e);
+                tree.walk(0,&e);
             }
         }
 
-        result_pointer find_word(const std::basic_string< character_type >& word) {
+        result_pointer find_word(const typename string_type& word) {
             collector c;
             tree.match(word,0,&c);
             return convert_to_result(c);
         }
         
-        result_pointer find_text(const std::basic_string< character_type >& text,bool intersection) {
+        result_pointer find_text(const typename string_type& text,bool intersection) {
             typename regex_type_iterator token(text.begin(),text.end(),tokenizer);
             typename regex_type_iterator end;
             if(token!=end) {
@@ -343,7 +350,7 @@ template < typename character_type, typename document_type, typename reader_writ
                     collector c;
                     while(token != end) {
                         if(token->begin()->length()>2) {
-                            std::basic_string<character_type> word = token->begin()->str();
+                            typename string_type word = token->begin()->str();
                             tree.match(word,0,&c);
                         }
                         ++token;
@@ -358,7 +365,7 @@ template < typename character_type, typename document_type, typename reader_writ
 
         void pack() {
             cleaner c(&tree);
-            tree.walk1(NULL,&c);
+            tree.walk(NULL,&c);
             tree.pack();
         }
 

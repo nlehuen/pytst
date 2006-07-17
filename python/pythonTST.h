@@ -33,7 +33,6 @@
 
 typedef qad_string<char> string_type;
 
-
 class CallableAction : public action<char,PythonReference,string_type > {
 public:
     CallableAction(PythonReference perform,PythonReference result) : _perform(perform), _result(result) {

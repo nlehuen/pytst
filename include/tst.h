@@ -1436,7 +1436,7 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
     // We save the version number
     size_t version_length = strlen(TST_VERSION);
     file.write((char*)(&version_length),sizeof(size_t));
-    file.write(TST_VERSION,version_length);
+	file.write(TST_VERSION,(std::streamsize)version_length);
 
     serializerT writer;
     writer.write(file,default_value);

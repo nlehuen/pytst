@@ -20,13 +20,18 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/filter/zlib.hpp>
 #include <boost/python.hpp>
 using namespace boost::python;
 
+#define COMPRESS_INDEX_FILE
+#ifdef COMPRESS_INDEX_FILE
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
+#endif
+
 #define __PYTHON__BUILD__
 #include "textindex.h"
+
 
 class object_serializer {
     public:
@@ -86,22 +91,29 @@ template <typename character_type> class python_textindex : public textindex<cha
         
         void write_to_file(str file) {
             std::ofstream out(PyString_AsString(file.ptr()),std::ofstream::binary|std::ofstream::out|std::ofstream::trunc);
-            boost::iostreams::filtering_ostream fout;
-            fout.push(boost::iostreams::zlib_compressor());
-            fout.push(out);
-            write(fout);
-            fout.strict_sync();
-            // out.close();
+            out.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
+            #ifdef COMPRESS_INDEX_FILE
+                boost::iostreams::filtering_ostream fout;
+                fout.push(boost::iostreams::zlib_compressor());
+                fout.push(out);
+                write(fout);
+                fout.strict_sync();
+            #else
+                write(out);
+            #endif
         }
         
         void read_from_file(object file) {
             std::ifstream in(PyString_AsString(file.ptr()),std::ifstream::binary|std::ifstream::in);
             in.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);
-            boost::iostreams::filtering_istream fin;
-            fin.push(boost::iostreams::zlib_decompressor());
-            fin.push(in);
-            read(fin);
-            // in.close();
+            #ifdef COMPRESS_INDEX_FILE
+                boost::iostreams::filtering_istream fin;
+                fin.push(boost::iostreams::zlib_decompressor());
+                fin.push(in);
+                read(fin);
+            #else
+                read(in);
+            #endif
         }
 
     protected:
