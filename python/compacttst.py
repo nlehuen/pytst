@@ -87,12 +87,10 @@ class compact_tst(object):
                     # il n'y a donc pas de match possible (sinon il y aurait eu
                     # split à l'insertion)
                     return None
-                else:
-                    # différence au dernier caractère du noeud
-                    if diff>0:
+                elif diff>0:
                         node = node.left
-                    elif diff<0:
-                        node = node.right
+                else: # diff<0
+                    node = node.right
     
             elif local_index == len(node.chars):
                 # On est au bout des caractères du noeud
