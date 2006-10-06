@@ -71,9 +71,9 @@ private:
     JNIEnv* jenv;
 };
 
-class ObjectAction : public action<jchar,jobject> {
+class ObjectAction : public tst_action<jchar,jobject> {
 public:
-    ObjectAction(jobject target,char *perform,char* result,JNIEnv* jenv) : action<jchar,jobject>() {
+    ObjectAction(jobject target,char *perform,char* result,JNIEnv* jenv) : tst_action<jchar,jobject>() {
         this->jenv=jenv;
         this->target=jenv->NewGlobalRef(target);
         jclass clazz = jenv->GetObjectClass(this->target);
@@ -180,9 +180,9 @@ public:
     }
 };
 
-class LongAction : public action<jchar,jlong> {
+class LongAction : public tst_action<jchar,jlong> {
 public:
-    LongAction(jobject target,char *perform,char* result,JNIEnv* jenv) : action<jchar,jlong>() {
+    LongAction(jobject target,char *perform,char* result,JNIEnv* jenv) : tst_action<jchar,jlong>() {
         this->jenv=jenv;
         this->target=jenv->NewGlobalRef(target);
         jclass clazz = jenv->GetObjectClass(this->target);

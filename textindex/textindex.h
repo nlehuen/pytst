@@ -193,7 +193,7 @@ class textindex {
         typedef boost::basic_regex < character_type > regex_type;
         typedef boost::regex_iterator<typename string_type::const_iterator> regex_type_iterator;
 
-        class collector : public action< typename character_type, typename documents_scores_pointer, typename string_type> {
+        class collector : public tst_action< typename character_type, typename documents_scores_pointer, typename string_type> {
             public:
                 collector(collector* _intersect=0) : intersect(_intersect), entries(new documents_scores_type(0)) {
                 }
@@ -223,7 +223,7 @@ class textindex {
                 documents_scores_pointer entries;
         };
         
-        class eraser : public action< typename character_type, typename documents_scores_pointer, typename string_type > {
+        class eraser : public tst_action< typename character_type, typename documents_scores_pointer, typename string_type > {
             public:
                 eraser(document_id_type _document_id) : document_id(_document_id) {
                 }
@@ -240,7 +240,7 @@ class textindex {
                 document_id_type document_id;
         };
 
-        class cleaner : public action< typename character_type, typename documents_scores_pointer, typename string_type > {
+        class cleaner : public tst_action< typename character_type, typename documents_scores_pointer, typename string_type > {
             public:
                 typedef boost::shared_ptr< std::vector< typename string_type > > result_type;
 
@@ -265,7 +265,7 @@ class textindex {
                 typename result_type empty_words;
         };
 
-        class documents_scores_type_factory : public filter< character_type, documents_scores_pointer, typename string_type > {
+        class documents_scores_type_factory : public tst_filter< character_type, documents_scores_pointer, typename string_type > {
             public:
                 virtual documents_scores_pointer perform(const typename string_type& string, int remaining_distance, typename documents_scores_pointer data) {
                     return typename documents_scores_pointer(new documents_scores_type(0));

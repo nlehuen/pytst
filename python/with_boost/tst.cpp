@@ -32,7 +32,7 @@ using namespace boost::python;
 /********************* ACTION & FILTER ***********************************/
 
 template <class S, class T, class string_type>
-class NullAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
+class NullAction : public tst_action<S,T,string_type>, public wrapper< tst_action<S,T,string_type> > {
     public:
         void perform(const typename string_type & string,int remaining_distance,T data) {
         }
@@ -44,7 +44,7 @@ class NullAction : public action<S,T,string_type>, public wrapper< action<S,T,st
 };
 
 template <class S,class T, class string_type>
-class DictAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
+class DictAction : public tst_action<S,T,string_type>, public wrapper< tst_action<S,T,string_type> > {
     public:
         void perform(const typename string_type & string,int remaining_distance,T data) {
             object r = result_dict.get(string);
@@ -62,7 +62,7 @@ class DictAction : public action<S,T,string_type>, public wrapper< action<S,T,st
 };
 
 template <class S,class T, class string_type>
-class TupleListAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
+class TupleListAction : public tst_action<S,T,string_type>, public wrapper< tst_action<S,T,string_type> > {
     public:
         void perform(const typename string_type & string,int remaining_distance,T data) {
             result_list.append(make_tuple(string,remaining_distance,data));
@@ -77,7 +77,7 @@ class TupleListAction : public action<S,T,string_type>, public wrapper< action<S
 };
 
 template <class S,class T, class string_type>
-class ListAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
+class ListAction : public tst_action<S,T,string_type>, public wrapper< tst_action<S,T,string_type> > {
     public:
         void perform(const typename string_type & string,int remaining_distance,T data) {
             result_list.append(data);
@@ -92,7 +92,7 @@ class ListAction : public action<S,T,string_type>, public wrapper< action<S,T,st
 };
 
 template <class S,class T, class string_type>
-class CallableAction : public action<S,T,string_type>, public wrapper< action<S,T,string_type> > {
+class CallableAction : public tst_action<S,T,string_type>, public wrapper< tst_action<S,T,string_type> > {
     public:
         CallableAction(object perform, object result) :
             _perform(perform),
@@ -252,11 +252,11 @@ class TST : public tst<char,object,memory_storage<char,object>,ObjectSerializer,
             // in.close();
         }
 
-        object walk1(filter<char,object,std::basic_string<char> >* filter,action<char,object,std::basic_string<char> >* to_perform) const {
+        object walk1(filter<char,object,std::basic_string<char> >* filter,tst_action<char,object,std::basic_string<char> >* to_perform) const {
             return walk(filter,to_perform);
         }
         
-        object walk2(filter<char,object,std::basic_string<char> >* filter,action<char,object,std::basic_string<char> >* to_perform,const std::basic_string<char>& string) const {
+        object walk2(filter<char,object,std::basic_string<char> >* filter,tst_action<char,object,std::basic_string<char> >* to_perform,const std::basic_string<char>& string) const {
             return walk(filter,to_perform,string);
         }
 
@@ -329,23 +329,23 @@ BOOST_PYTHON_MODULE(tst)
         .def("close_match_iterator",&TST::close_match_iterator)
     ;
     
-    class_< NullAction<char,object,std::basic_string<char> >, boost::noncopyable >("NullAction")
+    class_< Nulltst_action<char,object,std::basic_string<char> >, boost::noncopyable >("NullAction")
     ;
 
-    class_< DictAction<char,object,std::basic_string<char> >, boost::noncopyable >("DictAction")
-        .def("result", &DictAction<char,object,std::basic_string<char> >::result)
+    class_< Dicttst_action<char,object,std::basic_string<char> >, boost::noncopyable >("DictAction")
+        .def("result", &Dicttst_action<char,object,std::basic_string<char> >::result)
     ;
 
-    class_< TupleListAction<char,object,std::basic_string<char> >, boost::noncopyable >("TupleListAction")
-        .def("result", &TupleListAction<char,object,std::basic_string<char> >::result)
+    class_< TupleListtst_action<char,object,std::basic_string<char> >, boost::noncopyable >("TupleListAction")
+        .def("result", &TupleListtst_action<char,object,std::basic_string<char> >::result)
     ;
 
-    class_< ListAction<char,object,std::basic_string<char> >, boost::noncopyable >("ListAction")
-        .def("result", &ListAction<char,object,std::basic_string<char> >::result)
+    class_< Listtst_action<char,object,std::basic_string<char> >, boost::noncopyable >("ListAction")
+        .def("result", &Listtst_action<char,object,std::basic_string<char> >::result)
     ;
 
-    class_< CallableAction<char,object,std::basic_string<char> >, boost::noncopyable >("CallableAction",init<object,object>())
-        .def("result", &CallableAction<char,object,std::basic_string<char> >::result)
+    class_< Callabletst_action<char,object,std::basic_string<char> >, boost::noncopyable >("CallableAction",init<object,object>())
+        .def("result", &Callabletst_action<char,object,std::basic_string<char> >::result)
     ;
 
     class_< NullFilter<char,object,std::basic_string<char> >, boost::noncopyable >("NullFilter")

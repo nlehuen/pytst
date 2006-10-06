@@ -33,7 +33,7 @@
 
 typedef qad_string<char> string_type;
 
-class CallableAction : public action<char,PythonReference,string_type > {
+class CallableAction : public tst_action<char,PythonReference,string_type > {
 public:
     CallableAction(PythonReference perform,PythonReference result) : _perform(perform), _result(result) {
     }
@@ -62,7 +62,7 @@ private:
     PythonReference _perform,_result;
 };
 
-class CallableFilter : public filter<char,PythonReference,string_type > {
+class CallableFilter : public tst_filter<char,PythonReference,string_type > {
 public:
     CallableFilter(PythonReference _callable) : callable(_callable) {
     }
@@ -79,7 +79,7 @@ private:
     PythonReference callable;
 };
 
-class DictAction : public action<char,PythonReference,string_type > {
+class DictAction : public tst_action<char,PythonReference,string_type > {
 public:
     DictAction() : dict(PyDict_New(),0) {
     }
@@ -110,7 +110,7 @@ private:
     PythonReference dict;
 };
 
-class ListAction : public action<char,PythonReference,string_type > {
+class ListAction : public tst_action<char,PythonReference,string_type > {
 public:
     ListAction() : list(PyList_New(0),0) {
     }
@@ -130,7 +130,7 @@ private:
     PythonReference list;
 };
 
-class TupleListAction : public action<char,PythonReference,string_type > {
+class TupleListAction : public tst_action<char,PythonReference,string_type > {
 public:
     TupleListAction() : list(PyList_New(0),0){
     }

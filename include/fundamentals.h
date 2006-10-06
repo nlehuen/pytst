@@ -109,19 +109,19 @@ public:
 };
 
 template <typename charT,typename valueT,typename stringT>
-class action {
+class tst_action {
 public:
-    action() {}
-    virtual ~action() {}
+    tst_action() {}
+    virtual ~tst_action() {}
     virtual void perform(const stringT & string,int remaining_distance,valueT data)=0;
     virtual valueT result()=0;
 };
 
 template <typename charT,typename valueT,typename stringT>
-class filter {
+class tst_filter {
 public:
-    filter() {}
-    virtual ~filter() {}
+    tst_filter() {}
+    virtual ~tst_filter() {}
     virtual valueT perform(const stringT & string,int remaining_distance,valueT data)=0;
 };
 

@@ -53,7 +53,7 @@ public:
     }
 };
 
-class donothing : public action<char,char*> {
+class donothing : public tst_action<char,char*> {
     public:
         virtual void perform(const char* string,int string_length,int remaining_distance,char* data) {}
         virtual char* result() { return 0; }
