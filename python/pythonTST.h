@@ -156,7 +156,7 @@ public:
     ObjectSerializer();
     
     void write(std::ostream& file,PythonReference data);
-    PythonReference ObjectSerializer::read(std::istream& file);
+    PythonReference read(std::istream& file);
 
 private:
     PythonReference dumps,loads;
