@@ -26,7 +26,7 @@ setup(
     version = "1.15",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
-    url = "http://nicolas.lehuen.com/index.php/Pytst",
+    url = "http://nicolas.lehuen.com/index.php/category/Pytst",
     description = "An implementation of a Ternary Search Tree (TST) in C++ with Python bindings",
     py_modules = ["tst"],
     ext_modules = [
