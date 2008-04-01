@@ -226,7 +226,7 @@ class TSTIterator {
 typedef TSTIterator<lexical_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type > > TSTLexicalIterator;
 typedef TSTIterator<match_iterator<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type > > TSTCloseMatchIterator;
 
-class TST : private tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type > {
+class TST : public tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type > {
 public:
     TST() : tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >() {
     }

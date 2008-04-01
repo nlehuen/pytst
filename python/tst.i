@@ -59,8 +59,8 @@
 %include "memory_storage.h"
 
 %template(_TST) tst<char,PythonReference,memory_storage<char,PythonReference>,ObjectSerializer,string_type >;
-%template(_Action) action<char,PythonReference,string_type >;
-%template(_Filter) filter<char,PythonReference,string_type >;
+%template(_Action) tst_action<char,PythonReference,string_type >;
+%template(_Filter) tst_filter<char,PythonReference,string_type >;
 
 %include "pythonTST.h"
 

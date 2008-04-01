@@ -23,7 +23,7 @@ if sys.platform == "win32" and sys.version >= '2.4':
 
 setup(
     name = "pytst",
-    version = "1.14",
+    version = "1.15",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
     url = "http://nicolas.lehuen.com/index.php/Pytst",
@@ -33,7 +33,7 @@ setup(
         Extension(
             "_tst",
             ["tst_wrap.cxx"],
-            include_dirs=['include',r'c:\projets\boost_1_33_1'],
+            include_dirs=['include'],
             extra_compile_args = extra_compile_args,
             define_macros=[('SCANNER', None),],
         )

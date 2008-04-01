@@ -223,6 +223,18 @@ class TestBasics(unittest.TestCase):
                         d.get(k2)
                     ))
 
+    def testPrefixMatch(self):
+        for k1 in self.keys.iterkeys():
+            timer_start("prefix_match")        
+            d = self.tree.prefix_match(k1[:len(k1)/2],None,DictAction())
+            timer_end("prefix_match")
+            self.assert_(k1 in d,"Une cle manque dans un prefix_match pour %s"%(k1,))
+            k2 = k1 + k1
+            timer_start("prefix_match")        
+            d = self.tree.prefix_match(k2,None,DictAction())
+            timer_end("prefix_match")
+            self.assert_(k2 not in d,"Une cle manque dans un prefix_match pour %s"%(k1,))
+
     def testWriteRead(self):
         self.tree.write_to_file('test.tst')
         
