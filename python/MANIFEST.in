@@ -15,6 +15,7 @@ include README.html
 include setup.py
 include tst.i
 include tst.py
+include tst_wrap.h
 include tst_wrap.cxx
 
 
