@@ -46,7 +46,10 @@ public:
             return;
         }
         PythonReference tuple(Py_BuildValue("s#iO",string.data(),string.size(),remaining_distance,data.get()),0);
-        Py_DECREF(PyObject_CallObject(_perform.get(),tuple.get()));
+        PyObject* result = PyObject_CallObject(_perform.get(),tuple.get());
+        if(result) {
+            Py_DECREF(result);
+        }
     }
 
     virtual PythonReference result() {
@@ -54,7 +57,13 @@ public:
             return PythonReference();
         }
         else {
-            return PythonReference(PyObject_CallObject(_result.get(),0),0);
+            PyObject* result = PyObject_CallObject(_result.get(),0);
+            if(result) {
+                return PythonReference(result,0);
+            }
+            else {
+                return PythonReference();
+            }
         }
     }
 

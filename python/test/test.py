@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 
 import sys
-sys.path.insert(0,r"D:\projets\tst\python\Debug")
+# sys.path.insert(0,r"D:\projets\tst\python\Debug")
 
 import unittest
 import os
@@ -359,6 +359,59 @@ class TestIterators(unittest.TestCase):
             toto = 2
         ))
 
+class TestCallableAction(unittest.TestCase):
+    def setUp(self):
+        self.tree = TST()
+        self.tree['foo'] = 'bar'
+
+    def testCA1(self):
+        res = {}
+    
+        def callback(key, length, obj):
+            res[key] = obj
+        
+        def result():
+            res['hello'] = 'world'
+            return res
+        
+        self.assertEqual(
+            self.tree.walk(None, CallableAction(callback, result)),
+            {'foo':'bar', 'hello':'world'}
+        )
+
+    def testCA2(self):
+        res = {}
+    
+        def callback(key, length, obj):
+            # Provoke an exception
+            print 0 / 0
+            res[key] = obj
+        
+        def result():
+            return res
+        
+        try:
+            self.tree.walk(None, CallableAction(callback, result)),
+            self.fail("Should have raised an exception")
+        except:
+            pass
+        
+    def testCA3(self):
+        res = {}
+    
+        def callback(key, length, obj):
+            res[key] = obj
+        
+        def result():
+            # Provoke an exception
+            return 0/0
+        
+        try:
+            self.tree.walk(None, CallableAction(callback, result)),
+            self.fail("Should have raised an exception")
+        except:
+            pass
+
 class TestHighCapacity(unittest.TestCase):
     def setUp(self):
         tree = TST()
@@ -621,6 +674,7 @@ if __name__ == '__main__':
         unittest.makeSuite(TestScan),
         unittest.makeSuite(TestIterators),
         unittest.makeSuite(TestMatch),
+        unittest.makeSuite(TestCallableAction),
      ))
     
     for i in xrange(3):
