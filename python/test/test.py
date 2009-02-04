@@ -30,7 +30,8 @@ def timer_end(name,normalize=1.0):
     timers.setdefault(name,Timer()).stop(normalize)
 
 def print_timers(comment):
-    keys = sorted(timers.keys())
+    keys = timers.keys()
+    keys.sort()
 
     for name in keys: 
         print '%16s : %s'%(name,timers[name])
