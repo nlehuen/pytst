@@ -49,7 +49,16 @@
 
 %exception {
     try { $action }
-    catch (std::exception e) { PyErr_SetString(PyExc_RuntimeError,e.what()); SWIG_fail;}
+    catch (TSTException &e) {
+        PyErr_SetString(PyExc_RuntimeError,e.what());
+        SWIG_fail;
+    }
+    catch (PythonException &e) {
+        if(!PyErr_Occurred()) {
+            PyErr_SetString(PyExc_RuntimeError,e.what());
+        }
+        SWIG_fail;
+    }
 }
 
 #define __PYTHON__BUILD__

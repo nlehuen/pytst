@@ -49,6 +49,8 @@ public:
         PyObject* result = PyObject_CallObject(_perform.get(),tuple.get());
         if(result) {
             Py_DECREF(result);
+        } else {
+            throw PythonException("An exception was raised in a Python callback");
         }
     }
 
@@ -62,7 +64,7 @@ public:
                 return PythonReference(result,0);
             }
             else {
-                return PythonReference();
+                throw PythonException("An exception was raised in a Python callback");
             }
         }
     }
@@ -81,7 +83,13 @@ public:
 
     virtual PythonReference perform(const string_type& string,int remaining_distance,PythonReference data) {
         PythonReference tuple(Py_BuildValue("s#iO",string.data(),string.size(),remaining_distance,data.get()),0);
-        return PythonReference(PyObject_CallObject(callable.get(),tuple.get()),0);
+        PyObject* result = PyObject_CallObject(callable.get(),tuple.get());
+        if(result) {
+            return PythonReference(result,0);
+        }
+        else {
+            throw PythonException("An exception was raised in a Python callback");
+        }
     }
 
 private:
@@ -245,7 +253,7 @@ public:
 
     virtual PythonReference write_to_file(PythonReference file) {
         if(!PyString_CheckExact(file.get())) {
-            throw TSTException("Argument of write_to_file() must be a string object");
+            throw PythonException("Argument of write_to_file() must be a string object");
         }
         std::ofstream out(PyString_AsString(file.get()),std::ofstream::binary|std::ofstream::out|std::ofstream::trunc);
         out.exceptions(std::ofstream::eofbit | std::ofstream::failbit | std::ofstream::badbit);
@@ -266,7 +274,7 @@ public:
 
     virtual PythonReference read_from_file(PythonReference file) {
         if(!PyString_CheckExact(file.get())) {
-            throw TSTException("Argument of read_from_file() must be a string object");
+            throw PythonException("Argument of read_from_file() must be a string object");
         }
         std::ifstream in(PyString_AsString(file.get()),std::ifstream::binary|std::ifstream::in);
         in.exceptions(std::ifstream::eofbit | std::ifstream::failbit | std::ifstream::badbit);

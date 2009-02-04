@@ -393,7 +393,7 @@ class TestCallableAction(unittest.TestCase):
         try:
             self.tree.walk(None, CallableAction(callback, result)),
             self.fail("Should have raised an exception")
-        except:
+        except ZeroDivisionError:
             pass
         
     def testCA3(self):
@@ -409,7 +409,7 @@ class TestCallableAction(unittest.TestCase):
         try:
             self.tree.walk(None, CallableAction(callback, result)),
             self.fail("Should have raised an exception")
-        except:
+        except ZeroDivisionError:
             pass
 
 class TestHighCapacity(unittest.TestCase):
@@ -668,12 +668,12 @@ if __name__ == '__main__':
     comment = ' '.join(sys.argv[1:])
 
     suite = unittest.TestSuite((
-        unittest.makeSuite(TestCollectors),
-        unittest.makeSuite(TestBasics),
-        unittest.makeSuite(TestHighCapacity),
-        unittest.makeSuite(TestScan),
-        unittest.makeSuite(TestIterators),
-        unittest.makeSuite(TestMatch),
+        #unittest.makeSuite(TestCollectors),
+        #unittest.makeSuite(TestBasics),
+        #unittest.makeSuite(TestHighCapacity),
+        #unittest.makeSuite(TestScan),
+        #unittest.makeSuite(TestIterators),
+        #unittest.makeSuite(TestMatch),
         unittest.makeSuite(TestCallableAction),
      ))
     

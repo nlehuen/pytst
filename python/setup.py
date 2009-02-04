@@ -17,7 +17,7 @@
 from distutils.core import setup, Extension
 import sys
 
-extra_compile_args = ['-mdll']
+extra_compile_args = []
 #if sys.platform == "win32" and sys.version >= '2.4':
 #	extra_compile_args = '/Zp1 /Og /Ob2 /Oi /Ot /GS'.split()
 

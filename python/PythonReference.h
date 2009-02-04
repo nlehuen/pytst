@@ -3,6 +3,20 @@
 
 #include "Python.h"
 
+class PythonException : public std::exception {
+public:
+    PythonException(const char* _message) : message(_message) {
+    }
+
+    const char* what() {
+        return message;
+    }
+
+private:
+    const char* message;
+};
+
+
 class PythonReference {
 public:
     explicit PythonReference() : ref(Py_None) {
@@ -11,7 +25,7 @@ public:
     
     explicit PythonReference(PyObject *object, int borrow=1) : ref(object) {
         if(ref==0) {
-            throw TSTException("Cannot reference NULL");
+            throw PythonException("Cannot reference NULL");
         }
         if(borrow) {
             Py_INCREF(ref);
