@@ -669,12 +669,12 @@ if __name__ == '__main__':
     comment = ' '.join(sys.argv[1:])
 
     suite = unittest.TestSuite((
-        #unittest.makeSuite(TestCollectors),
-        #unittest.makeSuite(TestBasics),
-        #unittest.makeSuite(TestHighCapacity),
-        #unittest.makeSuite(TestScan),
-        #unittest.makeSuite(TestIterators),
-        #unittest.makeSuite(TestMatch),
+        unittest.makeSuite(TestCollectors),
+        unittest.makeSuite(TestBasics),
+        unittest.makeSuite(TestHighCapacity),
+        unittest.makeSuite(TestScan),
+        unittest.makeSuite(TestIterators),
+        unittest.makeSuite(TestMatch),
         unittest.makeSuite(TestCallableAction),
      ))
     

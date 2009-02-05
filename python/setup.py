@@ -18,12 +18,10 @@ from distutils.core import setup, Extension
 import sys
 
 extra_compile_args = []
-#if sys.platform == "win32" and sys.version >= '2.4':
-#	extra_compile_args = '/Zp1 /Og /Ob2 /Oi /Ot /GS'.split()
 
 setup(
     name = "pytst",
-    version = "1.16RC",
+    version = "1.16-RC1",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
     url = "http://nicolas.lehuen.com/index.php/category/Pytst",
