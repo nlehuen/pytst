@@ -191,15 +191,15 @@ void ObjectSerializer::write(std::ostream& file,PythonReference data) {
     PythonReference call(Py_BuildValue("Oi",data.get(),2),0);
     PythonReference result(PyObject_CallObject(dumps.get(),call.get()),0);
     char *string;
-    int length;
+    Py_ssize_t length;
     PyString_AsStringAndSize(result.get(),&string,&length);
-    file.write((char*)(&length),sizeof(int));
+    file.write((char*)(&length),sizeof(Py_ssize_t));
     file.write(string,length);
 }
 
 PythonReference ObjectSerializer::read(std::istream& file) {
-    int length;
-    file.read((char*)(&length),sizeof(int));
+    Py_ssize_t length;
+    file.read((char*)(&length),sizeof(Py_ssize_t));
     char* string=(char*)tst_malloc(length);
     file.read(string,length);
     PythonReference dumped(PyString_FromStringAndSize(string,length),0);

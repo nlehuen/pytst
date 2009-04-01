@@ -30,7 +30,7 @@
 
 %typemap(in) const string_type&, string_type& {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize($input,&buffer,&size);
     $1 = new string_type(buffer,size);
 }

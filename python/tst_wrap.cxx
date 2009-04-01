@@ -3391,7 +3391,7 @@ SWIGINTERN PyObject *_wrap__TST_walk__SWIG_1(PyObject *SWIGUNUSEDPARM(self), int
   arg3 = reinterpret_cast< tst_action< char,PythonReference,string_type > * >(argp3);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[3],&buffer,&size);
     arg4 = new string_type(buffer,size);
   }
@@ -3473,7 +3473,7 @@ SWIGINTERN PyObject *_wrap__TST_close_match(PyObject *SWIGUNUSEDPARM(self), PyOb
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -3545,7 +3545,7 @@ SWIGINTERN PyObject *_wrap__TST_prefix_match(PyObject *SWIGUNUSEDPARM(self), PyO
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -3612,7 +3612,7 @@ SWIGINTERN PyObject *_wrap__TST_match(PyObject *SWIGUNUSEDPARM(self), PyObject *
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -3673,7 +3673,7 @@ SWIGINTERN PyObject *_wrap__TST_get(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -3727,7 +3727,7 @@ SWIGINTERN PyObject *_wrap__TST_get_or_build(PyObject *SWIGUNUSEDPARM(self), PyO
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -3784,7 +3784,7 @@ SWIGINTERN PyObject *_wrap__TST_put(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -3837,7 +3837,7 @@ SWIGINTERN PyObject *_wrap__TST_remove(PyObject *SWIGUNUSEDPARM(self), PyObject 
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -3886,7 +3886,7 @@ SWIGINTERN PyObject *_wrap__TST_contains(PyObject *SWIGUNUSEDPARM(self), PyObjec
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -4061,7 +4061,7 @@ SWIGINTERN PyObject *_wrap__TST_iterator__SWIG_1(PyObject *SWIGUNUSEDPARM(self),
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -4135,7 +4135,7 @@ SWIGINTERN PyObject *_wrap__TST_close_match_iterator(PyObject *SWIGUNUSEDPARM(se
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -4268,7 +4268,7 @@ SWIGINTERN PyObject *_wrap__TST_scan(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -4328,13 +4328,13 @@ SWIGINTERN PyObject *_wrap__TST_scan_with_stop_chars(PyObject *SWIGUNUSEDPARM(se
   arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[2],&buffer,&size);
     arg3 = new string_type(buffer,size);
   }
@@ -4446,7 +4446,7 @@ SWIGINTERN PyObject *_wrap__Action_perform(PyObject *SWIGUNUSEDPARM(self), PyObj
   arg1 = reinterpret_cast< tst_action< char,PythonReference,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -4589,7 +4589,7 @@ SWIGINTERN PyObject *_wrap__Filter_perform(PyObject *SWIGUNUSEDPARM(self), PyObj
   arg1 = reinterpret_cast< tst_filter< char,PythonReference,string_type > * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -5360,7 +5360,7 @@ SWIGINTERN PyObject *_wrap_TST___getitem__(PyObject *SWIGUNUSEDPARM(self), PyObj
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -5412,7 +5412,7 @@ SWIGINTERN PyObject *_wrap_TST___setitem__(PyObject *SWIGUNUSEDPARM(self), PyObj
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -5465,7 +5465,7 @@ SWIGINTERN PyObject *_wrap_TST___delitem__(PyObject *SWIGUNUSEDPARM(self), PyObj
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -5514,7 +5514,7 @@ SWIGINTERN PyObject *_wrap_TST___contains__(PyObject *SWIGUNUSEDPARM(self), PyOb
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -5636,7 +5636,7 @@ SWIGINTERN PyObject *_wrap_TST_iterator__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -5710,7 +5710,7 @@ SWIGINTERN PyObject *_wrap_TST_close_match_iterator(PyObject *SWIGUNUSEDPARM(sel
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -5765,7 +5765,7 @@ SWIGINTERN PyObject *_wrap_TST_put(PyObject *SWIGUNUSEDPARM(self), PyObject *arg
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -5819,7 +5819,7 @@ SWIGINTERN PyObject *_wrap_TST_get(PyObject *SWIGUNUSEDPARM(self), PyObject *arg
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -5974,7 +5974,7 @@ SWIGINTERN PyObject *_wrap_TST_walk_SWIG_0_1(PyObject *SWIGUNUSEDPARM(self), int
   arg3 = reinterpret_cast< tst_action< char,PythonReference,string_type > * >(argp3);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[3],&buffer,&size);
     arg4 = new string_type(buffer,size);
   }
@@ -6056,7 +6056,7 @@ SWIGINTERN PyObject *_wrap_TST_close_match(PyObject *SWIGUNUSEDPARM(self), PyObj
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -6128,7 +6128,7 @@ SWIGINTERN PyObject *_wrap_TST_match(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -6192,7 +6192,7 @@ SWIGINTERN PyObject *_wrap_TST_scan(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
@@ -6252,13 +6252,13 @@ SWIGINTERN PyObject *_wrap_TST_scan_with_stop_chars(PyObject *SWIGUNUSEDPARM(sel
   arg1 = reinterpret_cast< TST * >(argp1);
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[1],&buffer,&size);
     arg2 = new string_type(buffer,size);
   }
   {
     char* buffer;
-    int size;
+    Py_ssize_t size;
     PyString_AsStringAndSize(swig_obj[2],&buffer,&size);
     arg3 = new string_type(buffer,size);
   }

@@ -21,7 +21,7 @@ extra_compile_args = []
 
 setup(
     name = "pytst",
-    version = "1.16",
+    version = "1.17-dev",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
     url = "http://nicolas.lehuen.com/index.php/category/Pytst",
