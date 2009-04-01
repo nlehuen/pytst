@@ -1,7 +1,4 @@
-rmdir /s /q build include
-mkdir include & xcopy ..\include include
-copy ..\include\LICENSE .
-swig -O -Iinclude -DSCANNER -c++ -python tst.i
-del MANIFEST
+rmdir /s /q build
+swig -O -I../include -DSCANNER -c++ -python tst.i
 python setup.py clean sdist bdist_wininst
-rmdir /s /q build include
+rmdir /s /q build

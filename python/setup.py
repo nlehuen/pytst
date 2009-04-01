@@ -31,7 +31,7 @@ setup(
         Extension(
             "_tst",
             ["tst_wrap.cxx"],
-            include_dirs=['include'],
+            include_dirs=['../include'],
             extra_compile_args = extra_compile_args,
             define_macros=[('SCANNER', None),],
         )
