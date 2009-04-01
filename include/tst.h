@@ -19,7 +19,7 @@
 #ifndef __TST__H_INCLUDED__
 #define __TST__H_INCLUDED__
 
-const char* const TST_VERSION = "1.17-dev";
+const char* const TST_VERSION = "1.17";
 
 #include "debug.h"
 
