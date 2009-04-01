@@ -18,6 +18,7 @@ random.seed(0)
 def random_string(length):
     return ''.join([random.choice(string.letters) for x in xrange(length)])
 
+# Where does tcc live?
 from tcc.timer import Timer
 from tcc.util import levenshtein
 
