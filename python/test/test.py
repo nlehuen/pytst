@@ -413,6 +413,52 @@ class TestCallableAction(unittest.TestCase):
         except ZeroDivisionError:
             pass
 
+class TestCallableFilter(unittest.TestCase):
+    def setUp(self):
+        self.tree = TST()
+        self.tree['foo'] = 'bar'
+        self.tree['bar'] = 'foo'
+
+    def testCF1(self):
+        res = {}
+    
+        def cfilter(key, length, obj):
+            res[key] = obj
+            return obj
+        
+        self.tree.walk(CallableFilter(cfilter),None)
+        
+        self.assertEqual(
+            res,
+            {'foo':'bar', 'bar':'foo'}
+        )
+
+    def testCF2(self):
+        def cfilter(key, length, obj):
+            if key=='foo':
+                return 'boo'
+            else:
+                return obj
+        
+        self.assertEqual(
+            self.tree.walk(CallableFilter(cfilter),DictAction()),
+            {'foo':(0,'boo'),'bar':(0,'foo')}
+        )
+
+    def testCF3(self):
+        def cfilter(key, length, obj):
+            if key=='foo':
+                # raises an exception
+                return 0 / 0
+            else:
+                return obj
+
+        try:
+            self.tree.walk(CallableFilter(cfilter),DictAction()),
+            self.fail("Should have raised an exception")
+        except ZeroDivisionError:
+            pass
+
 class TestHighCapacity(unittest.TestCase):
     def setUp(self):
         tree = TST()
@@ -676,6 +722,7 @@ if __name__ == '__main__':
         unittest.makeSuite(TestIterators),
         unittest.makeSuite(TestMatch),
         unittest.makeSuite(TestCallableAction),
+        unittest.makeSuite(TestCallableFilter),
      ))
     
     for i in xrange(3):
