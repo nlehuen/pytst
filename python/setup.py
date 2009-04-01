@@ -24,7 +24,7 @@ setup(
     version = "1.17",
     author = "Nicolas Lehuen",
     author_email = "nicolas@lehuen.com",
-    url = "http://nicolas.lehuen.com/index.php/category/Pytst",
+    url = "http://github.com/nlehuen/pytst",
     description = "An implementation of a Ternary Search Tree (TST) in C++ with Python bindings",
     py_modules = ["tst"],
     ext_modules = [
@@ -36,7 +36,7 @@ setup(
             define_macros=[('SCANNER', None),],
         )
     ],
-    download_url = "http://nicolas.lehuen.com/download/pytst/",
+    download_url = "http://github.com/nlehuen/pytst/downloads",
     classifiers = [
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
