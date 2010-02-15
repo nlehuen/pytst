@@ -596,6 +596,52 @@ class TestScan(unittest.TestCase):
         self.assertEqual(t.scan('cc',TupleListAction()),[('cc',-2,None)])
         self.assertEqual(t.scan('ccd',TupleListAction()),[('ccd',-3,None)])
         
+    def testScanKeithDavidson1(self):
+        t = TST()
+        t['333'] = 'ccc'
+        # self.assertEqual(t.scan('.33.',TupleListAction()),[('.33.',-4,None)])
+        self.assertEqual(t.scan('.33333.',TupleListAction()),[('.',-1,None),('333',3,'ccc'),('33.',-3,None)])
+
+    def testScanKeithDavidson2(self):
+        t = TST()
+        t['333'] = 'ccc'
+        self.assertEqual(t.scan('.33.',TupleListAction()),[('.33.',-4,None)])
+        self.assertEqual(t.scan('.33333.',TupleListAction()),[('.',-1,None),('333',3,'ccc'),('33.',-3,None)])
+
+
+    def testScanKeithDavidson3(self):
+        t = TST()
+        t['333'] = 'ccc'
+        self.assertEqual(t.scan('.33333.',TupleListAction()),[('.',-1,None),('333',3,'ccc'),('33.',-3,None)])
+        self.assertEqual(t.scan('.3.',TupleListAction()),[('.3.',-3,None)])
+        self.assertEqual(t.scan('.33.',TupleListAction()),[('.33.',-4,None)])
+        self.assertEqual(t.scan('.333.',TupleListAction()),[('.',-1,None),('333',3,'ccc'),('.',-1,None)])
+        self.assertEqual(t.scan('.33333.',TupleListAction()),[('.',-1,None),('333',3,'ccc'),('33.',-3,None)])
+
+    def testScanKeithDavidson4(self):
+        t = TST()
+        t['3333'] = 'ccc'
+        # self.assertEqual(t.scan('.333.',TupleListAction()),[('.333.',-5,None)])
+        self.assertEqual(t.scan('.333333.',TupleListAction()),[('.',-1,None),('3333',4,'ccc'),('33.',-3,None)])
+
+    def testScanKeithDavidson5(self):
+        t = TST()
+        t['3333'] = 'ccc'
+        self.assertEqual(t.scan('.333.',TupleListAction()),[('.333.',-5,None)])
+        self.assertEqual(t.scan('.333333.',TupleListAction()),[('.',-1,None),('3333',4,'ccc'),('33.',-3,None)])
+
+    def testScanKeithDavidson6(self):
+        t = TST()
+        t['333'] = 'ccc'
+        self.assertEqual(t.scan('.333.',TupleListAction()),[('.',-1,None),('333',3,'ccc'),('.',-1,None)])
+        self.assertEqual(t.scan('.333.',TupleListAction()),[('.',-1,None),('333',3,'ccc'),('333',3,'ccc'),('.',-1,None)])
+
+    def testScanKeithDavidson7(self):
+        t = TST()
+        t['333'] = 'ccc'
+        self.assertEqual(t.scan('.3.',TupleListAction()),[('.3.',-3,None)])
+        self.assertEqual(t.scan('.333.',TupleListAction()),[('.',-1,None),('333',3,'ccc'),('.',-1,None)])
+        self.assertEqual(t.scan('.33333.',TupleListAction()),[('.',-1,None),('333',3,'ccc'),('33.',-3,None)])
 
     def testScan0_1(self):
         self.assertEqual(self.tree.scan('Nicolas',TupleListAction()),[('Nicolas', 7, 'Nicolas'),])
