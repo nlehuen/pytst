@@ -36,7 +36,7 @@ public:
         Py_INCREF(ref);
     }
     
-    PythonReference& operator= (const PythonReference& that) {
+    inline PythonReference& operator= (const PythonReference& that) {
         PyObject* old = ref;
         
         if((this->ref = that.ref) != old) {
@@ -51,23 +51,23 @@ public:
         Py_DECREF(ref);
     }
 
-    int operator==(const PythonReference& that) {
+    inline int operator==(const PythonReference& that) {
         return (ref==that.ref);
     }
     
-    int operator!=(const PythonReference& that) {
+    inline int operator!=(const PythonReference& that) {
         return (ref!=that.ref);
     }
 
-    PythonReference getattr(char* name) {
+    inline PythonReference getattr(char* name) {
         return PythonReference(PyObject_GetAttrString(get(),name));
     }
     
-    PyObject* get() {
+    inline PyObject* get() {
         return ref;
     }
     
-    PyObject* lend() {
+    inline PyObject* lend() {
         Py_INCREF(ref);
         return ref;
     }
