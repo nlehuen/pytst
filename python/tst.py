@@ -177,6 +177,14 @@ class _TST(_object):
         """get_default_value(self) -> PythonReference"""
         return _tst._TST_get_default_value(self)
 
+    def scan(self, *args):
+        """scan(self, string_type string, _Action to_perform) -> PythonReference"""
+        return _tst._TST_scan(self, *args)
+
+    def scan_with_stop_chars(self, *args):
+        """scan_with_stop_chars(self, string_type string, string_type stop_chars, _Action to_perform) -> PythonReference"""
+        return _tst._TST_scan_with_stop_chars(self, *args)
+
 _TST_swigregister = _tst._TST_swigregister
 _TST_swigregister(_TST)
 
@@ -458,6 +466,14 @@ class TST(_TST):
     def match(self, *args):
         """match(self, string_type string, _Filter filter, _Action to_perform) -> PythonReference"""
         return _tst.TST_match(self, *args)
+
+    def scan(self, *args):
+        """scan(self, string_type string, _Action to_perform) -> PythonReference"""
+        return _tst.TST_scan(self, *args)
+
+    def scan_with_stop_chars(self, *args):
+        """scan_with_stop_chars(self, string_type string, string_type stop_chars, _Action to_perform) -> PythonReference"""
+        return _tst.TST_scan_with_stop_chars(self, *args)
 
 TST_swigregister = _tst.TST_swigregister
 TST_swigregister(TST)

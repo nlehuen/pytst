@@ -4366,6 +4366,142 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap__TST_scan(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > *arg1 = (tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > *) 0 ;
+  string_type *arg2 = 0 ;
+  tst_action< char,PythonReference,string_type > *arg3 = (tst_action< char,PythonReference,string_type > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PythonReference result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:_TST_scan",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_tstT_char_PythonReference_memory_storageT_char_PythonReference_t_ObjectSerializer_string_type_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_TST_scan" "', argument " "1"" of type '" "tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > *""'"); 
+  }
+  arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
+  {
+    char* buffer;
+    Py_ssize_t size;
+    PyString_AsStringAndSize(obj1,&buffer,&size);
+    arg2 = new string_type(buffer,size);
+  }
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_tst_actionT_char_PythonReference_string_type_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "_TST_scan" "', argument " "3"" of type '" "tst_action< char,PythonReference,string_type > *""'"); 
+  }
+  arg3 = reinterpret_cast< tst_action< char,PythonReference,string_type > * >(argp3);
+  {
+    try {
+      result = (arg1)->scan((string_type const &)*arg2,arg3); 
+    }
+    catch (TSTException &e) {
+      PyErr_SetString(PyExc_RuntimeError,e.what());
+      SWIG_fail;
+    }
+    catch (PythonException &e) {
+      if(!PyErr_Occurred()) {
+        PyErr_SetString(PyExc_RuntimeError,e.what());
+      }
+      SWIG_fail;
+    }
+  }
+  {
+    resultobj = (&result)->lend();
+  }
+  {
+    delete arg2;
+  }
+  return resultobj;
+fail:
+  {
+    delete arg2;
+  }
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap__TST_scan_with_stop_chars(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > *arg1 = (tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > *) 0 ;
+  string_type *arg2 = 0 ;
+  string_type *arg3 = 0 ;
+  tst_action< char,PythonReference,string_type > *arg4 = (tst_action< char,PythonReference,string_type > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PythonReference result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:_TST_scan_with_stop_chars",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_tstT_char_PythonReference_memory_storageT_char_PythonReference_t_ObjectSerializer_string_type_t, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_TST_scan_with_stop_chars" "', argument " "1"" of type '" "tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > const *""'"); 
+  }
+  arg1 = reinterpret_cast< tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > * >(argp1);
+  {
+    char* buffer;
+    Py_ssize_t size;
+    PyString_AsStringAndSize(obj1,&buffer,&size);
+    arg2 = new string_type(buffer,size);
+  }
+  {
+    char* buffer;
+    Py_ssize_t size;
+    PyString_AsStringAndSize(obj2,&buffer,&size);
+    arg3 = new string_type(buffer,size);
+  }
+  res4 = SWIG_ConvertPtr(obj3, &argp4,SWIGTYPE_p_tst_actionT_char_PythonReference_string_type_t, 0 |  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "_TST_scan_with_stop_chars" "', argument " "4"" of type '" "tst_action< char,PythonReference,string_type > *""'"); 
+  }
+  arg4 = reinterpret_cast< tst_action< char,PythonReference,string_type > * >(argp4);
+  {
+    try {
+      result = ((tst< char,PythonReference,memory_storage< char,PythonReference >,ObjectSerializer,string_type > const *)arg1)->scan_with_stop_chars((string_type const &)*arg2,(string_type const &)*arg3,arg4); 
+    }
+    catch (TSTException &e) {
+      PyErr_SetString(PyExc_RuntimeError,e.what());
+      SWIG_fail;
+    }
+    catch (PythonException &e) {
+      if(!PyErr_Occurred()) {
+        PyErr_SetString(PyExc_RuntimeError,e.what());
+      }
+      SWIG_fail;
+    }
+  }
+  {
+    resultobj = (&result)->lend();
+  }
+  {
+    delete arg2;
+  }
+  {
+    delete arg3;
+  }
+  return resultobj;
+fail:
+  {
+    delete arg2;
+  }
+  {
+    delete arg3;
+  }
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_TST_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
@@ -6687,6 +6823,142 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_TST_scan(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  TST *arg1 = (TST *) 0 ;
+  string_type *arg2 = 0 ;
+  tst_action< char,PythonReference,string_type > *arg3 = (tst_action< char,PythonReference,string_type > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PythonReference result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:TST_scan",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_TST, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "TST_scan" "', argument " "1"" of type '" "TST *""'"); 
+  }
+  arg1 = reinterpret_cast< TST * >(argp1);
+  {
+    char* buffer;
+    Py_ssize_t size;
+    PyString_AsStringAndSize(obj1,&buffer,&size);
+    arg2 = new string_type(buffer,size);
+  }
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_tst_actionT_char_PythonReference_string_type_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "TST_scan" "', argument " "3"" of type '" "tst_action< char,PythonReference,string_type > *""'"); 
+  }
+  arg3 = reinterpret_cast< tst_action< char,PythonReference,string_type > * >(argp3);
+  {
+    try {
+      result = (arg1)->scan((string_type const &)*arg2,arg3); 
+    }
+    catch (TSTException &e) {
+      PyErr_SetString(PyExc_RuntimeError,e.what());
+      SWIG_fail;
+    }
+    catch (PythonException &e) {
+      if(!PyErr_Occurred()) {
+        PyErr_SetString(PyExc_RuntimeError,e.what());
+      }
+      SWIG_fail;
+    }
+  }
+  {
+    resultobj = (&result)->lend();
+  }
+  {
+    delete arg2;
+  }
+  return resultobj;
+fail:
+  {
+    delete arg2;
+  }
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_TST_scan_with_stop_chars(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  TST *arg1 = (TST *) 0 ;
+  string_type *arg2 = 0 ;
+  string_type *arg3 = 0 ;
+  tst_action< char,PythonReference,string_type > *arg4 = (tst_action< char,PythonReference,string_type > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PythonReference result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:TST_scan_with_stop_chars",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_TST, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "TST_scan_with_stop_chars" "', argument " "1"" of type '" "TST const *""'"); 
+  }
+  arg1 = reinterpret_cast< TST * >(argp1);
+  {
+    char* buffer;
+    Py_ssize_t size;
+    PyString_AsStringAndSize(obj1,&buffer,&size);
+    arg2 = new string_type(buffer,size);
+  }
+  {
+    char* buffer;
+    Py_ssize_t size;
+    PyString_AsStringAndSize(obj2,&buffer,&size);
+    arg3 = new string_type(buffer,size);
+  }
+  res4 = SWIG_ConvertPtr(obj3, &argp4,SWIGTYPE_p_tst_actionT_char_PythonReference_string_type_t, 0 |  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "TST_scan_with_stop_chars" "', argument " "4"" of type '" "tst_action< char,PythonReference,string_type > *""'"); 
+  }
+  arg4 = reinterpret_cast< tst_action< char,PythonReference,string_type > * >(argp4);
+  {
+    try {
+      result = ((TST const *)arg1)->scan_with_stop_chars((string_type const &)*arg2,(string_type const &)*arg3,arg4); 
+    }
+    catch (TSTException &e) {
+      PyErr_SetString(PyExc_RuntimeError,e.what());
+      SWIG_fail;
+    }
+    catch (PythonException &e) {
+      if(!PyErr_Occurred()) {
+        PyErr_SetString(PyExc_RuntimeError,e.what());
+      }
+      SWIG_fail;
+    }
+  }
+  {
+    resultobj = (&result)->lend();
+  }
+  {
+    delete arg2;
+  }
+  {
+    delete arg3;
+  }
+  return resultobj;
+fail:
+  {
+    delete arg2;
+  }
+  {
+    delete arg3;
+  }
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *TST_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
@@ -7234,6 +7506,11 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"_TST_close_match_iterator", _wrap__TST_close_match_iterator, METH_VARARGS, (char *)"_TST_close_match_iterator(_TST self, string_type string, int distance) -> _close_match_iterator_type"},
 	 { (char *)"_TST_get_number_of_nodes", _wrap__TST_get_number_of_nodes, METH_VARARGS, (char *)"_TST_get_number_of_nodes(_TST self) -> int"},
 	 { (char *)"_TST_get_default_value", _wrap__TST_get_default_value, METH_VARARGS, (char *)"_TST_get_default_value(_TST self) -> PythonReference"},
+	 { (char *)"_TST_scan", _wrap__TST_scan, METH_VARARGS, (char *)"_TST_scan(_TST self, string_type string, _Action to_perform) -> PythonReference"},
+	 { (char *)"_TST_scan_with_stop_chars", _wrap__TST_scan_with_stop_chars, METH_VARARGS, (char *)"\n"
+		"_TST_scan_with_stop_chars(_TST self, string_type string, string_type stop_chars, \n"
+		"    _Action to_perform) -> PythonReference\n"
+		""},
 	 { (char *)"_TST_swigregister", _TST_swigregister, METH_VARARGS, NULL},
 	 { (char *)"delete__Action", _wrap_delete__Action, METH_VARARGS, (char *)"delete__Action(_Action self)"},
 	 { (char *)"_Action_perform", _wrap__Action_perform, METH_VARARGS, (char *)"\n"
@@ -7318,6 +7595,11 @@ static PyMethodDef SwigMethods[] = {
 		"    _Filter filter, _Action to_perform) -> PythonReference\n"
 		""},
 	 { (char *)"TST_match", _wrap_TST_match, METH_VARARGS, (char *)"TST_match(TST self, string_type string, _Filter filter, _Action to_perform) -> PythonReference"},
+	 { (char *)"TST_scan", _wrap_TST_scan, METH_VARARGS, (char *)"TST_scan(TST self, string_type string, _Action to_perform) -> PythonReference"},
+	 { (char *)"TST_scan_with_stop_chars", _wrap_TST_scan_with_stop_chars, METH_VARARGS, (char *)"\n"
+		"TST_scan_with_stop_chars(TST self, string_type string, string_type stop_chars, \n"
+		"    _Action to_perform) -> PythonReference\n"
+		""},
 	 { (char *)"TST_swigregister", TST_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new__lexical_iterator_type", _wrap_new__lexical_iterator_type, METH_VARARGS, (char *)"\n"
 		"new__lexical_iterator_type(tst<(char,PythonReference,memory_storage<(char,PythonReference)>,ObjectSerializer,qad_string<(char)>)> t, \n"
