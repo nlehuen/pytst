@@ -1,0 +1,8 @@
+*.pyc
+dist
+test/test.tst
+build
+MANIFEST
+Debug
+Debug CRM
+_ReSharper.pythonTST
