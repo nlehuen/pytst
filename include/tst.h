@@ -30,8 +30,8 @@ const char* const TST_VERSION = "1.18RC";
     #define tst_malloc PyMem_Malloc
     #define tst_realloc PyMem_Realloc
     #define tst_free PyMem_Free
-    // Pour ajouter/supprimer les fonctions de scanning.
-    #define SCANNER
+    // Add / remove SCANNER functions
+    // #define SCANNER
 #else
     #include "stdlib.h"
     #define tst_malloc malloc
