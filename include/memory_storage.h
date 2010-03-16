@@ -39,7 +39,7 @@ public:
     }
 
     inline tst_node<charT,valueT>* get(int index) {
-        return &(array[index]);
+      return index==UNDEFINED_INDEX ? NULL : &(array[index]);
     }
 
     inline void delete_node(int index) {

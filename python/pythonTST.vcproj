@@ -367,10 +367,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\setup.py"
-				>
-			</File>
-			<File
 				RelativePath=".\tst.i"
 				>
 				<FileConfiguration
@@ -430,6 +426,10 @@
 			>
 			<File
 				RelativePath="..\include\debug.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\fundamentals.h"
 				>
 			</File>
 			<File

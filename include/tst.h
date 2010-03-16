@@ -131,6 +131,7 @@ private:
 
     int build_node(node_info<charT,valueT>* current_node,const stringT & string,size_t current_position);
     void remove_node(int* current_index,const stringT & string,const size_t position);
+    int find_char(tst_node<charT,valueT>** current_node, charT c) const;
     tst_node<charT,valueT>* find_node(int* current_index,int* best_node, const stringT & string) const;
 
     void balance_node(node_info<charT,valueT>* bal);
@@ -1019,185 +1020,180 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
     return to_perform->result();
 }
 
+template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
+ inline int tst<charT,valueT,storageT,serializerT,stringT>::find_char(tst_node<charT,valueT> **n_current, charT c) const {
+   while(1) {
+      int diff = c - (*n_current)->c;
+      if(diff == 0) {
+        return 1;
+      }
+      else {
+        int ni_next;
+
+        if(diff>0) {
+          ni_next = (*n_current)->right;
+        }
+        else {
+          ni_next = (*n_current)->left;
+        }
+
+        if(ni_next==UNDEFINED_INDEX) {
+          *n_current = storage->get(root);
+          return 0;
+        }
+        else {
+          *n_current = storage->get(ni_next);
+        }
+      }
+   }
+ }
+
 /**************************** scan *************************************/
 
 #ifdef SCANNER
+
+template<typename charT,typename valueT,typename stringT>
+inline void emit(int match,const stringT & string,size_t start, size_t stop,valueT value,tst_action<charT,valueT,stringT>* to_perform) {
+  size_t length = stop-start;
+  if(length>0) {
+    to_perform->perform(string.substr(start,length), match * length, value);
+  }
+}
+
+
 template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
  valueT tst<charT,valueT,storageT,serializerT,stringT>::scan(const stringT & string,tst_action<charT,valueT,stringT>* to_perform) {
-    // Le premier caractère de la chaine ne correspondant pas à un match
-    size_t si_non_match_start=0;
-    // Le noeud pour lequel on a enregistré un match (noeud avec un objet associé)
-    int ni_best_match=UNDEFINED_INDEX;
-    // Le premier caractère de la chaine correspondant à un match
-    int si_match_start=UNDEFINED_INDEX;
-    // La position actuelle dans la chaîne (index)
-    size_t si_current=0;
-    // Le numéro du noeud actuel de l'arbre
-    int ni_current=root;
-    // Le noeud actuel de l'arbre
-    tst_node<charT,valueT> *n_current;
-    // Boucle principale
-    while(1) {
-        n_current = storage->get(ni_current);
+  // NOTE : yes, this code uses goto.
+  // It's actually FTW because it simplifies the code instead of
+  // forcing the abusive use of break, continue, all the more
+  // that C++ doesn't support labeled continue.
+  // To make sense of it all, you can have a look at 
+  // the file scan algorithm.graphml
+  // with yED : http://www.yworks.com/en/products_yed_about.html
+  // This way you can match nodes from the graph with the code below using the
+  // labels (A), (B), etc.
 
-        // On avance dans l'arbre d'un cran
-        if(si_current<string.size()) {
-            int diff=string[si_current]-n_current->c;
-            if(diff>0) {
-                ni_current=n_current->right;
-            }
-            else if(diff<0) {
-                ni_current=n_current->left;
-            }
-            else {
-                // ok, le caractère courant est accepté
-                if(si_match_start==UNDEFINED_INDEX) {
-                    // Si on n'a pas encore enregistré un début de match
-                    // on le fait
-                    si_match_start=si_current;
-                }
-                
-                if(n_current->data!=default_value) {
-                    // Si le noeud en cours contient une valeur
-                    // on l'enregistre
-                    ni_best_match=ni_current;
-                }
+  // Current position in the input string
+  size_t si=0;
 
-                ++si_current;
-                if(si_current<string.size()) {
-                    // Si on peut avancer, on avance
-                    ni_current=n_current->next;
-                }
-                else {
-                    // Fin de chaine ==> pas de match possible
-                    ni_current=UNDEFINED_INDEX;
-                }
-            }
+  // First string index for a non match
+  size_t si_nm=0;
+
+  // First string index for a match
+  int si_ms=UNDEFINED_INDEX;
+
+  // Best match
+  int si_bme=UNDEFINED_INDEX;
+  tst_node<charT,valueT> *n_best_match = NULL;
+
+  // Current node
+  tst_node<charT,valueT> *n_current = storage->get(root);
+
+  // Main loop
+  MAIN:
+  {
+    //
+    // NON-MATCH state
+    //
+
+    assert(si_ms == UNDEFINED_INDEX);
+
+    // (A) check input
+    if(si < string.size()) { 
+      if(find_char(&n_current,string[si])) {
+        // (B) found
+        si_ms = si;
+        ++si;
+        // this goto is implicit
+        // goto POTENTIAL_MATCH;
+      }
+      else {
+        // (C) not found
+        ++si;
+        goto MAIN;
+      }
+    }
+    else {
+      // (D) end input
+      emit(-1,string,si_nm,si,default_value,to_perform);
+      return to_perform->result();
+    }
+
+    POTENTIAL_MATCH:
+    {
+      //
+      // POTENTIAL_MATCH state
+      //
+  
+      assert(si_ms != UNDEFINED_INDEX);
+
+      // (E) check data
+      if(n_current->data != default_value) {
+        // (F) store best match
+        si_bme = si;
+        n_best_match = n_current;
+      }
+
+      // (G) move next ?
+      n_current = storage->get(n_current->next);
+      if(n_current != NULL) {
+
+        // (H) check input
+        if(si < string.size()) {
+          if(find_char(&n_current, string[si])) {
+            // (L)
+            ++si;
+            goto POTENTIAL_MATCH;
+          }
+          else {
+            goto END_MATCH;
+          }
         }
         else {
-            // On est toujours en fin de chaine ==> pas de match possible
-            ni_current=UNDEFINED_INDEX;
+          // (M) end match
+          if(si_bme!=UNDEFINED_INDEX) {
+            goto EMIT_AND_LOOP;
+          }
+          else {
+            // (N)
+            emit(-1,string,si_nm,si,default_value,to_perform);
+          }
+
+          return to_perform->result();
         }
 
-        if(ni_current==UNDEFINED_INDEX) {
-            // Le caractère courant n'est pas accepté
-            if(ni_best_match!=UNDEFINED_INDEX) {
-                // Si on a un match réussi en cours
 
-                // Si le match en cours démarre après la zone de non-match
-                // C'est qu'on a bien une zone de non-match
-                int non_match_length = si_match_start-si_non_match_start;
-                if(non_match_length>0) {
-                    // On l'envoie.
-                    to_perform->perform(string.substr(si_non_match_start,non_match_length),-non_match_length,default_value);
-                }
+      }
+      else END_MATCH: {
 
-                // On envoie maintenant le match
-                // On connait sa longueur grâce à la position dans l'arbre
-                // TODO: voir si on ne pourrait pas de passer de ça
-                tst_node<charT,valueT> *match_node=storage->get(ni_best_match);
-                int match_length = match_node->position+1;
-                // On envoie le match
-                to_perform->perform(string.substr(si_match_start,match_length),match_length,match_node->data);
-                // On repositionne la zone de non-match juste après la fin du match
-                si_non_match_start=si_match_start+match_length;
+        // (I) end match
+        if(si_bme!=UNDEFINED_INDEX) EMIT_AND_LOOP: {
+          // (J) emit and loop
+          emit(-1,string,si_nm,si_ms,default_value,to_perform);
+          emit(1,string,si_ms,si_bme,n_best_match->data,to_perform);
 
-                // Annulation du match
-                ni_best_match=UNDEFINED_INDEX;
-
-                // On backtracke
-                compute_backtrack(n_current,string,si_non_match_start,si_current);
-                // Le backtrack nous donne là où on se trouve dans le noeud juste après le match...
-                ni_current = n_current->backtrack;
-                // ... et là où on avait notre meilleur match
-                ni_best_match = n_current->backtrack_match_index;
-
-                if(ni_current==root) {
-                    // quand on a un retour à la racine, on n'a aucun match en cours
-                    si_match_start=UNDEFINED_INDEX;
-                }
-                else {
-                    // sinon c'est qu'un match est en cours, on va recalculer son point de démarrage
-                    // grâce à la position du noeud
-                    n_current=storage->get(ni_current);
-                    si_match_start=si_current-n_current->position;
-                }
-            }
-            else if(si_match_start!=UNDEFINED_INDEX) {
-                if(si_current<string.size()) {
-                    // Si on n'est pas en fin de chaîne...
-                    // Si le caractère courant n'est pas accepté, qu'on avait commencé
-                    // un match mais que celui-ci n'avait pas réussi, on va backtracker.
-                    compute_backtrack(n_current,string,si_match_start+1,si_current);
-                    ni_current = n_current->backtrack;
-                    ni_best_match=n_current->backtrack_match_index;
-
-                    if(ni_current==root) {
-                        // Quand on a un retour à la racine, on n'a aucun match en cours
-                        si_match_start=UNDEFINED_INDEX;
-                    }
-                    else {
-                        // sinon c'est qu'un match est en cours, on va recalculer son point de démarrage
-                        // grâce à la position du noeud
-                        n_current=storage->get(ni_current);
-                        si_match_start=si_current-n_current->position;
-                    }
-                }
-                else {
-                    // Si on est en fin de chaîne, on sort.
-                    break;
-                }
-            }
-            else {
-                // le caractère courant n'est pas accepté et on n'avait pas de match en cours
-                if(si_current<string.size()) {
-                    // si on peut avancer d'un caractère on le fait
-                    ++si_current;
-                    // on revient à la racine
-                    ni_current = root;
-                }
-                else {
-                    // si on est à la fin de la chaîne on sort de la boucle pour la fin.
-                    break;
-                }
-            }
+          si = si_bme;
+          si_nm = si;
+          si_ms = UNDEFINED_INDEX;
+          si_bme = UNDEFINED_INDEX;
+          n_current = storage->get(root);
+          goto MAIN;
         }
         else {
-            // on avance tranquillement dans l'arbre...
+          // (K) backtrack
+          // TODO : prevent backtrack using tree analysis
+          si = si_ms + 1;
+          si_ms = UNDEFINED_INDEX;
+          si_bme = UNDEFINED_INDEX;
+          n_current = storage->get(root);
+          goto MAIN;
         }
-    }
 
-    // on n'arrive ici que si on est arrivé à la fin de la chaine en entrée
-    if((si_current - si_non_match_start)>0) {
-        // charT'il y avait un non-match en cours
-        // on l'envoie
-        to_perform->perform(string.substr(si_non_match_start,si_current - si_non_match_start),-static_cast<int>(si_current - si_non_match_start),default_value);
-    }
+      } // (I)
+    } // (E)
 
-    return to_perform->result();
-}
-
-template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
- void tst<charT,valueT,storageT,serializerT,stringT>::compute_backtrack(tst_node<charT,valueT> *current_node,const stringT & string, int si_match_start, int si_match_end) {
-    if(current_node->backtrack==UNDEFINED_INDEX) {
-        while(si_match_start<si_match_end) {
-            current_node->backtrack=root;
-            current_node->backtrack_match_index=UNDEFINED_INDEX;
-            find_node(&(current_node->backtrack),&(current_node->backtrack_match_index),string.substr(si_match_start,si_match_end-si_match_start));
-            if(current_node->backtrack==UNDEFINED_INDEX) {
-                ++si_match_start;
-            }
-            else {
-                current_node->backtrack=(storage->get(current_node->backtrack))->next;
-                break;
-            }
-        }
-        if(current_node->backtrack==UNDEFINED_INDEX) {
-            current_node->backtrack=root;
-            current_node->backtrack_match_index=UNDEFINED_INDEX;
-        }
-    }
-}
+  } // MAIN
+} 
 
 template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>
  valueT tst<charT,valueT,storageT,serializerT,stringT>::scan_with_stop_chars(const stringT & string,const stringT& stop_chars,tst_action<charT,valueT,stringT>* to_perform) const {
