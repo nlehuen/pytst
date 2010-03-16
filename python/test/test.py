@@ -767,6 +767,7 @@ class TestNewScan(unittest.TestCase):
     self.tree['334'] = 'B'
     self.tree['3333'] = 'C'
     self.tree['33378'] = 'D'
+    self.tree['3339993339'] = 'E'
     
   def testA(self):
     self.assertEqual(self.tree.scan('3',TupleListAction()),[('3',-1,None)])
@@ -793,6 +794,12 @@ class TestNewScan(unittest.TestCase):
     self.assertEqual(self.tree.scan('335',TupleListAction()),[('335',-3,None)])
     self.assertEqual(self.tree.scan('2335',TupleListAction()),[('2335',-4,None)])
     self.assertEqual(self.tree.scan('33332335',TupleListAction()),[('3333',4,'C'),('2335',-4,None)])
+
+  def testF(self):
+    self.assertEqual(self.tree.scan('3339993339',TupleListAction()),[('3339993339',10,'E')])
+    self.assertEqual(self.tree.scan('333999333',TupleListAction()),[('333',3,'A'),('999',-3,None),('333',3,'A')])
+    self.assertEqual(self.tree.scan('3339993333',TupleListAction()),[('333',3,'A'),('999',-3,None),('3333',4,'C')])
+    self.assertEqual(self.tree.scan('3339993338',TupleListAction()),[('333',3,'A'),('999',-3,None),('333',3,'A'),('8',-1,None)])
 
 if __name__ == '__main__':
     print "Testing pytst %s"%TST_VERSION

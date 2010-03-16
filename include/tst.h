@@ -1392,8 +1392,6 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
 #ifdef SCANNER
     // TODO : inutile, peut être recalculé ?
     file.read((char*)(&(node_info.node->position)),sizeof(int));
-    file.read((char*)(&(node_info.node->backtrack)),sizeof(int));
-    file.read((char*)(&(node_info.node->backtrack_match_index)),sizeof(int));
 #endif
 
     int other_index;
@@ -1465,8 +1463,6 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
 
 #ifdef SCANNER
     file.write((char*)(&(node->position)),sizeof(int));
-    file.write((char*)(&(node->backtrack)),sizeof(int));
-    file.write((char*)(&(node->backtrack_match_index)),sizeof(int));
 #endif
 
     if(bitmask & 1) write_node(file,writer,node->next);

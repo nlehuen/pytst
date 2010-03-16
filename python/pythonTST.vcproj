@@ -367,6 +367,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\test\test.py"
+				>
+			</File>
+			<File
 				RelativePath=".\tst.i"
 				>
 				<FileConfiguration

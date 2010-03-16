@@ -47,8 +47,6 @@ public:
         ,left(UNDEFINED_INDEX)
 #ifdef SCANNER
         ,position(UNDEFINED_INDEX)
-        ,backtrack(UNDEFINED_INDEX)
-        ,backtrack_match_index(UNDEFINED_INDEX)
 #endif
     {
     }
@@ -60,8 +58,6 @@ public:
     int left;
 #ifdef SCANNER
     int position;
-    int backtrack;
-    int backtrack_match_index;
 #endif
 
     valueT store(valueT value) {
@@ -78,8 +74,6 @@ public:
         left = UNDEFINED_INDEX;
 #ifdef SCANNER
         position = UNDEFINED_INDEX;
-        backtrack = UNDEFINED_INDEX;
-        backtrack_match_index = UNDEFINED_INDEX;
 #endif
     }
 };
