@@ -31,13 +31,13 @@ const char* const TST_VERSION = "1.18";
     #define tst_realloc PyMem_Realloc
     #define tst_free PyMem_Free
     // Add / remove SCANNER functions
-    // #define SCANNER
+    #define SCANNER
 #else
     #include "stdlib.h"
     #define tst_malloc malloc
     #define tst_realloc realloc
     #define tst_free free
-    // Pour ajouter/supprimer les fonctions de scanning.
+    // Add / remove SCANNER functions
     // #define SCANNER
 #endif
 
@@ -1115,8 +1115,7 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
     }
     else {
       // (D) end input
-      emit(-1,string,si_nm,si,default_value,to_perform);
-      return to_perform->result();
+      goto EXIT;
     }
 
     POTENTIAL_MATCH:
@@ -1156,10 +1155,9 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
           }
           else {
             // (N)
-            emit(-1,string,si_nm,si,default_value,to_perform);
+            goto EXIT;
           }
 
-          return to_perform->result();
         }
 
 
@@ -1193,6 +1191,12 @@ template<typename charT,typename valueT,typename storageT,typename serializerT, 
     } // (E)
 
   } // MAIN
+
+  EXIT:
+  {
+    emit(-1,string,si_nm,si,default_value,to_perform);
+    return to_perform->result();
+  }
 } 
 
 template<typename charT,typename valueT,typename storageT,typename serializerT, typename stringT>

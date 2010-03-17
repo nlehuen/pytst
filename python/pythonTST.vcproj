@@ -380,7 +380,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="E:\swigwin-1.3.40\swig -c++ -O -DSCANNER -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)&#x0D;&#x0A;"
+						CommandLine="E:\swigwin-1.3.39\swig -c++ -O -DSCANNER -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)&#x0D;&#x0A;"
 						AdditionalDependencies="..\include\tst.h;pythonTST.h"
 						Outputs="tst_wrap.cxx"
 					/>
@@ -390,7 +390,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="E:\swigwin-1.3.40\swig -O -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)&#x0D;&#x0A;"
+						CommandLine="E:\swigwin-1.3.39\swig -O -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)&#x0D;&#x0A;"
 						AdditionalDependencies="..\tst.h;pythonTST.h"
 						Outputs="tst_wrap.cxx"
 					/>
@@ -400,7 +400,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="E:\swigwin-1.3.40\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)&#x0D;&#x0A;"
+						CommandLine="E:\swigwin-1.3.39\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)&#x0D;&#x0A;"
 						AdditionalDependencies="..\include\tst.h;pythonTST.h"
 						Outputs="tst_wrap.cxx"
 					/>
@@ -410,7 +410,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="E:\swigwin-1.3.40\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)&#x0D;&#x0A;"
+						CommandLine="E:\swigwin-1.3.39\swig -c++ -python -I..\include -o $(InputName)_wrap.cxx $(InputPath)&#x0D;&#x0A;"
 						AdditionalDependencies="..\tst.h;pythonTST.h"
 						Outputs="tst_wrap.cxx"
 					/>
